@@ -6,6 +6,8 @@
 
 package containing;
 
+import containing.Harbor.Harbor;
+
 /**
  *
  * @author Robert

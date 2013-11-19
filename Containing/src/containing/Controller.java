@@ -10,7 +10,7 @@ package containing;
  *
  * @author Robert
  */
-public class Containing {
+public class Controller {
 
     /**
      * @param args the command line arguments

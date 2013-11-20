@@ -4,12 +4,12 @@
  * and open the template in the editor.
  */
 
-package containing.Harbor;
+package containing.Platform;
 
 /**
  *
  * @author Robert
  */
-public class Harbor {
+public class TrainPlatform {
     
 }

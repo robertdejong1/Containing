@@ -10,11 +10,6 @@ package containing;
  *
  * @author Robert
  */
-public class XmlHandler {
-    
-    public Harbor openXml(String file){
-        
-    }
-    
+public class Clock {
     
 }

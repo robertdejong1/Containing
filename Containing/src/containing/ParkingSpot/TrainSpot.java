@@ -4,17 +4,12 @@
  * and open the template in the editor.
  */
 
-package containing;
+package containing.ParkingSpot;
 
 /**
  *
  * @author Robert
  */
-public class XmlHandler {
-    
-    public Harbor openXml(String file){
-        
-    }
-    
+public class TrainSpot {
     
 }

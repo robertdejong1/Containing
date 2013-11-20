@@ -1,4 +1,4 @@
-package containing.Container;
+package containing;
 
 public class Container 
 {

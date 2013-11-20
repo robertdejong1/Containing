@@ -4,12 +4,12 @@
  * and open the template in the editor.
  */
 
-package containing.Vehicle;
+package containing;
 
 /**
  *
  * @author Robert
  */
-public class MovableCrane {
+public class Port {
     
 }

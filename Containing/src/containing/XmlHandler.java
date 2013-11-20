@@ -12,7 +12,7 @@ package containing;
  */
 public class XmlHandler {
     
-    public Harbor openXml(String file){
+    public Port openXml(String file){
         
     }
     

@@ -79,4 +79,23 @@ public class Container
     public TransportType getDepartureTransport() {
         return departureTransport;
     }
+    
+    @Override
+    public String toString(){
+        String ret = "Container:[";
+        ret += this.containerId +", ";
+        ret += this.arrivalDate.toString() +", ";
+        ret += this.arrivalTimeFrom +", ";
+        ret += this.arrivalTimeTill +", ";
+        ret += this.arrivalTransport +", ";
+        ret += this.arrivalTransportCompany +", ";
+        ret += this.arrivalPosition.toString() +", ";
+        ret += this.owner +", ";
+        ret += this.departureDate +", ";
+        ret += this.departureTimeFrom +", ";
+        ret += this.departureTimeTill +", ";
+        ret += this.departureTransport +"]";
+        
+        return ret;
+    }
 }

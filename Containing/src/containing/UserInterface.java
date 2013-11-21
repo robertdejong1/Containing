@@ -1,25 +1,39 @@
 package containing;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 
 public class UserInterface extends JFrame
 {
-    private File CurrentDir = null;    
+    private File CurrentDir = null;   
+    public JButton StartSimulationButton;
+    public JButton StopSimulationButton;
+    public JLabel MessageLogLabel;
     
     public UserInterface()
     {
         super();
         this.setLayout(null);
+        this.getContentPane().setBackground(Color.pink);
+        this.setTitle("Containing 2013 groep 3 - Controller");
         this.setBounds(25, 25, 500, 500);
         AddButtons();
+        AddLabels();
         this.setVisible(true);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
     }
     
     private void AddButtons()
@@ -37,6 +51,8 @@ public class UserInterface extends JFrame
                         public void actionPerformed(ActionEvent e) 
                         {
                            JFileChooser XMLDialog = new JFileChooser();
+                           XMLDialog.setFileFilter(new FileNameExtensionFilter("XML file", "xml"));
+                           XMLDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
                            
                            if (CurrentDir != null)
                            {
@@ -50,7 +66,7 @@ public class UserInterface extends JFrame
                                File xmlFile = XMLDialog.getSelectedFile();
                                CurrentDir = XMLDialog.getCurrentDirectory();
                                
-                               Controller.ReadXML(xmlFile);
+                               Controller.ReadXMLAndSortOutput(xmlFile);
                            }
                            else
                            {
@@ -62,13 +78,54 @@ public class UserInterface extends JFrame
                 );
         
         //Start Button
-        JButton StartSimulationButton = new JButton("Start simulation");
+        StartSimulationButton = new JButton("Start simulation");
+        StartSimulationButton.setEnabled(false);
         StartSimulationButton.setBounds(160, 5, 150, 25);
         this.add(StartSimulationButton);
         
-        //stop Button
-        JButton StopSimulationButton = new JButton("Stop simulation");
+        StartSimulationButton.addActionListener
+                (
+                    new ActionListener()
+                    {
+                        @Override
+                        public void actionPerformed(ActionEvent e) 
+                        {
+                            Controller.SetSimulationStatus(true);
+                            StartSimulationButton.setEnabled(false);
+                            StopSimulationButton.setEnabled(true);
+                        }
+                    }
+                );
+        
+         //stop button
+        StopSimulationButton = new JButton("Stop simulation");
+        StopSimulationButton.setEnabled(false);
         StopSimulationButton.setBounds(315, 5, 150, 25);
         this.add(StopSimulationButton);
+        
+        StopSimulationButton.addActionListener
+                (
+                    new ActionListener()
+                    {
+                        @Override
+                        public void actionPerformed(ActionEvent e) 
+                        {
+                            Controller.SetSimulationStatus(false);
+                            
+                            StartSimulationButton.setEnabled(true);
+                            StopSimulationButton.setEnabled(false);
+                        }
+                    }
+                );
+    }
+    
+    private void AddLabels()
+    {
+        MessageLogLabel = new JLabel("");
+        MessageLogLabel.setBounds(5, 35, 485, 430);
+        MessageLogLabel.setVerticalAlignment(1);
+        
+        MessageLogLabel.setBorder(BorderFactory.createLineBorder(Color.black));
+        this.add(MessageLogLabel);
     }
 }

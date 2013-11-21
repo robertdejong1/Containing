@@ -15,6 +15,8 @@ public class Controller {
     
     public static void ReadXML(File XMLFile)
     {
+        XmlHandler xmlHandler = new XmlHandler();
+        System.out.println(xmlHandler.openXml(XMLFile).toString());
         //Lees xml
         //Sorteer containers naar boten
         

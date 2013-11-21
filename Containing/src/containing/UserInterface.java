@@ -54,7 +54,7 @@ public class UserInterface extends JFrame
                            }
                            else
                            {
-                               ErrorLog.logMsg("Could not load file", null);
+                               ErrorLog.logMsg("Could not load file");
                                
                            }
                         }

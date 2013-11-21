@@ -10,11 +10,6 @@ package containing;
  *
  * @author Robert
  */
-public class XmlHandler {
-    
-    public Port openXml(String file){
-        
-    }
-    
+public class Port {
     
 }

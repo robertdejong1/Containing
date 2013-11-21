@@ -6,15 +6,16 @@
 
 package containing;
 
+import containing.Vehicle.Vehicle;
+import java.util.List;
+
 /**
  *
  * @author Robert
  */
-public class XmlHandler {
-    
-    public Port openXml(String file){
-        
-    }
-    
-    
+public class Settings {
+    static String filePath;
+    static Port port;
+    static Boolean started;
+    static List<Vehicle> scheduledShips;
 }

@@ -10,11 +10,15 @@ package containing;
  *
  * @author Robert
  */
-public class XmlHandler {
-    
-    public Port openXml(String file){
-        
+class Vector3f {
+    public int x;
+    public int y;
+    public int z;
+
+    public Vector3f(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
-    
     
 }

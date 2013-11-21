@@ -4,17 +4,12 @@
  * and open the template in the editor.
  */
 
-package containing;
+package containing.Road;
 
 /**
  *
  * @author Robert
  */
-public class XmlHandler {
-    
-    public Port openXml(String file){
-        
-    }
-    
+public class Route {
     
 }

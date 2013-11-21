@@ -6,16 +6,19 @@
 
 package containing;
 
-import containing.Vehicle.Vehicle;
-import java.util.List;
-
 /**
  *
  * @author Robert
  */
-public class Settings {
-    static String filePath;
-    static Port port;
-    static Boolean started;
-    static List<Vehicle> scheduledShips;
+class Vector3f {
+    public int x;
+    public int y;
+    public int z;
+
+    public Vector3f(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+    
 }

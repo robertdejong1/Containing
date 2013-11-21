@@ -1,11 +1,12 @@
 package containing.Platform;
 
 import containing.ParkingSpot.ParkingSpot;
+import containing.ParkingSpot.AgvSpot;
 
 public class Platform {
     
     private int id;
-    private ParkingSpot[] avgSpots;
+    private ParkingSpot[] agvSpots;
     
     public Platform(int id, int nrAvgSpots) {
         this.id = id;
@@ -13,9 +14,9 @@ public class Platform {
     }
     
     private void initAvgSpots(int nrAvgSpots) {
-        avgSpots = new ParkingSpot[nrAvgSpots];
+        agvSpots = new ParkingSpot[nrAvgSpots];
         for(int i = 0; i < nrAvgSpots; i++)
-            avgSpots[i] = new AvgSpot();
+            agvSpots[i] = new AgvSpot();
     }
     
     public int getId() {

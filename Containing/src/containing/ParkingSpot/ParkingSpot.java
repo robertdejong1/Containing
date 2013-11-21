@@ -1,6 +1,6 @@
 package containing.ParkingSpot;
 
-public class ParkingSpot 
+public abstract class ParkingSpot 
 {
     
 }

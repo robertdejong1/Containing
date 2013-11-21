@@ -1,0 +1,5 @@
+private/
+*.xml
+*.properties
+!nbproject/project.properties
+!nbproject/project.xml

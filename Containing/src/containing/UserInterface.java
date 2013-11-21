@@ -27,7 +27,7 @@ public class UserInterface extends JFrame
         super();
         this.setLayout(null);
         this.getContentPane().setBackground(Color.pink);
-        this.setTitle("Containing 2013 groep 3 - Controller");
+        this.setTitle("Containing 2013");
         this.setBounds(25, 25, 500, 500);
         AddButtons();
         AddLabels();

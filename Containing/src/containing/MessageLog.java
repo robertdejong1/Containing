@@ -1,6 +1,8 @@
 package containing;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MessageLog 
@@ -10,12 +12,17 @@ public class MessageLog
     public MessageLog()
     {
         Messages = new ArrayList();
+        Messages.add("Controller Version: " + Settings.Version);
     }
     
     public void AddMessage(String Message)
     {
-        Messages.add(Message);
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+        String formattedDate = sdf.format(date);
         
+        Messages.add("[" + formattedDate + "]: " + Message);
+        Controller.UpdateMessageLogWindow();
     }
     
     public String GetLastMessagesAsHTMLString()
@@ -31,13 +38,14 @@ public class MessageLog
             MessageCounter = Messages.size();
         }
         
-        String StringToReturn = "";
+        String StringToReturn = "<html>";
         
         for (int i = MessageCounter - 1; i > -1; i--)
         {
             StringToReturn = StringToReturn + Messages.get(i) + "<br />";
         }
         
+        StringToReturn += "</html>";
         return StringToReturn;
         
     }
@@ -45,6 +53,8 @@ public class MessageLog
     public void ClearMessages()
     {
         Messages = new ArrayList();
+        Messages.add("Controller Version: " + Settings.Version);
+        Controller.UpdateMessageLogWindow();
     }
     
     public void WriteMessagesToFile()

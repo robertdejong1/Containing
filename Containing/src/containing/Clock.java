@@ -21,50 +21,65 @@ public class Clock {
 
         timer.setRepeats(true);
     }
-    
-    public boolean StartClock(int delay)
+
+    public boolean StartClock(int delay) 
     {
-        try
+        try 
         {
-            timer.setDelay(delay);
-            timer.start();
-            return true;
-        }
-        catch (Exception e)
+            if (!timer.isRunning()) 
+            {
+                timer.setDelay(delay);
+                timer.start();
+                return true;
+            } 
+            else 
+            {
+                return false;
+            }
+        } 
+        catch (Exception e) 
         {
+            ErrorLog.logMsg("Could not start the clock", e);
             return false;
         }
     }
-    
-    public boolean SetDelay(int delay)
+
+    public boolean SetDelay(int delay) 
     {
-        try
+        try 
         {
             timer.setDelay(delay);
             timer.stop();
             timer.start();
             return true;
-        }
-        catch (Exception e)
+        } 
+        catch (Exception e) 
         {
+            ErrorLog.logMsg("Could not set the delay of the clock", e);
             return false;
-        }   
+        }
     }
-    
-    public boolean StopClock()
+
+    public boolean StopClock() 
     {
-        try
+        try 
         {
-            timer.stop();
-            return true;
-        }
-        catch (Exception e)
+            if (!timer.isRunning()) 
+            {
+                timer.stop();
+                return true;
+            } else {
+                return false;
+            }
+        } 
+        catch (Exception e) 
         {
+            ErrorLog.logMsg("Could not stop the clock", e);
             return false;
         }
     }
-    
-    private void TimerFunctions()
+
+    private void TimerFunctions() 
     {
         //Controller doet hier iets :D
     }

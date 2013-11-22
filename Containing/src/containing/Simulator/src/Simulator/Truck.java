@@ -5,14 +5,15 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.scene.Node;
 
 
 public class Truck extends Model
 {
 
-    public Truck(AssetManager assetManager)
+    public Truck(AssetManager assetManager, Node node)
     {
-        super(assetManager);
+        super(assetManager, "Models/truck.j3o", node);
     }
     
 }

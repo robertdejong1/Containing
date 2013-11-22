@@ -11,13 +11,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import org.json.simple.JSONObject;
 
 /**
  *
  * @author Robert
  */
-public class NetworkHandler extends Thread {
+public class NetworkHandler implements Runnable {
 
     private Port port;
     private ServerSocket serverSocket;
@@ -38,14 +39,24 @@ public class NetworkHandler extends Thread {
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
             String inputLine, outputLine;
-            
-            while ((inputLine = in.readLine()) != null) {
-                System.out.println(inputLine);
-                outputLine = processCommand(inputLine);
-                System.out.println(outputLine);
-                out.println(outputLine);
-                if (outputLine.equals("QUIT")) {
-                    break;
+            while (true) {
+                inputLine = in.readLine();
+                if (inputLine == null) {
+                    System.out.println(inputLine);
+                    outputLine = processCommand(inputLine);
+                    System.out.println(outputLine);
+                    out.println(outputLine);
+                    if (outputLine.equals("QUIT")) {
+                        break;
+                    }
+                }
+                else{
+                    List<String> commands = Controller.getNewCommands();
+                    if(commands.size() > 0){
+                        for(String cmd : commands){
+                            out.println(cmd);
+                        }
+                    }
                 }
             }
 
@@ -55,26 +66,16 @@ public class NetworkHandler extends Thread {
         }
     }
 
-    public void sendMsg(String prefix, Object obj) {
-        JSONObject jsonobj = new JSONObject();
-        try{
-            Thread.sleep(10000);
-        }
-        catch(InterruptedException e){
-            
-        }
-        
-        System.out.println(prefix);
-    }
-    
-    private String processCommand(String cmd){
+    private String processCommand(String cmd) {
         JSONObject json = new JSONObject();
         String prefix = cmd.split(":", 1)[0];
-        switch(prefix){
-            case "PORT": return json.put("PORT", port).toString();
+        switch (prefix) {
+            case "PORT":
+                return json.put("PORT", port).toString();
             //Meer cases
-            
-            default: return "";
+
+            default:
+                return "";
         }
     }
 }

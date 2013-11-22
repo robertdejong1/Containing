@@ -1,7 +1,5 @@
 package containing.Platform;
 
-import containing.ParkingSpot.AgvSpot;
-import containing.ParkingSpot.ParkingSpot;
 import containing.Vehicle.StorageCrane;
 import java.util.Arrays;
 
@@ -17,6 +15,7 @@ import java.util.Arrays;
 
 public class StoragePlatform extends Platform {
     
+    private int time;
     private final int NR_STRIPS = 64;       // amount of StorageStrip objects
     private final StorageStrip[] strips;
 
@@ -28,6 +27,11 @@ public class StoragePlatform extends Platform {
             strips[i] = new StorageStrip(i, this);
         // initialize cranes
         Arrays.fill(cranes, new StorageCrane());
+    }
+    
+    @Override
+    public void update() {
+        
     }
 
 }

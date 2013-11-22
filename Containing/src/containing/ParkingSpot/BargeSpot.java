@@ -10,6 +10,6 @@ package containing.ParkingSpot;
  *
  * @author Robert
  */
-public class BargeSpot {
+public class BargeSpot extends ParkingSpot {
     
 }

@@ -3,3 +3,4 @@ private/
 *.properties
 !project.properties
 !project.xml
+!build-impl.xml

@@ -21,6 +21,7 @@ public abstract class Platform {
         cranes = new Crane[nrCranes];
     }
     
+    /*
     public void parkAGV(AGV agv) {
         for(AgvSpot spot : agvSpots) {
             if(spot.isFree()) {
@@ -28,6 +29,7 @@ public abstract class Platform {
             }    
         }
     }
+    */
     
     public ParkingSpot getAgvSpot(int spot) {
         return agvSpots[spot];

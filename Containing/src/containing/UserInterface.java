@@ -13,8 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-
-
 public class UserInterface extends JFrame
 {
     private File CurrentDir = null;   
@@ -26,7 +24,7 @@ public class UserInterface extends JFrame
     {
         super();
         this.setLayout(null);
-        this.getContentPane().setBackground(Color.pink);
+        this.getContentPane().setBackground(Color.white);
         this.setTitle("Containing 2013");
         this.setBounds(25, 25, 500, 500);
         AddButtons();

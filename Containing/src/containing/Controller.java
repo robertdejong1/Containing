@@ -1,11 +1,10 @@
 package containing;
 
 import static containing.Container.TransportType.Seaship;
+import containing.Platform.Platform;
 import containing.Vehicle.Vehicle;
 import java.io.File;
-import java.util.Date;
 import java.util.List;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class Controller 
 {
@@ -92,16 +91,22 @@ public class Controller
         
     }
     
-    public static void AddCommand(String Command)
+    public static void addCommand(String Command)
     {
-        
         
     }
     
-    public static List<String> getNewCommands()
+    public static List<Command> getNewCommands()
     {
         return null;
     }
+    
+    public static void GetNextContainer(Platform platform)
+    {
+        
+    }
+    
+    
     
     
     

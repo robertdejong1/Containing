@@ -5,6 +5,7 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.scene.Node;
 
 /**
  *
@@ -13,9 +14,9 @@ import com.jme3.asset.AssetManager;
 public class AVG extends Model
 {
     
-    public AVG(AssetManager assetManager)
+    public AVG(AssetManager assetManager, Node node)
     {
-        super(assetManager);
+        super(assetManager, "Models/avg.j3o", node);
     }
     
 }

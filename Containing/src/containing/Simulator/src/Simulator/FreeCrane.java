@@ -5,14 +5,15 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.scene.Node;
 
 
 public class FreeCrane extends Model
 {
 
-    public FreeCrane(AssetManager assetManager)
+    public FreeCrane(AssetManager assetManager, Node node)
     {
-        super(assetManager);
+        super(assetManager, "Models/freecrane.j3o", node);
     }
     
 }

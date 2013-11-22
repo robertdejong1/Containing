@@ -35,6 +35,10 @@ public class Container
         this.departureTimeTill = departureTimeTill;
         this.departureTransport = departureTransport;
     }
+
+    public Vector3f getArrivalPosition() {
+        return arrivalPosition;
+    }
     
     public int getContainerId() {
         return containerId;

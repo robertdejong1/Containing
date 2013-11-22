@@ -81,6 +81,6 @@ public class Clock {
 
     private void TimerFunctions() 
     {
-        Controller.Update();
+        Controller.update();
     }
 }

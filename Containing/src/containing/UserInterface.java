@@ -90,7 +90,7 @@ public class UserInterface extends JFrame
                         @Override
                         public void actionPerformed(ActionEvent e) 
                         {
-                            Controller.SetSimulationStatus(true);
+                            Controller.setSimulationStatus(true);
                             StartSimulationButton.setEnabled(false);
                             StopSimulationButton.setEnabled(true);
                         }
@@ -110,7 +110,7 @@ public class UserInterface extends JFrame
                         @Override
                         public void actionPerformed(ActionEvent e) 
                         {
-                            Controller.SetSimulationStatus(false);
+                            Controller.setSimulationStatus(false);
                             
                             StartSimulationButton.setEnabled(true);
                             StopSimulationButton.setEnabled(false);

@@ -6,3 +6,5 @@
 *.ear
 /Containing/nbproject/private/
 /Containing/build/
+/Containing/src/containing/Simulator/nbproject/private/
+/Containing/src/containing/Simulator/build/

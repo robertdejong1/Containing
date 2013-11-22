@@ -6,10 +6,25 @@
 
 package containing.Vehicle;
 
+import containing.Container;
+import java.util.List;
+
 /**
  *
  * @author Robert
  */
-public class ExternVehicle {
+public abstract class ExternVehicle extends Vehicle {
     
+    
+    public ExternVehicle(int capicity, List<Container> cargo){super(capicity, cargo);}
+    
+    public void load(Container container){}
+    
+    public Container unload(){
+        if (cargo.isEmpty()) return null;
+        Container container = cargo.get(0);
+        cargo.remove(container);
+        return container;
+    }
+    //public void leave(ExternVehicle vehicle){}
 }

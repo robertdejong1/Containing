@@ -16,19 +16,12 @@ import com.jme3.scene.Spatial;
 public abstract class Model
 {
     Spatial model;
-    private AssetManager assetManager;
     private Node node;
-    private String path;
     
     public Model(AssetManager assetManager, String path, Node node)
     {
-        this.assetManager = assetManager;
-        this.path = path;
         this.node = node;
-    }
-    
-    private void load()
-    {
+        
         model = assetManager.loadModel(path);
     }
     

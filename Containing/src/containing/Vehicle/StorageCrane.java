@@ -10,6 +10,6 @@ package containing.Vehicle;
  *
  * @author Robert
  */
-public class StorageCrane {
+public class StorageCrane extends RailCrane {
     
 }

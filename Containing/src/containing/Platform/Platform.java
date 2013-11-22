@@ -2,21 +2,26 @@ package containing.Platform;
 
 import containing.ParkingSpot.ParkingSpot;
 import containing.ParkingSpot.AgvSpot;
+import containing.Vehicle.Crane;
+import java.util.Arrays;
 
 public class Platform {
     
-    private int id;
-    private ParkingSpot[] agvSpots;
+    protected final int id;
+    protected final ParkingSpot[] agvSpots;
+    protected final Crane[] cranes;
     
-    public Platform(int id, int nrAvgSpots) {
+    public Platform(int id, int nrAgvSpots, int nrCranes) {
         this.id = id;
-        initAvgSpots(nrAvgSpots);
+        // initialize parking spots for AGV's
+        agvSpots = new ParkingSpot[nrAgvSpots];
+        Arrays.fill(agvSpots, new AgvSpot());
+        // declare cranes
+        cranes = new Crane[nrCranes];
     }
     
-    private void initAvgSpots(int nrAvgSpots) {
-        agvSpots = new ParkingSpot[nrAvgSpots];
-        for(int i = 0; i < nrAvgSpots; i++)
-            agvSpots[i] = new AgvSpot();
+    public ParkingSpot getAgvSpot(int spot) {
+        return agvSpots[spot];
     }
     
     public int getId() {

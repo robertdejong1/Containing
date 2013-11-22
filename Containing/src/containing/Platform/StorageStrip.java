@@ -10,8 +10,16 @@ package containing.Platform;
 
 public class StorageStrip {
     
-    public StorageStrip() {
-        
+    private final int id;
+    private final StoragePlatform controller;
+    
+    public StorageStrip(int id, StoragePlatform controller) {
+        this.id = id;
+        this.controller = controller;
+    }
+    
+    public int getId() {
+        return id;
     }
     
 }

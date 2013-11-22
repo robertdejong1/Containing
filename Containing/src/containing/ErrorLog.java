@@ -15,12 +15,12 @@ import java.io.UnsupportedEncodingException;
  */
 public class ErrorLog {
 
-    static final String logfile = "ErrorLog.txt";
+    static final String LOGFILE = "ErrorLog.txt";
 
     public static void logMsg(String msg, Exception ex) {
         System.out.println("ERROR: " + msg +"(" +ex.getMessage() +")");
         try{
-            PrintWriter writer = new PrintWriter(logfile, "UTF-8");
+            PrintWriter writer = new PrintWriter(LOGFILE, "UTF-8");
             writer.println(msg);
         }
         catch (FileNotFoundException | UnsupportedEncodingException e) {
@@ -31,7 +31,7 @@ public class ErrorLog {
         public static void logMsg(String msg) {
         System.out.println("ERROR: " + msg);
         try{
-            PrintWriter writer = new PrintWriter(logfile, "UTF-8");
+            PrintWriter writer = new PrintWriter(LOGFILE, "UTF-8");
             writer.println(msg);
         }
         catch (FileNotFoundException | UnsupportedEncodingException e) {

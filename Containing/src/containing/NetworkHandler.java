@@ -5,14 +5,15 @@
  */
 package containing;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.nio.channels.WritableByteChannel;
 import java.util.List;
-import org.json.simple.JSONObject;
 
 /**
  *
@@ -21,8 +22,8 @@ import org.json.simple.JSONObject;
 public class NetworkHandler implements Runnable {
 
     private Port port;
-    private ServerSocket serverSocket;
-    private Socket clientSocket;
+    private ServerSocketChannel serverSocket;
+    private SocketChannel clientSocket;
 
     public NetworkHandler(Port port) {
         this.port = port;
@@ -31,51 +32,67 @@ public class NetworkHandler implements Runnable {
     @Override
     public void run() {
         try {
-            serverSocket = new ServerSocket(1337);
-            //Wachten op een connectie
-            clientSocket = serverSocket.accept();
+            serverSocket = ServerSocketChannel.open();
+            serverSocket.bind(new InetSocketAddress(1337));
+            serverSocket.configureBlocking(false);
 
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-            String inputLine, outputLine;
             while (true) {
-                inputLine = in.readLine();
-                if (inputLine == null) {
-                    System.out.println(inputLine);
-                    outputLine = processCommand(inputLine);
-                    System.out.println(outputLine);
-                    out.println(outputLine);
-                    if (outputLine.equals("QUIT")) {
-                        break;
+                clientSocket = serverSocket.accept();
+                //Client verbonden
+                if (clientSocket != null) {
+                    System.out.println("Client connected");
+
+                    ReadableByteChannel rbc = Channels.newChannel(clientSocket.socket().getInputStream());
+                    WritableByteChannel wbc = Channels.newChannel(clientSocket.socket().getOutputStream());
+
+                    String inputLine = getInput(rbc);
+                    if(!inputLine.equals("")){
+                        Command cmd = processCommand(inputLine);
+                        wbc.write(ByteBuffer.wrap(cmd.toString().getBytes()));
                     }
-                }
-                else{
-                    List<String> commands = Controller.getNewCommands();
-                    if(commands.size() > 0){
-                        for(String cmd : commands){
-                            out.println(cmd);
+                    else{
+                        List<Command> commands = Controller.getNewCommands();
+                        if(commands.size() > 0){
+                            for(Command cmd : commands){
+                                wbc.write(ByteBuffer.wrap(cmd.toString().getBytes()));
+                            }
                         }
                     }
                 }
             }
 
         } catch (IOException e) {
-            ErrorLog.logMsg("Error while creating Socket Server", e);
-            return;
+            ErrorLog.logMsg("Error while creating Server Socket", e);
         }
     }
 
-    private String processCommand(String cmd) {
-        JSONObject json = new JSONObject();
+    public String getInput(ReadableByteChannel rbc) {
+        ByteBuffer b = ByteBuffer.allocate(8); // read 8 bytes 
+        String ret = "";
+        try {
+            while (rbc.read(b) != -1) {
+                b.flip();
+                while (b.hasRemaining()) {
+                    ret += b.toString();
+                }
+                b.clear();
+            }
+        }
+        catch(IOException e){
+            ErrorLog.logMsg("Error while reading from Socket", e);
+        }
+        return ret;
+    }
+
+    private Command processCommand(String cmd) {
         String prefix = cmd.split(":", 1)[0];
         switch (prefix) {
             case "PORT":
-                return json.put("PORT", port).toString();
+                return new Command("port", port);
             //Meer cases
 
             default:
-                return "";
+                return null;
         }
     }
 }

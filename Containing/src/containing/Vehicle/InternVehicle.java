@@ -7,7 +7,7 @@
 package containing.Vehicle;
 
 import containing.Container;
-import java.util.List;
+import containing.Vector3f;
 
 /**
  *
@@ -16,10 +16,12 @@ import java.util.List;
 public abstract class InternVehicle extends Vehicle{
     
     protected boolean isAvailable;
+    protected Vector3f startPosition;
     
-    public InternVehicle(int capicity, List<Container> cargo){
-        super(capicity, cargo);
+    public InternVehicle(int capicity, Vector3f startPosition){
+        super(capicity);
         isAvailable = false;
+        this.startPosition = startPosition;
     }
     
     protected void load(Container container){
@@ -35,7 +37,7 @@ public abstract class InternVehicle extends Vehicle{
             this.isLoaded = false;
             return container;
         }
-        return null;
+        else {throw new IndexOutOfBoundsException(String.format("Vehicle has no cargo to unload"));}
     }
     
     

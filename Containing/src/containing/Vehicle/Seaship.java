@@ -6,10 +6,36 @@
 
 package containing.Vehicle;
 
+import containing.Container;
+import containing.Container;
+import java.util.Date;
+
 /**
  *
  * @author Robert
  */
-public class Seaship {
+public class Seaship extends ExternVehicle {
+    private static int counter;
+    private int SeashipId;
+    static int capicity = 10000;
+    int[][][] grid;
     
+    public Seaship(Date arrivalDate, Container container){
+        super(capicity, arrivalDate, container); //true if vehicle comes to load, otherwise false
+        SeashipId = counter;
+        counter++;
+    }
+   
+    public Container unload(){return super.unload();}
+    
+    public void load(Container container){
+            super.load(container);
+    } //=add
+    
+    public void leave(){super.leave();}
+    public void enter(){super.enter();}
+    
+    
+  
+ 
 }

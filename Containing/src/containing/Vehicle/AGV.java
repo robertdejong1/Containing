@@ -8,28 +8,32 @@ package containing.Vehicle;
 
 import containing.Container;
 import containing.Platform.Platform;
+import containing.Road.Route;
+import containing.Vector3f;
 
 /**
  *
- * @author Robert
+ * @author Miriam
  */
 public class AGV extends InternVehicle {
     
     private static int counter;
-    private int AGVid;
+    private int id;
     private Platform currentPlatform;
     private static int capicityAGV = 1;
     private static int maxSpeedLoaded = 20;
     private static int maxSpeedUnloaded = 40;
     
-    public AGV(Platform currentPlatform){
-        super(capicityAGV, null);
-        AGVid = counter;
+    public AGV(Platform currentPlatform, Vector3f startPosition){
+        super(capicityAGV,startPosition );
+        id = counter;
         counter++;
-        this.currentPlatform = currentPlatform; //storageplatform?
+        this.currentPlatform = currentPlatform; //storageplatform @ default?
     }
     
-    public void followRoute(){} //update platform agv currentplatform of?
+    public void followRoute(Route route){ //call method platform when route is finished
+    
+    } 
     
     public Container unload(){return super.unload();}
 

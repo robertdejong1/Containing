@@ -12,7 +12,7 @@ public class MessageLog
     public MessageLog()
     {
         Messages = new ArrayList();
-        Messages.add("Controller Version: " + Settings.Version);
+        Messages.add("Controller Version: " + Settings.version);
     }
     
     public void AddMessage(String Message)
@@ -53,7 +53,7 @@ public class MessageLog
     public void ClearMessages()
     {
         Messages = new ArrayList();
-        Messages.add("Controller Version: " + Settings.Version);
+        Messages.add("Controller Version: " + Settings.version);
         Controller.updateMessageLogWindow();
     }
     

@@ -1,15 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package containing.ParkingSpot;
 
-/**
- *
- * @author Robert
- */
-public class TrainSpot extends ParkingSpot {
-    
+import containing.Road.Route;
+import containing.Vector3f;
+import containing.Vehicle.Vehicle;
+
+public class TrainSpot extends ParkingSpot 
+{
+
+    public TrainSpot(Vector3f position) 
+    {
+        super(position);
+    }
+
+    @Override
+    public void ParkVehicle(Vehicle VehicleToPark) 
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void UnparkVehicle(Route RouteToFollow) 
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    } 
 }

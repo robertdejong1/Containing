@@ -24,12 +24,12 @@ public class StorageStrip {
     public StorageStrip(int id, StoragePlatform controller) {
         this.id = id;
         this.controller = controller;
-        containers = new Container[MAX.x][MAX.z][MAX.y];
+        //containers = new Container[MAX.x][MAX.z][MAX.y];
     }
     
     public void load(Container container) {
         Vector3f pos = getFreePosition();
-        containers[pos.x][pos.z][pos.y] = container;
+        //containers[pos.x][pos.z][pos.y] = container;
     }
     
     public Container unload(Vector3f pos) {
@@ -44,11 +44,12 @@ public class StorageStrip {
     }
     
     public Container getContainer(Vector3f pos) {
-        return containers[pos.x][pos.z][pos.y];
+        //return containers[pos.x][pos.z][pos.y];
+        return null;
     }
     
     public void resetPosition(Vector3f pos) {
-        containers[pos.x][pos.z][pos.y] = null;
+        //containers[pos.x][pos.z][pos.y] = null;
     }
     
     public int getId() {

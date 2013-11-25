@@ -11,11 +11,11 @@ package containing;
  * @author Robert
  */
 public class Vector3f {
-    public int x;
-    public int y;
-    public int z;
+    public float x;
+    public float y;
+    public float z;
 
-    public Vector3f(int x, int y, int z) {
+    public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;

@@ -1,12 +1,13 @@
 package containing.Platform;
 
+import containing.Vector3f;
 import containing.Vehicle.TruckCrane;
 import java.util.Arrays;
 
 public class TruckPlatform extends Platform {
 
-    public TruckPlatform(int id, int nrAgvSpots, int nrCranes) {
-        super(id, nrAgvSpots, nrCranes);
+    public TruckPlatform(Vector3f position) {
+        super(position);
         Arrays.fill(cranes, new TruckCrane()); //initialize cranes
     }
     

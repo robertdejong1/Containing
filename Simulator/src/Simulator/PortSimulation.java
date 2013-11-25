@@ -24,7 +24,7 @@ public class PortSimulation extends SimpleApplication {
     //private AVG avg = new AVG(assetManager, rootNode);
     //private Barge barge = new Barge(assetManager, rootNode);
     //private Container container = new Container(assetManager, rootNode);
-    FreeCrane freeCrane;
+    FreeCrane[] freeCranes = new FreeCrane[4];
     Port port;
     //private Freighter freighter = new Freighter(assetManager, rootNode);
     //RailCrane railCrane = new RailCrane(assetManager, rootNode);
@@ -44,18 +44,21 @@ public class PortSimulation extends SimpleApplication {
         cam.setLocation(new Vector3f(0f,20f,200f));
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
 
-        freeCrane = new FreeCrane(assetManager, rootNode);
+        
+        for (int i = 0; i < 4; i++)
+        {
+            freeCranes[i] = new FreeCrane(assetManager, rootNode);
+            freeCranes[i].scale(0.5f);
+            freeCranes[i].rotate(0, 180*FastMath.DEG_TO_RAD, 0);
+        }
         port = new Port(assetManager, rootNode);
+        //port.scale(10f);
+        //port.place();
         
-        port.scale(10f);
-        port.place();
-        
-        freeCrane.scale(0.5f);
-        freeCrane.rotate(0, 180*FastMath.DEG_TO_RAD, 0);
-        freeCrane.place(0,5f,80);
-        freeCrane.place(10,5f,80);
-        freeCrane.place(-40,5f,80);
-        freeCrane.place(-30,5f,80);
+        freeCranes[0].place(0,5f,81);
+        freeCranes[1].place(10,5f,81);
+        freeCranes[2].place(-40,5f,81);
+        freeCranes[3].place(-30,5f,81);
         
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir=new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
@@ -97,12 +100,8 @@ public class PortSimulation extends SimpleApplication {
     }
 
     @Override
-    public void simpleUpdate(float tpf) {
-        //TODO: add update code
-    }
-
-    @Override
-    public void simpleRender(RenderManager rm) {
-        //TODO: add render code
+    public void simpleUpdate(float tpf) 
+    {
+        freeCranes[0].move(0, 0, 2);
     }
 }

@@ -1,15 +1,47 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package containing;
 
-/**
- *
- * @author Robert
- */
-public class Port {
-    
+import containing.Platform.BargePlatform;
+import containing.Platform.Platform;
+import containing.Platform.SeashipPlatform;
+import containing.Platform.StoragePlatform;
+import containing.Platform.TrainPlatform;
+import containing.Platform.TruckPlatform;
+import containing.Vehicle.AGV;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Port 
+{
+    private int ID = 0;
+    private List<Platform> Platforms;
+    private List<AGV> aGVs;
+
+    public Port() 
+    {
+        this.Platforms = new ArrayList<>();
+        Settings.messageLog.AddMessage("Created Harbor Object with id: " + ID);
+        //Platforms.add(new BargePlatform(new Vector3f(0, 0, 0)));
+        //Platforms.add(new SeashipPlatform(new Vector3f(0, 0, 0)));
+        //Platforms.add(new TrainPlatform(new Vector3f(0, 0, 0)));
+        //Platforms.add(new TruckPlatform(new Vector3f(0, 0, 0)));
+        
+        //StoragePlatform storagePlatform = new StoragePlatform(0,0,0);
+        //aGVs.addAll(storagePlatform.createagvs);
+        //Platforms.add(storagePlatform);
+        
+        
+    }
+
+    public void update() 
+    {
+        for (Platform P : Platforms) 
+        {
+            P.update();
+        }
+    }
+
+    public int getID() 
+    {
+        return ID;
+    }
 }

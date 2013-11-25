@@ -2,14 +2,20 @@ package containing;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
+import java.util.Calendar;
 import javax.swing.Timer;
 
-public class Clock {
-
+public class Clock 
+{
+    private int delay;
     private Timer timer;
+    private Timestamp currentDateAndTime;
 
     public Clock() 
     {
+        this.currentDateAndTime = new Timestamp(System.currentTimeMillis());
+        
         timer = new Timer(100, new ActionListener() 
         {
             @Override
@@ -24,6 +30,8 @@ public class Clock {
 
     public boolean StartClock(int delay) 
     {
+        this.delay = delay;
+        
         try 
         {
             if (!timer.isRunning()) 
@@ -46,6 +54,8 @@ public class Clock {
 
     public boolean SetDelay(int delay) 
     {
+        this.delay = delay;
+        
         try 
         {
             timer.setDelay(delay);
@@ -79,8 +89,22 @@ public class Clock {
         }
     }
 
+    public Timestamp getCurrentDateAndTime() 
+    {
+        return currentDateAndTime;
+    }
+
     private void TimerFunctions() 
     {
+        System.out.println(currentDateAndTime + " test");
+        
+        //SetTimeStamp
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(currentDateAndTime.getTime());
+        cal.add(Calendar.MILLISECOND, delay);
+        currentDateAndTime = new Timestamp(cal.getTime().getTime());
+        
+        //UpdateController
         Controller.update();
     }
 }

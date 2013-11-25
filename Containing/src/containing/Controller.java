@@ -25,8 +25,7 @@ public class Controller
        Thread networkHandlerThread = new Thread(networkHandler);
        networkHandlerThread.start();
     }
-    
-    //Errors in deze functie ivm niet geimplementeerde functies! voor nu zijn ze weggecomment
+   
     public static void ReadXMLAndSortOutput(File XMLFile)
     {
         //Create new Port
@@ -39,37 +38,13 @@ public class Controller
     private static void buildPort()
     {
         Settings.port = new Port();
-        Settings.messageLog.AddMessage("Created Harbor Object: " + Settings.port.toString());
-    }
-    
-    private static Vehicle createNewVehicle(Container.TransportType TypeofVehicle)
-    {
-        Vehicle VehicleToReturn = null;
-        
-        switch (TypeofVehicle)
-        {
-            case Truck:
-                //VehicleToReturn = new Truck();
-                break;
-            case Train:
-                //VehicleToReturn = new Train();
-                break;    
-            case Barge:
-                //VehicleToReturn = new Barge();
-                break;
-            case Seaship:
-                //VehicleToReturn = new Seaship();
-                break;
-        }
-        
-        return VehicleToReturn;
     }
     
     public static void setSimulationStatus(boolean Status)
     {
         if (Status)
         {
-            clock.StartClock(1000);
+            clock.StartClock(Settings.ClockDelay);
         }
         else
         {
@@ -85,7 +60,7 @@ public class Controller
     
     public static void update()
     {
-        System.out.println("test ;]");
+        Settings.port.update();
     }
     
     public static void addCommand(Command command)

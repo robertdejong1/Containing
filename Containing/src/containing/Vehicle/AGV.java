@@ -35,9 +35,5 @@ public class AGV extends InternVehicle {
     
     } 
     
-    public Container unload(){return super.unload();}
 
-    public void load(Container container){
-        super.load(container);
-    }
 }

@@ -21,7 +21,8 @@ public class ErrorLog {
         System.out.println("ERROR: " + msg +"(" +ex.getMessage() +")");
         try{
             PrintWriter writer = new PrintWriter(LOGFILE, "UTF-8");
-            writer.println(msg);
+            writer.append(msg +"(" +ex.getMessage() +")");
+            writer.close();
         }
         catch (FileNotFoundException | UnsupportedEncodingException e) {
             System.out.println("Error while opening logfile(" + e.getMessage() +")");

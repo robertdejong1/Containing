@@ -17,8 +17,8 @@ public class Train extends ExternVehicle{
     static int capicity = 10000;
     protected int timeCounter = 0;
     
-    public Train(Date arrivalDate, Container container){ 
-        super(capicity, arrivalDate, container); //true if vehicle comes to load, otherwise false
+    public Train(Date arrivalDate, float arrivalTime, Container container){ 
+        super(capicity, arrivalDate, arrivalTime, container); //true if vehicle comes to load, otherwise false
     }
     
     public Container unload(){return super.unload();}

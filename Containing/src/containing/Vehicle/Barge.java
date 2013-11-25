@@ -17,8 +17,8 @@ public class Barge extends ExternVehicle {
     static int capicity = 1;
     protected int timeCounter = 0;
     
-    public Barge(Date arrivalDate, Container container){ 
-        super(capicity, arrivalDate, container); //true if vehicle comes to load, otherwise false
+    public Barge(Date arrivalDate, float arrivalTime, Container container){ 
+        super(capicity, arrivalDate, arrivalTime, container); //true if vehicle comes to load, otherwise false
     }
     
     public Container unload(){return super.unload();}

@@ -22,7 +22,7 @@ public class TrainPlatform extends Platform {
         // initialize platform
         super(position);
         
-        // set dimensions and positions of platform
+        // set dimensions and entrance/exit waypoints of platform
         Dimension2f newDimension = new Dimension2f(WIDTH, LENGTH);
         Vector3f newEntrypoint = new Vector3f(0,0,0);
         Vector3f newExitpoint = new Vector3f(0,0,0);
@@ -45,7 +45,7 @@ public class TrainPlatform extends Platform {
             cranes[i] = new TrainCrane(cranePosition);
         }
         
-        Settings.messageLog.AddMessage("Created TrainPlatform");
+        Settings.messageLog.AddMessage("Created TrainPlatform: " + toString());
     }
     
     @Override

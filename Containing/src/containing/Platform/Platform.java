@@ -21,7 +21,7 @@ public abstract class Platform {
     
     // non-access properties
     private final int id;                   // unique ID for identifying platform
-    private final Vector3f position;              // the position of this platform (for simulation)
+    private final Vector3f position;        // the position of this platform (for simulation)
     private Dimension2f dimension;          // dimension of platform (width x length)
     private Vector3f entrypoint;            // waypoint of entrance
     private Vector3f exitpoint;             // waypoint of exit
@@ -33,14 +33,16 @@ public abstract class Platform {
     protected ParkingSpot[] vehicleSpots;   // spot of external vehicle
     
     /**
-     * Create a platform with parking spots for AGV's and a waitlist.
-     * Don't call this constructor in extended classes.
+     * Give platform unique ID and position
      * @param position The position of the platform in the port
      */
     public Platform(Vector3f position) {
         this.id = ++idCounter;
         this.position = position;
-        
+        agvQueue = new ArrayList<>();
+    }
+    
+    private void initAgvSpots() {
         // initialize parking spots for AGV's
         Vector3f agvSpotBasePosition = new Vector3f(0,0,0);
         int nrAgvSpots = (int)(dimension.width / ParkingSpot.width);
@@ -52,8 +54,6 @@ public abstract class Platform {
             Vector3f newAgvSpotPosition = new Vector3f(newX, 0, newZ);
             agvSpots[i] = new AgvSpot(newAgvSpotPosition);
         }
-        
-        agvQueue = new ArrayList<>();
     }
     
     /**
@@ -66,6 +66,7 @@ public abstract class Platform {
         this.dimension = dimension;
         this.entrypoint = entrypoint;
         this.exitpoint = exitpoint;
+        initAgvSpots();
     }
     
     /**
@@ -93,13 +94,20 @@ public abstract class Platform {
         return 0;
     }
     
-    /**
-     * Get a specific parking spot of AGV's
-     * @param spot the number in array of parking spots
-     * @return the requested parkingspot
-     */
     public ParkingSpot getAgvSpot(int spot) {
         return agvSpots[spot];
+    }
+    
+    public ParkingSpot[] getAllAgvSpots() {
+        return agvSpots;
+    }
+    
+    public ParkingSpot getVehicleSpot(int spot) {
+        return vehicleSpots[spot];
+    }
+    
+    public ParkingSpot[] getAllVehicleSpots() {
+        return vehicleSpots;
     }
     
     public int getId() {
@@ -120,6 +128,11 @@ public abstract class Platform {
     
     public Vector3f exitPoint() {
         return exitpoint;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("[%d, width=%f, length=%f]", id, dimension.width, dimension.length);
     }
     
     /**

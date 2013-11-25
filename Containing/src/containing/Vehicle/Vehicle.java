@@ -6,7 +6,7 @@ import java.util.List;
 
 public abstract class Vehicle 
 {     
-    protected boolean isLoaded;
+    protected boolean isLoaded = false;
     protected int capicity;
     protected List<Container> cargo;
     protected static int maxSpeedLoaded;

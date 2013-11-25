@@ -92,7 +92,7 @@ public class XmlHandler {
                 String x = getNestedValue(node, Arrays.asList("aankomst", "positie", "x")).getNodeValue();
                 String y = getNestedValue(node, Arrays.asList("aankomst", "positie", "y")).getNodeValue();
                 String z = getNestedValue(node, Arrays.asList("aankomst", "positie", "z")).getNodeValue();
-                Vector3f arrivalPosition = new Vector3f(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(z));
+                Vector3f arrivalPosition = new Vector3f(Float.parseFloat(x), Float.parseFloat(y), Float.parseFloat(z));
                 
                 String owner = getNestedValue(node, Arrays.asList("eigenaar", "naam")).getNodeValue();
                 

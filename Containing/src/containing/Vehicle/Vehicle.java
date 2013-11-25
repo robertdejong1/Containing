@@ -1,21 +1,22 @@
 package containing.Vehicle;
 
 import containing.Container;
-import containing.Platform.Platform;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Vehicle 
 {     
-    protected boolean isLoaded;
+    protected boolean isLoaded = false;
     protected int capicity;
     protected List<Container> cargo;
     protected static int maxSpeedLoaded;
     protected static int maxSpeedUnloaded;
     
     public Vehicle(int capicity){
+        this.cargo = new ArrayList<Container>();   
         this.isLoaded = cargo.isEmpty() ? false : true;
         this.capicity = capicity;
-        this.cargo = null;       
+            
     }
     
     public void load(Container container){

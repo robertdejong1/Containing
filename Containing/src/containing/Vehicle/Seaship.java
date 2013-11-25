@@ -20,8 +20,8 @@ public class Seaship extends ExternVehicle {
     static int capicity = 10000;
     int[][][] grid;
     
-    public Seaship(Date arrivalDate, Container container){
-        super(capicity, arrivalDate, container); //true if vehicle comes to load, otherwise false
+    public Seaship(Date arrivalDate, float arrivalTime, Container container){
+        super(capicity, arrivalDate, arrivalTime, container); //true if vehicle comes to load, otherwise false
         SeashipId = counter;
         counter++;
     }

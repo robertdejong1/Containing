@@ -52,6 +52,16 @@ public abstract class Model
         move(new Vector3f(x,y,z));
     }
     
+    public void scale(float factor)
+    {
+        model.scale(factor);
+    }
+    
+    public void rotate(float xAngle, float yAngle, float zAngle)
+    {
+        model.rotate(xAngle, yAngle, zAngle);
+    }
+    
     public void update()
     {
         

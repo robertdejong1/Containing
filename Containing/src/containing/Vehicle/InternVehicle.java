@@ -24,12 +24,12 @@ public abstract class InternVehicle extends Vehicle{
         this.startPosition = startPosition;
     }
     
-    protected void load(Container container){
+    public void load(Container container){
         super.load(container);
         if (isAvailable) isAvailable = false;
     }
     
-    protected Container unload(){ //exception if cargo == 0
+    public Container unload(){ //exception if cargo == 0
         if (!cargo.isEmpty()){
             Container container = cargo.get(0);
             this.isAvailable = true;

@@ -17,12 +17,15 @@ import java.util.Date;
 public abstract class ExternVehicle extends Vehicle {
     
     private Date arrivalDate;
+    private float arrivalTime;
     protected enum Status{LEAVING, ENTER, WAITING};
     protected Status status;
     Container[][][] grid;
-    public ExternVehicle(int capicity, Date arrivalDate, Container container){
+    
+    public ExternVehicle(int capicity, Date arrivalDate, float arrivalTime, Container container){
         super(capicity);
         this.arrivalDate = arrivalDate;
+        this.arrivalTime = arrivalTime;
         status = Status.WAITING;
         this.load(container);
     }
@@ -46,6 +49,7 @@ public abstract class ExternVehicle extends Vehicle {
     }
     
     public Date getArrivalDate(){return arrivalDate;}
+    public Float getArrivalTime(){return arrivalTime;}
     public void leave(){this.status = Status.LEAVING;}
     public void enter(){this.status = Status.ENTER;}
     

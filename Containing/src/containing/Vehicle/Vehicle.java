@@ -18,7 +18,7 @@ public abstract class Vehicle
         this.cargo = null;       
     }
     
-    protected void load(Container container){
+    public void load(Container container){
         if (cargo.isEmpty()) isLoaded = true;
         if (cargo.size() < capicity) cargo.add(container);
         else {throw new IndexOutOfBoundsException(String.format("Vehicle has reached capicity, container: {0} can't be loaded to vehicle.", container.getContainerId()));}

@@ -15,7 +15,7 @@ public abstract class Vehicle
     public Vehicle(int capicity){
         this.isLoaded = cargo.isEmpty() ? false : true;
         this.capicity = capicity;
-        this.cargo = null;       
+        this.cargo = new ArrayList<Container>();       
     }
     
     public void load(Container container){

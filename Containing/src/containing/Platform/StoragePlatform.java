@@ -21,7 +21,11 @@ public class StoragePlatform extends Platform {
     private final int NR_AGVS = 100;        // number of AGV's in the port
     private final int NR_STRIPS = 64;       // amount of StorageStrip objects
     private final StorageStrip[] strips;
-
+    
+    /**
+     * Create Storage platform
+     * @param position the position in the port
+     */
     public StoragePlatform(Vector3f position) {
         super(position);
         // initialize strips
@@ -39,6 +43,7 @@ public class StoragePlatform extends Platform {
      */
     public AGV[] createAllAgvs() {
         AGV[] agvs = new AGV[NR_AGVS];
+        //TODO: Create AGV's on the strips
         return agvs;
     }
     

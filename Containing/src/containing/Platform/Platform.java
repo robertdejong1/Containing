@@ -17,19 +17,20 @@ import java.util.List;
 
 public abstract class Platform {
     
-    private static int idCounter = 0;   // used for automatic ID generation
+    private static int idCounter = 0;       // used for automatic ID generation
     
     // non-access properties
-    private final int id;               // unique ID for identifying platform
-    private Vector3f position;          // the position of this platform (for simulation)
-    private Dimension2f dimension;      // dimension of platform (width x length)
-    private Vector3f entrypoint;        // waypoint of entrance
-    private Vector3f exitpoint;         // waypoint of exit
+    private final int id;                   // unique ID for identifying platform
+    private final Vector3f position;              // the position of this platform (for simulation)
+    private Dimension2f dimension;          // dimension of platform (width x length)
+    private Vector3f entrypoint;            // waypoint of entrance
+    private Vector3f exitpoint;             // waypoint of exit
     
     // accessable properties (in extended classes)
-    protected ParkingSpot[] agvSpots;   // all parking spots for AGV's
-    protected Crane[] cranes;           // the cranes  
-    protected List<AGV> agvQueue;       // waitlist for AGV's (stack)  
+    protected ParkingSpot[] agvSpots;       // all parking spots for AGV's
+    protected List<AGV> agvQueue;           // waitlist for AGV's (stack)
+    protected Crane[] cranes;               // the cranes on the platform
+    protected ParkingSpot[] vehicleSpots;   // spot of external vehicle
     
     /**
      * Create a platform with parking spots for AGV's and a waitlist.

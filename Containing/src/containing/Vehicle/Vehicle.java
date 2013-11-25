@@ -13,9 +13,10 @@ public abstract class Vehicle
     protected static int maxSpeedUnloaded;
     
     public Vehicle(int capicity){
+        this.cargo = new ArrayList<Container>();   
         this.isLoaded = cargo.isEmpty() ? false : true;
         this.capicity = capicity;
-        this.cargo = new ArrayList<Container>();       
+            
     }
     
     public void load(Container container){

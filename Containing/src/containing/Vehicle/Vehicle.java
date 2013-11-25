@@ -1,7 +1,7 @@
 package containing.Vehicle;
 
 import containing.Container;
-import containing.Platform.Platform;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Vehicle 

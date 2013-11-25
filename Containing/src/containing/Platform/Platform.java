@@ -32,6 +32,9 @@ public abstract class Platform {
     protected Crane[] cranes;               // the cranes on the platform
     protected ParkingSpot[] vehicleSpots;   // spot of external vehicle
     
+    // timing
+    protected int timing = 0;
+    
     /**
      * Give platform unique ID and position
      * @param position The position of the platform in the port

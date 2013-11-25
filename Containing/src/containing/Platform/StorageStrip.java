@@ -17,14 +17,15 @@ import java.util.List;
 public class StorageStrip {
     
     private final int id;
+    private final Vector3f position;
     private final StoragePlatform controller;
-    private final Vector3f MAX = new Vector3f(6, 40, 6);
+    private final Vector3f MAX_SPACE = new Vector3f(6, 40, 6);
     private Container[][][] containers;
     
-    public StorageStrip(int id, StoragePlatform controller) {
+    public StorageStrip(int id, Vector3f position, StoragePlatform controller) {
         this.id = id;
+        this.position = position;
         this.controller = controller;
-        //containers = new Container[MAX.x][MAX.z][MAX.y];
     }
     
     public void load(Container container) {

@@ -6,21 +6,23 @@ import containing.Vehicle.StorageCrane;
 import java.util.Arrays;
 
 /**
- * Dit de controller voor individuele StorageStrips.
- * De controller stuurt bijvoorbeeld een AVG naar StoragePlatform.
- * Nu mag dit platform het gaan afhandelen.
- * Het platform geeft aan waar de AVG's naar toe moeten.
- * Er zijn 64 stroken met elk 12 parkeerplaatsen.
- * @see Technisch Document
+ * StoragePlatform
+ * 
+ * Crane movement:
+ * X-axis: dynamic
+ * Z-axis: static
+ * 
  * @author Minardus
  */
 
 public class StoragePlatform extends Platform {
-    
-    private int time;
+   
     private final int NR_AGVS = 100;        // number of AGV's in the port
-    private final int NR_STRIPS = 64;       // amount of StorageStrip objects
-    private final StorageStrip[] strips;
+    private final int NR_STRIPS = 64;       // amount of StorageStrip objects, also amount of cranes
+    private final float WIDTH = 600;        // the width of this platform
+    private final float LENGTH = 1550;      // the lenght of this platform
+    private final StorageStrip[] strips;    // ? still needed?
+    private float stripZ;                   // CRANE_Z_POSITION
     
     /**
      * Create Storage platform
@@ -28,12 +30,18 @@ public class StoragePlatform extends Platform {
      */
     public StoragePlatform(Vector3f position) {
         super(position);
+        this.stripZ = LENGTH / 64;
         // initialize strips
         strips = new StorageStrip[NR_STRIPS];
-        for(int i = 0; i < NR_STRIPS; i++)
-            strips[i] = new StorageStrip(i, this);
+        for(int i = 0; i < NR_STRIPS; i++) {
+            Vector3f newPosition = new Vector3f(0,0,stripZ*i);
+            strips[i] = new StorageStrip(i, newPosition, this);
+        }
         // initialize cranes
-        Arrays.fill(cranes, new StorageCrane());
+        for(int i = 0; i < NR_STRIPS; i++) {
+            Vector3f newPosition = new Vector3f(0,0, stripZ*i);
+            cranes[i] = new StorageCrane(newPosition);
+        }
     }
     
     /**

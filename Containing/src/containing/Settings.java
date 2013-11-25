@@ -11,5 +11,4 @@ public class Settings
     public static List<Vehicle> scheduledDepartingVehicles;
     public static MessageLog messageLog;
     
-    
 }

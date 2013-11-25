@@ -27,16 +27,18 @@ public abstract class ExternVehicle extends Vehicle {
         this.arrivalDate = arrivalDate;
         this.arrivalTime = arrivalTime;
         status = Status.WAITING;
-        
+        grid = new Container[1000][1000][1000];
     }
     ///[0,0,0] add grid container position
     public void load(Container container){
         //check out of capicity, check dubbel
         if (this.cargo.isEmpty()){this.isLoaded = true;} 
         Vector3f coordinates = container.getArrivalPosition();
+        if (grid!=null){
         if (grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]!=null){}//dubbel
         if(grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]==null){
         grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z] = container;
+        }
         super.load(container);
         }
     }

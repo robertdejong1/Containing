@@ -27,7 +27,7 @@ public abstract class ExternVehicle extends Vehicle {
         this.arrivalDate = arrivalDate;
         this.arrivalTime = arrivalTime;
         status = Status.WAITING;
-        grid = new Container[1000][1000][1000];
+        grid = new Container[100][100][100];
     }
     ///[0,0,0] add grid container position
     public void load(Container container){

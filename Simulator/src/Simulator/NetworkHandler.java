@@ -23,12 +23,6 @@ public class NetworkHandler implements Runnable {
     private int port;
     private Socket client;
 
-    public static void main(String[] args) {
-        Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        Thread networkHandlerThread = new Thread(networkHandler);
-        networkHandlerThread.start();
-    }
-
     public NetworkHandler(String ip, int port) {
         this.ip = ip;
         this.port = port;
@@ -61,7 +55,7 @@ public class NetworkHandler implements Runnable {
         catch(IOException e){
             ErrorLog.logMsg("Error while connecting to Controller Server", e);
             System.out.println("Connection lost. Trying to reconnect...");
-            run();           
+            run();
         }
     }
 }

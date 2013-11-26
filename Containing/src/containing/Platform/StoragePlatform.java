@@ -1,10 +1,10 @@
 package containing.Platform;
 
 import containing.Container.TransportType;
+import containing.Dimension2f;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.StorageCrane;
-import java.util.Arrays;
 
 /**
  * StoragePlatform
@@ -20,8 +20,8 @@ public class StoragePlatform extends Platform {
    
     private final int NR_AGVS = 100;        // number of AGV's in the port
     private final int NR_STRIPS = 64;       // amount of StorageStrip objects, also amount of cranes
-    private final float WIDTH = 600;        // the width of this platform
-    private final float LENGTH = 1550;      // the lenght of this platform
+    private final float X_SIZE = 600;        // the width of this platform
+    private final float Z_SIZE = 1550;      // the lenght of this platform
     private final StorageStrip[] strips;    // ? still needed?
     private final float stripZ;                   // CRANE_Z_POSITION
     
@@ -33,7 +33,13 @@ public class StoragePlatform extends Platform {
         super(position);
         
         // width of 1 strip
-        this.stripZ = LENGTH / 64;
+        this.stripZ = Z_SIZE / 64;
+        
+        // set dimensions and entrance/exit waypoints of platform
+        Dimension2f newDimension = new Dimension2f(X_SIZE, Z_SIZE);
+        Vector3f newEntrypoint = new Vector3f(0,0,0);
+        Vector3f newExitpoint = new Vector3f(0,0,0);
+        setDimensionAndWayPoints(newDimension, newEntrypoint, newExitpoint);
         
         // initialize strips
         strips = new StorageStrip[NR_STRIPS];
@@ -51,9 +57,8 @@ public class StoragePlatform extends Platform {
      * Port.java calls this function and gets all AGV's
      * @return 
      */
-    public AGV[] createAllAgvs() {
+    public AGV[] getAllCreatedAgvs() {
         AGV[] agvs = new AGV[NR_AGVS];
-        //TODO: Create AGV's on the strips
         for(int i = 0; i < NR_AGVS; i++) {
             //agvs[i] = new AGV(this, agvSpots[i].getPosition());
             agvSpots[i].ParkVehicle(agvs[i]);

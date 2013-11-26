@@ -27,7 +27,7 @@ public abstract class Model
     
     private void place(Vector3f loc)
     {
-        Spatial model_cur = model.clone();
+        Spatial model_cur = model;
         model_cur.setLocalTranslation(loc);
         node.attachChild(model_cur);
     }
@@ -49,7 +49,8 @@ public abstract class Model
     
     public void move(float x, float y, float z)
     {
-        move(new Vector3f(x,y,z));
+        model.move(x,y,z);
+        //move(new Vector3f(x,y,z));
     }
     
     public void scale(float factor)

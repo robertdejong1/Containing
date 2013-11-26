@@ -17,22 +17,31 @@ public class Port
 {
     Node port_node = new Node();
     Spatial port;
-    Spatial rail;
+    Spatial cranerail;
+    Spatial trainrail;
     
     public Port(AssetManager assetManager, Node node)
     {
         port = assetManager.loadModel("Models/port.j3o");
-        rail = assetManager.loadModel("Models/rail.j3o");
+        cranerail = assetManager.loadModel("Models/rail.j3o");
+        trainrail = assetManager.loadModel("Models/trainrails.j3o");
         
         port.scale(10);
         port_node.attachChild(port);
         
-        rail.setLocalTranslation(0, 5, 81);
-        rail.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-        rail.scale(1, 1, 10);
-        port_node.attachChild(rail.clone());
-        rail.setLocalTranslation(0, 5, 78.95f);
-        port_node.attachChild(rail);
+        cranerail.setLocalTranslation(-1, 5, 81);
+        cranerail.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+        cranerail.scale(1, 1, 10);
+        port_node.attachChild(cranerail.clone());
+        cranerail.setLocalTranslation(-1, 5, 78.95f);
+        port_node.attachChild(cranerail);
+        
+        trainrail.scale(10);
+        for (int i = 0; i < 14; i++)
+        {
+        trainrail.setLocalTranslation(-42, 5.1f, -77.25f+(10.4f*i));
+        port_node.attachChild(trainrail.clone());
+        }
         
         node.attachChild(port_node);
     }

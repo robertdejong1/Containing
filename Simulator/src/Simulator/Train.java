@@ -13,7 +13,7 @@ public class Train extends Model
 
     public Train(AssetManager assetManager, Node node)
     {
-        super(assetManager, "Models/train.j3o", node);
+        super(assetManager, "Models/trainwagon.j3o", node);
     }
     
 }

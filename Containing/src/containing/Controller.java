@@ -21,7 +21,7 @@ public class Controller
        Settings.messageLog = new MessageLog();
        updateMessageLogWindow();
        
-       Runnable networkHandler = new NetworkHandler(Settings.port);
+       Runnable networkHandler = new NetworkHandler(1337);
        Thread networkHandlerThread = new Thread(networkHandler);
        networkHandlerThread.start();
     }

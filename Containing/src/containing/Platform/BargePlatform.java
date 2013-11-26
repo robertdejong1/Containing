@@ -1,5 +1,6 @@
 package containing.Platform;
 
+import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.ParkingSpot.BargeSpot;
 import containing.Settings;
@@ -37,7 +38,17 @@ public class BargePlatform extends Platform {
         Vector3f newExitpoint = new Vector3f(0,0,0);
         setDimensionAndWayPoints(newDimension, newEntrypoint, newExitpoint);
         
-        // initialize parkingspots for barges
+        // initialize vehicle spots
+        initVehicleSpots();
+        
+        // initialize cranes
+        initCranes();
+        
+        Settings.messageLog.AddMessage("Created BargePlatform object: " + toString());
+    }
+    
+    @Override
+    protected final void initVehicleSpots() {
         vehicleSpots = new BargeSpot[NR_EXT_VEHICLES];
         float spotSize = Z_SIZE / (float)NR_EXT_VEHICLES;
         for(int i = 0; i < vehicleSpots.length; i++) {
@@ -45,16 +56,21 @@ public class BargePlatform extends Platform {
             Vector3f vehicleSpotPosition = new Vector3f(X_SIZE + BargeSpot.width, 0, spotPosition);
             vehicleSpots[i] = new BargeSpot(vehicleSpotPosition);
         }
-        
-        // initialize cranes
+    }
+    
+    @Override
+    protected final void initCranes() {
         cranes = new BargeCrane[NR_CRANES];
         float margin = Z_SIZE / NR_CRANES;
         for(int i = 0; i < cranes.length; i++) {
             Vector3f cranePosition = new Vector3f(CRANE_X_POSITION, 0, margin*i);
             cranes[i] = new BargeCrane(cranePosition);
         }
-        
-        Settings.messageLog.AddMessage("Created BargePlatform object: " + toString());
+    }
+    
+    @Override
+    public TransportType getTransportType() {
+        return TransportType.Barge;
     }
     
     @Override

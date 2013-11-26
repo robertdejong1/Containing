@@ -1,6 +1,7 @@
 package containing.Platform;
 
 import containing.Container;
+import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.ParkingSpot.ParkingSpot;
 import containing.ParkingSpot.AgvSpot;
@@ -89,11 +90,11 @@ public abstract class Platform {
         agvSpots[getFreeParkingSpot()].ParkVehicle(agv);
     }
     
-    /**
-     * Get a parking spot that isn't assigned to an AGV yet.
-     * @return int position in avgSpots array
-     */
     public int getFreeParkingSpot() {
+        for(int i = 0; i < agvSpots.length; i++) {
+            if(agvSpots[i].isEmpty())
+                return i;
+        }
         return 0;
     }
     
@@ -138,9 +139,10 @@ public abstract class Platform {
         return String.format("[%d, width=%f, length=%f]", id, dimension.width, dimension.length);
     }
     
-    /**
-     * Gets called by controller on timed moments
-     */
+    protected abstract void initVehicleSpots();
+    protected abstract void initCranes();
+    public abstract TransportType getTransportType();
+    
     public abstract void update();
     
 }

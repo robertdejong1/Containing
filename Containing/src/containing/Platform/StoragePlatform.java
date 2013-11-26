@@ -1,5 +1,6 @@
 package containing.Platform;
 
+import containing.Container.TransportType;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.StorageCrane;
@@ -22,7 +23,7 @@ public class StoragePlatform extends Platform {
     private final float WIDTH = 600;        // the width of this platform
     private final float LENGTH = 1550;      // the lenght of this platform
     private final StorageStrip[] strips;    // ? still needed?
-    private float stripZ;                   // CRANE_Z_POSITION
+    private final float stripZ;                   // CRANE_Z_POSITION
     
     /**
      * Create Storage platform
@@ -30,18 +31,19 @@ public class StoragePlatform extends Platform {
      */
     public StoragePlatform(Vector3f position) {
         super(position);
+        
+        // width of 1 strip
         this.stripZ = LENGTH / 64;
+        
         // initialize strips
         strips = new StorageStrip[NR_STRIPS];
         for(int i = 0; i < NR_STRIPS; i++) {
             Vector3f newPosition = new Vector3f(0,0,stripZ*i);
             strips[i] = new StorageStrip(i, newPosition, this);
         }
+        
         // initialize cranes
-        for(int i = 0; i < NR_STRIPS; i++) {
-            Vector3f newPosition = new Vector3f(0,0, stripZ*i);
-            cranes[i] = new StorageCrane(newPosition);
-        }
+        initCranes();
     }
     
     /**
@@ -52,7 +54,30 @@ public class StoragePlatform extends Platform {
     public AGV[] createAllAgvs() {
         AGV[] agvs = new AGV[NR_AGVS];
         //TODO: Create AGV's on the strips
+        for(int i = 0; i < NR_AGVS; i++) {
+            //agvs[i] = new AGV(this, agvSpots[i].getPosition());
+            agvSpots[i].ParkVehicle(agvs[i]);
+        }
         return agvs;
+    }
+    
+    /**
+     * Not needed on this platform
+     */
+    @Override
+    protected void initVehicleSpots() { }
+    
+    @Override
+    protected final void initCranes() {
+        for(int i = 0; i < NR_STRIPS; i++) {
+            Vector3f newPosition = new Vector3f(0,0, stripZ*i);
+            cranes[i] = new StorageCrane(newPosition);
+        }
+    }
+    
+    @Override
+    public TransportType getTransportType() {
+        return null;
     }
     
     @Override

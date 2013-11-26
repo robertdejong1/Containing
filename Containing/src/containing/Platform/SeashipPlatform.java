@@ -1,5 +1,6 @@
 package containing.Platform;
 
+import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.ParkingSpot.SeashipSpot;
 import containing.Settings;
@@ -38,6 +39,16 @@ public class SeashipPlatform extends Platform {
         setDimensionAndWayPoints(newDimension, newEntrypoint, newExitpoint);
         
         // initialize parkingspots for barges
+        initVehicleSpots();
+        
+        // initialize cranes
+        initCranes();
+        
+        Settings.messageLog.AddMessage("Created SeashipPlatform: " + toString());
+    }
+    
+    @Override
+    protected final void initVehicleSpots() {
         vehicleSpots = new SeashipSpot[NR_EXT_VEHICLES];
         float spotSize = X_SIZE / (float)NR_EXT_VEHICLES;
         for(int i = 0; i < vehicleSpots.length; i++) {
@@ -45,16 +56,21 @@ public class SeashipPlatform extends Platform {
             Vector3f vehicleSpotPosition = new Vector3f(spotPosition, 0, 0 - SeashipSpot.length);
             vehicleSpots[i] = new SeashipSpot(vehicleSpotPosition);
         }
-        
-        // initialize cranes
+    }
+    
+    @Override
+    protected final void initCranes() {
         cranes = new SeashipCrane[NR_CRANES];
         float margin = X_SIZE / (float)NR_CRANES;
         for(int i = 0; i < cranes.length; i++) {
             Vector3f cranePosition = new Vector3f(margin*i,0,CRANE_Z_POSITION);
             cranes[i] = new SeashipCrane(cranePosition);
         }
-        
-        Settings.messageLog.AddMessage("Created SeashipPlatform: " + toString());
+    }
+    
+    @Override
+    public TransportType getTransportType() {
+        return TransportType.Seaship;
     }
     
     @Override

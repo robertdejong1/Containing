@@ -1,5 +1,6 @@
 package containing.Platform;
 
+import containing.Container;
 import containing.Dimension2f;
 import containing.ParkingSpot.TrainSpot;
 import containing.Settings;
@@ -38,6 +39,16 @@ public class TrainPlatform extends Platform {
         setDimensionAndWayPoints(newDimension, newEntrypoint, newExitpoint);
         
         // initialize parkingspots for barges
+        initVehicleSpots();
+        
+        // initialize cranes
+        initCranes();
+        
+        Settings.messageLog.AddMessage("Created TrainPlatform: " + toString());
+    }
+    
+    @Override
+    protected final void initVehicleSpots() {
         vehicleSpots = new TrainSpot[NR_EXT_VEHICLES];
         float spotSize = Z_SIZE / (float)NR_EXT_VEHICLES;
         for(int i = 0; i < vehicleSpots.length; i++) {
@@ -45,16 +56,21 @@ public class TrainPlatform extends Platform {
             Vector3f vehicleSpotPosition = new Vector3f(0 - TrainSpot.width, 0, spotPosition);
             vehicleSpots[i] = new TrainSpot(vehicleSpotPosition);
         }
-        
-        // initialize cranes
+    }
+    
+    @Override
+    protected final void initCranes() {
         cranes = new TrainCrane[NR_CRANES];
         float margin = Z_SIZE / (float)NR_CRANES;
         for(int i = 0; i < cranes.length; i++) {
             Vector3f cranePosition = new Vector3f(CRANE_X_POSITION,0,margin*i);
             cranes[i] = new TrainCrane(cranePosition);
         }
-        
-        Settings.messageLog.AddMessage("Created TrainPlatform: " + toString());
+    }
+    
+    @Override
+    public Container.TransportType getTransportType() {
+        return Container.TransportType.Train;
     }
     
     @Override

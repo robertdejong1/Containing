@@ -38,6 +38,9 @@ public class TruckPlatform extends Platform {
         Vector3f newExitpoint = new Vector3f(0,0,Z_SIZE);
         setDimensionAndWayPoints(newDimension, newEntrypoint, newExitpoint);
         
+        // initialize AGV spots
+        initAgvSpots('z');
+        
         // initialize parkingspots for barges
         initVehicleSpots();
         

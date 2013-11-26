@@ -38,6 +38,9 @@ public class SeashipPlatform extends Platform {
         Vector3f newExitpoint = new Vector3f(0,0,0);
         setDimensionAndWayPoints(newDimension, newEntrypoint, newExitpoint);
         
+        // initialize AGV spots
+        initAgvSpots('x');
+        
         // initialize parkingspots for barges
         initVehicleSpots();
         

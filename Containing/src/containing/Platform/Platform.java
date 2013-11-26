@@ -3,13 +3,16 @@ package containing.Platform;
 import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
+import containing.Job;
 import containing.ParkingSpot.ParkingSpot;
 import containing.ParkingSpot.AgvSpot;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Platform class, has the basic functions for all Platforms in the port.
@@ -29,9 +32,11 @@ public abstract class Platform {
     
     // accessable properties (in extended classes)
     protected ParkingSpot[] agvSpots;       // all parking spots for AGV's
-    protected List<AGV> agvQueue;           // waitlist for AGV's (stack)
     protected Crane[] cranes;               // the cranes on the platform
     protected ParkingSpot[] vehicleSpots;   // spot of external vehicle
+    
+    // jobs todo
+    protected Queue<Job> jobQueue;
     
     // timing
     protected int timing = 0;
@@ -43,13 +48,13 @@ public abstract class Platform {
     public Platform(Vector3f position) {
         this.id = ++idCounter;
         this.position = position;
-        agvQueue = new ArrayList<>();
+        jobQueue = new LinkedList<>();
     }
     
-    private void initAgvSpots() {
+    public void initAgvSpots(char axis) {
         // initialize parking spots for AGV's
         Vector3f agvSpotBasePosition = new Vector3f(0,0,0);
-        int nrAgvSpots = (int)(dimension.width / ParkingSpot.width);
+        int nrAgvSpots = (int)((axis == 'x' ? dimension.width : dimension.length) / ParkingSpot.width);
         agvSpots = new AgvSpot[nrAgvSpots];
         for(int i = 0; i < agvSpots.length; i++) 
         {
@@ -70,7 +75,10 @@ public abstract class Platform {
         this.dimension = dimension;
         this.entrypoint = entrypoint;
         this.exitpoint = exitpoint;
-        initAgvSpots();
+    }
+    
+    public void pushJob(Job job) {
+        
     }
     
     /**

@@ -1,10 +1,12 @@
 package containing.Platform;
 
+import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.StorageCrane;
+import java.util.Arrays;
 
 /**
  * StoragePlatform
@@ -17,13 +19,14 @@ import containing.Vehicle.StorageCrane;
  */
 
 public class StoragePlatform extends Platform {
-   
+    
     private final int NR_AGVS = 100;        // number of AGV's in the port
     private final int NR_STRIPS = 64;       // amount of StorageStrip objects, also amount of cranes
-    private final float X_SIZE = 600;        // the width of this platform
+    private final float X_SIZE = 600;       // the width of this platform
     private final float Z_SIZE = 1550;      // the lenght of this platform
     private final StorageStrip[] strips;    // ? still needed?
-    private final float stripZ;                   // CRANE_Z_POSITION
+    private final float stripZ;             // CRANE_Z_POSITION
+    private Container[][][][] containers;   // [stripId][x][y][z]
     
     /**
      * Create Storage platform
@@ -31,6 +34,8 @@ public class StoragePlatform extends Platform {
      */
     public StoragePlatform(Vector3f position) {
         super(position);
+        
+        containers = new Container[NR_STRIPS][40][6][6];
         
         // width of 1 strip
         this.stripZ = Z_SIZE / 64;
@@ -40,6 +45,9 @@ public class StoragePlatform extends Platform {
         Vector3f newEntrypoint = new Vector3f(0,0,0);
         Vector3f newExitpoint = new Vector3f(0,0,0);
         setDimensionAndWayPoints(newDimension, newEntrypoint, newExitpoint);
+        
+        // initialize AGV spots
+        initAgvSpots('x');
         
         // initialize strips
         strips = new StorageStrip[NR_STRIPS];
@@ -64,6 +72,11 @@ public class StoragePlatform extends Platform {
             agvSpots[i].ParkVehicle(agvs[i]);
         }
         return agvs;
+    }
+    
+    public boolean isContainerHere(Container container) {
+        boolean isHere = false;
+        return isHere;
     }
     
     /**

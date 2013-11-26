@@ -32,7 +32,7 @@ public class CommandHandler {
         return true;
     }
     
-    static List<String> getCommands(){
+    public static List<String> getCommands(){
         //Return een list met commando's naar de server
         List<String> commands = new ArrayList<String>();
         return commands;

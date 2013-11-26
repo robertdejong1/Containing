@@ -82,6 +82,12 @@ class ControllerAlgoritmes
         
     }
     
+    /*
+     * Search if job exists with same timestamp
+     * true? add container to job
+     * false? create new job
+     * Sort List of jobs
+     */
     public static void SortOutgoingContainer(Container UnloadedContainer)
     {
         boolean SuitingJobFound = false;

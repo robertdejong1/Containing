@@ -54,7 +54,7 @@ public abstract class Platform {
     public void initAgvSpots(char axis) {
         // initialize parking spots for AGV's
         Vector3f agvSpotBasePosition = new Vector3f(0,0,0);
-        int nrAgvSpots = (int)((axis == 'x' ? dimension.width : dimension.length) / ParkingSpot.width);
+        int nrAgvSpots = (int)((axis == 'x' ? dimension.width : dimension.length) / /*ParkingSpot.width*/ 2);
         agvSpots = new AgvSpot[nrAgvSpots];
         for(int i = 0; i < agvSpots.length; i++) 
         {
@@ -144,7 +144,7 @@ public abstract class Platform {
     
     @Override
     public String toString() {
-        return String.format("[%d, width=%f, length=%f]", id, dimension.width, dimension.length);
+        return String.format("[%d, width=%1f, length=%1f]", id, dimension.width, dimension.length);
     }
     
     protected abstract void initVehicleSpots();

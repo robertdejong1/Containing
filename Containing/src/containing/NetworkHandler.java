@@ -19,14 +19,12 @@ import java.util.List;
  */
 public class NetworkHandler implements Runnable {
 
-    private Port port;
     private ServerSocket server;
     private Socket client;
 
-    public NetworkHandler(Port port) {
-        this.port = port;
+    public NetworkHandler(int port) {
         try {
-            server = new ServerSocket(1337);
+            server = new ServerSocket(port);
             server.setSoTimeout(999999999);
             System.out.println("Server running.");
         } catch (IOException e) {
@@ -47,7 +45,7 @@ public class NetworkHandler implements Runnable {
                 if (reader.ready()) {
                     String inputLine = reader.readLine();
                     System.out.println("Received: " +inputLine);
-                    Command returnCmd = processInput(inputLine);
+                    Command returnCmd = CommandHandler.handle(inputLine);
                     if (returnCmd != null) {
                         System.out.println("Sending in reply to " +inputLine +": " +returnCmd.toString());
                         writer.println(returnCmd.toString());
@@ -73,17 +71,5 @@ public class NetworkHandler implements Runnable {
             ErrorLog.logMsg("An error occured", e);
         }
 
-    }
-
-    private Command processInput(String cmd) {
-        String prefix = cmd.split(":", 1)[0];
-        switch (prefix) {
-            case "PORT":
-                return new Command("port", port);
-            //Meer cases
-
-            default:
-                return null;
-        }
     }
 }

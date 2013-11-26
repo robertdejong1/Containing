@@ -82,10 +82,16 @@ public class Controller
         return CommandsToReturn;
     }
     
-    public static void requestNextContainer(Platform requestingPlatform)
+    public static void AddContainerTOJobQeue(Container container)
+    {
+        ControllerAlgoritmes.SortOutgoingContainer(container);
+    }
+    
+    public static void RequestNextContainer(Container container, Platform RequestingPlatform)
     {
         
     }
+            
     
     public static void requestNextJobForLoadedAGV(AGV agv)
     {

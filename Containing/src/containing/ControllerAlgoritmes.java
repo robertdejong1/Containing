@@ -40,7 +40,7 @@ class ControllerAlgoritmes
                 for (int j = 0; j < scheduledArrivingVehicles.size(); j++)
                 {
                     if (
-                            (scheduledArrivingVehicles.get(j).getArrivalDate() == ArrivalDateContainer) 
+                            (scheduledArrivingVehicles.get(j).getArrivalDate().equals(ArrivalDateContainer))
                             && 
                             (scheduledArrivingVehicles.get(j).getArrivalTime() == ArrivalTimeFromContainer)
                         )

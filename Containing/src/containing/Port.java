@@ -14,20 +14,21 @@ public class Port
 {
     private int ID = 0;
     private List<Platform> Platforms;
-    private List<AGV> aGVs;
+    private AGV[] aGVs;
+    private StoragePlatform storagePlatform;
 
     public Port() 
     {
         this.Platforms = new ArrayList<>();
         Settings.messageLog.AddMessage("Created Harbor Object with id: " + ID);
-        //Platforms.add(new BargePlatform(new Vector3f(0, 0, 0)));
-        //Platforms.add(new SeashipPlatform(new Vector3f(0, 0, 0)));
-        //Platforms.add(new TrainPlatform(new Vector3f(0, 0, 0)));
-        //Platforms.add(new TruckPlatform(new Vector3f(0, 0, 0)));
+        Platforms.add(new BargePlatform(new Vector3f(0, 0, 0)));
+        Platforms.add(new SeashipPlatform(new Vector3f(0, 0, 0)));
+        Platforms.add(new TrainPlatform(new Vector3f(0, 0, 0)));
+        Platforms.add(new TruckPlatform(new Vector3f(0, 0, 0)));
         
-        //StoragePlatform storagePlatform = new StoragePlatform(0,0,0);
-        //aGVs.addAll(storagePlatform.createagvs);
-        //Platforms.add(storagePlatform);
+        storagePlatform = new StoragePlatform(new Vector3f(0,0,0));
+        aGVs = storagePlatform.getAllCreatedAgvs();
+        Platforms.add(storagePlatform);
         
         
     }
@@ -44,4 +45,11 @@ public class Port
     {
         return ID;
     }
+
+    public StoragePlatform getStoragePlatform() 
+    {
+        return storagePlatform;
+    }
+    
+    
 }

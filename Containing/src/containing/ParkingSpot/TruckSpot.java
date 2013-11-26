@@ -6,22 +6,13 @@ import containing.Vehicle.Vehicle;
 
 public class TruckSpot extends ParkingSpot 
 {
+    private final float LENGHT;
+    private final float WIDTH;
 
-    public TruckSpot(Vector3f position) 
+    public TruckSpot(Vector3f position, Vector3f entryPoint) 
     {
-        super(position);
+        super(position, entryPoint);
+        this.LENGHT = 10; //???
+        this.WIDTH = 10; //???
     }
-
-    @Override
-    public void ParkVehicle(Vehicle VehicleToPark) 
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void UnparkVehicle(Route RouteToFollow) 
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }

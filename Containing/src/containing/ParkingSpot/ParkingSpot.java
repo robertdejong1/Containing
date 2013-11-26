@@ -1,25 +1,26 @@
 package containing.ParkingSpot;
 
+import containing.Command;
+import containing.CommandHandler;
 import containing.Road.Route;
 import containing.Vector3f;
 import containing.Vehicle.Vehicle;
+import java.util.HashMap;
 
-public abstract class ParkingSpot 
+public abstract class ParkingSpot
 {
-    public static float length;
-    public static float width;
-    private static int idCounter = 0;
+    private static int idCounter = 0; //Statische counter die functioneert als auto_increment veld
+    protected int id; //id van de parkingspot
+    protected Vector3f position; //Positie van de parkingspot
+    protected Vehicle ParkedVehicle; //Voortuig die is geparkeerd. Blijft null als de spot leeg is.
+    protected Vector3f entryPoint; //In- en uitgang van de parkingspot
     
-    protected int id;
-    protected Vector3f position;
-    protected Vehicle ParkedVehicle;
-    //waypoint ingang en uitgang?
     
-    protected ParkingSpot(Vector3f position) 
+    protected ParkingSpot(Vector3f position, Vector3f entryPoint) 
     {
         this.id = ParkingSpot.requestNewParkingSpotID();
         this.position = position;
-        this.ParkedVehicle = null;
+        this.entryPoint = entryPoint;
     }
     
     public int GetParkingSpotID()
@@ -29,23 +30,26 @@ public abstract class ParkingSpot
     
     public boolean isEmpty()
     {
-        if (this.ParkedVehicle == null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return this.ParkedVehicle == null;
     }
     
-    public abstract void ParkVehicle(Vehicle VehicleToPark);
-    public abstract void UnparkVehicle(Route RouteToFollow);
+    public void ParkVehicle(Vehicle VehicleToPark) 
+    {
+        this.ParkedVehicle = VehicleToPark;
+    }
+    
+    public void UnparkVehicle(Route RouteToFollow) 
+    {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("parkingSpot", this);
+        map.put("route", RouteToFollow);
+        CommandHandler.addCommand(new Command("unparkVehicle", map));
+        this.ParkedVehicle = null;
+    }
     
     private static int requestNewParkingSpotID()
     {
         idCounter++;
         return idCounter;
     }
-    
 }

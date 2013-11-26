@@ -53,7 +53,7 @@ public class NetworkHandler implements Runnable {
                     }
                 }
                 else{
-                    List<Command> commands = Controller.getNewCommands();
+                    List<Command> commands = CommandHandler.getNewCommands();
                     if(commands != null && commands.size() > 0){
                         for(Command cmd : commands){
                             System.out.println("Sending: " +cmd.toString());

@@ -18,7 +18,7 @@ public abstract class ExternVehicle extends Vehicle {
     
     private Date arrivalDate;
     private float arrivalTime;
-    protected enum Status{LEAVING, ENTER, WAITING};
+    protected enum Status{LEAVING, ENTER, WAITING, DOCKING};
     protected Status status;
     Container[][][] grid;
     
@@ -26,7 +26,7 @@ public abstract class ExternVehicle extends Vehicle {
         super(capicity);
         this.arrivalDate = arrivalDate;
         this.arrivalTime = arrivalTime;
-        status = Status.WAITING;
+        status = Status.WAITING; 
         grid = new Container[100][100][100];
     }
     ///[0,0,0] add grid container position
@@ -53,7 +53,10 @@ public abstract class ExternVehicle extends Vehicle {
     public Date getArrivalDate(){return arrivalDate;}
     public Float getArrivalTime(){return arrivalTime;}
     public void leave(){this.status = Status.LEAVING;}
-    public void enter(){this.status = Status.ENTER;}
+    public void docking(){this.status = Status.DOCKING;}
+    public void enter(){
+        this.status = Status.ENTER;
+    }
     
     
 

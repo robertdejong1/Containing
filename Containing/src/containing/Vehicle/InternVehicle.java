@@ -40,5 +40,10 @@ public abstract class InternVehicle extends Vehicle{
         else {throw new IndexOutOfBoundsException(String.format("Vehicle has no cargo to unload"));}
     }
     
+    public void update(){
+        this.update();
+        
+    }
+    
     
 }

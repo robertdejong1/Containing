@@ -32,4 +32,9 @@ public class StorageCrane extends Crane {
     
     public void reset(){super.reset();}
     
+    @Override
+    public int getMaxSpeedUnloaded(){return 3;}
+    @Override
+    public int getMaxSpeedLoaded(){return 2;}
+    
 }

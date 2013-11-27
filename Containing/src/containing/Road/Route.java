@@ -6,7 +6,10 @@
 
 package containing.Road;
 
+import containing.ParkingSpot.ParkingSpot;
+import containing.Platform.Platform;
 import containing.Vector3f;
+import containing.Vehicle.Crane;
 import containing.Vehicle.Vehicle;
 import java.util.List;
 
@@ -17,20 +20,42 @@ import java.util.List;
 public class Route {
     private List<Vector3f> weg;
     float distance;
+    Platform destinationPlatform;
+    ParkingSpot destinationParkingSpot;
+    
     public Route(List<Vector3f> weg, float distanceInMeters){
+        
         this.weg = weg;
         this.distance = distanceInMeters;
+     
+        
     }
     
-    public int CalculateTime(Vehicle vehicle){
-        float drived_distance = 0;
-        int count_sec = 0;
-        while (drived_distance < distance){
-            drived_distance =  drived_distance + vehicle.getCurrentSpeed()*1000/3600;
-            count_sec++;
+    public void setDestinationPlatform(Platform destination){this.destinationPlatform = destination;}
+    
+    public void setDestinationParkingSpot(ParkingSpot destination){this.destinationParkingSpot = destination;}
+    
+    public void follow(Vehicle vehicle){
+        //if destinationParkingSpot == null ga vanaf exitpoint naar midden weg en start volg route
+        
+        distance = distance - (vehicle.getCurrentSpeed()*1000/3600)/100;
+        if (distance <= 0){
+            
+            vehicle.stopDriving();
+            if (destinationParkingSpot == null){
+                //motionpath from waypoint to platform
+                //platform sign in
+                vehicle.setCurrentPlatform(destinationPlatform);
+            } //meldt aan voor platform nieuwe route
+            else {
+                //motionpath from waypoint to parkingspot
+                this.destinationParkingSpot.ParkVehicle(vehicle);
+            } //park vehicle
+
         }
-        return count_sec;
+        
     }
     
+
     
 }

@@ -37,4 +37,9 @@ public class SeashipCrane extends Crane {
         while (this.timeCounter < starttime + this.metersToNextAgvSpot * this.maxSpeedUnloaded){}
         this.startPosition.x = this.startPosition.x + direction * this.metersToNextAgvSpot;
     }
+    
+    @Override
+    public int getMaxSpeedUnloaded(){return 4;}
+    @Override
+    public int getMaxSpeedLoaded(){return 0;}
 }

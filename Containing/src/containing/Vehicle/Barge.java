@@ -31,4 +31,9 @@ public class Barge extends ExternVehicle {
      public void update(){
         timeCounter++;
     }
+    
+    @Override
+    public int getMaxSpeedUnloaded(){return 25;}
+    @Override
+    public int getMaxSpeedLoaded(){return 30;}
 }

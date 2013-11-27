@@ -31,5 +31,10 @@ public class TruckCrane extends Crane {
     public void load(Container container){super.load(container);}
     
     public void reset(){super.reset();}
+    
+    @Override
+    public int getMaxSpeedUnloaded(){return 20;}
+    @Override
+    public int getMaxSpeedLoaded(){return 15;}
 
 }

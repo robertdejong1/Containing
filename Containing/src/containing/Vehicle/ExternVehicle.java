@@ -8,7 +8,9 @@ package containing.Vehicle;
 
 import containing.Container;
 import containing.Vector3f;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -18,20 +20,23 @@ public abstract class ExternVehicle extends Vehicle {
     
     private Date arrivalDate;
     private float arrivalTime;
-    protected enum Status{LEAVING, ENTER, WAITING, DOCKING};
-    protected Status status;
+  
     Container[][][] grid;
+    private List<Container> priorityCargo = new ArrayList<Container>();
     
     public ExternVehicle(int capicity, Date arrivalDate, float arrivalTime, Container[][][] grid){
         super(capicity);
         this.arrivalDate = arrivalDate;
         this.arrivalTime = arrivalTime;
         status = Status.WAITING; 
-        
         this.grid = grid;
     }
     
     public void getContainerWithHighestPriority(){
+        /*
+        for (Container container : this.cargo){
+            if (container.getArrivalDate() == new Date().)
+        }*/
         
     }
     ///[0,0,0] add grid container position
@@ -56,12 +61,16 @@ public abstract class ExternVehicle extends Vehicle {
         return container;
     }
     
+   
+    
     public Date getArrivalDate(){return arrivalDate;}
     public Float getArrivalTime(){return arrivalTime;}
-    public void leave(){this.status = Status.LEAVING;}
-    public void docking(){this.status = Status.DOCKING;}
+    public void leave(){this.status = Status.MOVEING;}
+    public void docking(){
+        //this.status = Status.DOCKING;
+    }
     public void enter(){
-        this.status = Status.ENTER;
+        this.status = Status.MOVEING;
     }
     
     

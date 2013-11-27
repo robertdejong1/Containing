@@ -1,17 +1,28 @@
 package containing.Vehicle;
 
 import containing.Container;
+import containing.ParkingSpot.ParkingSpot;
+import containing.Platform.Platform;
+import containing.Road.Route;
+import containing.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Vehicle 
-{     
+{ 
+    protected int time = 0;
     protected boolean isLoaded = false;
     protected int capicity;
     protected List<Container> cargo;
     protected static int maxSpeedLoaded;
     protected static int maxSpeedUnloaded;
     protected int currentSpeed;
+    protected enum Status{ UNLOADING, LOADING, WAITING, MOVEING};
+    protected Status status;
+    protected Route route;
+    protected Platform currentPlatform;
+    protected ParkingSpot currentParkingSpot;
+    protected Vector3f position;
     
     public Vehicle(int capicity){
         this.cargo = new ArrayList<Container>();   
@@ -24,10 +35,39 @@ public abstract class Vehicle
         if (cargo.isEmpty()) isLoaded = true;
         if (cargo.size() < capicity) cargo.add(container);
         else {throw new IndexOutOfBoundsException(String.format("Vehicle has reached capicity, container: {0} can't be loaded to vehicle.", container.getContainerId()));}
-        
     } 
     
     public int getCurrentSpeed(){return this.currentSpeed;}
+    
+    public Platform getCurrentPlatform(){return this.currentPlatform;}
+    
+    public void setCurrentPlatform(Platform platform){this.currentPlatform = platform;}
+    
+    public void setCurrentParkingSpot(ParkingSpot parkingSpot){this.currentParkingSpot = parkingSpot;}
+    
+    public void setPosition(Vector3f position){this.position = position;}
+    
+    public void followRoute(Route route){
+        this.route = route;
+        //currentplatform sign out
+        this.status = Status.MOVEING;
+        this.currentSpeed = (this.isLoaded) ? Vehicle.maxSpeedLoaded : Vehicle.maxSpeedUnloaded;
+        
+    } 
+    
+    public void stopDriving(){
+        this.status = Status.WAITING;
+        this.currentSpeed = 0;
+    }
+    
+    public abstract int getMaxSpeedLoaded();
+    public abstract int getMaxSpeedUnloaded();
+    
+    public void update(){
+        time++;
+        if (this.status == Status.MOVEING){this.route.follow(this);}
+        
+    }
  
    
     

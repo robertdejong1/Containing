@@ -28,6 +28,11 @@ public class Train extends ExternVehicle{
     public void leave(){super.leave();}
     public void enter(){super.enter();}
     
+    @Override
+    public int getMaxSpeedUnloaded(){return 20;}
+    @Override
+    public int getMaxSpeedLoaded(){return 10;}
+    
      public void update(){
         timeCounter++;
     }

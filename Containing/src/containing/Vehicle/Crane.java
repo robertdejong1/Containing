@@ -41,6 +41,7 @@ public abstract class Crane extends InternVehicle {
         //platform moet agv volgende route geven
     }
 
+    
     public void load(Container container){ //container from extern verhicle
         int starttime = this.timeCounter;
         super.load(container);

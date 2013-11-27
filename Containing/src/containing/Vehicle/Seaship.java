@@ -32,6 +32,11 @@ public class Seaship extends ExternVehicle {
             super.load(container);
     } //=add
     
+    @Override
+    public int getMaxSpeedUnloaded(){return 15;}
+    @Override
+    public int getMaxSpeedLoaded(){return 10;}
+    
     public void leave(){super.leave();}
     public void enter(){super.enter();}
     

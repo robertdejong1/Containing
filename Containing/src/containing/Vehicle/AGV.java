@@ -19,10 +19,12 @@ public class AGV extends InternVehicle {
     private int timeCounter = 0;
     private static int counter;
     private int id;
-    protected Platform currentPlatform;
+    public static float width = 2.5f; //????????
     private static int capicityAGV = 1;
-    private static int maxSpeedLoaded = 20;
-    private static int maxSpeedUnloaded = 40; 
+  
+
+    
+
     
     public AGV(Platform currentPlatform, Vector3f startPosition){
         super(capicityAGV,startPosition );
@@ -31,11 +33,12 @@ public class AGV extends InternVehicle {
         this.currentPlatform = currentPlatform; //storageplatform @ default?
     }
     
-    public void followRoute(Route route){ //call method platform when route is finished
-        int starttime = this.timeCounter;
-        while (this.timeCounter < starttime + route.CalculateTime(this)){}
-        //aangekomen bij destination/ander platform
-    } 
+    
+    
+    @Override
+    public int getMaxSpeedUnloaded(){return 40;}
+    @Override
+    public int getMaxSpeedLoaded(){return 20;}
     
     public void setCurrentPlatform(Platform platform){
         currentPlatform = platform;
@@ -43,6 +46,15 @@ public class AGV extends InternVehicle {
     
     public Platform getCurrentPlatform(){
         return this.currentPlatform;
+    }
+    
+    public void setStatus(Status status){
+        this.status = status;
+    }
+    
+    public void update(){
+       super.update();
+       if (this.status == Status.MOVEING){this.route.follow(this);}
     }
     
     

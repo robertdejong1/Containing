@@ -29,6 +29,12 @@ public class Truck extends ExternVehicle{
     public void leave(){super.leave();}
     public void enter(){super.enter();}
     
+  
+    @Override
+    public int getMaxSpeedUnloaded(){return 30;}
+    @Override
+    public int getMaxSpeedLoaded(){return 15;}
+    
      public void update(){
         timeCounter++;
     }

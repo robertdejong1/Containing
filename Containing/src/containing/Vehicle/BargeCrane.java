@@ -43,6 +43,10 @@ public class BargeCrane extends Crane {
         this.startPosition.x = this.startPosition.x + direction * this.metersToNextAgvSpot;
     }
     
+    @Override
+    public int getMaxSpeedUnloaded(){return 8;}
+    @Override
+    public int getMaxSpeedLoaded(){return 3;}
     
     
 }

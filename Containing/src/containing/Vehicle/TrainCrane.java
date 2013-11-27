@@ -37,4 +37,10 @@ public class TrainCrane extends Crane {
         while (this.timeCounter < this.metersToNextAgvSpot * this.maxSpeedUnloaded * 10){}
         this.startPosition.x = this.startPosition.x + direction * this.metersToNextAgvSpot;
     }
+    
+    @Override
+    public int getMaxSpeedUnloaded(){return 3;}
+    @Override
+    public int getMaxSpeedLoaded(){return 2;}
+
 }

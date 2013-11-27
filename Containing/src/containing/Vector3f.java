@@ -10,7 +10,7 @@ package containing;
  *
  * @author Robert
  */
-public class Vector3f {
+public class Vector3f implements Comparable {
     public float x;
     public float y;
     public float z;
@@ -24,6 +24,15 @@ public class Vector3f {
     @Override
     public String toString(){
         return "Vector:[" + x +", " + y +", " +z +"]";   
+    }
+    
+    public int compareTo(Object o) { 
+        Vector3f v2 = (Vector3f) o;
+        if (x < v2.x){return -1;}
+        if (x > v2.x) {return 1;}
+        if (z < v2.z) {return -1;}
+        if (z > v2.z) return 1;
+        return 0;
     }
     
 }

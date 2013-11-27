@@ -11,30 +11,25 @@ public class Road
 {
     //testvariabelen, simulatie is bepalend
     Vector3f hoekpunt1 = new Vector3f(0,0,0); 
-    Vector3f entryPointTrainPlatform = new Vector3f(0,0,3.5f);
-    Vector3f entryPointTruckPlatform = new Vector3f(4,0,3.5f);
-    Vector3f entryPointSeashipPlatform = new Vector3f(0.5f,0,0);
-    Vector3f entryPointStoragePlatformLeft = new Vector3f(0.5f,0,0);
-    Vector3f entryPointStoragePlatformRight = new Vector3f(3.5f,0,0);
-    Vector3f entryPointBargePlatform = new Vector3f(2,0,2);
     Vector3f hoekpunt2 = new Vector3f(0,0,4);
     Vector3f hoekpunt3 = new Vector3f(4,0,0);
     Vector3f hoekpunt4 = new Vector3f(4,4,4);
     
-    List<Vector3f> mainroad = new ArrayList<Vector3f>(); //is op volgorde van y,x  
+    List<Vector3f> mainroad = new ArrayList<Vector3f>(); 
         
-    public Road(){
+    public Road(Vector3f entryPointTruckPlatform, Vector3f entryPointTrainPlatform, Vector3f entryPointSeashipPlatform, Vector3f entryPointBargePlatform, Vector3f entryPointStoragePlatform ){
         mainroad.add(hoekpunt1);
-        mainroad.add(entryPointTrainPlatform);
-        mainroad.add(entryPointTruckPlatform);
-        mainroad.add(entryPointSeashipPlatform);
-        mainroad.add(entryPointStoragePlatformLeft);
-        mainroad.add(entryPointStoragePlatformRight);
-        mainroad.add(entryPointBargePlatform);
         mainroad.add(hoekpunt2);
         mainroad.add(hoekpunt3);
         mainroad.add(hoekpunt4);
-
+        mainroad.add(entryPointTrainPlatform);
+        mainroad.add(entryPointTruckPlatform);
+        mainroad.add(entryPointSeashipPlatform);
+        mainroad.add(entryPointStoragePlatform);
+        mainroad.add(entryPointBargePlatform);
+        
+        Collections.sort(mainroad);
+        
     } 
     
      public float getPathLength(List<Vector3f> weg){
@@ -50,12 +45,18 @@ public class Road
      * There are two possible roads for agv, the function selects the road with minimum distance (=shortest).
      * The shortest way is converted into a Route.
      */
-    public Route getShortestPath(AGV agv, Platform destination){ 
-        int index = mainroad.indexOf(agv.getCurrentPlatform().entryPoint());
-        List<Vector3f> weg1 = mainroad.subList(0, index);
-        List<Vector3f> weg2 = mainroad.subList(index, mainroad.size());
-        List<Vector3f> weg = new ArrayList<Vector3f>(weg2);
-        weg.addAll(weg1);
+    public Route getShortestPath(AGV agv, Vector3f destinationPlatformEntryPoint){ 
+        int indexSource = mainroad.indexOf(agv.getCurrentPlatform().entryPoint());
+        int indexDestination =  mainroad.indexOf(destinationPlatformEntryPoint);
+        List<Vector3f> weg1 = mainroad.subList(indexSource, mainroad.size());
+        List<Vector3f> weg2 = mainroad.subList(0, indexSource);
+        List<Vector3f> weg = new ArrayList<Vector3f>(weg1);
+        weg.addAll(weg2);
+        try{
+        weg = weg.subList(0, indexDestination+1);}
+        catch(Exception e){
+            //destination is laatste waypoint
+        }
         float length_weg1 = getPathLength(weg);
         List<Vector3f> weg_notreversed = new ArrayList<Vector3f>(weg);
         Collections.reverse(weg.subList(1, weg.size()));

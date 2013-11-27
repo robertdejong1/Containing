@@ -13,4 +13,12 @@ public class TrainSpot extends ParkingSpot
         this.LENGHT = 10; //???
         this.WIDTH = 10; //???
     }
+
+    public float getLENGHT() {
+        return LENGHT;
+    }
+
+    public float getWIDTH() {
+        return WIDTH;
+    }
 }

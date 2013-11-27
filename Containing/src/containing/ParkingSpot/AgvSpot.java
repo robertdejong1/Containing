@@ -13,5 +13,12 @@ public class AgvSpot extends ParkingSpot
         this.LENGTH = 10; //???
         this.WIDTH = 10; //???
     }
-    
+
+    public float getLENGTH() {
+        return LENGTH;
+    }
+
+    public float getWIDTH() {
+        return WIDTH;
+    }
 }

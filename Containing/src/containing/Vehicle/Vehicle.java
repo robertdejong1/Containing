@@ -11,6 +11,7 @@ public abstract class Vehicle
     protected List<Container> cargo;
     protected static int maxSpeedLoaded;
     protected static int maxSpeedUnloaded;
+    protected int currentSpeed;
     
     public Vehicle(int capicity){
         this.cargo = new ArrayList<Container>();   
@@ -25,6 +26,8 @@ public abstract class Vehicle
         else {throw new IndexOutOfBoundsException(String.format("Vehicle has reached capicity, container: {0} can't be loaded to vehicle.", container.getContainerId()));}
         
     } 
+    
+    public int getCurrentSpeed(){return this.currentSpeed;}
  
    
     

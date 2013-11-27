@@ -16,13 +16,13 @@ import containing.Vector3f;
  * @author Miriam
  */
 public class AGV extends InternVehicle {
-    
+    private int timeCounter = 0;
     private static int counter;
     private int id;
-    private Platform currentPlatform;
+    protected Platform currentPlatform;
     private static int capicityAGV = 1;
     private static int maxSpeedLoaded = 20;
-    private static int maxSpeedUnloaded = 40;
+    private static int maxSpeedUnloaded = 40; 
     
     public AGV(Platform currentPlatform, Vector3f startPosition){
         super(capicityAGV,startPosition );
@@ -32,8 +32,20 @@ public class AGV extends InternVehicle {
     }
     
     public void followRoute(Route route){ //call method platform when route is finished
-    
+        int starttime = this.timeCounter;
+        while (this.timeCounter < starttime + route.CalculateTime(this)){}
+        //aangekomen bij destination/ander platform
     } 
+    
+    public void setCurrentPlatform(Platform platform){
+        currentPlatform = platform;
+    }
+    
+    public Platform getCurrentPlatform(){
+        return this.currentPlatform;
+    }
+    
+    
     
 
 }

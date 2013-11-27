@@ -21,7 +21,7 @@ public class Seaship extends ExternVehicle {
     int[][][] grid;
     
     public Seaship(Date arrivalDate, float arrivalTime){
-        super(capicity, arrivalDate, arrivalTime); //true if vehicle comes to load, otherwise false
+        super(capicity, arrivalDate, arrivalTime, new Container[20][16][6]); //true if vehicle comes to load, otherwise false
         SeashipId = counter;
         counter++;
     }

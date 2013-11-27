@@ -34,7 +34,7 @@ public class TrainCrane extends Crane {
   
     public void move(int direction){ //-1 = left + 1 = rechts
         int starttime = this.timeCounter;
-        while (this.timeCounter < this.metersToNextAgvSpot * this.maxSpeedUnloaded){}
+        while (this.timeCounter < this.metersToNextAgvSpot * this.maxSpeedUnloaded * 10){}
         this.startPosition.x = this.startPosition.x + direction * this.metersToNextAgvSpot;
     }
 }

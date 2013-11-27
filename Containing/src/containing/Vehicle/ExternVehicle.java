@@ -22,16 +22,22 @@ public abstract class ExternVehicle extends Vehicle {
     protected Status status;
     Container[][][] grid;
     
-    public ExternVehicle(int capicity, Date arrivalDate, float arrivalTime){
+    public ExternVehicle(int capicity, Date arrivalDate, float arrivalTime, Container[][][] grid){
         super(capicity);
         this.arrivalDate = arrivalDate;
         this.arrivalTime = arrivalTime;
         status = Status.WAITING; 
-        grid = new Container[100][100][100];
+        
+        this.grid = grid;
+    }
+    
+    public void getContainerWithHighestPriority(){
+        
     }
     ///[0,0,0] add grid container position
     public void load(Container container){
         //check out of capicity, check dubbel
+        
         if (this.cargo.isEmpty()){this.isLoaded = true;} 
         Vector3f coordinates = container.getArrivalPosition();
         if (grid!=null){

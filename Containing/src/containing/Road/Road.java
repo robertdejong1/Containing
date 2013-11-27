@@ -41,18 +41,15 @@ public class Road
             );
         
     public Road(List<Vector3f> entryPoints){
-        for (Vector3f v : entryPoints){this.createCorrespondedWaypoint(v);}
+        for (Vector3f v : entryPoints){this.createCorrespondingWaypoint(v);}
         
-        Collections.sort(outsidetrack);
-        
-        Collections.sort(insidetrack);
-        Collections.reverse(insidetrack);
+
         
     } 
     
     
     
-    private void createCorrespondedWaypoint(Vector3f entryPoint){
+    private void createCorrespondingWaypoint(Vector3f entryPoint){
         //left of mainroad (trainplatform)
         if (entryPoint.x < this.vertex_insidetrack_leftbottom.x){ //links van weg
             outsidetrack.add(new Vector3f(entryPoint.x+roadWidth/2,0,entryPoint.z));//niet zeker van roadWidth
@@ -122,11 +119,12 @@ public class Road
      * The shortest way is converted into a Route.
      */
     private Route calculateShortestPath(Vehicle vehicle, Vector3f destination){
+        this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().exitPoint());
+
         List<Vector3f> outsidetrack = new ArrayList<Vector3f>(this.outsidetrack);
-        outsidetrack.add(vehicle.getCurrentPlatform().exitPoint()); //copy of mainroad with exitpoint
-        
         List<Vector3f> insidetrack = new ArrayList<Vector3f>(this.insidetrack);
-        insidetrack.add(vehicle.getCurrentPlatform().exitPoint());
+   
+        Collections.sort(outsidetrack);
         Collections.sort(insidetrack);
         Collections.reverse(insidetrack);
         
@@ -141,6 +139,8 @@ public class Road
     }
     
     private List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Vector3f source, Vector3f destination){
+        
+        
         int indexSource = path.indexOf(source);
         int indexDestination =  path.indexOf(destination);
         List<Vector3f> weg1 = path.subList(indexSource, outsidetrack.size());

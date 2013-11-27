@@ -1,8 +1,6 @@
 package containing.ParkingSpot;
 
-import containing.Road.Route;
 import containing.Vector3f;
-import containing.Vehicle.Vehicle;
 
 public class TruckSpot extends ParkingSpot 
 {

@@ -5,6 +5,8 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -23,6 +25,19 @@ public abstract class Model
         this.node = node;
         
         model = assetManager.loadModel(path);
+    }
+    
+    public Model(AssetManager assetManager, String path, Node node, ColorRGBA color)
+    {
+        this.node = node;
+        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat.setBoolean("UseMaterialColors", true);
+        mat.setColor("Diffuse", color);
+        mat.setColor("Specular", color);
+        
+        model = assetManager.loadModel(path);
+        model.scale(0.1f);
+        model.setMaterial(mat);
     }
     
     private void place(Vector3f loc)

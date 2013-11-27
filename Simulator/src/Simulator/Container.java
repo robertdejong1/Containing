@@ -5,15 +5,15 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 
 
 public class Container extends Model
 {
-
-    public Container(AssetManager assetManager, Node node)
-    {
-        super(assetManager, "Models/container.j3o", node);
-    }
     
+    public Container(AssetManager assetManager, Node node, ColorRGBA color)
+    {
+        super(assetManager, "Models/container.j3o", node, color);
+    }
 }

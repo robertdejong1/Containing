@@ -1,0 +1,112 @@
+newmtl AH_ProfileSG
+illum 4
+Kd 1.00 0.45 0.83
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl AussenhautSG
+illum 4
+Kd 0.04 0.05 0.05
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl DeckshausSG
+illum 4
+Kd 1.00 0.96 0.94
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl Lifeboat1SG
+illum 4
+Kd 0.98 0.34 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl ProfileSG
+illum 4
+Kd 0.14 0.25 0.28
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl PropSG
+illum 4
+Kd 0.59 0.52 0.14
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl SchotteSG
+illum 4
+Kd 1.00 0.96 0.91
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl UW_FarbeSG
+illum 4
+Kd 0.58 0.14 0.14
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl WindenSG
+illum 4
+Kd 0.52 0.52 0.49
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl bSG
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl container1SG
+illum 4
+Kd 0.00 0.87 0.31
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl container3SG
+illum 4
+Kd 0.32 0.31 0.31
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.63 0.63 0.63
+Ns 18.00
+newmtl equipmentSG
+illum 4
+Kd 0.91 0.78 0.45
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl fensterSG
+illum 4
+Kd 0.00 0.21 0.23
+Ka 0.00 0.00 0.00
+Tf 0.30 0.30 0.30
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00

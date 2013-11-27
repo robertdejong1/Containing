@@ -23,7 +23,7 @@ public class PortSimulation extends SimpleApplication
 
     //private AVG avg = new AVG(assetManager, rootNode);
     //private Barge barge = new Barge(assetManager, rootNode);
-    //private Container container = new Container(assetManager, rootNode);
+    Container[] container = new Container[19];
     FreeCrane[] freeCranes = new FreeCrane[4];
     Port port;
     //private Freighter freighter = new Freighter(assetManager, rootNode);
@@ -66,13 +66,16 @@ public class PortSimulation extends SimpleApplication
         freeCranes[3].place(-30, 5f, 81);
         
         railCrane = new RailCrane(assetManager, rootNode);
-        railCrane.scale(0.8f);
-        railCrane.model.scale(2, 1.5f, 1);
-        railCrane.rotate(0, -90*FastMath.DEG_TO_RAD, 0);
-        railCrane.place(-41,5.1f,0);
+        railCrane.place(-42f,5f,0);
         
-        train = new Train(assetManager, rootNode);
-        train.place(-42,5.1f,0);
+        train = new Train(assetManager, rootNode, 19);
+        train.place(-42,5f,0);
+        
+        for (int i = 0; i < 19; i++)
+        {
+            container[i] = new Container(assetManager, rootNode, ColorRGBA.randomColor());
+            container[i].place(-42,5.1f,-1.5f*(i+1));
+        }
 
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
@@ -97,16 +100,16 @@ public class PortSimulation extends SimpleApplication
         waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, waterLocation.dot(Vector3f.UNIT_Y)));
         waterProcessor.setWaterColor(ColorRGBA.Yellow);
 
-        Quad quad = new Quad(800, 800);
+        Quad quad = new Quad(400, 400);
 
         //the texture coordinates define the general size of the waves
-        quad.scaleTextureCoordinates(new Vector2f(6f, 6f));
+        quad.scaleTextureCoordinates(new Vector2f(12f, 12f));
 
         Geometry water = new Geometry("water", quad);
         //water.setShadowMode(RenderQueue.ShadowMode.Receive);
         water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
         water.setMaterial(waterProcessor.getMaterial());
-        water.setLocalTranslation(-400, 0, 400);
+        water.setLocalTranslation(-200, 0, 200);
 
         rootNode.attachChild(water);
 
@@ -117,7 +120,15 @@ public class PortSimulation extends SimpleApplication
     public void simpleUpdate(float tpf)
     {
         //freeCranes[0].move(tpf/2, 0, 0);
-        //train.move(0,0,tpf);
+        //train.move(0,0,tpf*2);
         //train.model.rotate(tpf, tpf, tpf)
+        
+        //for (int i = 0; i < 19; i++)
+        //{
+         //   container[i].move(0, 0, tpf*2);
+        //}
+        
+        //railCrane.moveTop(tpf);
+        railCrane.update(tpf);
     }
 }

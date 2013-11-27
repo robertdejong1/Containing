@@ -36,10 +36,10 @@ public class Port
         cranerail.setLocalTranslation(-1, 5, 78.95f);
         port_node.attachChild(cranerail);
         
-        trainrail.scale(10);
-        for (int i = 0; i < 14; i++)
+        trainrail.scale(2);
+        for (int i = 0; i < 14*5; i++)
         {
-        trainrail.setLocalTranslation(-42, 5.1f, -77.25f+(10.4f*i));
+        trainrail.setLocalTranslation(-42f, 5f, -77.25f+((10.4f/5)*i));
         port_node.attachChild(trainrail.clone());
         }
         

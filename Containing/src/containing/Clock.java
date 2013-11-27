@@ -105,6 +105,6 @@ public class Clock
         currentDateAndTime = new Timestamp(cal.getTime().getTime());
         
         //UpdateController
-        Controller.update();
+        Controller.update(currentDateAndTime);
     }
 }

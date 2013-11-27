@@ -50,6 +50,4 @@ public class Port
     {
         return storagePlatform;
     }
-    
-    
 }

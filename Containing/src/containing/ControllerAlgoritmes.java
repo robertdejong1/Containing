@@ -4,16 +4,19 @@ import static containing.Container.TransportType.Barge;
 import static containing.Container.TransportType.Seaship;
 import static containing.Container.TransportType.Train;
 import static containing.Container.TransportType.Truck;
+import containing.Platform.Platform;
 import containing.Vehicle.Barge;
 import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.Seaship;
 import containing.Vehicle.Train;
 import containing.Vehicle.Truck;
 import containing.Vehicle.Vehicle;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Stack;
+import java.util.Calendar;
 
 class ControllerAlgoritmes 
 {
@@ -21,7 +24,7 @@ class ControllerAlgoritmes
     private static Stack<Job> JobQeueSorted;
     private static List<ExternVehicle> scheduledArrivingVehicles;
     
-    public static void SortInCommingContainers(List<Container> ContainersFromXML, UserInterface UserInterface)
+    public static void sortInCommingContainers(List<Container> ContainersFromXML, UserInterface UserInterface)
     {
         scheduledArrivingVehicles = new ArrayList<>();
         
@@ -88,7 +91,7 @@ class ControllerAlgoritmes
      * false? create new job
      * Sort List of jobs
      */
-    public static void SortOutgoingContainer(Container UnloadedContainer)
+    public static void sortOutgoingContainer(Container UnloadedContainer)
     {
         boolean SuitingJobFound = false;
         
@@ -121,7 +124,7 @@ class ControllerAlgoritmes
     *if not create a new vehicle
     *return job
     */ 
-    public static Job GetNextJob(List<ExternVehicle> externalVehicles) 
+    public static Job getNextJob(List<ExternVehicle> externalVehicles) //intern bijhouden
     {
         //Get job and remove from qeue
         Job job = JobQeueSorted.pop();
@@ -162,24 +165,54 @@ class ControllerAlgoritmes
     //Creates vehicle based on type
     private static ExternVehicle createNewVehicle(Container.TransportType typeofVehicle, Date date, float time)
     {
-        ExternVehicle VehicleToReturn = null;
+        ExternVehicle vehicleToReturn = null;
         
         switch (typeofVehicle)
         {
             case Truck:
-                VehicleToReturn = new Truck(date, time);
+                vehicleToReturn = new Truck(date, time);
                 break;
             case Train:
-                VehicleToReturn = new Train(date, time);
+                vehicleToReturn = new Train(date, time);
                 break;    
             case Barge:
-                VehicleToReturn = new Barge(date, time);
+                vehicleToReturn = new Barge(date, time);
                 break;
             case Seaship:
-                VehicleToReturn = new Seaship(date, time);
+                vehicleToReturn = new Seaship(date, time);
                 break;
         }
         
-        return VehicleToReturn;
+        return vehicleToReturn;
+    }
+    
+    //Check list for matching vehicles
+    public static void checkIncomingVehicles(Timestamp timeStamp)
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timeStamp);
+        
+        System.out.println(calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.MONTH) + " " + calendar.get(Calendar.YEAR));
+        
+        for (ExternVehicle ev : scheduledArrivingVehicles)
+        {
+            System.out.println(ev.getArrivalDate().toString());
+            
+            if (
+                    (false) // timestamp vergelijken, moet nog worden uitgezocht maar kan nu niet compilen
+                    &&
+                    (true) // functie maken die docktype vergelijkt met vehilce type en dan checken of het vrij is
+                ) 
+            {
+                ev.enter();
+                Settings.messageLog.AddMessage(ev.toString() + " is entering.");
+                scheduledArrivingVehicles.remove(ev);
+            }
+        }
+    }
+    
+    private static Platform matchVehicleTypeWithPlatform(Container.TransportType transportType)
+    {
+        return null;
     }
 }

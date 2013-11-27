@@ -5,9 +5,8 @@
  */
 package containing;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  *
@@ -20,11 +19,11 @@ public class ErrorLog {
     public static void logMsg(String msg, Exception ex) {
         System.out.println("ERROR: " + msg +"(" +ex.getMessage() +")");
         try{
-            PrintWriter writer = new PrintWriter(LOGFILE, "UTF-8");
+            FileWriter writer = new FileWriter(LOGFILE, true);
             writer.append(msg +"(" +ex.getMessage() +")");
             writer.close();
         }
-        catch (FileNotFoundException | UnsupportedEncodingException e) {
+        catch (IOException e) {
             System.out.println("Error while opening logfile(" + e.getMessage() +")");
         }
     }
@@ -32,10 +31,11 @@ public class ErrorLog {
         public static void logMsg(String msg) {
         System.out.println("ERROR: " + msg);
         try{
-            PrintWriter writer = new PrintWriter(LOGFILE, "UTF-8");
-            writer.println(msg);
+            FileWriter writer = new FileWriter(LOGFILE, true);
+            writer.append(msg);
+            writer.close();
         }
-        catch (FileNotFoundException | UnsupportedEncodingException e) {
+        catch (IOException e) {
             System.out.println("Error while opening logfile(" + e.getMessage() +")");
         }
     }

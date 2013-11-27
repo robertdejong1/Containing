@@ -6,17 +6,22 @@
 package containing;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 /**
  *
  * @author Robert
  */
 public class CommandHandler {
-    static List<Command> queuedCommands = new ArrayList<>();
+    static HashMap<Long, Command> queuedCommands = new HashMap<>();
+    static HashMap<Integer, Long> idTime = new HashMap<>();
 
     public static void addCommand(Command cmd){
-        queuedCommands.add(cmd);
+        Date date = new Date();
+        queuedCommands.put(date.getTime() / 1000, cmd);
     }
     
     public static Command handle(String input) {
@@ -30,7 +35,21 @@ public class CommandHandler {
         }
     }
     
-    public static List<Command> getNewCommands(){
-        return queuedCommands;
+    public static List<Command> getNewCommands(int id){
+        List<Command> commands = new ArrayList<>();
+        Date date = new Date();
+        long currentTime = date.getTime() / 1000;
+        if(idTime.get(id) != null){
+            long lastTime = idTime.get(id);
+            for(Entry<Long, Command> entry : queuedCommands.entrySet()){
+                if(entry.getKey() >= lastTime){
+                    commands.add(entry.getValue());
+                }
+            }
+        }
+        else{
+            idTime.put(id, currentTime);
+        }
+        return commands;
     }
 }

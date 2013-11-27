@@ -9,8 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,10 +21,13 @@ public class NetworkHandler implements Runnable {
     private String ip;
     private int port;
     private Socket client;
+    private long lastPing;
 
     public NetworkHandler(String ip, int port) {
         this.ip = ip;
         this.port = port;
+        Date date = new Date();
+        this.lastPing = (date.getTime() / 1000);
     }
 
     @Override
@@ -37,6 +39,11 @@ public class NetworkHandler implements Runnable {
             BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
             while(true){
+                if(sendPing()){
+                    System.out.println("Sending: PING");
+                    writer.println("PING");
+                    writer.flush();
+                }
                 if(!reader.ready()){
                     List<String> commands = CommandHandler.getCommands();
                     for(String cmd : commands){
@@ -57,5 +64,15 @@ public class NetworkHandler implements Runnable {
             System.out.println("Connection lost. Trying to reconnect...");
             run();
         }
+    }
+    
+    private boolean sendPing(){
+        Date date = new Date();
+        long currentTime = (date.getTime() / 1000);
+        if(currentTime - this.lastPing > 60){
+            this.lastPing = currentTime;
+            return true;
+        }
+        return false;
     }
 }

@@ -21,7 +21,7 @@ import com.jme3.water.SimpleWaterProcessor;
 public class PortSimulation extends SimpleApplication
 {
 
-    //private AVG avg = new AVG(assetManager, rootNode);
+    AGV avg;
     //private Barge barge = new Barge(assetManager, rootNode);
     Container[] container = new Container[19];
     FreeCrane[] freeCranes = new FreeCrane[4];
@@ -66,16 +66,21 @@ public class PortSimulation extends SimpleApplication
         freeCranes[3].place(-30, 5f, 81);
         
         railCrane = new RailCrane(assetManager, rootNode);
-        railCrane.place(-42f,5f,0);
+        railCrane.place(-42f,5f,-1.52f);
         
         train = new Train(assetManager, rootNode, 19);
         train.place(-42,5f,0);
         
+        //avg = new AVG(assetManager, rootNode);
+        
+        
         for (int i = 0; i < 19; i++)
         {
             container[i] = new Container(assetManager, rootNode, ColorRGBA.randomColor());
-            container[i].place(-42,5.1f,-1.5f*(i+1));
+            container[i].place(-42,5.23f,-1.5f*(i+1));
         }
+        
+        railCrane.attachContainer(container);
 
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
@@ -125,10 +130,9 @@ public class PortSimulation extends SimpleApplication
         
         //for (int i = 0; i < 19; i++)
         //{
-         //   container[i].move(0, 0, tpf*2);
+        //    container[i].move(0, 0, tpf*2);
         //}
         
-        //railCrane.moveTop(tpf);
         railCrane.update(tpf);
     }
 }

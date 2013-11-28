@@ -17,7 +17,7 @@ public class CommandHandler {
 
     static Boolean handle(String json){
         JSONParser parser = new JSONParser();
-        
+
         try{
             Object obj = parser.parse(json);
             System.out.println(obj.toString());

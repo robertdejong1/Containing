@@ -13,6 +13,9 @@ import com.jme3.scene.Spatial;
 
 public class RailCrane
 {
+    Container[] containers;
+    AGV agv;
+    
     Node crane;
     Node node;
     
@@ -24,8 +27,6 @@ public class RailCrane
     Spatial cable5;
     Spatial grab;
     Spatial top;
-    
-    private float cableScale = 1f;
     
     public RailCrane(AssetManager assetManager, Node node)
     {
@@ -42,9 +43,9 @@ public class RailCrane
         crane.attachChild(grab);
         crane.attachChild(top);
         
-        cable.move(0, 0, -0.5f);
-        grab.move(0, 0, -0.5f);
-        top.move(0, 0, -0.5f);
+        cable.move(0, 0, -0.55f);
+        grab.move(0, 0, -0.55f);
+        top.move(0, 0, -0.55f);
         
         cable2 = cable.clone();
         crane.attachChild(cable2);
@@ -55,8 +56,11 @@ public class RailCrane
         cable5 = cable.clone();
         crane.attachChild(cable5);
         
+        agv = new AGV(assetManager, node);
+        agv.place(-40.32f,5f,-1.5f);
+        
         crane.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-        crane.scale(0.3f);
+        crane.scale(0.33f);
     }
     
     private void place(Vector3f loc)
@@ -70,6 +74,11 @@ public class RailCrane
         place(new Vector3f(x,y,z));
     }
     
+    private void moveCrane(float z)
+    {
+        crane.move(0, 0, z);
+    }
+    
     private void moveTop(float x)
     {
         crane.getChild(1).move(0, 0, x);
@@ -79,6 +88,11 @@ public class RailCrane
         crane.getChild(5).move(0, 0, x);
         crane.getChild(6).move(0, 0, x);
         crane.getChild(7).move(0, 0, x);
+        
+        if (occupied)
+        {
+            containers[con_index].move(x/3.01f, 0, 0);
+        }
     }
     
     private void moveGrab(float y)
@@ -88,18 +102,35 @@ public class RailCrane
         crane.getChild(4).move(0, 0, 0);
         crane.getChild(5).move(0, y/2, 0);
         crane.getChild(6).move(0, y/4, 0);
-        crane.getChild(7).move(0, (y/4)*3, 0);
+        crane.getChild(7).move(0, (y/4)*3f, 0);
+        
+        if (occupied)
+        {
+            containers[con_index].move(0, y/3f, 0);
+        }
+    }
+    
+    public void attachContainer(Container[] con)
+    {
+        this.containers = con;
     }
     
     private int grabstate = 1;
+    private boolean occupied = false;
+    private int con_index = 0;
+    
+    private int avgstate = 1;
     
     public void update(float tpf)
     {
+        
         float x = crane.getChild(3).getLocalTranslation().z;
         float y = crane.getChild(2).getLocalTranslation().y;
+        float z = crane.getLocalTranslation().z;
         
         switch (grabstate)
         {
+            //grab down
             case 1:
                 if (y > -2.5f)
                 {
@@ -108,52 +139,108 @@ public class RailCrane
                     grabstate = 2;
                 }
                 break;
-            
+                
+            //attach container    
             case 2:
+                grabstate = 3;
+                occupied = true;
+                break;
+            
+            //grab up
+            case 3:
                 if (y < 0)
                 {
                     moveGrab(tpf);
                 } else {
-                    grabstate = 3;
-                }
-                break;
-                
-            case 3:
-                if (x < 4.5f)
-                {
-                    moveTop(tpf);
-                } else {
                     grabstate = 4;
                 }
                 break;
-            
+                
+            //move top to side
             case 4:
-                if (y > -2.5f)
+                if (x < 4.5f)
                 {
-                    moveGrab(-tpf);
+                    moveTop(tpf);
                 } else {
                     grabstate = 5;
                 }
                 break;
             
+            //grab down
             case 5:
-                if (y < 0)
+                if (y > -2.25f)
                 {
-                    moveGrab(tpf);
+                    moveGrab(-tpf);
                 } else {
                     grabstate = 6;
                 }
                 break;
-           
+            
+            //dettach container    
             case 6:
+                grabstate = 7;
+                avgstate = 2;
+                occupied = false;
+                break;   
+             
+            //grab up
+            case 7:
+                if (y < 0)
+                {
+                    moveGrab(tpf);
+                } else {
+                    grabstate = 8;
+                }
+                break;
+           
+            //return top to default location
+            case 8:
                 if (x > -0.5f)
                 {
                     moveTop(-tpf);
                 } else {
-                    grabstate = 1;
+                    grabstate = 9;
                 }
-                break;    
-        } 
+                break; 
+                
+            //next container
+            case 9:
+                if (z > -1.5f*(con_index+2))
+                {
+                    moveCrane(-tpf);
+                } else {
+                    if (con_index >= containers.length-1)
+                    {
+                        grabstate = 10;
+                    }
+                    else
+                    {
+                        System.out.println(""+z);
+                        con_index++;
+                        grabstate = 1;
+                    }
+                }
+                break;
+                
+            //ready
+            case 10:
+                break;
+        }
+        
+        switch (avgstate)
+        {
+            case 1:
+                break;
+            
+            case 2:
+                agv.attachContainer(containers[0]);
+                avgstate = 3;
+                break;
+                
+            case 3:
+                agv.move(0, 0, 2*tpf);
+                break;
+        }
     }
             
 

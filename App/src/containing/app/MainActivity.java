@@ -77,7 +77,7 @@ public class MainActivity extends Activity {
             	if(value){
             		textView.setText("");
             		button.setEnabled(false);
-            		CommandHandler.queuedCommands.add("STATS");
+            		CommandHandler.addCommand("STATS");
             	}
             	else{
             		textView.setText("Not connected");

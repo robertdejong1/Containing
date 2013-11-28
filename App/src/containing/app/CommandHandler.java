@@ -12,7 +12,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CommandHandler {
 
-	public static List<String> queuedCommands = new ArrayList<String>();
+	public volatile static List<String> queuedCommands = new ArrayList<String>();
 	
     public static Boolean handle(String json){
         JSONParser parser = new JSONParser();

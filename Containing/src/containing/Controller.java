@@ -1,5 +1,6 @@
 package containing;
 
+import containing.Exceptions.NoJobException;
 import containing.Platform.Platform;
 import containing.Vehicle.AGV;
 import java.io.File;
@@ -16,7 +17,6 @@ public class Controller
     public static void main(String[] args) 
     {
        UserInterface = new UserInterface(); 
-       clock = new Clock();
        Settings.messageLog = new MessageLog();
        updateMessageLogWindow();
        
@@ -31,7 +31,9 @@ public class Controller
         buildPort();
         
         XmlHandler xmlHandler = new XmlHandler();
-        ControllerAlgoritmes.sortInCommingContainers(xmlHandler.openXml(XMLFile), UserInterface);
+        List<Container> ContainersFromXMList = xmlHandler.openXml(XMLFile);
+        Controlleralgorithms.sortInCommingContainers(ContainersFromXMList, UserInterface);
+        clock = new Clock(Controlleralgorithms.getFirstDate(ContainersFromXMList));
     }
     
     private static void buildPort()
@@ -60,7 +62,7 @@ public class Controller
     public static void update(Timestamp timestamp)
     {
         Settings.port.update();
-        ControllerAlgoritmes.checkIncomingVehicles(timestamp);
+        Controlleralgorithms.checkIncomingVehicles(timestamp);
     }
     
     public static void addCommand(Command command)
@@ -84,7 +86,7 @@ public class Controller
     
     public static void AddContainerTOJobQeue(Container container)
     {
-        ControllerAlgoritmes.sortOutgoingContainer(container);
+        Controlleralgorithms.sortOutgoingContainer(container);
     }
     
     public static boolean RequestNextContainer(Container container, Platform requestingPlatform)
@@ -98,6 +100,18 @@ public class Controller
         else
         {
             return false;
+        }
+    }
+    
+    public static Job RequestNewJob(Platform platform) throws NoJobException
+    {
+        try
+        {
+            return Controlleralgorithms.getNextJob(platform);
+        }
+        catch (NoJobException e)
+        {
+            throw e;
         }
     }
                 

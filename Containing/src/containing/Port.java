@@ -50,4 +50,11 @@ public class Port
     {
         return storagePlatform;
     }
+
+    public List<Platform> getPlatforms() 
+    {
+        return Platforms;
+    }
+    
+    
 }

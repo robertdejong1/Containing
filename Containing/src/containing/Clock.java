@@ -12,9 +12,9 @@ public class Clock
     private Timer timer;
     private Timestamp currentDateAndTime;
 
-    public Clock() 
+    public Clock(long startTimeMil) 
     {
-        this.currentDateAndTime = new Timestamp(System.currentTimeMillis());
+        this.currentDateAndTime = new Timestamp(startTimeMil);
         
         timer = new Timer(100, new ActionListener() 
         {
@@ -95,9 +95,7 @@ public class Clock
     }
 
     private void TimerFunctions() 
-    {
-        System.out.println(currentDateAndTime + " test");
-        
+    {   
         //SetTimeStamp
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(currentDateAndTime.getTime());

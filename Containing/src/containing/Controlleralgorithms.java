@@ -4,6 +4,7 @@ import static containing.Container.TransportType.Barge;
 import static containing.Container.TransportType.Seaship;
 import static containing.Container.TransportType.Train;
 import static containing.Container.TransportType.Truck;
+import containing.Exceptions.NoJobException;
 import containing.Platform.Platform;
 import containing.Vehicle.Barge;
 import containing.Vehicle.ExternVehicle;
@@ -18,10 +19,10 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Calendar;
 
-class ControllerAlgoritmes 
+class Controlleralgorithms 
 {
-    private static List<Job> JobQeueUnsorted;
-    private static Stack<Job> JobQeueSorted;
+    private static List<Job> jobQeueUnsorted;
+    private static Stack<Job> jobQeueSorted;
     private static List<ExternVehicle> scheduledArrivingVehicles;
     
     public static void sortInCommingContainers(List<Container> ContainersFromXML, UserInterface UserInterface)
@@ -68,7 +69,12 @@ class ControllerAlgoritmes
                 }
                 else
                 {
-                    ExternVehicle NewVehicle = createNewVehicle(ContainersFromXML.get(i).getArrivalTransport(), ContainersFromXML.get(i).getArrivalDate(), ContainersFromXML.get(i).getArrivalTimeFrom());
+                    ExternVehicle NewVehicle = createNewVehicle(
+                            ContainersFromXML.get(i).getArrivalTransport(), 
+                            ContainersFromXML.get(i).getArrivalDate(), 
+                            ContainersFromXML.get(i).getArrivalTimeFrom(),
+                            ContainersFromXML.get(i).getArrivalTransportCompany());
+                    
                     Settings.messageLog.AddMessage("Created new " + ContainersFromXML.get(i).getArrivalTransport()); // : " + VehicleWithMatchingDateAndTime.toString());
                     NewVehicle.load(ContainersFromXML.get(i));
                     scheduledArrivingVehicles.add(NewVehicle);
@@ -95,7 +101,7 @@ class ControllerAlgoritmes
     {
         boolean SuitingJobFound = false;
         
-        for (Job j : JobQeueUnsorted)
+        for (Job j : jobQeueUnsorted)
         {
             if (j.getDate().equals(UnloadedContainer.getDepartureDate()))
             {
@@ -110,12 +116,13 @@ class ControllerAlgoritmes
             Job job = new Job(
                     UnloadedContainer.getDepartureDate(), 
                     UnloadedContainer.getDepartureTimeFrom(), 
-                    UnloadedContainer.getDepartureTransport());
+                    UnloadedContainer.getDepartureTransport(),
+                    UnloadedContainer.getArrivalTransportCompany());
             job.addContainer(UnloadedContainer);
-             JobQeueUnsorted.add(job);
+             jobQeueUnsorted.add(job);
         }
         
-        JobQeueSorted = Job.sortOutGoingJobs(JobQeueUnsorted);
+        jobQeueSorted = Job.sortOutGoingJobs(jobQeueUnsorted);
     }
     
    /*
@@ -124,62 +131,62 @@ class ControllerAlgoritmes
     *if not create a new vehicle
     *return job
     */ 
-    public static Job getNextJob(List<ExternVehicle> externalVehicles) //intern bijhouden
+    public static Job getNextJob(Platform platform) throws NoJobException
     {
+        Job job = null;
+        
         //Get job and remove from qeue
-        Job job = JobQeueSorted.pop();
-        JobQeueUnsorted.remove(job);
-        
-        //Check if there is an existing vehicle
-        for (ExternVehicle v : externalVehicles)
+        try
         {
-            if (v.getClass().equals(
-                    createNewVehicle(
-                        job.getVehicleType(), 
-                        job.getDate(), 
-                        job.getDepartureTime()
-                    ).getClass())
-                    &&
-                    false//v.getVehicleStatus <-------- Moet nog geimplementeerd worden!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-               )
-            {
-                //Set Status of vehicle to loading
-                job.setTargetVehicle(v);
-            }
+            job = jobQeueSorted.pop();
         }
+        catch (Exception e)
+        {
+            throw new NoJobException("No jobs in qeue.");
+        }
+        jobQeueUnsorted.remove(job);
         
-        //Check if job has a vehicle, if not create a new 1
-        if (job.getTargetVehicle() == null)
+        //Check platform for empty parkingspot:
+        if (platform.hasFreeParkingSpot())
         {
             ExternVehicle eV = createNewVehicle(
                         job.getVehicleType(), 
                         job.getDate(), 
-                        job.getDepartureTime());
+                        job.getDepartureTime(), 
+                        job.getCompanyName());
             
-            job.setTargetVehicle(eV); // mischien dit omzetten naar platformen uiteindelijk -> praten met mindardusssss
+            job.setTargetVehicle(eV);
+        }
+        else
+        {
+            job.changeContainerDepartureTime(job.getDepartureTime());
+            jobQeueSorted.push(job);
+            
+            job = null;
+            throw new NoJobException("No parkingspot available");
         }
         
         return job;
     }
     
     //Creates vehicle based on type
-    private static ExternVehicle createNewVehicle(Container.TransportType typeofVehicle, Date date, float time)
+    private static ExternVehicle createNewVehicle(Container.TransportType typeofVehicle, Date date, float time, String companyName)
     {
         ExternVehicle vehicleToReturn = null;
         
         switch (typeofVehicle)
         {
             case Truck:
-                vehicleToReturn = new Truck(date, time);
+                vehicleToReturn = new Truck(date, time, matchTransportTypeWithPlatform(typeofVehicle), companyName);
                 break;
             case Train:
-                vehicleToReturn = new Train(date, time);
+                vehicleToReturn = new Train(date, time , matchTransportTypeWithPlatform(typeofVehicle), companyName);
                 break;    
             case Barge:
-                vehicleToReturn = new Barge(date, time);
+                vehicleToReturn = new Barge(date, time, matchTransportTypeWithPlatform(typeofVehicle), companyName);
                 break;
             case Seaship:
-                vehicleToReturn = new Seaship(date, time);
+                vehicleToReturn = new Seaship(date, time, matchTransportTypeWithPlatform(typeofVehicle), companyName);
                 break;
         }
         
@@ -189,19 +196,19 @@ class ControllerAlgoritmes
     //Check list for matching vehicles
     public static void checkIncomingVehicles(Timestamp timeStamp)
     {
+        //System.out.println(timeStamp);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(timeStamp);
         
-        System.out.println(calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.MONTH) + " " + calendar.get(Calendar.YEAR));
+        Date date = new Date(calendar.getTime().getYear(), calendar.getTime().getMonth(), calendar.getTime().getDate());
+        float arrivalTime = timeStamp.getHours() + ((float)timeStamp.getMinutes() / 100);
         
         for (ExternVehicle ev : scheduledArrivingVehicles)
         {
-            System.out.println(ev.getArrivalDate().toString());
-            
             if (
-                    (false) // timestamp vergelijken, moet nog worden uitgezocht maar kan nu niet compilen
+                    (date.equals(ev.getArrivalDate()) && (arrivalTime == ev.getArrivalTime()))
                     &&
-                    (true) // functie maken die docktype vergelijkt met vehilce type en dan checken of het vrij is
+                    (ev.getCurrentPlatform().hasFreeParkingSpot())
                 ) 
             {
                 ev.enter();
@@ -211,8 +218,48 @@ class ControllerAlgoritmes
         }
     }
     
-    private static Platform matchVehicleTypeWithPlatform(Container.TransportType transportType)
+    private static Platform matchTransportTypeWithPlatform(Container.TransportType transportType)
     {
-        return null;
+        Platform platform = null;
+        
+        for (Platform p : Settings.port.getPlatforms())
+        {
+            if (p.getTransportType() == transportType)
+            {
+                platform = p;
+            }
+        }
+        
+        return platform;
+    }
+    
+    public static long getFirstDate(List<Container> ContainersFromXML)
+    {
+        if (ContainersFromXML.size() > 0)
+        {
+            Container FirstContainer = ContainersFromXML.get(0);
+        
+            for (Container c : ContainersFromXML)
+            {
+                if (c.getArrivalDate().before(FirstContainer.getArrivalDate())
+                        &&
+                   (c.getArrivalTimeFrom() == FirstContainer.getArrivalTimeFrom())
+                   )
+                {
+                    FirstContainer = c;
+               }
+            }
+            
+            int hours = (int)FirstContainer.getArrivalTimeFrom();
+            float minutes = ((float)FirstContainer.getArrivalTimeFrom() % 1) * 100;
+            
+            Date date = new Date(FirstContainer.getArrivalDate().getYear(), FirstContainer.getArrivalDate().getMonth(), FirstContainer.getArrivalDate().getDay(), hours, (int)minutes);
+            System.out.println(FirstContainer.getArrivalDate());
+            return date.getTime();
+        }
+        else
+        {
+            return(1102806000000l);
+        }
     }
 }

@@ -12,14 +12,16 @@ public class Job
     private float departureTime;
     private Container.TransportType vehicleType;
     private List<Container> Containers;
-    private ExternVehicle TargetVehicle;
+    private ExternVehicle targetVehicle;
+    private String companyName;
     
-    public Job(Date date, float departureTime, Container.TransportType vehicleType) 
+    public Job(Date date, float departureTime, Container.TransportType vehicleType, String companyName) 
     {
         this.date = date;
         this.departureTime = departureTime;
         this.vehicleType = vehicleType;
         this.Containers = new ArrayList<>();
+        this.companyName = companyName;
     }
     
     public void addContainer(Container container)
@@ -49,13 +51,30 @@ public class Job
 
     public ExternVehicle getTargetVehicle() 
     {
-        return TargetVehicle;
+        return targetVehicle;
     }
 
     public void setTargetVehicle(ExternVehicle TargetVehicle) 
     {
-        this.TargetVehicle = TargetVehicle;
+        this.targetVehicle = TargetVehicle;
     }
+    
+    public void changeContainerDepartureTime(float departureTime)
+    {
+        this.departureTime = departureTime;
+        
+        for (Container c : Containers)
+        {
+            c.setDepartureTimeFrom(departureTime);
+        }
+    }
+
+    public String getCompanyName() 
+    {
+        return companyName;
+    }
+    
+    
     
     public static Stack<Job> sortOutGoingJobs(List<Job> Jobs)
     {

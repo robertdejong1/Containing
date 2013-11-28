@@ -140,33 +140,44 @@ class Controlleralgorithms
         {
             job = jobQeueSorted.pop();
         }
-        catch (Exception e)
+        catch (Exception e)//OOPS hou geen rekening met verschillende types platformen
         {
             throw new NoJobException("No jobs in qeue.");
         }
-        jobQeueUnsorted.remove(job);
         
-        //Check platform for empty parkingspot:
-        if (platform.hasFreeParkingSpot())
+        if (job.getVehicleType() == platform.getTransportType())
         {
-            ExternVehicle eV = createNewVehicle(
+            jobQeueUnsorted.remove(job);
+        
+            //Check platform for empty parkingspot:
+            if (platform.hasFreeParkingSpot())
+            {
+                ExternVehicle eV = createNewVehicle(
                         job.getVehicleType(), 
                         job.getDate(), 
                         job.getDepartureTime(), 
                         job.getCompanyName());
             
-            job.setTargetVehicle(eV);
+                job.setTargetVehicle(eV);
+            }
+            else
+            {
+                job.changeContainerDepartureTime(job.getDepartureTime());
+                jobQeueSorted.push(job);
+                jobQeueUnsorted.add(job);
+            
+                job = null;
+                throw new NoJobException("No parkingspot available");
+            }
+        
+            return job;
         }
         else
         {
-            job.changeContainerDepartureTime(job.getDepartureTime());
             jobQeueSorted.push(job);
-            
-            job = null;
-            throw new NoJobException("No parkingspot available");
+            throw new NoJobException("No jobs for platform.");
         }
         
-        return job;
     }
     
     //Creates vehicle based on type
@@ -241,10 +252,15 @@ class Controlleralgorithms
         
             for (Container c : ContainersFromXML)
             {
-                if (c.getArrivalDate().before(FirstContainer.getArrivalDate())
+                if ((c.getArrivalDate().before(FirstContainer.getArrivalDate())
                         &&
-                   (c.getArrivalTimeFrom() == FirstContainer.getArrivalTimeFrom())
-                   )
+                   (c.getArrivalTimeFrom() <= FirstContainer.getArrivalTimeFrom()))
+                        ||
+                   ((c.getArrivalDate().equals(FirstContainer.getArrivalDate())
+                        &&
+                   (c.getArrivalTimeFrom() <= FirstContainer.getArrivalTimeFrom()))
+                        
+                   ))
                 {
                     FirstContainer = c;
                }
@@ -253,8 +269,7 @@ class Controlleralgorithms
             int hours = (int)FirstContainer.getArrivalTimeFrom();
             float minutes = ((float)FirstContainer.getArrivalTimeFrom() % 1) * 100;
             
-            Date date = new Date(FirstContainer.getArrivalDate().getYear(), FirstContainer.getArrivalDate().getMonth(), FirstContainer.getArrivalDate().getDay(), hours, (int)minutes);
-            System.out.println(FirstContainer.getArrivalDate());
+            Date date = new Date(FirstContainer.getArrivalDate().getYear(), FirstContainer.getArrivalDate().getMonth(), FirstContainer.getArrivalDate().getDate(), hours, (int)minutes);
             return date.getTime();
         }
         else

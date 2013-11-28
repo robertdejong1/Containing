@@ -90,7 +90,7 @@ public class StoragePlatform extends Platform {
         cranes = new StorageCrane[NR_STRIPS];
         for(int i = 0; i < NR_STRIPS; i++) {
             Vector3f newPosition = new Vector3f(0,0, stripZ*i);
-            cranes[i] = new StorageCrane(newPosition);
+            cranes[i] = new StorageCrane(newPosition, this);
         }
     }
     

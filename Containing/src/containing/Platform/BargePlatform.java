@@ -67,7 +67,7 @@ public class BargePlatform extends Platform {
         float margin = Z_SIZE / NR_CRANES;
         for(int i = 0; i < cranes.length; i++) {
             Vector3f cranePosition = new Vector3f(CRANE_X_POSITION, 0, margin*i);
-            cranes[i] = new BargeCrane(cranePosition);
+            cranes[i] = new BargeCrane(cranePosition, this);
         }
     }
     

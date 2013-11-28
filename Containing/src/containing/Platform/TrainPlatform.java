@@ -67,7 +67,7 @@ public class TrainPlatform extends Platform {
         float margin = Z_SIZE / (float)NR_CRANES;
         for(int i = 0; i < cranes.length; i++) {
             Vector3f cranePosition = new Vector3f(CRANE_X_POSITION,0,margin*i);
-            cranes[i] = new TrainCrane(cranePosition);
+            cranes[i] = new TrainCrane(cranePosition, this);
         }
     }
     

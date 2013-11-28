@@ -21,6 +21,11 @@ import java.util.Queue;
 
 public abstract class Platform {
     
+    public enum State {
+        BUSY,
+        FREE,
+    }
+    
     private static int idCounter = 0;       // used for automatic ID generation
     
     // non-access properties
@@ -58,8 +63,8 @@ public abstract class Platform {
         agvSpots = new AgvSpot[nrAgvSpots];
         for(int i = 0; i < agvSpots.length; i++) 
         {
-            float newX = agvSpotBasePosition.x + ParkingSpot.width;
-            float newZ = agvSpotBasePosition.z + ParkingSpot.length;
+            float newX = agvSpotBasePosition.x + AgvSpot.width;
+            float newZ = agvSpotBasePosition.z + AgvSpot.length;
             Vector3f newAgvSpotPosition = new Vector3f(newX, 0, newZ);
             agvSpots[i] = new AgvSpot(newAgvSpotPosition);
         }
@@ -75,10 +80,6 @@ public abstract class Platform {
         this.dimension = dimension;
         this.entrypoint = entrypoint;
         this.exitpoint = exitpoint;
-    }
-    
-    public void pushJob(Job job) {
-        
     }
     
     /**
@@ -98,7 +99,15 @@ public abstract class Platform {
         agvSpots[getFreeParkingSpot()].ParkVehicle(agv);
     }
     
-    public int getFreeParkingSpot() {
+    public boolean hasFreeParkingSpot() {
+        for(ParkingSpot spot : agvSpots) {
+            if(spot.isEmpty())
+                return true;
+        }
+        return false;
+    }
+    
+    protected int getFreeParkingSpot() {
         for(int i = 0; i < agvSpots.length; i++) {
             if(agvSpots[i].isEmpty())
                 return i;
@@ -144,7 +153,7 @@ public abstract class Platform {
     
     @Override
     public String toString() {
-        return String.format("[%d, width=%1f, length=%1f]", id, dimension.width, dimension.length);
+        return String.format("[%d, width=%.1f, length=%.1f]", id, dimension.width, dimension.length);
     }
     
     protected abstract void initVehicleSpots();

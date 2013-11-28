@@ -67,7 +67,7 @@ public class SeashipPlatform extends Platform {
         float margin = X_SIZE / (float)NR_CRANES;
         for(int i = 0; i < cranes.length; i++) {
             Vector3f cranePosition = new Vector3f(margin*i,0,CRANE_Z_POSITION);
-            cranes[i] = new SeashipCrane(cranePosition);
+            cranes[i] = new SeashipCrane(cranePosition, this);
         }
     }
     

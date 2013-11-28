@@ -67,7 +67,7 @@ public class TruckPlatform extends Platform {
         float margin = X_SIZE / (float)NR_CRANES;
         for(int i = 0; i < cranes.length; i++) {
             Vector3f cranePosition = new Vector3f(CRANE_X_POSITION, 0, margin*i);
-            cranes[i] = new TruckCrane(cranePosition);
+            cranes[i] = new TruckCrane(cranePosition, this);
         }
     }
     

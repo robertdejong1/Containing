@@ -16,11 +16,10 @@ public abstract class ParkingSpot
     protected Vector3f entryPoint; //In- en uitgang van de parkingspot
     
     
-    protected ParkingSpot(Vector3f position, Vector3f entryPoint) 
+    protected ParkingSpot(Vector3f position) 
     {
         this.id = ParkingSpot.requestNewParkingSpotID();
         this.position = position;
-        this.entryPoint = entryPoint;
     }
     
     public boolean isEmpty()

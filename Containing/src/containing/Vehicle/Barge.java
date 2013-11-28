@@ -17,6 +17,8 @@ import java.util.Date;
 public class Barge extends ExternVehicle {
     static int capicity = 1;
     protected int timeCounter = 0;
+    public static float width = 5f; //????????
+    public static float length = 10f; //??????????
     
     public Barge(Date arrivalDate, float arrivalTime, Platform platform, String company){ 
         super(capicity, arrivalDate, arrivalTime, new Container[6][3][3], platform, company); //true if vehicle comes to load, otherwise false

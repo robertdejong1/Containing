@@ -19,6 +19,8 @@ public class Seaship extends ExternVehicle {
     private int SeashipId;
     static int capicity = 10000;
     int[][][] grid;
+    public static float width = 10f; //????????
+    public static float length = 20f; //??????????
     
     public Seaship(Date arrivalDate, float arrivalTime, Platform platform, String company){
         super(capicity, arrivalDate, arrivalTime, new Container[20][16][6], platform, company); //true if vehicle comes to load, otherwise false

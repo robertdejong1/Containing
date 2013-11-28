@@ -17,7 +17,8 @@ import java.util.Date;
 public class Train extends ExternVehicle{
     static int capicity = 10000;
     protected int timeCounter = 0;
-    
+    public static float width = 5f; //????????
+    public static float length = 30f; //??????????
     public Train(Date arrivalDate, float arrivalTime, Platform platform, String company){          //rij hoogte kolom
         super(capicity, arrivalDate, arrivalTime,  new Container[1][2][1], platform, company); //true if vehicle comes to load, otherwise false
        

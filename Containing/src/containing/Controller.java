@@ -2,7 +2,6 @@ package containing;
 
 import containing.Exceptions.NoJobException;
 import containing.Platform.Platform;
-import containing.Vehicle.AGV;
 import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public class Controller
         return CommandsToReturn;
     }
     
-    public static void AddContainerTOJobQeue(Container container)
+    public static void sortOutgoingContainer(Container container)
     {
         Controlleralgorithms.sortOutgoingContainer(container);
     }
@@ -113,23 +112,5 @@ public class Controller
         {
             throw e;
         }
-    }
-                
-    public static void requestNextJobForLoadedAGV(AGV agv)
-    {
-        //kijken waar container heen moet
-        //route aanmaken
-        //route naar agv sturen
-        agv.followRoute(null);
-    }
-    
-    public static boolean requestIdleAGV(Platform RequestingPlatform)
-    {
-        //kijk lijst na op idle agv's
-        //kijk welke de dichstbijzijnde is
-        //geef agv de route 
-        //geef agv door voor welke container hij komt???? bespreken met groep
-        
-        return false;
     }
 }

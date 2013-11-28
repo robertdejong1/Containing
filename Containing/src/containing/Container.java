@@ -83,6 +83,18 @@ public class Container
     public TransportType getDepartureTransport() {
         return departureTransport;
     }
+
+    public void setDepartureDate(Date departureDate) {
+        this.departureDate = departureDate;
+    }
+
+    public void setDepartureTimeFrom(float departureTimeFrom) {
+        this.departureTimeFrom = departureTimeFrom;
+    }
+
+    public void setDepartureTimeTill(float departureTimeTill) {
+        this.departureTimeTill = departureTimeTill;
+    }
     
     @Override
     public String toString(){

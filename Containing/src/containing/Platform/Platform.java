@@ -1,165 +1,144 @@
 package containing.Platform;
 
-import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
-import containing.Job;
-import containing.ParkingSpot.ParkingSpot;
 import containing.ParkingSpot.AgvSpot;
+import containing.ParkingSpot.ParkingSpot;
+import containing.Settings;
 import containing.Vector3f;
-import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-
-/**
- * Platform class, has the basic functions for all Platforms in the port.
- * @author Minardus
- */
 
 public abstract class Platform {
     
-    public enum State {
-        BUSY,
-        FREE,
-    }
+    public enum State { BUSY, FREE }
+    protected enum DynamicAxis { X, Z }
     
-    private static int idCounter = 0;       // used for automatic ID generation
+    private final float AGVSPOT_OFFSET = 0f;
     
-    // non-access properties
-    private final int id;                   // unique ID for identifying platform
-    private final Vector3f position;        // the position of this platform (for simulation)
-    private Dimension2f dimension;          // dimension of platform (width x length)
-    private Vector3f entrypoint;            // waypoint of entrance
-    private Vector3f exitpoint;             // waypoint of exit
+    private static int idCounter = 1;
     
-    // accessable properties (in extended classes)
-    protected ParkingSpot[] agvSpots;       // all parking spots for AGV's
-    protected Crane[] cranes;               // the cranes on the platform
-    protected ParkingSpot[] vehicleSpots;   // spot of external vehicle
+    private final int id;
+    private final Vector3f position;
+    private Dimension2f dimension;
+    private DynamicAxis axis;
+    private Vector3f entrypoint = null;
+    private Vector3f exitpoint = null;
+    private TransportType transportType = null;
     
-    // jobs todo
-    protected Queue<Job> jobQueue;
+    protected List<AgvSpot> agvSpots;
+    protected List<Crane> cranes;
+    protected List<ParkingSpot> extVehicleSpots;
     
-    // timing
-    protected int timing = 0;
-    
-    /**
-     * Give platform unique ID and position
-     * @param position The position of the platform in the port
-     */
-    public Platform(Vector3f position) {
-        this.id = ++idCounter;
+    public Platform(Vector3f position) 
+    {
+        id = idCounter++;
         this.position = position;
-        jobQueue = new LinkedList<>();
+        /* initialize arraylists */
+        agvSpots = new ArrayList<>();
+        cranes = new ArrayList<>();
+        extVehicleSpots = new ArrayList<>();
     }
     
-    public void initAgvSpots(char axis) {
-        // initialize parking spots for AGV's
-        Vector3f agvSpotBasePosition = new Vector3f(0,0,0);
-        int nrAgvSpots = (int)((axis == 'x' ? dimension.width : dimension.length) / /*ParkingSpot.width*/ 2);
-        agvSpots = new AgvSpot[nrAgvSpots];
-        for(int i = 0; i < agvSpots.length; i++) 
+    protected void createAgvSpots(Vector3f baseposition)
+    {   
+        float x = baseposition.x;
+        float z = baseposition.z;
+        
+        for(int i = 0; i < getAgvSpotAmount(); i++)
         {
-            float newX = agvSpotBasePosition.x + AgvSpot.width;
-            float newZ = agvSpotBasePosition.z + AgvSpot.length;
-            Vector3f newAgvSpotPosition = new Vector3f(newX, 0, newZ);
-            agvSpots[i] = new AgvSpot(newAgvSpotPosition);
+            Vector3f spotPosition;
+            float currentWidth = AgvSpot.width*i+AGVSPOT_OFFSET;
+            spotPosition = axis.equals(DynamicAxis.X) ? new Vector3f(currentWidth,0,z) : new Vector3f(x,0,currentWidth);
+            agvSpots.add(new AgvSpot(spotPosition));
         }
     }
     
-    /**
-     * Set dimension of platform and the waypoints of entrance and exit
-     * @param dimension width x length of platform
-     * @param entrypoint the waypoint of the entrance
-     * @param exitpoint the waypoint of the exit
-     */
-    protected void setDimensionAndWayPoints(Dimension2f dimension, Vector3f entrypoint, Vector3f exitpoint) {
-        this.dimension = dimension;
-        this.entrypoint = entrypoint;
-        this.exitpoint = exitpoint;
+    private int getAgvSpotAmount()
+    {
+        return (int)((float)(axis.equals(DynamicAxis.X) ? dimension.width : dimension.length) / AgvSpot.width);
     }
     
-    /**
-     * Park a empty AGV
-     * @param agv The AGV that is sended by controller 
-     */
-    public void parkAGV(AGV agv) {
-        agvSpots[getFreeParkingSpot()].ParkVehicle(agv);
-    }
-    
-    /**
-     * Park a AGV that is assigned to a container
-     * @param agv The AGV that is sended by controller
-     * @param container The container thats gonna be loaded/unloaded
-     */
-    public void parkAGV(AGV agv, Container container) {
-        agvSpots[getFreeParkingSpot()].ParkVehicle(agv);
-    }
-    
-    public boolean hasFreeParkingSpot() {
-        for(ParkingSpot spot : agvSpots) {
+    public boolean hasFreeParkingSpot()
+    {
+        for(AgvSpot spot : agvSpots)
             if(spot.isEmpty())
                 return true;
-        }
         return false;
     }
     
-    protected int getFreeParkingSpot() {
-        for(int i = 0; i < agvSpots.length; i++) {
-            if(agvSpots[i].isEmpty())
-                return i;
-        }
-        return 0;
-    }
-    
-    public ParkingSpot getAgvSpot(int spot) {
-        return agvSpots[spot];
-    }
-    
-    public ParkingSpot[] getAllAgvSpots() {
-        return agvSpots;
-    }
-    
-    public ParkingSpot getVehicleSpot(int spot) {
-        return vehicleSpots[spot];
-    }
-    
-    public ParkingSpot[] getAllVehicleSpots() {
-        return vehicleSpots;
-    }
-    
-    public int getId() {
-        return id;
-    }
-    
-    public Dimension2f getDimension() {
-        return dimension;
-    }
-    
-    public Vector3f getPosition() {
+    public Vector3f getPosition()
+    {
         return position;
     }
     
-    public Vector3f entryPoint() {
+    public Dimension2f getDimension() 
+    {
+        return dimension;
+    }
+    
+    protected void setDimension(Dimension2f dimension)
+    {
+        this.dimension = dimension;
+    }
+    
+    public DynamicAxis getAxis()
+    {
+        return axis;
+    }
+    
+    protected void setAxis(DynamicAxis axis) 
+    {
+        this.axis = axis;
+    }
+    
+    public Vector3f getEntrypoint()
+    {
         return entrypoint;
     }
     
-    public Vector3f exitPoint() {
+    protected void setEntrypoint(Vector3f entrypoint)
+    {
+        this.entrypoint = entrypoint;
+    }
+    
+    public Vector3f getExitpoint() {
         return exitpoint;
     }
+    
+    protected void setExitpoint(Vector3f exitpoint)
+    {
+        this.exitpoint = exitpoint;
+    }
+    
+    public TransportType getTransportType() {
+        return transportType;
+    }
+    
+    protected void setTransportType(TransportType transportType)
+    {
+        this.transportType = transportType;
+    }
+    
+    public int getId()
+    {
+        return id;
+    }
+    
+    protected abstract void createCranes();
+    protected abstract void createExtVehicleSpots();
+    
+    public abstract void update();
     
     @Override
     public String toString() {
         return String.format("[%d, width=%.1f, length=%.1f]", id, dimension.width, dimension.length);
     }
     
-    protected abstract void initVehicleSpots();
-    protected abstract void initCranes();
-    public abstract TransportType getTransportType();
-    
-    public abstract void update();
+    protected void log(String msg)
+    {
+        Settings.messageLog.AddMessage(msg);
+    }
     
 }

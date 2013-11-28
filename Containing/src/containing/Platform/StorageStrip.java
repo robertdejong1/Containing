@@ -1,60 +1,43 @@
 package containing.Platform;
 
 import containing.Container;
-import containing.Vector3f;
-import containing.Vehicle.AGV;
-import java.util.ArrayList;
-import java.util.List;
+import containing.Pair;
+import containing.Point3D;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
- * 1 Storage strip krijgt avgSpots
- * Aan de linkerkant wordt geladen, aan de rechterkant gelost.
- * Als ik de even avgSpots aan de linkerkant doe, en de oneven
- * aan de rechterkant kunnen we daar op checken.
+ * StorageStrip.java
+ * Keeps track of positions of containers
  * @author Minardus
  */
-
 public class StorageStrip {
     
-    private final int id;
-    private final Vector3f position;
-    private final StoragePlatform controller;
-    private final Vector3f MAX_SPACE = new Vector3f(6, 40, 6);
+    private final int MAX_X = 40;
+    private final int MAX_Y = 6;
+    private final int MAX_Z = 6;
+    
     private Container[][][] containers;
+    private HashMap<Point3D, Container> containers2;
     
-    public StorageStrip(int id, Vector3f position, StoragePlatform controller) {
-        this.id = id;
-        this.position = position;
-        this.controller = controller;
+    public StorageStrip() 
+    {
+        containers = new Container[MAX_X][MAX_Y][MAX_Z];
     }
     
-    public void load(Container container) {
-        Vector3f pos = getFreePosition();
-        //containers[pos.x][pos.z][pos.y] = container;
+    public boolean hasContainer(Container container)
+    {
+        return true; //todo
     }
     
-    public Container unload(Vector3f pos) {
-        Container container = getContainer(pos);
-        resetPosition(pos);
-        return container;
+    public void addContainer(Container c)
+    {
+        //containers.put(c, new Pair(getFreeContainerPosition(c.getDepartureDate(), c.getDepartureTimeFrom(), c.getDepartureTimeTill()), c));
     }
     
-    public Vector3f getFreePosition() {
-        Vector3f pos = new Vector3f(0,0,0);
-        return pos;
-    }
-    
-    public Container getContainer(Vector3f pos) {
-        //return containers[pos.x][pos.z][pos.y];
-        return null;
-    }
-    
-    public void resetPosition(Vector3f pos) {
-        //containers[pos.x][pos.z][pos.y] = null;
-    }
-    
-    public int getId() {
-        return id;
+    private Point3D getFreeContainerPosition(Date date, float from, float till)
+    {
+        return new Point3D(0,0,0);
     }
     
 }

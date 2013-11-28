@@ -3,82 +3,67 @@ package containing.Platform;
 import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.ParkingSpot.BargeSpot;
-import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.BargeCrane;
 
 /**
- * StoragePlatform
- * 
- * Crane movement:
- * X-axis: static
- * Z-axis: dynamic
- * 
+ * BargePlatform.java
+ * The dynamic axis for cranes is: Z
  * @author Minardus
  */
 public class BargePlatform extends Platform {
     
-    private final int NR_EXT_VEHICLES = 2;      // amount of external vehicles fit in the platform
-    private final float CRANE_X_POSITION = 50;  // the Z position of the cranes (where the Rails are ;))
-    private final int NR_CRANES = 8;            // amount of cranes on this platform
-    private final float X_SIZE = 100;            // the width of this platform
-    private final float Z_SIZE = 100;           // the length of thus platform
+    private final float WIDTH          = 100f;  // ???
+    private final float LENGTH         = 725f;  // ???
+    private final int MAX_VEHICLES     = 2;
+    private final int CRANES           = 8;
     
-    /**
-     * Create Barge platform
-     * @param position the position in the port
-     */
-    public BargePlatform(Vector3f position) {
-        // initialize platform
+    private final float AGV_OFFSET     = 0f;
+    private final float CRANE_OFFSET   = 98f;   // ???
+    private final float VEHICLE_OFFSET = 0f;
+    
+    public BargePlatform(Vector3f position)
+    {
         super(position);
-        
-        // set dimensions and entrance/exit waypoints of platform
-        Dimension2f newDimension = new Dimension2f(X_SIZE, Z_SIZE);
-        Vector3f newEntrypoint = new Vector3f(0,0,0);
-        Vector3f newExitpoint = new Vector3f(0,0,0);
-        setDimensionAndWayPoints(newDimension, newEntrypoint, newExitpoint);
-        
-        // initialize AGV spots
-        initAgvSpots('z');
-        
-        // initialize vehicle spots
-        initVehicleSpots();
-        
-        // initialize cranes
-        initCranes();
-        
-        Settings.messageLog.AddMessage("Created BargePlatform object: " + toString());
+        setDimension(new Dimension2f(WIDTH, LENGTH));
+        setAxis(DynamicAxis.Z);
+        setEntrypoint(new Vector3f(0,0,0));
+        setExitpoint(new Vector3f(0,0,LENGTH));
+        setTransportType(TransportType.Barge);
+        createAgvSpots(new Vector3f(CRANE_OFFSET /* - BargeCrane.length */ - AGV_OFFSET, 0, 0));
+        createExtVehicleSpots();
+        createCranes();
+        log("Created BargePlatform object: " + toString());
     }
     
     @Override
-    protected final void initVehicleSpots() {
-        vehicleSpots = new BargeSpot[NR_EXT_VEHICLES];
-        float spotSize = Z_SIZE / (float)NR_EXT_VEHICLES;
-        for(int i = 0; i < vehicleSpots.length; i++) {
-            float spotPosition = (i+1)*spotSize;
-            Vector3f vehicleSpotPosition = new Vector3f(X_SIZE + BargeSpot.width, 0, spotPosition);
-            vehicleSpots[i] = new BargeSpot(vehicleSpotPosition);
+    protected final void createCranes() 
+    {
+        float space = LENGTH / (float)CRANES;
+        float offset = (space / 2f) - ( /*BargeCrane.width*/ 5f / 2f);
+        for(int i = 0; i < CRANES; i++) 
+        {
+            Vector3f cranePosition = new Vector3f(CRANE_OFFSET, 0, space*i + offset);
+            cranes.add(new BargeCrane(cranePosition, this));
+        }
+    }
+
+    @Override
+    protected final void createExtVehicleSpots() 
+    {
+        float space = LENGTH / (float)MAX_VEHICLES;
+        float offset = (space / 2) - (BargeSpot.length / 2);
+        for(int i = 0; i < MAX_VEHICLES; i++)
+        {
+            Vector3f spotPosition = new Vector3f(WIDTH + VEHICLE_OFFSET,0,space*i + offset);
+            extVehicleSpots.add(new BargeSpot(spotPosition));
         }
     }
     
     @Override
-    protected final void initCranes() {
-        cranes = new BargeCrane[NR_CRANES];
-        float margin = Z_SIZE / NR_CRANES;
-        for(int i = 0; i < cranes.length; i++) {
-            Vector3f cranePosition = new Vector3f(CRANE_X_POSITION, 0, margin*i);
-            cranes[i] = new BargeCrane(cranePosition, this);
-        }
-    }
-    
-    @Override
-    public TransportType getTransportType() {
-        return TransportType.Barge;
-    }
-    
-    @Override
-    public void update() {
-        
+    public void update()
+    {
+        //todo
     }
     
 }

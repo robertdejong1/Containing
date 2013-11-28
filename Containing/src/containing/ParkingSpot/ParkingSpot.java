@@ -23,11 +23,6 @@ public abstract class ParkingSpot
         this.entryPoint = entryPoint;
     }
     
-    public int GetParkingSpotID()
-    {
-        return this.id;
-    }
-    
     public boolean isEmpty()
     {
         return this.ParkedVehicle == null;
@@ -52,4 +47,22 @@ public abstract class ParkingSpot
         idCounter++;
         return idCounter;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public Vector3f getPosition() {
+        return position;
+    }
+
+    public Vehicle getParkedVehicle() {
+        return ParkedVehicle;
+    }
+
+    public Vector3f getEntryPoint() {
+        return entryPoint;
+    }
+    
+    
 }

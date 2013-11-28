@@ -7,7 +7,7 @@
 package containing.Vehicle;
 
 import containing.Container;
-import containing.Container;
+import containing.Platform.Platform;
 import java.util.Date;
 
 /**
@@ -20,10 +20,11 @@ public class Seaship extends ExternVehicle {
     static int capicity = 10000;
     int[][][] grid;
     
-    public Seaship(Date arrivalDate, float arrivalTime){
-        super(capicity, arrivalDate, arrivalTime, new Container[20][16][6]); //true if vehicle comes to load, otherwise false
+    public Seaship(Date arrivalDate, float arrivalTime, Platform platform, String company){
+        super(capicity, arrivalDate, arrivalTime, new Container[20][16][6], platform, company); //true if vehicle comes to load, otherwise false
         SeashipId = counter;
         counter++;
+     
     }
    
     public Container unload(){return super.unload();}

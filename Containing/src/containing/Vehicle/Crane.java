@@ -7,6 +7,7 @@
 package containing.Vehicle;
 
 import containing.Container;
+import containing.Platform.Platform;
 import containing.Vector3f;
 
 /**
@@ -30,8 +31,8 @@ public abstract class Crane extends InternVehicle {
     private final int resetTime = 50;
     protected final int metersToNextAgvSpot = 10;
     
-    public Crane(Vector3f startPosition){
-        super(CAPICITY, startPosition);
+    public Crane(Vector3f startPosition, Platform platform){
+        super(CAPICITY, startPosition, platform);
     }
     
     public void unload(AGV agv){

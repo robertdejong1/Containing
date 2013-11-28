@@ -7,6 +7,7 @@
 package containing.Vehicle;
 
 import containing.Container;
+import containing.Platform.Platform;
 import containing.Vector3f;
 
 /**
@@ -18,8 +19,8 @@ public abstract class InternVehicle extends Vehicle{
     protected boolean isAvailable;
     protected Vector3f startPosition;
     
-    public InternVehicle(int capicity, Vector3f startPosition){
-        super(capicity);
+    public InternVehicle(int capicity, Vector3f startPosition, Platform platform){
+        super(capicity, platform);
         isAvailable = false;
         this.startPosition = startPosition;
     }

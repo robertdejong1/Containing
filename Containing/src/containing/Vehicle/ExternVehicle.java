@@ -7,6 +7,7 @@
 package containing.Vehicle;
 
 import containing.Container;
+import containing.Platform.Platform;
 import containing.Vector3f;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,17 +21,20 @@ public abstract class ExternVehicle extends Vehicle {
     
     private Date arrivalDate;
     private float arrivalTime;
-  
+    private String company;
     Container[][][] grid;
     private List<Container> priorityCargo = new ArrayList<Container>();
-    
-    public ExternVehicle(int capicity, Date arrivalDate, float arrivalTime, Container[][][] grid){
-        super(capicity);
+   
+    public ExternVehicle(int capicity, Date arrivalDate, float arrivalTime, Container[][][] grid, Platform platform, String company){
+        super(capicity, platform);
         this.arrivalDate = arrivalDate;
         this.arrivalTime = arrivalTime;
         status = Status.WAITING; 
         this.grid = grid;
+        this.company = company;
     }
+    
+    public String getCompanyName(){return this.company;}
     
     public void getContainerWithHighestPriority(){
         /*

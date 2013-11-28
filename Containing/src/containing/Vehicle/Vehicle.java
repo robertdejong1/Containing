@@ -24,7 +24,7 @@ public abstract class Vehicle
     protected ParkingSpot currentParkingSpot;
     protected Vector3f position;
     
-    public Vehicle(int capicity){
+    public Vehicle(int capicity, Platform platform){
         this.cargo = new ArrayList<Container>();   
         this.isLoaded = cargo.isEmpty() ? false : true;
         this.capicity = capicity;

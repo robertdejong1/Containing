@@ -7,6 +7,7 @@
 package containing.Vehicle;
 
 import containing.Container;
+import containing.Platform.Platform;
 import java.util.Date;
 
 /**
@@ -17,8 +18,8 @@ public class Barge extends ExternVehicle {
     static int capicity = 1;
     protected int timeCounter = 0;
     
-    public Barge(Date arrivalDate, float arrivalTime){ 
-        super(capicity, arrivalDate, arrivalTime, new Container[6][3][3]); //true if vehicle comes to load, otherwise false
+    public Barge(Date arrivalDate, float arrivalTime, Platform platform, String company){ 
+        super(capicity, arrivalDate, arrivalTime, new Container[6][3][3], platform, company); //true if vehicle comes to load, otherwise false
     }
     
     public Container unload(){return super.unload();}

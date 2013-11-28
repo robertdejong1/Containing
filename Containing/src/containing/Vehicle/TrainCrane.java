@@ -7,6 +7,7 @@
 package containing.Vehicle;
 
 import containing.Container;
+import containing.Platform.Platform;
 import containing.Vector3f;
 
 /**
@@ -19,9 +20,9 @@ public class TrainCrane extends Crane {
     private int currentRow;
     
     //hier TrainCrane specific variables
-    public TrainCrane(){this(new Vector3f(0,0,0));} //om te testen zolang posities niet bekend zijn
-    public TrainCrane(Vector3f startPosition){ //variabelen doorgeven aan constructor crane
-        super(startPosition);
+   
+    public TrainCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
+        super(startPosition, platform);
         id = counter;
         counter++;
     }

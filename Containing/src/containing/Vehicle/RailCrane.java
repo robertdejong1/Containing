@@ -7,6 +7,7 @@
 package containing.Vehicle;
 
 import containing.Container;
+import containing.Platform.Platform;
 import containing.Vector3f;
 
 /**
@@ -22,11 +23,9 @@ public class RailCrane extends Crane {
     private final float liftTimeMax = 3.5f * 60;
     private final float dropTimeMin = 0;
     private final float dropTimeMax = 3.5f * 60;*/
-    
-    public RailCrane(){this(new Vector3f(0,0,0));} //om te testen zolang posities niet bekend zijn
-    
-    public RailCrane(Vector3f startPosition){ //variabelen doorgeven aan constructor crane
-        super(startPosition);
+
+    public RailCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
+        super(startPosition, platform);
         id = counter;
         counter++;
     }

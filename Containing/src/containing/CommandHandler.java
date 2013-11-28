@@ -30,6 +30,17 @@ public class CommandHandler {
             case "PORT":
                 return new Command("port", Settings.port);
 
+            case "STATS":
+                HashMap<String, Integer> stats = new HashMap<>();
+                stats.put("train", 1);
+                stats.put("truck", 1);
+                stats.put("seaShip", 1);
+                stats.put("barge", 1);
+                stats.put("opslag", 1);
+                stats.put("agv", 1);
+                stats.put("other", 1);
+                return new Command("stats", stats);
+                
             default:
                 return null;
         }

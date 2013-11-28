@@ -69,16 +69,15 @@ public class NetworkHandler implements Runnable {
             }
         	try{
                 if(!reader.ready()){
-                    List<String> commands = CommandHandler.getCommands();
+                	if(CommandHandler.newCommandsAvailable()){  
+                		List<String> commands = CommandHandler.getCommands();
+                		System.out.println(commands);
+                		for(String cmd : commands){
+                        	System.out.println("Sending: " +cmd);
+                            writer.println(cmd);
+                        }
+                	}
                     
-                    System.out.println(commands.toString());
-                    if(commands.size() > 0)
-                    {                    
-                    	for(String cmd : commands){
-                    		System.out.println("Sending: " +cmd);
-                        	writer.println(cmd);
-                    	}
-                    }
                 }
                 else{
                     String inputLine = reader.readLine();

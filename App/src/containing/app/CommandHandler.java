@@ -12,7 +12,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CommandHandler {
 
-	public volatile static List<String> queuedCommands = new ArrayList<String>();
+	volatile static List<String> queuedCommands = new ArrayList<String>();
 	
     public static Boolean handle(String json){
         JSONParser parser = new JSONParser();
@@ -34,13 +34,22 @@ public class CommandHandler {
     }
     
     public static List<String> getCommands(){
-        List<String> cmds = queuedCommands;
-        queuedCommands.clear();
+        List<String> cmds = CommandHandler.queuedCommands;
+        System.out.println(cmds);
+        System.out.println(queuedCommands);
+        System.out.println(CommandHandler.queuedCommands);
+        System.out.println("----------------------------------");
+        if(cmds.size() > 0){    queuedCommands.clear();}
         return cmds;
     }
     
     public static void addCommand(String cmd){
     	queuedCommands.add(cmd);
     	System.out.println("Added: " +cmd);
+    	System.out.println("Current queue: " +queuedCommands.toString());
+    }
+    
+    public static boolean newCommandsAvailable(){
+    	return queuedCommands.size() > 0;
     }
 }

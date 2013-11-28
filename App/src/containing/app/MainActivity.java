@@ -89,15 +89,7 @@ public class MainActivity extends Activity {
     }
     
     public static void showDialog(final String text, final Exception e){
-        activity.runOnUiThread(new Runnable(){
-        	@Override
-        	public void run(){
-            	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            	builder.setMessage(text +"\n\n" +e.getMessage()).setTitle("Message");
-            	AlertDialog dialog = builder.create();
-            	dialog.show();
-        	}
-        });
+        showDialog(text +"\n\n" +e.getMessage());
     }
     public static void showDialog(final String text){
         activity.runOnUiThread(new Runnable(){

@@ -20,7 +20,7 @@ public class ErrorLog {
         System.out.println("ERROR: " + msg +"(" +ex.getMessage() +")");
         try{
             FileWriter writer = new FileWriter(LOGFILE, true);
-            writer.append(msg +"(" +ex.getMessage() +")");
+            writer.append(msg +"(" +ex.getMessage() +")\n");
             writer.close();
         }
         catch (IOException e) {
@@ -32,7 +32,7 @@ public class ErrorLog {
         System.out.println("ERROR: " + msg);
         try{
             FileWriter writer = new FileWriter(LOGFILE, true);
-            writer.append(msg);
+            writer.append(msg +"\n");
             writer.close();
         }
         catch (IOException e) {

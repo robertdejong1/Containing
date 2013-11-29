@@ -7,6 +7,8 @@
 package containing.Vehicle;
 
 import containing.Container;
+import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Vector3f;
 
@@ -18,6 +20,8 @@ public class BargeCrane extends Crane {
     private static int counter = 0;
     private int id;
     private int currentRow;
+    public static float width = 5f; //????????
+    public static float length = 6f; //??????????
     /*
     private final int liftTimeMin = 0;
     private final float liftTimeMax = 3.5f * 60;
@@ -27,14 +31,10 @@ public class BargeCrane extends Crane {
     
     
     public BargeCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
-        super(startPosition, platform);
+        super(startPosition, platform, Type.BARGECRANE, width, length);
         id = counter;
         counter++;
     }
-    
-    public Container unload(){return super.unload();}
-    
-    public void load(Container container){super.load(container);}
     
     public void reset(){super.reset();}
   

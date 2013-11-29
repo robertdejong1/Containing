@@ -1,6 +1,10 @@
 package containing.Vehicle;
 
+import containing.Command;
+import containing.CommandHandler;
 import containing.Container;
+import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.VehicleOverflowException;
 import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
 import containing.Road.Route;
@@ -18,24 +22,31 @@ public abstract class Vehicle
     protected static int maxSpeedUnloaded;
     protected int currentSpeed;
     protected enum Status{ UNLOADING, LOADING, WAITING, MOVEING};
+    protected enum Type{ TRUCK, AGV, BARGE, BARGECRANE, SEASHIP, SEASHIPCRANE, TRAIN, TRAINCRANE, TRUCKCRANE, STORAGECRANE};
+    private Type vehicleType;
     protected Status status;
     protected Route route;
     protected Platform currentPlatform;
     protected ParkingSpot currentParkingSpot;
     protected Vector3f position;
     
-    public Vehicle(int capicity, Platform platform){
+    public Vehicle(int capicity, Platform platform, Type type){
         this.cargo = new ArrayList<Container>();   
         this.isLoaded = cargo.isEmpty() ? false : true;
         this.capicity = capicity;
+        this.vehicleType = type;
+        this.currentPlatform = platform;
             
     }
     
-    public void load(Container container){
+    public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException{
         if (cargo.isEmpty()) isLoaded = true;
         if (cargo.size() < capicity) cargo.add(container);
-        else {throw new IndexOutOfBoundsException(String.format("Vehicle has reached capicity, container: {0} can't be loaded to vehicle.", container.getContainerId()));}
+        else {throw new CargoOutOfBoundsException("CargoOutOfBounds");}
+        CommandHandler.addCommand(new Command("loadVehicle", this));
     } 
+    
+    public Vector3f getPosition(){return this.position;}
     
     public int getCurrentSpeed(){return this.currentSpeed;}
     
@@ -47,12 +58,14 @@ public abstract class Vehicle
     
     public void setPosition(Vector3f position){this.position = position;}
     
+    public Status getStatus(){return this.status;}
+    
     public void followRoute(Route route){
         this.route = route;
         //currentplatform sign out
         this.status = Status.MOVEING;
         this.currentSpeed = (this.isLoaded) ? Vehicle.maxSpeedLoaded : Vehicle.maxSpeedUnloaded;
-        
+        CommandHandler.addCommand(new Command("followPath", this));
     } 
     
     public void stopDriving(){

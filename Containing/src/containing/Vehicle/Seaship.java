@@ -7,6 +7,8 @@
 package containing.Vehicle;
 
 import containing.Container;
+import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import java.util.Date;
 
@@ -23,18 +25,13 @@ public class Seaship extends ExternVehicle {
     public static float length = 20f; //??????????
     
     public Seaship(Date arrivalDate, float arrivalTime, Platform platform, String company){
-        super(capicity, arrivalDate, arrivalTime, new Container[20][16][6], platform, company); //true if vehicle comes to load, otherwise false
+        super(capicity, arrivalDate, arrivalTime, new Container[20][16][6], platform, company, Type.SEASHIP); //true if vehicle comes to load, otherwise false
         SeashipId = counter;
         counter++;
      
     }
    
-    public Container unload(){return super.unload();}
-    
-    public void load(Container container){
-            super.load(container);
-    } //=add
-    
+
     @Override
     public int getMaxSpeedUnloaded(){return 15;}
     @Override

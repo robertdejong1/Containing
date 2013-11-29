@@ -7,6 +7,8 @@
 package containing.Vehicle;
 
 import containing.Container;
+import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Vector3f;
 
@@ -18,21 +20,17 @@ public class TruckCrane extends Crane {
     private static int counter = 0;
     private int id;
     private int currentRow;
+    public static float width = 3f; //????????
+    public static float length = 5f; //??????????
     
     //hier TruckCrane specific variables
    
     public TruckCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
-        super(startPosition, platform);
+        super(startPosition, platform, Type.TRUCKCRANE, width, length);
         id = counter;
         counter++;
     }
-    
-    public Container unload(){return super.unload();}
-    
-    public void load(Container container){super.load(container);}
-    
-    public void reset(){super.reset();}
-    
+
     @Override
     public int getMaxSpeedUnloaded(){return 20;}
     @Override

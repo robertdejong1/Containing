@@ -3,11 +3,13 @@ package containing.Platform;
 import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
-import containing.Platform.StorageStrip.StripState;
+import containing.Platform.StorageStrip.StorageState;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * SeashipPlatform.java
@@ -33,13 +35,13 @@ public class StoragePlatform extends Platform {
         super(position);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(Platform.DynamicAxis.X);
+        strips = new StorageStrip[getStripAmount()];
         createStrips();
         createAgvSpots(new Vector3f(0, 0, 0));  //todo
         createCranes();
         /* no vehicles on this platform */
         extVehicleSpots = null;
         /* initialize arraylists */
-        strips = new StorageStrip[getStripAmount()];
         log("Created StoragePlatform object: " + toString());
     }
     
@@ -81,13 +83,13 @@ public class StoragePlatform extends Platform {
             case Barge:
             case Seaship:
                 for(int i = getStripAmount() - 1; i >= 0; i--)
-                    if(strips[i].getState().equals(StripState.FREE))
+                    if(!strips[i].getState().equals(StorageState.FULL))
                         return i;
                 break;
             case Train:
             case Truck:
                 for(int i = 0; i < getStripAmount(); i++)
-                    if(strips[i].getState().equals(StripState.FREE))
+                    if(!strips[i].getState().equals(StorageState.FULL))
                         return i;
                 break;
         }

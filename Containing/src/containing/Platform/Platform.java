@@ -15,14 +15,14 @@ public abstract class Platform {
     public enum State { BUSY, FREE }
     protected enum DynamicAxis { X, Z }
     
-    private final float AGVSPOT_OFFSET = 0f;
+    protected final float AGVSPOT_OFFSET = 0f;
     
     private static int idCounter = 1;
     
     private final int id;
     private final Vector3f position;
     private Dimension2f dimension;
-    private DynamicAxis axis;
+    protected DynamicAxis axis;
     private Vector3f entrypoint = null;
     private Vector3f exitpoint = null;
     private TransportType transportType = null;
@@ -55,7 +55,7 @@ public abstract class Platform {
         }
     }
     
-    private int getAgvSpotAmount()
+    protected int getAgvSpotAmount()
     {
         return (int)((float)(axis.equals(DynamicAxis.X) ? dimension.width : dimension.length) / AgvSpot.width);
     }

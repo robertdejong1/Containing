@@ -1,12 +1,12 @@
 package containing.Platform;
 
 import containing.Container;
+import containing.Container.TransportType;
 import containing.Dimension2f;
+import containing.Platform.StorageStrip.StripState;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ public class StoragePlatform extends Platform {
     private final int AGVS             = 100;
     
     //private HashMap<Integer, StorageStrip> strips;
-    private List<StorageStrip> strips;
+    private StorageStrip[] strips;
     
     public StoragePlatform(Vector3f position)
     {
@@ -39,7 +39,7 @@ public class StoragePlatform extends Platform {
         /* no vehicles on this platform */
         extVehicleSpots = null;
         /* initialize arraylists */
-        strips = new ArrayList<>();
+        strips = new StorageStrip[getStripAmount()];
         log("Created StoragePlatform object: " + toString());
     }
     
@@ -55,7 +55,7 @@ public class StoragePlatform extends Platform {
     {
         for(int i = 0; i < getStripAmount(); i++)
         {
-            strips.add(new StorageStrip());
+            strips[i] = new StorageStrip();
         }
     }
     
@@ -72,6 +72,26 @@ public class StoragePlatform extends Platform {
     private int getStripAmount()
     {
         return (int)((float)LENGTH / STRIP_WIDTH);
+    }
+    
+    private int getNearbyStrip(TransportType tt)
+    {
+        switch(tt)
+        {
+            case Barge:
+            case Seaship:
+                for(int i = getStripAmount() - 1; i >= 0; i--)
+                    if(strips[i].getState().equals(StripState.FREE))
+                        return i;
+                break;
+            case Train:
+            case Truck:
+                for(int i = 0; i < getStripAmount(); i++)
+                    if(strips[i].getState().equals(StripState.FREE))
+                        return i;
+                break;
+        }
+        return 0;
     }
     
     @Override

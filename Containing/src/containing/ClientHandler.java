@@ -29,6 +29,7 @@ public class ClientHandler implements Runnable {
 
         Date date = new Date();
         this.lastPing = (date.getTime() / 1000);
+        CommandHandler.addidTime(id);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class ClientHandler implements Runnable {
         try {
             PrintWriter writer = new PrintWriter(client.getOutputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-
+            
             while (client.isConnected()) {
                 if (!isAlive()) {
                     client.close();

@@ -9,13 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
-
-import android.app.AlertDialog;
-import android.os.Handler;
-import android.os.Message;
 
 /**
  *
@@ -42,6 +37,7 @@ public class NetworkHandler implements Runnable {
     public void run() {
     	try{
     		client = new Socket(ip, port);
+    		client.setSoTimeout(100);
     	}
     	catch(Exception e){
     		MainActivity.showDialog("Error while connecting to server", e);
@@ -64,25 +60,33 @@ public class NetworkHandler implements Runnable {
         while(true){
         	if(sendPing()){
         		System.out.println("Sending: PING");
-                //writer.println("PING");
-        		CommandHandler.addCommand("PING");
+                writer.println("PING");
             }
         	try{
                 if(!reader.ready()){
                 	if(CommandHandler.newCommandsAvailable()){  
                 		List<String> commands = CommandHandler.getCommands();
+                		
                 		System.out.println(commands);
                 		for(String cmd : commands){
                         	System.out.println("Sending: " +cmd);
                             writer.println(cmd);
                         }
+                		CommandHandler.clearCommands();
                 	}
                     
                 }
                 else{
+                	System.out.println("now reading");
+                	try{
                     String inputLine = reader.readLine();
                     System.out.println("Received: " +inputLine);
                     CommandHandler.handle(inputLine);
+                	}
+                	catch(IOException e){
+                		
+                	}
+                    
                 }
         	}
         	catch(IOException e){

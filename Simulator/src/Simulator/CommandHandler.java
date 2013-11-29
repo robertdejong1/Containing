@@ -15,6 +15,8 @@ import org.json.simple.parser.ParseException;
  */
 public class CommandHandler {
 
+    private static volatile List<String> queuedCommands = new ArrayList<String>();
+    
     static Boolean handle(String json){
         JSONParser parser = new JSONParser();
 
@@ -33,8 +35,18 @@ public class CommandHandler {
     }
     
     public static List<String> getCommands(){
-        //Return een list met commando's naar de server
-        List<String> commands = new ArrayList<String>();
-        return commands;
+        return queuedCommands;
+    }
+    
+    public static void clearCommands(){
+    	queuedCommands.clear();
+    }
+    
+    public static void addCommand(String cmd){
+    	queuedCommands.add(cmd);
+    }
+    
+    public static boolean newCommandsAvailable(){
+    	return queuedCommands.size() > 0;
     }
 }

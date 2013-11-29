@@ -25,20 +25,7 @@ public class Train extends ExternVehicle{
         super(capicity, arrivalDate, arrivalTime,  new Container[17][1][1], platform, company, Type.TRAIN); //true if vehicle comes to load, otherwise false
        
     }
-    
-    public Container unload() throws CargoOutOfBoundsException{
-        try{return super.unload();}
-        catch(Exception e){throw e;}
-    }
-    
-    public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException{
-        try{super.load(container);}
-        catch(Exception e){throw e;}
-    } //=add
-    
-    public void leave(){super.leave();}
-    public void enter(){super.enter();}
-    
+
     @Override
     public int getMaxSpeedUnloaded(){return 20;}
     @Override

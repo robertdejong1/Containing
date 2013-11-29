@@ -7,6 +7,8 @@
 package containing.Vehicle;
 
 import containing.Container;
+import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import java.util.Date;
 
@@ -20,18 +22,9 @@ public class Truck extends ExternVehicle{
     public static float width = 3f; //????????
     public static float length = 5f; //??????????
     public Truck(Date arrivalDate, float arrivalTime, Platform platform, String company){ 
-        super(capicity, arrivalDate, arrivalTime, new Container[1][1][1], platform, company); //true if vehicle comes to load, otherwise false
-        
-    
+        super(capicity, arrivalDate, arrivalTime, new Container[1][1][1], platform, company, Type.TRUCK); //true if vehicle comes to load, otherwise false
     }
-    
-    public Container unload(){return super.unload();}
-    
-    public void load(Container container){super.load(container);} //=add
-    
-    public void leave(){super.leave();}
-    public void enter(){super.enter();}
-    
+   
   
     @Override
     public int getMaxSpeedUnloaded(){return 30;}

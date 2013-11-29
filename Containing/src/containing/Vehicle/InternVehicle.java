@@ -6,7 +6,11 @@
 
 package containing.Vehicle;
 
+import containing.Command;
+import containing.CommandHandler;
 import containing.Container;
+import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Vector3f;
 
@@ -19,26 +23,33 @@ public abstract class InternVehicle extends Vehicle{
     protected boolean isAvailable;
     protected Vector3f startPosition;
     
-    public InternVehicle(int capicity, Vector3f startPosition, Platform platform){
-        super(capicity, platform);
+    public InternVehicle(int capicity, Vector3f startPosition, Platform platform, Type type){
+        super(capicity, platform, type);
         isAvailable = false;
         this.startPosition = startPosition;
     }
     
-    public void load(Container container){
+    public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException {
+        try{
         super.load(container);
         if (isAvailable) isAvailable = false;
+        }
+        catch (Exception e){}
+
     }
     
-    public Container unload(){ //exception if cargo == 0
+    public Container unload() throws CargoOutOfBoundsException{ //exception if cargo == 0
         if (!cargo.isEmpty()){
             Container container = cargo.get(0);
             this.isAvailable = true;
             this.cargo = null;
             this.isLoaded = false;
+            CommandHandler.addCommand(new Command("unloadVehicle", this));
             return container;
+            
         }
-        else {throw new IndexOutOfBoundsException(String.format("Vehicle has no cargo to unload"));}
+        else {throw new CargoOutOfBoundsException("CargoOutOfBounds");}
+        
     }
     
     public void update(){

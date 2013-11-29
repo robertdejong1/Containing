@@ -24,70 +24,31 @@ public class Road
     Vector3f vertex_insidetrack_lefttop = new Vector3f(vertex_outsidetrack_lefttop.x + roadWidth,0,vertex_outsidetrack_lefttop.z - roadWidth);
     Vector3f vertex_insidetrack_righttop = new Vector3f(vertex_outsidetrack_righttop.x - roadWidth,0,vertex_outsidetrack_righttop.z - roadWidth);
     
-    List<Vector3f> outsidetrack = 
-            Arrays.asList(
-            vertex_outsidetrack_leftbottom, 
-            vertex_outsidetrack_rightbottom, 
-            vertex_outsidetrack_lefttop, 
-            vertex_outsidetrack_righttop
-            );
+    //List<Vector3f> outsidetrack = new ArrayList<>();
     
-    List<Vector3f> insidetrack = 
-            Arrays.asList(
-            vertex_insidetrack_leftbottom, 
-            vertex_insidetrack_rightbottom, 
-            vertex_insidetrack_lefttop, 
-            vertex_insidetrack_righttop
-            );
+    //List<Vector3f> insidetrack = new ArrayList<>();
+    
+    //List<Vector3f> singletrack = new ArrayList<>();
+    
+    List<Vector3f> track = new ArrayList<>();
         
-    public Road(List<Vector3f> entryPoints){
-        for (Vector3f v : entryPoints){this.createCorrespondingWaypoint(v);}
-        
-
-        
+    public Road(List<Vector3f> roadPoints){ //vaste punten voor main road = 4, voor platform road = 2
+        for (Vector3f v : roadPoints){
+            track.add(v);
+        }
+        Collections.sort(track); //links onder links boven rechts boven rechtsonder
+        //for (Vector3f v : entryPoints){this.createCorrespondingWaypoint(v);}
     } 
     
-    
-    
-    private void createCorrespondingWaypoint(Vector3f entryPoint){
-        //left of mainroad (trainplatform)
-        if (entryPoint.x < this.vertex_insidetrack_leftbottom.x){ //links van weg
-            outsidetrack.add(new Vector3f(entryPoint.x+roadWidth/2,0,entryPoint.z));//niet zeker van roadWidth
-            insidetrack.add(new Vector3f(entryPoint.x+roadWidth*1.5f,0,entryPoint.z));
-            return;
-        }
-        
-        //right of mainroad (barge,truck platform)
-        if (entryPoint.x > this.vertex_outsidetrack_righttop.x){
-            outsidetrack.add(new Vector3f(entryPoint.x-roadWidth/2,0,entryPoint.z));
-            insidetrack.add(new Vector3f(entryPoint.x-roadWidth*1.5f,0,entryPoint.z));
-            return;
-        }
-        
-        if (entryPoint.z > this.vertex_insidetrack_lefttop.z){
-            outsidetrack.add(new Vector3f(entryPoint.z-roadWidth/2,0,entryPoint.z));
-            insidetrack.add(new Vector3f(entryPoint.z-roadWidth*1.5f,0,entryPoint.z));
-            return;
-        }
-        
-        if (entryPoint.z < this.vertex_insidetrack_leftbottom.z){
-            outsidetrack.add(new Vector3f(entryPoint.z+roadWidth/2,0,entryPoint.z));
-            insidetrack.add(new Vector3f(entryPoint.z+roadWidth*1.5f,0,entryPoint.z));
-            return;
-        }
-        
-        
-        //left side storage platform
-        if (Math.abs(entryPoint.x - this.vertex_insidetrack_lefttop.x) < Math.abs(entryPoint.x - this.vertex_insidetrack_righttop.x)){
-            outsidetrack.add(new Vector3f(entryPoint.x-roadWidth*1.5f,0,entryPoint.x));
-            insidetrack.add(new Vector3f(entryPoint.x-roadWidth/2,0,entryPoint.x));
-            return;
-        }
-        
-        //else right side
-        outsidetrack.add(new Vector3f(entryPoint.x+roadWidth*1.5f,0,entryPoint.x));
-        insidetrack.add(new Vector3f(entryPoint.x+roadWidth/2,0,entryPoint.x));
 
+    private Vector3f createCorrespondingWaypoint(Vector3f point){
+        if (track.size() == 4){
+            if (point.x < track.get(0).x){ return new Vector3f(track.get(0).x, point.y, point.z);}
+            if (point.x > track.get(2).x) {return new Vector3f(track.get(2).x, point.y, point.z); }
+            if (point.z < track.get(1).z){return new Vector3f(point.x, point.y, track.get(1).z);}
+            return new Vector3f(point.x,point.y, track.get(0).z);
+        }
+        return new Vector3f(track.get(0).x, point.y, point.z);
     }
     
      public float getPathLength(List<Vector3f> weg){
@@ -100,36 +61,39 @@ public class Road
     
   
     public Route getPath(Vehicle vehicle, Platform destination){ 
-        Route shortestPath = calculateShortestPath(vehicle, destination.entryPoint());
+        Route shortestPath = calculateShortestPath(vehicle, this.createCorrespondingWaypoint(destination.getExitpoint()));
         shortestPath.setDestinationPlatform(destination);
         shortestPath.setDestinationParkingSpot(null);
         return shortestPath;
     }
     
-    public Route getPath(Vehicle vehicle, ParkingSpot parkingSpot){ 
-        Route shortestPath = calculateShortestPath(vehicle, new Vector3f(0,0,0)); //parkingSpot moet position hebben
-        shortestPath.setDestinationPlatform(vehicle.getCurrentPlatform());
-        shortestPath.setDestinationParkingSpot(parkingSpot);
-        return shortestPath;
+    public Route getPath(Vehicle vehicle, Vector3f position){
+        List<Vector3f> track = new ArrayList<Vector3f>(this.track);
+        track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
+        track.add(this.createCorrespondingWaypoint(position));
+        Collections.sort(track);
+        track = this.setPathCorrectOrder(track, createCorrespondingWaypoint(vehicle.getPosition()), this.createCorrespondingWaypoint(position));
+        float length = this.getPathLength(track);
+        return (new Route(track,length));
+      
     }
     
-        /*
+     /*
      * Calculates distance from current platform of agv to desination platform.
      * There are two possible roads for agv, the function selects the road with minimum distance (=shortest).
      * The shortest way is converted into a Route.
      */
-    private Route calculateShortestPath(Vehicle vehicle, Vector3f destination){
-        this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().exitPoint());
+    private Route calculateShortestPath(Vehicle vehicle, Vector3f destination){ //only for mainroad
+        List<Vector3f> outsidetrack = new ArrayList<Vector3f>(this.track);
 
-        List<Vector3f> outsidetrack = new ArrayList<Vector3f>(this.outsidetrack);
-        List<Vector3f> insidetrack = new ArrayList<Vector3f>(this.insidetrack);
-   
+        outsidetrack.add(destination);
+        outsidetrack.add(this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().getExitpoint()));
         Collections.sort(outsidetrack);
-        Collections.sort(insidetrack);
-        Collections.reverse(insidetrack);
+        List<Vector3f> insidetrack = new ArrayList<>(outsidetrack);
+        Collections.reverse(outsidetrack);
         
-        insidetrack = this.setPathCorrectOrder(insidetrack, vehicle.getCurrentPlatform().exitPoint(), destination);
-        outsidetrack = this.setPathCorrectOrder(outsidetrack, vehicle.getCurrentPlatform().exitPoint(), destination);
+        insidetrack = this.setPathCorrectOrder(insidetrack, this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().getExitpoint()), this.createCorrespondingWaypoint(destination));
+        outsidetrack = this.setPathCorrectOrder(outsidetrack, this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().getExitpoint()), this.createCorrespondingWaypoint(destination));
         
         float length_insidetrack = getPathLength(insidetrack);
         float length_outsidetrack = getPathLength(outsidetrack);
@@ -139,11 +103,9 @@ public class Road
     }
     
     private List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Vector3f source, Vector3f destination){
-        
-        
         int indexSource = path.indexOf(source);
         int indexDestination =  path.indexOf(destination);
-        List<Vector3f> weg1 = path.subList(indexSource, outsidetrack.size());
+        List<Vector3f> weg1 = path.subList(indexSource, path.size());
         List<Vector3f> weg2 = path.subList(0, indexSource);
         List<Vector3f> weg = new ArrayList<Vector3f>(weg1);
         weg.addAll(weg2);

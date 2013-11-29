@@ -21,6 +21,7 @@ public class Port
     {
         this.Platforms = new ArrayList<>();
         Settings.messageLog.AddMessage("Created Harbor Object with id: " + ID);
+
         Platforms.add(new BargePlatform(new Vector3f(0, 0, 0)));
         Platforms.add(new SeashipPlatform(new Vector3f(0, 0, 0)));
         Platforms.add(new TrainPlatform(new Vector3f(0, 0, 0)));

@@ -4,7 +4,9 @@ import static containing.Container.TransportType.Barge;
 import static containing.Container.TransportType.Seaship;
 import static containing.Container.TransportType.Train;
 import static containing.Container.TransportType.Truck;
+import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.NoJobException;
+import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Vehicle.Barge;
 import containing.Vehicle.ExternVehicle;
@@ -25,7 +27,7 @@ class Controlleralgorithms
     private static Stack<Job> jobQeueSorted;
     private static List<ExternVehicle> scheduledArrivingVehicles;
     
-    public static void sortInCommingContainers(List<Container> ContainersFromXML, UserInterface UserInterface)
+    public static void sortInCommingContainers(List<Container> ContainersFromXML)
     {
         scheduledArrivingVehicles = new ArrayList<>();
         
@@ -76,13 +78,28 @@ class Controlleralgorithms
                             ContainersFromXML.get(i).getArrivalTransportCompany());
                     
                     Settings.messageLog.AddMessage("Created new " + ContainersFromXML.get(i).getArrivalTransport()); // : " + VehicleWithMatchingDateAndTime.toString());
-                    NewVehicle.load(ContainersFromXML.get(i));
+                    try
+                    {
+                        NewVehicle.load(ContainersFromXML.get(i));
+                    }
+                    catch (CargoOutOfBoundsException | VehicleOverflowException e)
+                    {
+                        //isvoor later
+                    }
+                    
                     scheduledArrivingVehicles.add(NewVehicle);
                 }
                 
             }
             
-            UserInterface.StartSimulationButton.setEnabled(true);
+            try
+            {
+                Settings.userInterface.StartSimulationButton.setEnabled(true);
+            }
+            catch (NullPointerException E)
+            {
+                //voor test
+            }            
         }
         else
         {
@@ -101,9 +118,16 @@ class Controlleralgorithms
     {
         boolean SuitingJobFound = false;
         
+        if (jobQeueUnsorted == null)
+        {
+            jobQeueUnsorted = new ArrayList<>();
+        }
+        
         for (Job j : jobQeueUnsorted)
         {
-            if (j.getDate().equals(UnloadedContainer.getDepartureDate()))
+            if (j.getDate().equals(UnloadedContainer.getDepartureDate())
+                    &&
+                    j.getVehicleType().equals(UnloadedContainer.getDepartureTransport()))
             {
                 SuitingJobFound = true;
                 j.addContainer(UnloadedContainer);
@@ -112,14 +136,15 @@ class Controlleralgorithms
         }
         
         if (!SuitingJobFound)
-        {
+        {   
             Job job = new Job(
                     UnloadedContainer.getDepartureDate(), 
                     UnloadedContainer.getDepartureTimeFrom(), 
                     UnloadedContainer.getDepartureTransport(),
                     UnloadedContainer.getArrivalTransportCompany());
             job.addContainer(UnloadedContainer);
-             jobQeueUnsorted.add(job);
+            
+            jobQeueUnsorted.add(job);
         }
         
         jobQeueSorted = Job.sortOutGoingJobs(jobQeueUnsorted);
@@ -148,7 +173,7 @@ class Controlleralgorithms
         if (job.getVehicleType() == platform.getTransportType())
         {
             jobQeueUnsorted.remove(job);
-        
+            
             //Check platform for empty parkingspot:
             if (platform.hasFreeParkingSpot())
             {
@@ -215,7 +240,7 @@ class Controlleralgorithms
         float arrivalTime = timeStamp.getHours() + ((float)timeStamp.getMinutes() / 100);
         
         for (ExternVehicle ev : scheduledArrivingVehicles)
-        {
+        {             
             if (
                     (date.equals(ev.getArrivalDate()) && (arrivalTime == ev.getArrivalTime()))
                     &&
@@ -225,6 +250,7 @@ class Controlleralgorithms
                 ev.enter();
                 Settings.messageLog.AddMessage(ev.toString() + " is entering.");
                 scheduledArrivingVehicles.remove(ev);
+                break;
             }
         }
     }
@@ -277,4 +303,21 @@ class Controlleralgorithms
             return(1102806000000l);
         }
     }
+
+    public static List<ExternVehicle> getScheduledArrivingVehicles() 
+    {
+        return scheduledArrivingVehicles;
+    }
+
+    public static Stack<Job> getJobQeueSorted() 
+    {
+        return jobQeueSorted;
+    }
+
+    public static List<Job> getJobQeueUnsorted() 
+    {
+        return jobQeueUnsorted;
+    }
+    
+    
 }

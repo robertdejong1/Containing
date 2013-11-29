@@ -18,6 +18,7 @@ public class Controller
        UserInterface = new UserInterface(); 
        Settings.messageLog = new MessageLog();
        updateMessageLogWindow();
+       Settings.userInterface = UserInterface;
        
        Runnable networkHandler = new NetworkHandler(1337);
        Thread networkHandlerThread = new Thread(networkHandler);
@@ -31,7 +32,7 @@ public class Controller
         
         XmlHandler xmlHandler = new XmlHandler();
         List<Container> ContainersFromXMList = xmlHandler.openXml(XMLFile);
-        Controlleralgorithms.sortInCommingContainers(ContainersFromXMList, UserInterface);
+        Controlleralgorithms.sortInCommingContainers(ContainersFromXMList);
         clock = new Clock(Controlleralgorithms.getFirstDate(ContainersFromXMList));
     }
     
@@ -55,7 +56,14 @@ public class Controller
     
     public static void updateMessageLogWindow()
     {
-        UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
+        try
+        {
+            UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
+        }
+        catch (NullPointerException e)
+        {
+            //Catch voor unit tests vanwege het hebben van geen interface
+        }
     }
     
     public static void update(Timestamp timestamp)

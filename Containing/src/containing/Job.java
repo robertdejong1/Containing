@@ -77,16 +77,19 @@ public class Job
     
     
     public static Stack<Job> sortOutGoingJobs(List<Job> Jobs)
-    {
+    {   
         Stack JobStack = new Stack<>();
+        List<Job> JobsTemp = new ArrayList<>();
         
-        if (Jobs.size() > 0)
+        JobsTemp.addAll(Jobs);
+        
+        if (JobsTemp.size() > 0)
         {
-            Job LatestJob = Jobs.get(0);
+            Job LatestJob = JobsTemp.get(0);
         
-            while (Jobs.size() > 0)
+            while (JobsTemp.size() > 0)
             {
-                for (Job j : Jobs)
+                for (Job j : JobsTemp)
                 {
                     if (j.date.after(LatestJob.date) && j.departureTime > LatestJob.getDepartureTime())
                     {
@@ -95,7 +98,13 @@ public class Job
                 }
                 
                 JobStack.push(LatestJob);
-                Jobs.remove(LatestJob);
+                JobsTemp.remove(LatestJob);
+                
+                if (JobsTemp.size() > 0)
+                {
+                    LatestJob = JobsTemp.get(0);
+                }
+                
             }
         }
         

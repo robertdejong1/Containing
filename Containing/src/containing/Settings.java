@@ -6,4 +6,5 @@ public class Settings
     public static Port port;
     public static int ClockDelay = 100;
     public static MessageLog messageLog;
+    public static UserInterface userInterface;
 }

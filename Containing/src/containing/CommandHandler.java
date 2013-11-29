@@ -16,12 +16,12 @@ import java.util.Map.Entry;
  * @author Robert
  */
 public class CommandHandler {
-    static HashMap<Long, Command> queuedCommands = new HashMap<>();
-    static HashMap<Integer, Long> idTime = new HashMap<>();
+    static volatile HashMap<Integer, Command> queuedCommands = new HashMap<>();
+    static volatile HashMap<Integer, Integer> idLastID = new HashMap<>();
+    static volatile int counter = 0;
 
     public static void addCommand(Command cmd){
-        Date date = new Date();
-        queuedCommands.put(date.getTime() / 1000, cmd);
+        queuedCommands.put(getNewId(), cmd);
     }
     
     public static Command handle(String input) {
@@ -48,19 +48,35 @@ public class CommandHandler {
     
     public static List<Command> getNewCommands(int id){
         List<Command> commands = new ArrayList<>();
-        Date date = new Date();
-        long currentTime = date.getTime() / 1000;
-        if(idTime.get(id) != null){
-            long lastTime = idTime.get(id);
-            for(Entry<Long, Command> entry : queuedCommands.entrySet()){
-                if(entry.getKey() >= lastTime){
+
+        if(idLastID.get(id) != null){
+            int lastID = idLastID.get(id);
+            for(Entry<Integer, Command> entry : queuedCommands.entrySet()){
+                if(entry.getKey() > lastID){
                     commands.add(entry.getValue());
                 }
             }
         }
-        else{
-            idTime.put(id, currentTime);
-        }
+        idLastID.put(id, getLastID());
+        
         return commands;
+    }
+    
+    public static void addidTime(int id){
+        idLastID.put(id, getLastID());
+    }
+    
+    public static int getNewId(){
+        return ++counter;
+    }
+    
+    public static int getLastID(){
+        int id = 0;
+        for(Entry<Integer, Command> entry : queuedCommands.entrySet()){
+            if(entry.getKey() > id){
+                id = entry.getKey();
+            }
+        }
+        return id;
     }
 }

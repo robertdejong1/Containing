@@ -30,9 +30,6 @@ public class SeashipCrane extends Crane {
         counter++;
     }
     
-
-    
-
     
     public void reset(){super.reset();}
   

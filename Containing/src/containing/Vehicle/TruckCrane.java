@@ -30,9 +30,7 @@ public class TruckCrane extends Crane {
         id = counter;
         counter++;
     }
-    
-    public void reset(){super.reset();}
-    
+
     @Override
     public int getMaxSpeedUnloaded(){return 20;}
     @Override

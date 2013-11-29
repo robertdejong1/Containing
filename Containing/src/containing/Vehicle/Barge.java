@@ -27,10 +27,6 @@ public class Barge extends ExternVehicle {
     }
     
     
-
-    public void leave(){super.leave();}
-    public void enter(){super.enter();}
-    
      public void update(){
         timeCounter++;
     }

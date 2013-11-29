@@ -30,13 +30,8 @@ public class TrainCrane extends Crane {
         counter++;
     }
     
-    public Container unload(){return super.unload();}
-    
-    public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException
-    {
-        try{super.load(container);}
-        catch(Exception e){throw e;}
-    }
+  
+
     
     public void reset(){super.reset();}
   

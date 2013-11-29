@@ -23,23 +23,8 @@ public class Truck extends ExternVehicle{
     public static float length = 5f; //??????????
     public Truck(Date arrivalDate, float arrivalTime, Platform platform, String company){ 
         super(capicity, arrivalDate, arrivalTime, new Container[1][1][1], platform, company, Type.TRUCK); //true if vehicle comes to load, otherwise false
-        
-    
     }
-    
-    public Container unload() throws CargoOutOfBoundsException{
-        try{return super.unload();}
-        catch(Exception e){throw e;}
-    }
-    
-    public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException{
-        try{super.load(container);}
-        catch(Exception e){throw e;}
-    } //=add
-    
-    public void leave(){super.leave();}
-    public void enter(){super.enter();}
-    
+   
   
     @Override
     public int getMaxSpeedUnloaded(){return 30;}

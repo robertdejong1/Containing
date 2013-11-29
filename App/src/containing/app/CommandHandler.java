@@ -2,7 +2,11 @@ package containing.app;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -16,37 +20,37 @@ public class CommandHandler {
 	
     public static Boolean handle(String json){
         JSONParser parser = new JSONParser();
-        Object obj;
+    	
+    	
+        JSONObject result;
+		try {
+			result = (JSONObject) parser.parse(json);
+			
+			System.out.println(result.get("stats").toString());
+			
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
-        try{
-            obj = parser.parse(json);
-            System.out.println(obj.toString());
-           
-        }
-        catch(ParseException e){
-            return false;
-        }
         //Handle de commands
+
         
-        MainActivity.showDialog(obj.toString());
-        
+    	
         return true;
     }
     
     public static List<String> getCommands(){
-        List<String> cmds = CommandHandler.queuedCommands;
-        System.out.println(cmds);
-        System.out.println(queuedCommands);
-        System.out.println(CommandHandler.queuedCommands);
-        System.out.println("----------------------------------");
-        if(cmds.size() > 0){    queuedCommands.clear();}
-        return cmds;
+        return queuedCommands;
+    }
+    
+    public static void clearCommands(){
+    	queuedCommands.clear();
     }
     
     public static void addCommand(String cmd){
     	queuedCommands.add(cmd);
-    	System.out.println("Added: " +cmd);
-    	System.out.println("Current queue: " +queuedCommands.toString());
     }
     
     public static boolean newCommandsAvailable(){

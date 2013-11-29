@@ -45,12 +45,16 @@ public class NetworkHandler implements Runnable {
                     writer.flush();
                 }
                 if(!reader.ready()){
-                    List<String> commands = CommandHandler.getCommands();
-                    for(String cmd : commands){
-                        System.out.println("Sending: " +cmd);
-                        writer.println(cmd);
-                        writer.flush();
+                    if(CommandHandler.newCommandsAvailable()){
+                        List<String> commands = CommandHandler.getCommands();
+                        for(String cmd : commands){
+                            System.out.println("Sending: " +cmd);
+                            writer.println(cmd);
+                            writer.flush();
+                        }
+                        CommandHandler.clearCommands();
                     }
+                    
                 }
                 else{
                     String inputLine = reader.readLine();

@@ -3,9 +3,11 @@ package containing.Platform;
 import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
+import containing.ParkingSpot.AgvSpot;
 import containing.Platform.StorageStrip.StorageState;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
+import containing.Vehicle.TrainCrane;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +27,8 @@ public class StoragePlatform extends Platform {
     private final float AGV_OFFSET     = 0f;
     private final float CRANE_OFFSET   = 0f;    // ???
     private final float STRIP_WIDTH    = 24f;   // ???
+    private final int MAX_AGV_SPOT     = 6;
+    
     private final int AGVS             = 100;
     
     //private HashMap<Integer, StorageStrip> strips;
@@ -33,15 +37,14 @@ public class StoragePlatform extends Platform {
     public StoragePlatform(Vector3f position)
     {
         super(position);
+        strips = new StorageStrip[getStripAmount()];
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(Platform.DynamicAxis.X);
-        strips = new StorageStrip[getStripAmount()];
         createStrips();
         createAgvSpots(new Vector3f(0, 0, 0));  //todo
         createCranes();
         /* no vehicles on this platform */
         extVehicleSpots = null;
-        /* initialize arraylists */
         log("Created StoragePlatform object: " + toString());
     }
     
@@ -51,6 +54,22 @@ public class StoragePlatform extends Platform {
         for(int i = 0; i < AGVS; i++)
             agvs.add(new AGV(this, new Vector3f(0,0,0), this)); // todo
         return agvs;
+    }
+    
+    @Override
+    protected void createAgvSpots(Vector3f baseposition)
+    {
+        float space = STRIP_WIDTH / (float)MAX_AGV_SPOT;
+        float offset = (space / 2f) - ( AgvSpot.width / 2f);
+        for(int i = 0; i < MAX_AGV_SPOT*2; i++) 
+        {
+            Vector3f agvSpotPosition;
+            if(i % 2 == 0)
+                agvSpotPosition = new Vector3f(AGV_OFFSET, 0, space*i + offset);
+            else
+                agvSpotPosition = new Vector3f((WIDTH - AgvSpot.length) + AGV_OFFSET, 0, space*i + offset);
+            agvSpots.add(new AgvSpot(agvSpotPosition));
+        }
     }
     
     private void createStrips() 
@@ -83,13 +102,13 @@ public class StoragePlatform extends Platform {
             case Barge:
             case Seaship:
                 for(int i = getStripAmount() - 1; i >= 0; i--)
-                    if(!strips[i].getState().equals(StorageState.FULL))
+                    if(!strips[i].getStorageState().equals(StorageState.FULL))
                         return i;
                 break;
             case Train:
             case Truck:
                 for(int i = 0; i < getStripAmount(); i++)
-                    if(!strips[i].getState().equals(StorageState.FULL))
+                    if(!strips[i].getStorageState().equals(StorageState.FULL))
                         return i;
                 break;
         }

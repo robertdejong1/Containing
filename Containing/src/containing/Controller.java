@@ -90,7 +90,7 @@ public class Controller
     
     public static boolean RequestNextContainer(Container container, Platform requestingPlatform)
     {
-        if (Settings.port.getStoragePlatform().isContainerHere(container))
+        if (Settings.port.getStoragePlatform().hasContainer(container))
         {
             //Route route = new Route(requestingPlatform);
             //Settings.port.getStoragePlatform().loadContainerInAgv(); // Moet route meegeven maar ik snap eigenlijk niet hoe ik dat moet doen :D

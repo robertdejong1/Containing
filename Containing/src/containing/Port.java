@@ -14,7 +14,7 @@ public class Port
 {
     private int ID = 0;
     private List<Platform> Platforms;
-    private AGV[] aGVs;
+    private List<AGV> aGVs;
     private StoragePlatform storagePlatform;
 
     public Port() 

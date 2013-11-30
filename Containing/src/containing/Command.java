@@ -15,10 +15,15 @@ import org.json.simple.JSONObject;
 public class Command {
     private String command;
     private Object object;
+    private boolean app;
 
-    public Command(String command, Object object) {
+    public Command(String command, Object object){
+        this(command, object, false);
+    }
+    public Command(String command, Object object, boolean app) {
         this.command = command;
         this.object = object;
+        this.app = app;
     }
 
     public String getCommand() {
@@ -27,6 +32,10 @@ public class Command {
 
     public Object getObject() {
         return object;
+    }
+    
+    public boolean getApp(){
+        return this.app;
     }
     
     @Override

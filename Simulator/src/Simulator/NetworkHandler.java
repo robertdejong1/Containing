@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Date;
 import java.util.List;
 
@@ -34,10 +35,14 @@ public class NetworkHandler implements Runnable {
     public void run() {
         try{
             client = new Socket(ip, port);
+            client.setSoTimeout(1000);
             System.out.println("Connected to " +ip +":" +port);
             PrintWriter writer = new PrintWriter(client.getOutputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-
+            
+            CommandHandler.addCommand("IDENTIFY:SIM");
+            CommandHandler.addCommand("STATS");
+            
             while(true){
                 if(sendPing()){
                     System.out.println("Sending: PING");
@@ -57,9 +62,15 @@ public class NetworkHandler implements Runnable {
                     
                 }
                 else{
-                    String inputLine = reader.readLine();
-                    System.out.println("Received: " +inputLine);
-                    CommandHandler.handle(inputLine);
+                    try{
+                        String inputLine = reader.readLine();
+                        System.out.println("Received: " +inputLine);
+                        CommandHandler.handle(inputLine);
+                    }
+                    catch(SocketTimeoutException e){
+                        System.out.println("Socket blocked for 1 second. Continueing.");
+                    }
+                    
                 }
             }
         }

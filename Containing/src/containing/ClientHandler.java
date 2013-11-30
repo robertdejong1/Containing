@@ -22,6 +22,7 @@ public class ClientHandler implements Runnable {
     private Socket client;
     private int id;
     private long lastPing;
+    private boolean app;
 
     public ClientHandler(Socket client, int id) {
         this.client = client;
@@ -37,7 +38,7 @@ public class ClientHandler implements Runnable {
         try {
             PrintWriter writer = new PrintWriter(client.getOutputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            
+
             while (client.isConnected()) {
                 if (!isAlive()) {
                     client.close();
@@ -50,8 +51,14 @@ public class ClientHandler implements Runnable {
                     if (inputLine.equals("PING")) {
                         Date date = new Date();
                         this.lastPing = (date.getTime() / 1000);
-                    } else
-                    {
+                    }
+                    else if(inputLine.equals("IDENTIFY:APP")){
+                        this.app = true;
+                    }
+                    else if(inputLine.equals("IDENTIFY:SIM")){
+                        this.app = false;
+                    }
+                    else{
                         Command returnCmd = CommandHandler.handle(inputLine);
                         if (returnCmd != null) {
                             System.out.println("Sending in reply to " + inputLine + ": " + returnCmd.toString());
@@ -62,7 +69,7 @@ public class ClientHandler implements Runnable {
 
                 }
                 else {
-                    List<Command> commands = CommandHandler.getNewCommands(this.id);
+                    List<Command> commands = CommandHandler.getNewCommands(this.id, this.app);
                     if (commands != null && commands.size() > 0) {
                         for (Command cmd : commands) {
                             System.out.println("Sending: " + cmd.toString());

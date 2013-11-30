@@ -6,7 +6,6 @@
 package containing;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -25,7 +24,12 @@ public class CommandHandler {
     }
     
     public static Command handle(String input) {
-        String prefix = input.split(":", 1)[0];
+        String[] command = input.split(":", 2);
+        String prefix = command[0];
+        if(command.length == 2){
+            String arg = command[1];
+        }
+
         switch (prefix) {
             case "PORT":
                 return new Command("port", Settings.port);
@@ -36,7 +40,7 @@ public class CommandHandler {
                 stats.put("truck", 1);
                 stats.put("seaShip", 1);
                 stats.put("barge", 1);
-                stats.put("opslag", 1);
+                stats.put("storage", 1);
                 stats.put("agv", 1);
                 stats.put("other", 1);
                 return new Command("stats", stats);
@@ -46,13 +50,13 @@ public class CommandHandler {
         }
     }
     
-    public static List<Command> getNewCommands(int id){
+    public static List<Command> getNewCommands(int id, boolean app){
         List<Command> commands = new ArrayList<>();
-
+        
         if(idLastID.get(id) != null){
             int lastID = idLastID.get(id);
             for(Entry<Integer, Command> entry : queuedCommands.entrySet()){
-                if(entry.getKey() > lastID){
+                if(entry.getKey() > lastID && entry.getValue().getApp() == app){
                     commands.add(entry.getValue());
                 }
             }

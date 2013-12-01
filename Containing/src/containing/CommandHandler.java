@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 
 /**
  *
@@ -36,13 +37,21 @@ public class CommandHandler {
 
             case "STATS":
                 HashMap<String, Integer> stats = new HashMap<>();
-                stats.put("train", 1);
-                stats.put("truck", 1);
-                stats.put("seaShip", 1);
-                stats.put("barge", 1);
-                stats.put("storage", 1);
-                stats.put("agv", 1);
-                stats.put("other", 1);
+                for(int i = 0; i < 7; i++){
+                    Random rand = new Random();
+                    int randomNumber = rand.nextInt(10);
+                    switch(i){
+                        case 0: stats.put("train", randomNumber); break;
+                            
+                        case 1: stats.put("truck", randomNumber); break;
+                        case 2: stats.put("seaShip", randomNumber); break;
+                        case 3: stats.put("barge", randomNumber); break;
+                        case 4: stats.put("storage", randomNumber); break;
+                        case 5: stats.put("agv", randomNumber); break;
+                        case 6: stats.put("other", randomNumber); break;
+                    }
+                }
+                
                 return new Command("stats", stats);
                 
             default:

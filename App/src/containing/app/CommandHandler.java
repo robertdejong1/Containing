@@ -1,14 +1,11 @@
 package containing.app;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.simple.JSONValue;
 
 /**
  *
@@ -18,27 +15,29 @@ public class CommandHandler {
 
 	volatile static List<String> queuedCommands = new ArrayList<String>();
 	
-    public static Boolean handle(String json){
-        JSONParser parser = new JSONParser();
-    	
-    	
-        JSONObject result;
-		try {
-			result = (JSONObject) parser.parse(json);
-			
-			System.out.println(result.get("stats").toString());
-			
-			
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        //Handle de commands
+    public static void handle(String input){
+        JSONObject json = (JSONObject) JSONValue.parse(input);
 
-        
-    	
-        return true;
+        if(json.get("stats") != null){
+        	
+        	JSONObject stats = (JSONObject) json.get("stats");
+
+        	HashMap<String, Double> map = new HashMap<String, Double>();
+        	map.put("train", Double.parseDouble(stats.get("train").toString()));
+        	map.put("truck", Double.parseDouble(stats.get("truck").toString()));
+        	map.put("seaShip", Double.parseDouble(stats.get("seaShip").toString()));
+        	map.put("barge", Double.parseDouble(stats.get("barge").toString()));
+        	map.put("storage", Double.parseDouble(stats.get("storage").toString()));
+        	map.put("agv", Double.parseDouble(stats.get("agv").toString()));
+        	map.put("other", Double.parseDouble(stats.get("other").toString()));
+        	
+        	if(MainActivity.getStats() == null){
+        		MainActivity.showGraphView(map);
+        	}
+        	else{
+        		MainActivity.updateStats(map);
+        	}
+        }
     }
     
     public static List<String> getCommands(){

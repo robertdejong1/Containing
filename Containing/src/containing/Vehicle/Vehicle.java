@@ -9,11 +9,12 @@ import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
 import containing.Road.Route;
 import containing.Vector3f;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class Vehicle 
+public abstract class Vehicle implements Serializable 
 { 
     private int counter = 0;
     protected boolean isLoaded = false;
@@ -31,7 +32,8 @@ public abstract class Vehicle
     protected ParkingSpot currentParkingSpot;
     protected Vector3f position;
     private int id;
-    private int vehicleID;
+
+    
     
     public Vehicle(int capicity, Platform platform, Type type){
         this.cargo = new ArrayList<Container>();   

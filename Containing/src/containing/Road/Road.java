@@ -51,7 +51,7 @@ public class Road
         return new Vector3f(track.get(0).x, point.y, point.z);
     }
     
-     public float getPathLength(List<Vector3f> weg){
+     public static float getPathLength(List<Vector3f> weg){
         if (weg.size() > 1){
             if (weg.get(0).x != weg.get(1).x){return Math.abs(weg.get(1).x - weg.get(0).x) + getPathLength(weg.subList(1, weg.size()));}
             return Math.abs(weg.get(1).z - weg.get(0).z) + getPathLength(weg.subList(1, weg.size()));

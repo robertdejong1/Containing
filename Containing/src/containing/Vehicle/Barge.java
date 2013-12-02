@@ -32,7 +32,7 @@ public class Barge extends ExternVehicle {
         
         super(arrivalDate, arrivalTime, nrContainersDepth,nrContainersWidth,nrContainersHeight, platform, company, Type.BARGE); //true if vehicle comes to load, otherwise false
         
-        bargeID = counter;
+        id = counter;
         this.setID(id);
         counter++;
     

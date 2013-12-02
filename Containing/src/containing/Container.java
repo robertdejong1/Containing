@@ -16,6 +16,9 @@ public class Container
     private float departureTimeFrom;
     private float departureTimeTill;
     private TransportType departureTransport;
+    public static float width = 2.44f;
+    public static float height = 2.59f;
+    public static float depth = 12.19f;
     
     public enum TransportType{
         Truck, Train, Barge, Seaship

@@ -5,9 +5,10 @@ import containing.CommandHandler;
 import containing.Road.Route;
 import containing.Vector3f;
 import containing.Vehicle.Vehicle;
+import java.io.Serializable;
 import java.util.HashMap;
 
-public abstract class ParkingSpot
+public abstract class ParkingSpot implements Serializable
 {
     private static int idCounter = 0; //Statische counter die functioneert als auto_increment veld
     protected int id; //id van de parkingspot
@@ -62,6 +63,9 @@ public abstract class ParkingSpot
     public Vector3f getEntryPoint() {
         return entryPoint;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "ParkingSpot{" + "id=" + id + ", position=" + position + ", ParkedVehicle=" + ParkedVehicle + ", entryPoint=" + entryPoint + '}';
+    }
 }

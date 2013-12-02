@@ -6,11 +6,13 @@
 
 package containing;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Robert
  */
-public class Vector3f implements Comparable {
+public class Vector3f implements Comparable, Serializable {
     public float x;
     public float y;
     public float z;
@@ -20,12 +22,13 @@ public class Vector3f implements Comparable {
         this.y = y;
         this.z = z;
     }
-    
+
     @Override
-    public String toString(){
-        return "Vector:[" + x +", " + y +", " +z +"]";   
+    public String toString() {
+        return "Vector3f{" + "x=" + x + ", y=" + y + ", z=" + z + '}';
     }
-    
+
+    @Override
     public int compareTo(Object o) { 
         Vector3f v2 = (Vector3f) o;
         if (x < v2.x){return -1;}
@@ -34,5 +37,4 @@ public class Vector3f implements Comparable {
         if (z > v2.z) return 1;
         return 0;
     }
-    
 }

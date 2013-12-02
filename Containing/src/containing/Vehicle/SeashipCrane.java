@@ -17,18 +17,14 @@ import containing.Vector3f;
  * @author Robert
  */
 public class SeashipCrane extends Crane {
-    private static int counter = 0;
-    private int id;
-    private int currentRow;
+
     public static float width = 5f; //????????
     public static float length = 6f; //??????????
     //hier SeashipCrane specific variables
     
     public SeashipCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
         super(startPosition, platform, Type.SEASHIPCRANE, width, length);
-        id = counter;
-        this.setID(id);
-        counter++;
+
     }
     
     

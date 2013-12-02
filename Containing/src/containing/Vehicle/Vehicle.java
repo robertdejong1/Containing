@@ -14,7 +14,7 @@ import java.util.List;
 
 public abstract class Vehicle 
 { 
-    protected int time = 0;
+    
     protected boolean isLoaded = false;
     protected int capicity;
     protected List<Container> cargo;
@@ -29,7 +29,7 @@ public abstract class Vehicle
     protected Platform currentPlatform;
     protected ParkingSpot currentParkingSpot;
     protected Vector3f position;
-  
+    private int id;
     
     public Vehicle(int capicity, Platform platform, Type type){
         this.cargo = new ArrayList<Container>();   
@@ -39,6 +39,10 @@ public abstract class Vehicle
         this.currentPlatform = platform;
             
     }
+    
+    protected void setID(int id ){this.id = id;}
+    
+    public int getID(){return this.id;}
 
     public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException
     {
@@ -94,7 +98,7 @@ public abstract class Vehicle
     public int getCapicity(){return this.capicity;}
     
     public void update(){
-        time++;
+      
         if (this.status == Status.MOVING){this.route.follow(this);}
         
     }

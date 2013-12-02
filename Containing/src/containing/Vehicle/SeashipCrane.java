@@ -27,6 +27,7 @@ public class SeashipCrane extends Crane {
     public SeashipCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
         super(startPosition, platform, Type.SEASHIPCRANE, width, length);
         id = counter;
+        this.setID(id);
         counter++;
     }
     

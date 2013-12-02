@@ -33,6 +33,7 @@ public class BargeCrane extends Crane {
     public BargeCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
         super(startPosition, platform, Type.BARGECRANE, width, length);
         id = counter;
+        this.setID(id);
         counter++;
     }
     

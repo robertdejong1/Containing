@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public class Seaship extends ExternVehicle {
     private static int counter;
-    private int SeashipID;
+    private int id;
     static int capicity = 10000;
     int[][][] grid;
     public static float width = 10f; //????????
@@ -32,8 +32,8 @@ public class Seaship extends ExternVehicle {
         
         super(arrivalDate, arrivalTime,nrContainersDepth,nrContainersHeight,nrContainersWidth, platform, company, Type.SEASHIP); //true if vehicle comes to load, otherwise false
         
-        SeashipID = counter;
-        
+        id = counter;
+        this.setID(id);
         counter++;
     }
    

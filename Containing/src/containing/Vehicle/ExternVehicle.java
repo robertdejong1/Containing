@@ -10,11 +10,13 @@ import containing.Command;
 import containing.CommandHandler;
 import containing.Container;
 import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Vector3f;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -105,23 +107,42 @@ public abstract class ExternVehicle extends Vehicle {
         }
     }
     
-    public Container unload() throws CargoOutOfBoundsException{
-        if (cargo.isEmpty()) {throw new CargoOutOfBoundsException(String.format("CargoOutOfBounds"));}
-        Container container = cargo.get(0);
-        cargo.remove(container);
-        return container;
+    public Container unload() throws CargoOutOfBoundsException
+    {
+        try
+        {
+            if (cargo.isEmpty()) {throw new ContainerNotFoundException("No containers");}
+            Container container = cargo.get(0);
+            cargo.remove(container);
+            return container;
+        }
+        
+        catch(Exception e)
+        {
+            //throw e;
+            return null;
+        }
+        
     }
     
    
     
     public Date getArrivalDate(){return arrivalDate;}
     public Float getArrivalTime(){return arrivalTime;}
-    public void leave(){this.status = Status.MOVEING;}
+    public void leave(){this.status = Status.MOVING;}
     public void docking(){
         //this.status = Status.DOCKING;
     }
-    public void enter(){
-        this.status = Status.MOVEING;
+    public void enter()
+    {
+        this.status = Status.MOVING;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("vehicleType", this.getVehicleType());
+        map.put("cargo)", this.getGrid());
+                
+        //type//cargo lijst
+        
+        CommandHandler.addCommand(new Command("enterVehicle",map));
     }
     
     public Container[][][] getGrid(){ return this.grid; }

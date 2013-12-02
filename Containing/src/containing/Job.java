@@ -1,12 +1,13 @@
 package containing;
 
 import containing.Vehicle.ExternVehicle;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Stack;
 
-public class Job 
+public class Job implements Serializable
 {
     private Date date;
     private float departureTime;

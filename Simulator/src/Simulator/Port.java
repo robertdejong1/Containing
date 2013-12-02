@@ -24,24 +24,36 @@ public class Port
     Spatial port;
     Spatial cranerail;
     Spatial trainrail;
+    Spatial storage;
+    Spatial road;
     
     public Port(AssetManager assetManager, Node node)
     {
         port = assetManager.loadModel("Models/port.j3o");
         cranerail = assetManager.loadModel("Models/rail.j3o");
         trainrail = assetManager.loadModel("Models/trainrails.j3o");
+        storage = assetManager.loadModel("Models/storageplatform.j3o");
+        road = assetManager.loadModel("Models/road.j3o");
         
         Material stone_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture tex2 = assetManager.loadTexture(new TextureKey("Textures/asphalt.jpg"));
         tex2.setWrap(Texture.WrapMode.Repeat);
         stone_mat.setTexture("ColorMap", tex2);
         ((Geometry) port).getMesh().scaleTextureCoordinates(new Vector2f(64, 64));
-        port.setMaterial(stone_mat);
+        //port.setMaterial(stone_mat);
         
         port.scale(10);
-        port.scale(1f, 0.2f, 1f);
-        port.move(0,4,0);
+        //port.scale(1f, 0.2f, 1f);
+        //port.move(0,4,0);
         port_node.attachChild(port);
+        
+        storage.scale(10);
+        storage.move(0,0.01f,-4);
+        port_node.attachChild(storage);
+        
+        //road.scale(10);
+        //road.move(0,0.01f,-4);
+        //port_node.attachChild(road);
         
         cranerail.setLocalTranslation(-1, 5, 81);
         cranerail.rotate(0, 90*FastMath.DEG_TO_RAD, 0);

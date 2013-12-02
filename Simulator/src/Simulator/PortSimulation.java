@@ -8,12 +8,11 @@ import com.jme3.math.Plane;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.SimpleWaterProcessor;
-
 /**
  * test
  *
@@ -31,22 +30,22 @@ public class PortSimulation extends SimpleApplication
     RailCrane railCrane;
     //private StorageCrane storageCrane = new StorageCrane(assetManager, rootNode);
     Train train;
-    //private Truck truck = new Truck(assetManager, rootNode);
+    Truck[] truck = new Truck[20];
 
     public static void main(String[] args)
     {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        //NetworkHandler networkHandler = new NetworkHandler("141.252.222.172", 1337);
-        //Thread t = new Thread(networkHandler);
-        //t.start();
+        Runnable networkHandler = new NetworkHandler("141.252.222.88", 1337);
+        Thread t = new Thread(networkHandler);
+        t.start();
     }
 
     @Override
     public void simpleInitApp()
     {
-        flyCam.setMoveSpeed(15f);
+        flyCam.setMoveSpeed(50f);
         cam.setLocation(new Vector3f(0f, 20f, 0));
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
 
@@ -60,6 +59,15 @@ public class PortSimulation extends SimpleApplication
         port = new Port(assetManager, rootNode);
         //port.scale(10f);
         //port.place();
+        
+        for (int i = 0; i < 20; i++)
+        {
+            truck[i] = new Truck(assetManager, rootNode);
+            truck[i].rotate(0, -90*FastMath.DEG_TO_RAD, 0);
+            truck[i].scale(0.15f);
+            truck[i].place(40.32f,5f,i);
+        }
+        
 
         freeCranes[0].place(0, 5f, 81);
         freeCranes[1].place(10, 5f, 81);
@@ -104,25 +112,23 @@ public class PortSimulation extends SimpleApplication
 
         SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
         waterProcessor.setReflectionScene(rootNode);
-        waterProcessor.setDebug(false);
-        waterProcessor.setLightPosition(lightDir);
-        waterProcessor.setRefractionClippingOffset(1f);
-
-        //setting the water plane
-        Vector3f waterLocation = new Vector3f(0, 4.5f, 0);
+        
+        Vector3f waterLocation=new Vector3f(0,4.5f,0);
         waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, waterLocation.dot(Vector3f.UNIT_Y)));
-        waterProcessor.setWaterColor(ColorRGBA.Yellow);
-
-        Quad quad = new Quad(400, 400);
-
-        //the texture coordinates define the general size of the waves
-        quad.scaleTextureCoordinates(new Vector2f(12f, 12f));
-
-        Geometry water = new Geometry("water", quad);
-        water.setShadowMode(RenderQueue.ShadowMode.Receive);
+        viewPort.addProcessor(waterProcessor);
+        
+        waterProcessor.setWaterDepth(40);         // transparency of water
+        waterProcessor.setDistortionScale(0.05f); // strength of waves
+        waterProcessor.setWaveSpeed(0.05f);       // speed of waves
+        
+        Quad quad = new Quad(400,400);
+        quad.scaleTextureCoordinates(new Vector2f(24f,24f));
+        
+        Geometry water=new Geometry("water", quad);
         water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
+        water.setLocalTranslation(-200, 4.5f, 250);
+        water.setShadowMode(ShadowMode.Receive);
         water.setMaterial(waterProcessor.getMaterial());
-        water.setLocalTranslation(-200, 4.5f, 200);
 
         rootNode.attachChild(water);
 

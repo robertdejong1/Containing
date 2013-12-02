@@ -24,12 +24,9 @@ public class CommandHandler {
     static void handle(String input) {
         //Handle de command
         Command cmd = (Command) decode(input);
-        //switch(cmd.getCommand()){
-        //    case "port": //doe iets
-        //        break;
-        //        
-        //    default: return;
-        //}
+        
+        
+        
     }
 
     private static Object decode(String encoded) {

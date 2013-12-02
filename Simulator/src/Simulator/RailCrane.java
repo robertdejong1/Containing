@@ -215,7 +215,6 @@ public class RailCrane
                     }
                     else
                     {
-                        System.out.println(""+z);
                         con_index++;
                         grabstate = 1;
                     }

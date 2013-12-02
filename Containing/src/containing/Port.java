@@ -7,10 +7,11 @@ import containing.Platform.StoragePlatform;
 import containing.Platform.TrainPlatform;
 import containing.Platform.TruckPlatform;
 import containing.Vehicle.AGV;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Port 
+public class Port implements Serializable
 {
     private int ID = 0;
     private List<Platform> Platforms;
@@ -56,6 +57,9 @@ public class Port
     {
         return Platforms;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Port{" + "ID=" + ID + ", Platforms=" + Platforms + ", aGVs=" + aGVs + ", storagePlatform=" + storagePlatform + '}';
+    }
 }

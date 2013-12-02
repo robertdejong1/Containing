@@ -3,23 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package containing;
 
-import org.json.simple.JSONObject;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  *
  * @author Robert
  */
-public class Command {
+public class Command implements Serializable {
+
     private String command;
     private Object object;
     private boolean app;
 
-    public Command(String command, Object object){
+    public Command(String command, Object object) {
         this(command, object, false);
     }
+
     public Command(String command, Object object, boolean app) {
         this.command = command;
         this.object = object;
@@ -33,15 +37,25 @@ public class Command {
     public Object getObject() {
         return object;
     }
-    
-    public boolean getApp(){
+
+    public boolean getApp() {
         return this.app;
     }
-    
+
     @Override
-    public String toString(){
-        JSONObject json = new JSONObject();
-        json.put(this.command, this.object);
-        return json.toString();
+    public String toString() {
+        String serializedObject = "";
+
+        try {
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+            ObjectOutputStream so = new ObjectOutputStream(bo);
+            so.writeObject(this);
+            so.flush();
+            serializedObject = bo.toString();
+        } catch (IOException e) {
+           ErrorLog.logMsg("Error while serializing command object", e);
+        }
+        
+        return serializedObject;
     }
 }

@@ -77,11 +77,7 @@ public abstract class InternVehicle extends Vehicle{
         
     }
     
-    public void update()
-    {
-        this.update();
-        
-    }
+  
     
     
 }

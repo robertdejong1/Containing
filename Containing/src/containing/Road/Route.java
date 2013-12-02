@@ -49,7 +49,12 @@ public class Route {
             } //meldt aan voor platform nieuwe route
             else {
                 //motionpath from waypoint to parkingspot
-                this.destinationParkingSpot.ParkVehicle(vehicle);
+                if (destinationPlatform == null)
+                {
+                    this.destinationParkingSpot.ParkVehicle(vehicle);
+                }
+                
+                //hier kraan geparkeerd ... ga unload
             } //park vehicle
 
         }

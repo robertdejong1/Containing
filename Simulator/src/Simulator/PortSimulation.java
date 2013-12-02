@@ -8,6 +8,7 @@ import com.jme3.math.Plane;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
@@ -22,11 +23,11 @@ public class PortSimulation extends SimpleApplication
 {
 
     AGV avg;
-    //private Barge barge = new Barge(assetManager, rootNode);
+    Barge barge;
     Container[] container = new Container[19];
     FreeCrane[] freeCranes = new FreeCrane[4];
     Port port;
-    //private Freighter freighter = new Freighter(assetManager, rootNode);
+    Freighter freighter;
     RailCrane railCrane;
     //private StorageCrane storageCrane = new StorageCrane(assetManager, rootNode);
     Train train;
@@ -73,6 +74,13 @@ public class PortSimulation extends SimpleApplication
         
         //avg = new AVG(assetManager, rootNode);
         
+        freighter = new Freighter(assetManager, rootNode);
+        freighter.scale(3f);
+        freighter.place(0, 4f, 85);
+        
+        barge = new Barge(assetManager, rootNode);
+        barge.scale(3f);
+        barge.place(44, 4.5f, 70);
         
         for (int i = 0; i < 19; i++)
         {
@@ -98,10 +106,10 @@ public class PortSimulation extends SimpleApplication
         waterProcessor.setReflectionScene(rootNode);
         waterProcessor.setDebug(false);
         waterProcessor.setLightPosition(lightDir);
-        waterProcessor.setRefractionClippingOffset(1.0f);
+        waterProcessor.setRefractionClippingOffset(1f);
 
         //setting the water plane
-        Vector3f waterLocation = new Vector3f(0, 0, 0);
+        Vector3f waterLocation = new Vector3f(0, 4.5f, 0);
         waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, waterLocation.dot(Vector3f.UNIT_Y)));
         waterProcessor.setWaterColor(ColorRGBA.Yellow);
 
@@ -111,10 +119,10 @@ public class PortSimulation extends SimpleApplication
         quad.scaleTextureCoordinates(new Vector2f(12f, 12f));
 
         Geometry water = new Geometry("water", quad);
-        //water.setShadowMode(RenderQueue.ShadowMode.Receive);
+        water.setShadowMode(RenderQueue.ShadowMode.Receive);
         water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
         water.setMaterial(waterProcessor.getMaterial());
-        water.setLocalTranslation(-200, 0, 200);
+        water.setLocalTranslation(-200, 4.5f, 200);
 
         rootNode.attachChild(water);
 

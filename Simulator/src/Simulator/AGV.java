@@ -33,7 +33,9 @@ public class AGV extends Model
     public void move(float x, float y, float z)
     {
         super.move(x, y, z);
-        this.container.move(x, y, z);
-    }
+        if (this.container != null)
+        {
+            this.container.move(x, y, z);
+        }    }
     
 }

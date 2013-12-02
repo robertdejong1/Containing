@@ -91,9 +91,12 @@ public class Job
             {
                 for (Job j : JobsTemp)
                 {
-                    if (j.date.after(LatestJob.date) && j.departureTime > LatestJob.getDepartureTime())
+                    if (j.date.after(LatestJob.date) || j.date.equals(LatestJob.date))
                     {
-                        LatestJob = j;
+                        if (j.departureTime > LatestJob.getDepartureTime())
+                        {
+                            LatestJob = j;
+                        }
                     }
                 }
                 

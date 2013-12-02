@@ -14,7 +14,7 @@ public class Clock
 
     public Clock(long startTimeMil) 
     {
-        startTimeMil -= 300000;
+        startTimeMil -= 10000;
         this.currentDateAndTime = new Timestamp(startTimeMil);
         
         timer = new Timer(100, new ActionListener() 

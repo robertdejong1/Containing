@@ -138,7 +138,8 @@ public abstract class ExternVehicle extends Vehicle {
         this.status = Status.MOVING;
         HashMap<String, Object> map = new HashMap<>();
         map.put("vehicleType", this.getVehicleType());
-        map.put("cargo)", this.getGrid());
+        map.put("cargo", this.getGrid());
+        //map.put("id", ) getId() ?
                 
         //type//cargo lijst
         

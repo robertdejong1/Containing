@@ -8,6 +8,7 @@ import containing.Point3D;
 import containing.Vector3f;
 import containing.Vehicle.Crane;
 import containing.Vehicle.StorageCrane;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ import java.util.Queue;
  * The dynamic axis is: X
  * @author Minardus
  */
-public class StorageStrip {
+public class StorageStrip implements Serializable {
     
     public enum StorageState { FREE, FULL }
     public enum StorageJobState { FREE, FULL }

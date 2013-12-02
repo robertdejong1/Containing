@@ -11,13 +11,14 @@ import containing.Platform.Platform;
 import containing.Vector3f;
 import containing.Vehicle.Crane;
 import containing.Vehicle.Vehicle;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author Robert
  */
-public class Route {
+public class Route implements Serializable {
     private List<Vector3f> weg;
     float distance;
     Platform destinationPlatform;

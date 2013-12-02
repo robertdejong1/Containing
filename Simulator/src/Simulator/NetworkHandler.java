@@ -41,7 +41,6 @@ public class NetworkHandler implements Runnable {
             BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
             
             CommandHandler.addCommand("IDENTIFY:SIM");
-            CommandHandler.addCommand("STATS");
             
             while(true){
                 if(sendPing()){

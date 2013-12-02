@@ -30,12 +30,6 @@ public class NetworkHandler implements Runnable {
         Date date = new Date();
         this.lastPing = (date.getTime() / 1000);
     }
-    
-    public static void main(String[] args){
-        Runnable r = new NetworkHandler("localhost", 1337);
-        Thread t = new Thread(r);
-        t.start();
-    }
 
     @Override
     public void run() {
@@ -47,7 +41,6 @@ public class NetworkHandler implements Runnable {
             BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
             
             CommandHandler.addCommand("IDENTIFY:SIM");
-            CommandHandler.addCommand("PORT");
             
             while(true){
                 if(sendPing()){

@@ -7,17 +7,19 @@ package containing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
  * @author Robert
  */
 public class CommandHandler {
-    static volatile HashMap<Integer, Command> queuedCommands = new HashMap<>();
-    static volatile HashMap<Integer, Integer> idLastID = new HashMap<>();
+    static volatile ConcurrentHashMap<Integer, Command> queuedCommands = new ConcurrentHashMap<>();
+    static volatile ConcurrentHashMap<Integer, Integer> idLastID = new ConcurrentHashMap<>();
     static volatile int counter = 0;
 
     public static void addCommand(Command cmd){
@@ -64,7 +66,10 @@ public class CommandHandler {
         
         if(idLastID.get(id) != null){
             int lastID = idLastID.get(id);
-            for(Entry<Integer, Command> entry : queuedCommands.entrySet()){
+            
+            Iterator it = queuedCommands.entrySet().iterator();
+            while(it.hasNext()){
+                Entry<Integer, Command> entry = (Entry) it.next();
                 if(entry.getKey() > lastID && entry.getValue().getApp() == app){
                     commands.add(entry.getValue());
                 }

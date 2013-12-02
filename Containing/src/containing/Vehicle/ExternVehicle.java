@@ -26,44 +26,82 @@ public abstract class ExternVehicle extends Vehicle {
     private Date arrivalDate;
     private float arrivalTime;
     private String company;
-    Container[][][] grid;
+    protected Container[][][] grid;
     private List<Container> priorityCargo = new ArrayList<Container>();
-   
-    public ExternVehicle(int capicity, Date arrivalDate, float arrivalTime, Container[][][] grid, Platform platform, String company, Type type){
-        super(capicity, platform, type);
+    private int nrContainersDepth;
+    private int nrContainersHeight;
+    private int nrContainersWidth;
+    
+    public ExternVehicle(Date arrivalDate, float arrivalTime, int depthGrid,int widthGrid,int heightGrid, Platform platform, String company, Type type){
+        super(depthGrid*widthGrid*heightGrid, platform, type);
         this.arrivalDate = arrivalDate;
         this.arrivalTime = arrivalTime;
         status = Status.WAITING; 
-        this.grid = grid;
+        this.grid = new Container[depthGrid][widthGrid][heightGrid];
         this.company = company;
+        this.nrContainersDepth = depthGrid;
+        this.nrContainersHeight = heightGrid;
+        this.nrContainersWidth = widthGrid;
     }
+    
+   
     
     public String getCompanyName(){return this.company;}
     
     public void getContainerWithHighestPriority(){
         List<Container> priority = new ArrayList<>();
         for (Container container : this.cargo){
+            Date currentDate = new Date();
+            if (currentDate.getDay() >= container.getDepartureDate().getDay() && currentDate.getMonth() >= container.getDepartureDate().getMonth() && currentDate.getYear() >= container.getDepartureDate().getYear()){
+                if (currentDate.getDay() == container.getDepartureDate().getDay() && currentDate.getMonth() == container.getDepartureDate().getMonth() && currentDate.getYear() == container.getDepartureDate().getYear()){
+                    long diff = currentDate.getTime() - container.getDepartureDate().getTime();
+                    long diffMinutes = diff / (60 * 1000) % 60;
+                    long diffHours = diff / (60 * 60 * 1000) % 24;
+                    diff = Math.abs(diffHours + diffMinutes/60);
+                    if (diff > 2.5){priority.add(container);}
+                }
+                else priority.add(container); //container had al bij extern vehicle moeten zijn
+            }
             
-            //if (container.getArrivalDate() == new Date().)
+           
         }
         
     }
     ///[0,0,0] add grid container position
-    public void load(Container container) throws VehicleOverflowException,CargoOutOfBoundsException{
-        //check out of capicity, check dubbel
-        
+    @Override
+    public void load(Container container) throws VehicleOverflowException,CargoOutOfBoundsException
+    {
+        //set isLoaded true when it wasn't already done
         if (this.cargo.isEmpty()){this.isLoaded = true;} 
+        
         Vector3f coordinates = container.getArrivalPosition();
-        if (grid!=null){
-        if (grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]!=null){}//dubbel
-        try{
-        if(grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]==null){
-        grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z] = container;
-        }
-        super.load(container);
-        CommandHandler.addCommand(new Command("loadVehicle", this));
-        }
-        catch(Exception e){throw e;}
+        
+   
+        if (grid!=null)
+        {
+            try
+            {
+            if (coordinates.x  > this.nrContainersWidth || coordinates.z > this.nrContainersHeight || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y > this.nrContainersDepth )
+            {
+            
+                throw new CargoOutOfBoundsException("CargoOutOfBoundsException");
+            
+            }
+                
+            if (grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]!=null){throw new VehicleOverflowException("VehicleOverflowException");}//dubbel
+        
+                grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z] = container; 
+
+                super.load(container);
+                
+                CommandHandler.addCommand(new Command("loadVehicle", this));
+                
+            }
+            
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
     }
     
@@ -85,6 +123,8 @@ public abstract class ExternVehicle extends Vehicle {
     public void enter(){
         this.status = Status.MOVEING;
     }
+    
+    public Container[][][] getGrid(){ return this.grid; }
     
     
 

@@ -61,11 +61,13 @@ public abstract class Crane extends InternVehicle {
     }
     
     public void reset(){
+        /*
         int starttime = this.timeCounter;
         while (this.timeCounter < starttime + resetTime){} //kraan gaat t
         //evt ga opzij [moet platform doen]
         this.isAvailable = true;
         this.timeCounter = 0;
+        */
     }
     
     

@@ -29,6 +29,7 @@ public abstract class Vehicle
     protected Platform currentPlatform;
     protected ParkingSpot currentParkingSpot;
     protected Vector3f position;
+  
     
     public Vehicle(int capicity, Platform platform, Type type){
         this.cargo = new ArrayList<Container>();   
@@ -38,11 +39,22 @@ public abstract class Vehicle
         this.currentPlatform = platform;
             
     }
-    
-    public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException{
+
+    public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException
+    {
+        
         if (cargo.isEmpty()) isLoaded = true;
-        if (cargo.size() < capicity) cargo.add(container);
-        else {throw new CargoOutOfBoundsException("CargoOutOfBounds");}
+
+        if (cargo.size() < capicity) 
+        {
+            cargo.add(container);
+            
+        }
+        
+        else 
+        {
+            throw new CargoOutOfBoundsException("CargoOutOfBounds");
+        }
         CommandHandler.addCommand(new Command("loadVehicle", this));
     } 
     
@@ -75,6 +87,8 @@ public abstract class Vehicle
     
     public abstract int getMaxSpeedLoaded();
     public abstract int getMaxSpeedUnloaded();
+    public List<Container> getCargo(){return this.cargo;}
+    public int getCapicity(){return this.capicity;}
     
     public void update(){
         time++;

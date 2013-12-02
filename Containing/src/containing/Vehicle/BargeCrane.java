@@ -39,10 +39,12 @@ public class BargeCrane extends Crane {
     public void reset(){super.reset();}
   
     public void move(int direction){ //-1 = left + 1 = rechts
+        /*
         int starttime = this.timeCounter;
         while (this.timeCounter < starttime + this.metersToNextAgvSpot * this.maxSpeedUnloaded){}
         this.startPosition.x = this.startPosition.x + direction * this.metersToNextAgvSpot;
-    }
+        */
+     }
     
     @Override
     public int getMaxSpeedUnloaded(){return 8;}

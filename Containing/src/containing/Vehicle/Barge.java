@@ -17,14 +17,26 @@ import java.util.Date;
  * @author Robert
  */
 public class Barge extends ExternVehicle {
-    static int capicity = 1;
+    private static int counter;
+    private int bargeID;
     protected int timeCounter = 0;
     public static float width = 5f; //????????
     public static float length = 10f; //??????????
+    public static int nrContainersDepth = 6;
+    public static int nrContainersHeight = 3;
+    public static int nrContainersWidth = 5;
+    public static int capicity;
     
-    public Barge(Date arrivalDate, float arrivalTime, Platform platform, String company){ 
-        super(capicity, arrivalDate, arrivalTime, new Container[6][3][3], platform, company, Type.BARGE); //true if vehicle comes to load, otherwise false
+    public Barge(Date arrivalDate, float arrivalTime, Platform platform, String company)
+    {
+        
+        super(arrivalDate, arrivalTime, nrContainersDepth,nrContainersWidth,nrContainersHeight, platform, company, Type.BARGE); //true if vehicle comes to load, otherwise false
+        
+        bargeID = counter;
+        counter++;
+    
     }
+
     
     
      public void update(){

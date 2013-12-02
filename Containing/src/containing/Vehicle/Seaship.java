@@ -18,17 +18,23 @@ import java.util.Date;
  */
 public class Seaship extends ExternVehicle {
     private static int counter;
-    private int SeashipId;
+    private int SeashipID;
     static int capicity = 10000;
     int[][][] grid;
     public static float width = 10f; //????????
     public static float length = 20f; //??????????
+    private static int nrContainersDepth= 20;
+    private static int nrContainersHeight = 16;
+    private static int nrContainersWidth = 6;
     
-    public Seaship(Date arrivalDate, float arrivalTime, Platform platform, String company){
-        super(capicity, arrivalDate, arrivalTime, new Container[20][16][6], platform, company, Type.SEASHIP); //true if vehicle comes to load, otherwise false
-        SeashipId = counter;
+    public Seaship(Date arrivalDate, float arrivalTime, Platform platform, String company)
+    {
+        
+        super(arrivalDate, arrivalTime,nrContainersDepth,nrContainersHeight,nrContainersWidth, platform, company, Type.SEASHIP); //true if vehicle comes to load, otherwise false
+        
+        SeashipID = counter;
+        
         counter++;
-     
     }
    
 

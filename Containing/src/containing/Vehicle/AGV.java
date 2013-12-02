@@ -25,8 +25,9 @@ public class AGV extends InternVehicle {
     public static float length = 3.5f; //??????????
     private static int capicityAGV = 1;
 
-    public AGV(Platform currentPlatform, Vector3f startPosition, Platform platform){
-        super(capicityAGV,startPosition, platform, Type.AGV);
+    public AGV(Platform currentPlatform, Vector3f startPosition)
+    { 
+        super(capicityAGV,startPosition, currentPlatform, Type.AGV);
         id = counter;
         counter++;
         this.currentPlatform = currentPlatform; //storageplatform @ default?

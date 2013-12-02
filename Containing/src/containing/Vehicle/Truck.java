@@ -17,12 +17,24 @@ import java.util.Date;
  * @author Robert
  */
 public class Truck extends ExternVehicle{
+    private static int counter;
+    private int truckID;
     static int capicity = 1;
     protected int timeCounter = 0;
     public static float width = 3f; //????????
     public static float length = 5f; //??????????
-    public Truck(Date arrivalDate, float arrivalTime, Platform platform, String company){ 
-        super(capicity, arrivalDate, arrivalTime, new Container[1][1][1], platform, company, Type.TRUCK); //true if vehicle comes to load, otherwise false
+    private static int nrContainersDepth= 1;
+    private static int nrContainersHeight = 1;
+    private static int nrContainersWidth = 1;
+    
+    public Truck(Date arrivalDate, float arrivalTime, Platform platform, String company)
+    { 
+        
+        super(arrivalDate, arrivalTime, nrContainersDepth,nrContainersHeight,nrContainersWidth, platform, company, Type.TRUCK); //true if vehicle comes to load, otherwise false
+        
+        truckID = counter;
+        
+        counter++;
     }
    
   

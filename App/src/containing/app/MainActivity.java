@@ -1,6 +1,7 @@
 package containing.app;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
@@ -55,6 +56,24 @@ public class MainActivity extends Activity {
         
         textView = (TextView) findViewById(R.id.textView1);
         activity = this;
+        
+        HashMap<String, Double> map = new HashMap<String, Double>();
+        for(int i = 0; i < 7; i++){
+            Random rand = new Random();
+            Double randomNumber = rand.nextDouble();
+            switch(i){
+                case 0: map.put("train", randomNumber); break;
+                case 1: map.put("truck", randomNumber); break;
+                case 2: map.put("seaShip", randomNumber); break;
+                case 3: map.put("barge", randomNumber); break;
+                case 4: map.put("storage", randomNumber); break;
+                case 5: map.put("agv", randomNumber); break;
+                case 6: map.put("other", randomNumber); break;
+            }
+        }
+        
+        
+        showGraphView(map);
     }
     
     private void connect(String ip, int port){

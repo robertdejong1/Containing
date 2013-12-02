@@ -33,7 +33,8 @@ public class CommandHandler {
 
         switch (prefix) {
             case "PORT":
-                return new Command("port", Settings.port);
+                return new Command("port", new Command("test", "test"));
+                
 
             case "STATS":
                 HashMap<String, Integer> stats = new HashMap<>();
@@ -42,7 +43,6 @@ public class CommandHandler {
                     int randomNumber = rand.nextInt(10);
                     switch(i){
                         case 0: stats.put("train", randomNumber); break;
-                            
                         case 1: stats.put("truck", randomNumber); break;
                         case 2: stats.put("seaShip", randomNumber); break;
                         case 3: stats.put("barge", randomNumber); break;

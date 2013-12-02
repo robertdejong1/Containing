@@ -23,8 +23,8 @@ public class CommandHandler {
 
     static void handle(String input) {
         //Handle de command
-        Command iets = (Command) decode(input);
-        System.out.println(iets.toString());
+        Command cmd = (Command) decode(input);
+        System.out.println(cmd.getCommand());
     }
 
     private static Object decode(String encoded) {

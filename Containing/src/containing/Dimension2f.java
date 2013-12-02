@@ -1,6 +1,6 @@
 package containing;
 
-public class Dimension2f {
+public class Dimension2f implements Serializable {
     
     public float width;
     public float length;

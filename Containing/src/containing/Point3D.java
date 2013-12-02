@@ -1,6 +1,8 @@
 package containing;
 
-public class Point3D {
+import java.io.Serializable;
+
+public class Point3D implements Serializable {
     
     public int x;
     public int y;

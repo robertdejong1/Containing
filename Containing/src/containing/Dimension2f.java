@@ -1,5 +1,7 @@
 package containing;
 
+import java.io.Serializable;
+
 public class Dimension2f implements Serializable {
     
     public float width;

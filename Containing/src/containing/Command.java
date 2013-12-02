@@ -5,6 +5,7 @@
  */
 package containing;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -44,18 +45,17 @@ public class Command implements Serializable {
 
     @Override
     public String toString() {
-        String serializedObject = "";
-
         try {
             ByteArrayOutputStream bo = new ByteArrayOutputStream();
             ObjectOutputStream so = new ObjectOutputStream(bo);
             so.writeObject(this);
             so.flush();
-            serializedObject = bo.toString();
+            byte[] bytes = bo.toByteArray();
+            return(Base64.encode(bytes));
         } catch (IOException e) {
            ErrorLog.logMsg("Error while serializing command object", e);
         }
         
-        return serializedObject;
+        return null;
     }
 }

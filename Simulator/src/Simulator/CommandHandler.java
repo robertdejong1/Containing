@@ -6,11 +6,11 @@ package Simulator;
 
 import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
+import containing.Command;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import containing.Command;
 
 /**
  *
@@ -24,7 +24,12 @@ public class CommandHandler {
     static void handle(String input) {
         //Handle de command
         Command cmd = (Command) decode(input);
-        System.out.println(cmd.getCommand());
+        //switch(cmd.getCommand()){
+        //    case "port": //doe iets
+        //        break;
+        //        
+        //    default: return;
+        //}
     }
 
     private static Object decode(String encoded) {

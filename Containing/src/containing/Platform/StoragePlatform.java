@@ -48,6 +48,14 @@ public class StoragePlatform extends Platform {
         log("Created StoragePlatform object: " + toString());
     }
     
+    public List<AGV> getAllCreatedAgvs()
+    {
+        List<AGV> agvs = new ArrayList<>();
+        for(int i = 0; i < AGVS; i++)
+            agvs.add(new AGV(this, new Vector3f(0,0,0))); // todo
+        return agvs;
+    }
+    
     protected AGV requestFreeAgv(TransportType tt) throws NoFreeAgvException
     {
         List<Vector3f> waypoints = new ArrayList<>();
@@ -82,38 +90,13 @@ public class StoragePlatform extends Platform {
         throw new NoFreeAgvException("No free AGV available");
     }
     
-    public List<AGV> getAllCreatedAgvs()
-    {
-        List<AGV> agvs = new ArrayList<>();
-        for(int i = 0; i < AGVS; i++)
-            agvs.add(new AGV(this, new Vector3f(0,0,0))); // todo
-        return agvs;
-    }
-    
-    @Override
-    protected final void createAgvSpots(Vector3f baseposition)
-    {
-        /* ignore */
-        /*
-        float space = STRIP_WIDTH / (float)MAX_AGV_SPOT;
-        float offset = (space / 2f) - ( AgvSpot.width / 2f);
-        for(int i = 0; i < MAX_AGV_SPOT*2; i++) 
-        {
-            Vector3f agvSpotPosition;
-            if(i % 2 == 0)
-                agvSpotPosition = new Vector3f(AGV_OFFSET, 0, space*i + offset);
-            else
-                agvSpotPosition = new Vector3f((WIDTH - AgvSpot.length) + AGV_OFFSET, 0, space*i + offset);
-            agvSpots.add(new AgvSpot(agvSpotPosition));
-        }
-        */
-    }
-    
     private void createStrips() 
     {
+        Vector3f stripPosition;
         for(int i = 0; i < getStripAmount(); i++)
         {
-            strips[i] = new StorageStrip(this);
+            stripPosition = new Vector3f(0,0,STRIP_WIDTH*i);
+            strips[i] = new StorageStrip(this, stripPosition);
         }
     }
     
@@ -191,11 +174,12 @@ public class StoragePlatform extends Platform {
         throw new UnsupportedOperationException("Pl0x add side as parameter (ex: getExitpoint(Side.LEFT))");
     }
     
+    /* begin ignore */
     @Override
     protected void createCranes() { /*ignore */ }
-
     @Override
     protected void createExtVehicleSpots() {/* ignore */}
+    /* end ignore */
     
     @Override
     public void update()

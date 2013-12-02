@@ -16,6 +16,7 @@ import java.util.Queue;
 
 /**
  * StorageStrip.java
+ * The dynamic axis is: X
  * @author Minardus
  */
 public class StorageStrip {
@@ -35,6 +36,7 @@ public class StorageStrip {
     
     private final int MAX_JOBS = 12;
     
+    private final Vector3f position;
     private final Dimension2f dimension;
     
     private HashMap<Point3D, Container> containers;
@@ -45,9 +47,10 @@ public class StorageStrip {
     
     private final StoragePlatform platform;
     
-    public StorageStrip(StoragePlatform platform) 
+    public StorageStrip(StoragePlatform platform, Vector3f position) 
     {
         this.platform = platform;
+        this.position = position;
         containers = new HashMap<>();
         storageState = StorageState.FREE;
         storageJobState = StorageJobState.FREE;
@@ -158,6 +161,11 @@ public class StorageStrip {
     {
         Vector3f cranePosition = new Vector3f(0,0,0);
         crane = new StorageCrane(cranePosition, platform);
+    }
+    
+    public Vector3f getPosition()
+    {
+        return position;
     }
     
     public Dimension2f getDimension()

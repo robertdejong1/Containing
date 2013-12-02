@@ -12,12 +12,13 @@ import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public abstract class Platform {
+public abstract class Platform implements Serializable {
     
     public enum State { FREE, LOAD, UNLOAD }
     protected enum DynamicAxis { X, Z }
@@ -41,7 +42,7 @@ public abstract class Platform {
     
     protected Queue<Job> jobs = null;
     protected Queue<AGV> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
-    private int maxAgvQueue = 1;
+    protected int maxAgvQueue = 1;
     
     protected int time = 0;
     

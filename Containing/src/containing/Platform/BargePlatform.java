@@ -66,7 +66,22 @@ public class BargePlatform extends Platform {
     public void update()
     {
         time += Settings.ClockDelay;
-        requestNextJob();
+        
+        /* if platform is free, request next job */
+        if(state.equals(State.FREE))
+            requestNextJob();
+        
+        /* UNLOAD EXTERNAL VEHICLE */
+        if(state.equals(State.UNLOAD))
+        {
+            /* request new AGV's */
+            if(jobs.size() > maxAgvQueue)
+                getFreeAgv();
+            else if(jobs.size() == maxAgvQueue && agvQueue.size() != maxAgvQueue)
+                getFreeAgv();
+        }
+        
+        
     }
     
 }

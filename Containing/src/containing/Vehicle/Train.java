@@ -17,9 +17,7 @@ import java.util.Date;
  * @author Robert
  */
 public class Train extends ExternVehicle{
-    private static int counter;
-    private int id;
-    static int capicity = 10000;
+ 
     protected int timeCounter = 0;
     public static float width = 5f; //????????
     public static float length = 30f; //??????????
@@ -31,11 +29,7 @@ public class Train extends ExternVehicle{
 
         super(arrivalDate, arrivalTime,  nrContainersDepth,nrContainersHeight,nrContainersWidth, platform, company, Type.TRAIN); //true if vehicle comes to load, otherwise false
         
-        id = counter;
-        
-        this.setID(id);
-        
-        counter++;
+
     }
 
     @Override

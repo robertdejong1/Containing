@@ -15,7 +15,7 @@ import java.util.List;
 
 public abstract class Vehicle 
 { 
-    
+    private int counter = 0;
     protected boolean isLoaded = false;
     protected int capicity;
     protected List<Container> cargo;
@@ -31,6 +31,7 @@ public abstract class Vehicle
     protected ParkingSpot currentParkingSpot;
     protected Vector3f position;
     private int id;
+    private int vehicleID;
     
     public Vehicle(int capicity, Platform platform, Type type){
         this.cargo = new ArrayList<Container>();   
@@ -38,10 +39,13 @@ public abstract class Vehicle
         this.capicity = capicity;
         this.vehicleType = type;
         this.currentPlatform = platform;
+        id = counter;
+        this.setID(id);
+        counter++;
             
     }
     
-    protected void setID(int id ){this.id = id;}
+    private void setID(int id ){this.id = id;}
     
     public int getID(){return this.id;}
 
@@ -94,8 +98,10 @@ public abstract class Vehicle
         map.put("motionPath", route); 
         map.put("speed", currentSpeed);
             
-        CommandHandler.addCommand(new Command("followPath", this));
-        CommandHandler.addCommand(new Command("followPath", this));
+        CommandHandler.addCommand(new Command("followPath", map));
+        
+        
+    
         
     } 
     

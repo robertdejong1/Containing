@@ -6,12 +6,17 @@
 
 package containing.Vehicle;
 
+import containing.Command;
+import containing.CommandHandler;
 import containing.Container;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Vector3f;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -59,6 +64,31 @@ public abstract class Crane extends InternVehicle {
         catch(Exception e){throw e;}
         //update: while (this.timeCounter < starttime + liftTimeMax + moveContainerSpeed * 2){} //aan het laden
         //roep evt nieuwe agv aan (op zelfde parkeerplaats of op parkeerplaats opzij [moet platform doen]
+    }
+    
+    public void move(int direction) //-1 is left 1 is right
+    {
+        //override this method for truckcrane
+        List<Vector3f> route = new ArrayList<>();
+        route.add(this.position);
+        if (direction == -1)
+        {
+            route.add(new Vector3f(this.position.x - Container.depth, this.position.y, this.position.z));
+        }
+        
+        else 
+        {
+            route.add(new Vector3f(this.position.x + Container.depth, this.position.y, this.position.z));
+        }
+        
+        this.currentSpeed = (this.isLoaded) ? Vehicle.maxSpeedLoaded : Vehicle.maxSpeedUnloaded;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", this.getID());
+        map.put("vehicleType", this.getVehicleType());
+        map.put("motionPath", route); 
+        map.put("speed", currentSpeed);
+            
+        CommandHandler.addCommand(new Command("moveCrane", map));
     }
     
     public void reset(){

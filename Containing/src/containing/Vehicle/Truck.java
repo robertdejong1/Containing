@@ -17,10 +17,8 @@ import java.util.Date;
  * @author Robert
  */
 public class Truck extends ExternVehicle{
-    private static int counter;
-    private int id;
-    static int capicity = 1;
-    protected int timeCounter = 0;
+    
+
     public static float width = 3f; //????????
     public static float length = 5f; //??????????
     private static int nrContainersDepth= 1;
@@ -32,9 +30,7 @@ public class Truck extends ExternVehicle{
         
         super(arrivalDate, arrivalTime, nrContainersDepth,nrContainersHeight,nrContainersWidth, platform, company, Type.TRUCK); //true if vehicle comes to load, otherwise false
         
-        id = counter;
-        this.setID(id);
-        counter++;
+
     }
    
   
@@ -44,6 +40,6 @@ public class Truck extends ExternVehicle{
     public int getMaxSpeedLoaded(){return 15;}
     
      public void update(){
-        timeCounter++;
+     
     }
 }

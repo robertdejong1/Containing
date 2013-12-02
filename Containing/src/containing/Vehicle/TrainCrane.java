@@ -17,33 +17,28 @@ import containing.Vector3f;
  * @author Robert
  */
 public class TrainCrane extends Crane {
-    private static int counter = 0;
-    private int id;
-    private int currentRow;
+
     public static float width = 5f; //????????
     public static float length = 6f; //??????????
     //hier TrainCrane specific variables
    
     public TrainCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
         super(startPosition, platform, Type.TRAINCRANE, width, length);
-        id = counter;
-        this.setID(id);
-        counter++;
+
+
     }
     
-  
+    @Override
     public void update()
     {
-        
+       
     }
     
     public void reset(){super.reset();}
   
-    public void move(int direction){ //-1 = left + 1 = rechts
-        
-       // while (this.timeCounter < this.metersToNextAgvSpot * this.maxSpeedUnloaded * 10){}
-     
-    }
+
+    
+    
     
     @Override
     public int getMaxSpeedUnloaded(){return 3;}

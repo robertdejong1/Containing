@@ -14,14 +14,14 @@ import java.util.List;
 
 public abstract class Vehicle 
 { 
-    protected int time = 0;
+    
     protected boolean isLoaded = false;
     protected int capicity;
     protected List<Container> cargo;
     protected static int maxSpeedLoaded;
     protected static int maxSpeedUnloaded;
     protected int currentSpeed;
-    protected enum Status{ UNLOADING, LOADING, WAITING, MOVEING};
+    protected enum Status{ UNLOADING, LOADING, WAITING, MOVING};
     protected enum Type{ TRUCK, AGV, BARGE, BARGECRANE, SEASHIP, SEASHIPCRANE, TRAIN, TRAINCRANE, TRUCKCRANE, STORAGECRANE};
     private Type vehicleType;
     protected Status status;
@@ -29,7 +29,7 @@ public abstract class Vehicle
     protected Platform currentPlatform;
     protected ParkingSpot currentParkingSpot;
     protected Vector3f position;
-  
+    private int id;
     
     public Vehicle(int capicity, Platform platform, Type type){
         this.cargo = new ArrayList<Container>();   
@@ -39,6 +39,10 @@ public abstract class Vehicle
         this.currentPlatform = platform;
             
     }
+    
+    protected void setID(int id ){this.id = id;}
+    
+    public int getID(){return this.id;}
 
     public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException
     {
@@ -72,10 +76,12 @@ public abstract class Vehicle
     
     public Status getStatus(){return this.status;}
     
+    public Type getVehicleType(){return this.vehicleType;}
+    
     public void followRoute(Route route){
         this.route = route;
         //currentplatform sign out
-        this.status = Status.MOVEING;
+        this.status = Status.MOVING;
         this.currentSpeed = (this.isLoaded) ? Vehicle.maxSpeedLoaded : Vehicle.maxSpeedUnloaded;
         CommandHandler.addCommand(new Command("followPath", this));
     } 
@@ -88,11 +94,12 @@ public abstract class Vehicle
     public abstract int getMaxSpeedLoaded();
     public abstract int getMaxSpeedUnloaded();
     public List<Container> getCargo(){return this.cargo;}
+    
     public int getCapicity(){return this.capicity;}
     
     public void update(){
-        time++;
-        if (this.status == Status.MOVEING){this.route.follow(this);}
+      
+        if (this.status == Status.MOVING){this.route.follow(this);}
         
     }
  

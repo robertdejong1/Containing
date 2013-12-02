@@ -19,7 +19,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Speedy
+ * @author Miriam
  */
 public class VehicleTest extends TestCase {
     
@@ -41,9 +41,28 @@ public class VehicleTest extends TestCase {
     @After
     public void tearDown() {
     }
-
+    
+    @Test
+    public void testUnloading()
+    {
+        XmlHandler xml = new XmlHandler();
+        List<Container> ContainersFromXML = xml.openXml(new File("C:\\Users\\Miriam\\Desktop\\xml1.xml"));    
+        Container bc = ContainersFromXML.get(0);
+        Container container0 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,1,1), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
+        Barge barge = new Barge(null,0,null,null);
+        
+        // unload empty barge
+        try
+        {
+            barge.unload();
+        }
+        catch(Exception e)
+        {
+            
+        }
+    }
     /**
-     * Test of sortInCommingContainers method, of class Controlleralgorithms.
+     * TestLoadingExternVehicle
      */
     @Test
     public void testLoading() 

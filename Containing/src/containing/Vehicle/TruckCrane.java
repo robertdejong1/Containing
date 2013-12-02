@@ -28,6 +28,7 @@ public class TruckCrane extends Crane {
     public TruckCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
         super(startPosition, platform, Type.TRUCKCRANE, width, length);
         id = counter;
+        this.setID(id);
         counter++;
     }
 

@@ -27,11 +27,15 @@ public class TrainCrane extends Crane {
     public TrainCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
         super(startPosition, platform, Type.TRAINCRANE, width, length);
         id = counter;
+        this.setID(id);
         counter++;
     }
     
   
-
+    public void update()
+    {
+        
+    }
     
     public void reset(){super.reset();}
   

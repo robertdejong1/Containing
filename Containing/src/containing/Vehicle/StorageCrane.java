@@ -27,6 +27,7 @@ public class StorageCrane extends Crane {
     public StorageCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
         super(startPosition, platform, Type.STORAGECRANE, width, length);
         id = counter;
+        this.setID(id);
         counter++;
     }
     

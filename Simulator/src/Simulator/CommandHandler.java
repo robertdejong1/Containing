@@ -10,12 +10,16 @@ import containing.Command;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  *
  * @author Robert
  */
+
+enum Type {TRUCK, AGV, BARGE, BARGECRANE, SEASHIP, SEASHIPCRANE, TRAIN, TRAINCRANE, TRUCKCRANE, STORAGECRANE }
 
 public class CommandHandler {
 
@@ -25,7 +29,15 @@ public class CommandHandler {
         //Handle de command
         Command cmd = (Command) decode(input);
         
-        
+        if (cmd.getCommand().equals("enterExternVehicle"))
+        {
+            HashMap<String, Object> map = (HashMap<String, Object>)cmd.getObject();
+            int id = Integer.parseInt(map.get("id").toString());
+            System.out.println(""+id);
+            
+            Container[][][] containers = (Container[][][]) map.get("cargo");
+            Type type = (Type) map.get("vehicleType");
+        }
         
     }
 

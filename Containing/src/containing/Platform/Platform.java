@@ -87,10 +87,7 @@ public abstract class Platform implements Serializable {
         {
             agvToQueue(agv);
         }
-        catch(AgvQueueSpaceOutOfBounds e)
-        {
-            System.out.println(e.getMessage());
-        }
+        catch(AgvQueueSpaceOutOfBounds e){/* ignore */}
     }
     
     protected AGV getFreeAgv()

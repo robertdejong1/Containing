@@ -127,7 +127,14 @@ class Controlleralgorithms
         {
             if (j.getDate().equals(UnloadedContainer.getDepartureDate())
                     &&
-                    j.getVehicleType().equals(UnloadedContainer.getDepartureTransport()))
+                j.getVehicleType().equals(UnloadedContainer.getDepartureTransport())
+                    &&
+                createNewVehicle(
+                    j.getVehicleType(), 
+                    UnloadedContainer.getDepartureDate(),
+                    UnloadedContainer.getDepartureTimeFrom(), 
+                    UnloadedContainer.getArrivalTransportCompany()).getCapicity() > j.getContainers().size()
+                )
             {
                 SuitingJobFound = true;
                 j.addContainer(UnloadedContainer);
@@ -182,7 +189,7 @@ class Controlleralgorithms
                         job.getDate(), 
                         job.getDepartureTime(), 
                         job.getCompanyName());
-            
+                
                 job.setTargetVehicle(eV);
             }
             else
@@ -192,7 +199,7 @@ class Controlleralgorithms
                 jobQeueUnsorted.add(job);
             
                 job = null;
-                throw new NoJobException("No parkingspot available");
+                throw new NoJobException("No job available");
             }
         
             return job;
@@ -319,5 +326,11 @@ class Controlleralgorithms
         return jobQeueUnsorted;
     }
     
+    public static void ClearLists()
+    {
+        jobQeueUnsorted.clear();
+        jobQeueSorted.clear();
+        scheduledArrivingVehicles.clear();
+    }
     
 }

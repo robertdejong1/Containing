@@ -70,10 +70,7 @@ public abstract class Platform implements Serializable {
         {
             jobs.add(Controller.RequestNewJob(this));
         } 
-        catch(NoJobException e)
-        {
-            System.out.println(e.getMessage());
-        }
+        catch(NoJobException e){/* ignore */}
     }
     
     private void agvToQueue(AGV agv) throws AgvQueueSpaceOutOfBounds

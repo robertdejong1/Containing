@@ -107,45 +107,61 @@ public abstract class ExternVehicle extends Vehicle {
         }
     }
     
-    public Container unload() throws CargoOutOfBoundsException
+    public Container unload() throws ContainerNotFoundException
     {
-        try
-        {
-            if (cargo.isEmpty()) {throw new ContainerNotFoundException("No containers");}
-            Container container = cargo.get(0);
-            cargo.remove(container);
-            return container;
-        }
+            try
+            {
+                if (cargo.isEmpty()) { throw new ContainerNotFoundException("No containers"); }
+            
+     
+                Container container = cargo.get(0);
+            
+                cargo.remove(container);
+            
+                this.getGrid()[(int)container.getArrivalPosition().x][(int)container.getArrivalPosition().y][(int)container.getArrivalPosition().z] = null;
+            
+                return container;
+            }
+            
+            catch(ContainerNotFoundException e)
+            {
+                throw e;
+            }
         
-        catch(Exception e)
-        {
-            //throw e;
-            return null;
-        }
+      
         
     }
     
    
     
     public Date getArrivalDate(){return arrivalDate;}
+    
     public Float getArrivalTime(){return arrivalTime;}
-    public void leave(){this.status = Status.MOVING;}
-    public void docking(){
-        //this.status = Status.DOCKING;
-    }
-    public void enter()
+    
+    public void leave()
     {
         this.status = Status.MOVING;
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", this.getID());
         map.put("vehicleType", this.getVehicleType());
-        map.put("cargo", this.getGrid());
+    
+        CommandHandler.addCommand(new Command("leaveExternVehicle",map));
+    }
+    
+    public void docking(){
+        //this.status = Status.DOCKING;
+    }
+    
+    public void enter()
+    {
+        this.status = Status.MOVING;
         
-        //map.put("id", ) getId() ?
-                
-        //type//cargo lijst
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", this.getID());
+        map.put("vehicleType", this.getVehicleType());
+        map.put("cargo", this.getGrid()); 
         
-        CommandHandler.addCommand(new Command("enterVehicle",map));
+        CommandHandler.addCommand(new Command("enterExternVehicle",map));
     }
     
     public Container[][][] getGrid(){ return this.grid; }

@@ -10,9 +10,11 @@ import containing.Command;
 import containing.CommandHandler;
 import containing.Container;
 import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Vector3f;
+import java.util.HashMap;
 
 /**
  *
@@ -30,29 +32,53 @@ public abstract class InternVehicle extends Vehicle{
     }
     
     public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException {
-        try{
-        super.load(container);
-        if (isAvailable) isAvailable = false;
+        try
+        {
+            super.load(container);
+            if (isAvailable) isAvailable = false;
+            
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("id", this.getID());
+            map.put("vehicleType", this.getVehicleType());
+            map.put("container", container);
+            
+            CommandHandler.addCommand(new Command("loadInternVehicle",map));
         }
-        catch (Exception e){}
+        
+        catch (Exception e){ throw e; }
 
     }
     
-    public Container unload() throws CargoOutOfBoundsException{ //exception if cargo == 0
-        if (!cargo.isEmpty()){
+    public Container unload() throws ContainerNotFoundException
+    { 
+        if (!cargo.isEmpty())
+        {
             Container container = cargo.get(0);
+            
             this.isAvailable = true;
+            
             this.cargo = null;
+            
             this.isLoaded = false;
-            CommandHandler.addCommand(new Command("unloadVehicle", this));
+            
+            HashMap<String, Object> map = new HashMap<>();
+            
+            map.put("id", this.getID());
+            map.put("vehicleType", this.getVehicleType());
+            map.put("container", cargo.get(0)); 
+            
+            CommandHandler.addCommand(new Command("unloadInternVehicle", this));
+            
             return container;
             
         }
-        else {throw new CargoOutOfBoundsException("CargoOutOfBounds");}
+        
+        else { throw new ContainerNotFoundException("No container to unload"); }
         
     }
     
-    public void update(){
+    public void update()
+    {
         this.update();
         
     }

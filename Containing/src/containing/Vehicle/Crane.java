@@ -8,6 +8,7 @@ package containing.Vehicle;
 
 import containing.Container;
 import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Vector3f;
@@ -42,7 +43,7 @@ public abstract class Crane extends InternVehicle {
         this.length = length;
     }
     
-    public void unload(AGV agv) throws VehicleOverflowException, CargoOutOfBoundsException{
+    public void unload(AGV agv) throws VehicleOverflowException, ContainerNotFoundException, CargoOutOfBoundsException{
         try{
         agv.load(super.unload());
         }
@@ -69,6 +70,8 @@ public abstract class Crane extends InternVehicle {
         this.timeCounter = 0;
         */
     }
+    
+
     
     
     

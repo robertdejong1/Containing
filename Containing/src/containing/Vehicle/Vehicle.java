@@ -10,6 +10,7 @@ import containing.Platform.Platform;
 import containing.Road.Route;
 import containing.Vector3f;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class Vehicle 
@@ -21,7 +22,7 @@ public abstract class Vehicle
     protected static int maxSpeedLoaded;
     protected static int maxSpeedUnloaded;
     protected int currentSpeed;
-    protected enum Status{ UNLOADING, LOADING, WAITING, MOVING};
+    public enum Status{ UNLOADING, LOADING, WAITING, MOVING};
     protected enum Type{ TRUCK, AGV, BARGE, BARGECRANE, SEASHIP, SEASHIPCRANE, TRAIN, TRAINCRANE, TRUCKCRANE, STORAGECRANE};
     private Type vehicleType;
     protected Status status;
@@ -59,6 +60,7 @@ public abstract class Vehicle
         {
             throw new CargoOutOfBoundsException("CargoOutOfBounds");
         }
+        
         CommandHandler.addCommand(new Command("loadVehicle", this));
     } 
     
@@ -80,10 +82,21 @@ public abstract class Vehicle
     
     public void followRoute(Route route){
         this.route = route;
+        
         //currentplatform sign out
         this.status = Status.MOVING;
+        
         this.currentSpeed = (this.isLoaded) ? Vehicle.maxSpeedLoaded : Vehicle.maxSpeedUnloaded;
+        HashMap<String, Object> map = new HashMap<>();
+            
+        map.put("id", this.getID());
+        map.put("vehicleType", this.getVehicleType());
+        map.put("motionPath", route); 
+        map.put("speed", currentSpeed);
+            
         CommandHandler.addCommand(new Command("followPath", this));
+        CommandHandler.addCommand(new Command("followPath", this));
+        
     } 
     
     public void stopDriving(){

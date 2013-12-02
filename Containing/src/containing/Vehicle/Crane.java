@@ -13,6 +13,8 @@ import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
+import containing.Road.Road;
+import containing.Road.Route;
 import containing.Vector3f;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +26,7 @@ import java.util.List;
  */
 public abstract class Crane extends InternVehicle {
     
-    protected int timeCounter = 0;
+    protected int timeCountDown = 0;
     protected final static int CAPICITY = 1;
     protected int counter;
     protected final float SECURETIME = 0.5f;
@@ -58,16 +60,24 @@ public abstract class Crane extends InternVehicle {
 
     
     public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException{ //container from extern verhicle
-        try{
-        super.load(container);
+        try
+        {
+            
+            super.load(container);
         }
-        catch(Exception e){throw e;}
+        catch(Exception e)
+        {
+            throw e;
+        }
+        this.status = Status.LOADING;
+        this.timeCountDown = (int) liftTimeMax;
         //update: while (this.timeCounter < starttime + liftTimeMax + moveContainerSpeed * 2){} //aan het laden
         //roep evt nieuwe agv aan (op zelfde parkeerplaats of op parkeerplaats opzij [moet platform doen]
     }
     
     public void move(int direction) //-1 is left 1 is right
     {
+        
         //override this method for truckcrane
         List<Vector3f> route = new ArrayList<>();
         route.add(this.position);
@@ -87,8 +97,20 @@ public abstract class Crane extends InternVehicle {
         map.put("vehicleType", this.getVehicleType());
         map.put("motionPath", route); 
         map.put("speed", currentSpeed);
+        
+        this.route = new Route(route,Road.getPathLength(route));
             
         CommandHandler.addCommand(new Command("moveCrane", map));
+    }
+
+    @Override
+    public void update()
+    {
+       super.update();
+       if (this.status == Status.LOADING )
+       {
+           
+       }
     }
     
     public void reset(){
@@ -100,6 +122,8 @@ public abstract class Crane extends InternVehicle {
         this.timeCounter = 0;
         */
     }
+    
+ 
     
 
     

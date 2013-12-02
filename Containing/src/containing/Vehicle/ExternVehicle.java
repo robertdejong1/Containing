@@ -96,7 +96,8 @@ public abstract class ExternVehicle extends Vehicle {
 
                 super.load(container);
                 
-                CommandHandler.addCommand(new Command("loadVehicle", this));
+                //if status not waiting
+                //CommandHandler.addCommand(new Command("loadVehicle", this));
                 
             }
             

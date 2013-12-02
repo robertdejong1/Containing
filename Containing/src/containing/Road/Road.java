@@ -1,16 +1,15 @@
 package containing.Road;
 
-import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Vehicle;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Road 
+public class Road implements Serializable 
 {
     float roadWidth = AGV.width + AGV.width * 0.25f;
     //testvariabelen, simulatie is bepalend 

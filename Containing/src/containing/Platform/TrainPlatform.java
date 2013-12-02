@@ -2,9 +2,9 @@ package containing.Platform;
 
 import containing.Container.TransportType;
 import containing.Dimension2f;
-import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.BargeSpot;
 import containing.ParkingSpot.TrainSpot;
+import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.TrainCrane;
 
@@ -65,7 +65,7 @@ public class TrainPlatform extends Platform {
     @Override
     public void update()
     {
-        //todo
+        time += Settings.ClockDelay;
     }
     
 }

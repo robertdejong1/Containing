@@ -2,8 +2,8 @@ package containing.Platform;
 
 import containing.Container.TransportType;
 import containing.Dimension2f;
-import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.SeashipSpot;
+import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.SeashipCrane;
 
@@ -64,7 +64,7 @@ public class SeashipPlatform extends Platform {
     @Override
     public void update()
     {
-        //todo
+        time += Settings.ClockDelay;
     }
     
 }

@@ -5,13 +5,11 @@ import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.ParkingSpot.AgvSpot;
 import containing.Platform.StorageStrip.StorageState;
+import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
-import containing.Vehicle.TrainCrane;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * SeashipPlatform.java
@@ -31,8 +29,7 @@ public class StoragePlatform extends Platform {
     
     private final int AGVS             = 100;
     
-    //private HashMap<Integer, StorageStrip> strips;
-    private StorageStrip[] strips;
+    private final StorageStrip[] strips;
     
     public StoragePlatform(Vector3f position)
     {
@@ -52,12 +49,12 @@ public class StoragePlatform extends Platform {
     {
         List<AGV> agvs = new ArrayList<>();
         for(int i = 0; i < AGVS; i++)
-            agvs.add(new AGV(this, new Vector3f(0,0,0), this)); // todo
+            agvs.add(new AGV(this, new Vector3f(0,0,0))); // todo
         return agvs;
     }
     
     @Override
-    protected void createAgvSpots(Vector3f baseposition)
+    protected final void createAgvSpots(Vector3f baseposition)
     {
         float space = STRIP_WIDTH / (float)MAX_AGV_SPOT;
         float offset = (space / 2f) - ( AgvSpot.width / 2f);
@@ -127,7 +124,7 @@ public class StoragePlatform extends Platform {
     @Override
     public void update()
     {
-        //todo
+        time += Settings.ClockDelay;
     }
     
 }

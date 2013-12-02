@@ -1,14 +1,19 @@
 package containing.Platform;
 
 import containing.Container.TransportType;
+import containing.Controller;
 import containing.Dimension2f;
+import containing.Exceptions.NoJobException;
+import containing.Job;
 import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.ParkingSpot;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.Crane;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public abstract class Platform {
     
@@ -31,6 +36,10 @@ public abstract class Platform {
     protected List<Crane> cranes;
     protected List<ParkingSpot> extVehicleSpots;
     
+    protected Queue<Job> jobs = null;
+    
+    protected int time = 0;
+    
     public Platform(Vector3f position) 
     {
         id = idCounter++;
@@ -39,6 +48,19 @@ public abstract class Platform {
         agvSpots = new ArrayList<>();
         cranes = new ArrayList<>();
         extVehicleSpots = new ArrayList<>();
+        jobs = new LinkedList<>();
+    }
+    
+    protected void requestNextJob()
+    {
+        try 
+        {
+            jobs.add(Controller.RequestNewJob(this));
+        } 
+        catch(NoJobException e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
     
     protected void createAgvSpots(Vector3f baseposition)

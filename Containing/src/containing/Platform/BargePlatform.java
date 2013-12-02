@@ -3,6 +3,7 @@ package containing.Platform;
 import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.ParkingSpot.BargeSpot;
+import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.BargeCrane;
 
@@ -63,7 +64,7 @@ public class BargePlatform extends Platform {
     @Override
     public void update()
     {
-        //todo
+        time += Settings.ClockDelay;
     }
     
 }

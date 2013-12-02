@@ -32,6 +32,7 @@ public class TrainPlatform extends Platform {
         setEntrypoint(new Vector3f(WIDTH,0,0));
         setExitpoint(new Vector3f(WIDTH,0,LENGTH));
         setTransportType(TransportType.Train);
+        setMaxAgvQueue(CRANES);
         createAgvSpots(new Vector3f(CRANE_OFFSET /* + TrainCrane.length */ + AGV_OFFSET, 0, 0));
         createExtVehicleSpots();
         createCranes();
@@ -66,6 +67,7 @@ public class TrainPlatform extends Platform {
     public void update()
     {
         time += Settings.ClockDelay;
+        requestNextJob();
     }
     
 }

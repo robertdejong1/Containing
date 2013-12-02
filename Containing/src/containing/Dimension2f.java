@@ -14,7 +14,7 @@ public class Dimension2f {
     @Override
     public String toString()
     {
-        return String.format("Dimension:[%f,%f]", width, length);   
+        return String.format("Dimension:[%.1f,%.1f]", width, length);   
     }
     
 }

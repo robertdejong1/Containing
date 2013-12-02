@@ -3,11 +3,13 @@ package containing.Platform;
 import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
-import containing.ParkingSpot.AgvSpot;
+import containing.Exceptions.NoFreeAgvException;
 import containing.Platform.StorageStrip.StorageState;
+import containing.Road.Route;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
+import containing.Vehicle.Vehicle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,31 +20,66 @@ import java.util.List;
  */
 public class StoragePlatform extends Platform {
     
-    private final float WIDTH          = 400f;  // ???
-    private final float LENGTH         = 1400f; // ???
-    private final int CRANES           = 10;
+    public enum Side { LEFT, RIGHT }
     
-    private final float AGV_OFFSET     = 0f;
-    private final float CRANE_OFFSET   = 0f;    // ???
-    private final float STRIP_WIDTH    = 24f;   // ???
-    private final int MAX_AGV_SPOT     = 6;
+    private final float WIDTH       = 400f;  // ???
+    private final float LENGTH      = 1400f; // ???
     
-    private final int AGVS             = 100;
+    public final float STRIP_WIDTH  = 24f;   // ???
+    public final float STRIP_LENGTH = WIDTH;
+    
+    private final int AGVS          = 100;
     
     private final StorageStrip[] strips;
+    private Vector3f[] entrypoints;
+    private Vector3f[] exitpoints;
     
     public StoragePlatform(Vector3f position)
     {
         super(position);
         strips = new StorageStrip[getStripAmount()];
         setDimension(new Dimension2f(WIDTH, LENGTH));
+        setEntrypoints();
+        setExitpoints();
         setAxis(Platform.DynamicAxis.X);
         createStrips();
-        createAgvSpots(new Vector3f(0, 0, 0));  //todo
-        createCranes();
         /* no vehicles on this platform */
         extVehicleSpots = null;
         log("Created StoragePlatform object: " + toString());
+    }
+    
+    protected AGV requestFreeAgv(TransportType tt) throws NoFreeAgvException
+    {
+        List<Vector3f> waypoints = new ArrayList<>();
+        Route route;
+        switch(tt)
+        {
+            case Barge:
+            case Seaship:
+                for(int i = agvSpots.size() - 1; i >= 0; i--)
+                {
+                    AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();
+                    if(agv.getStatus().equals(Vehicle.Status.WAITING))
+                    {
+                        //agv.followRoute(route);
+                        return agv;
+                    }
+                }
+                break;
+            case Truck:
+            case Train:
+                for(int i = 0; i < agvSpots.size(); i++)
+                {
+                    AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();
+                    if(agv.getStatus().equals(Vehicle.Status.WAITING))
+                    {
+                        //agv.followRoute(route);
+                        return agv;
+                    }
+                }
+                break;
+        }
+        throw new NoFreeAgvException("No free AGV available");
     }
     
     public List<AGV> getAllCreatedAgvs()
@@ -56,6 +93,8 @@ public class StoragePlatform extends Platform {
     @Override
     protected final void createAgvSpots(Vector3f baseposition)
     {
+        /* ignore */
+        /*
         float space = STRIP_WIDTH / (float)MAX_AGV_SPOT;
         float offset = (space / 2f) - ( AgvSpot.width / 2f);
         for(int i = 0; i < MAX_AGV_SPOT*2; i++) 
@@ -67,13 +106,14 @@ public class StoragePlatform extends Platform {
                 agvSpotPosition = new Vector3f((WIDTH - AgvSpot.length) + AGV_OFFSET, 0, space*i + offset);
             agvSpots.add(new AgvSpot(agvSpotPosition));
         }
+        */
     }
     
     private void createStrips() 
     {
         for(int i = 0; i < getStripAmount(); i++)
         {
-            strips[i] = new StorageStrip();
+            strips[i] = new StorageStrip(this);
         }
     }
     
@@ -112,11 +152,47 @@ public class StoragePlatform extends Platform {
         return 0;
     }
     
-    @Override
-    protected final void createCranes() 
+    public Vector3f getEntrypoint(Side side)
     {
-        //todo
+        if(side.equals(Side.LEFT))
+            return entrypoints[0];
+        return entrypoints[1];
     }
+    
+    public Vector3f getExitpoint(Side side)
+    {
+        if(side.equals(Side.LEFT))
+            return exitpoints[0];
+        return exitpoints[1];
+    }
+    
+    private void setEntrypoints()
+    {
+        entrypoints[0] = new Vector3f(0,0,0);
+        entrypoints[1] = new Vector3f(WIDTH, 0, 0);
+        
+    }
+    
+    private void setExitpoints()
+    {
+        exitpoints[0] = new Vector3f(0,0,LENGTH);
+        exitpoints[1] = new Vector3f(WIDTH, 0, LENGTH);
+    }
+    
+    @Override
+    public Vector3f getEntrypoint()
+    {
+        throw new UnsupportedOperationException("Pl0x add side as parameter (ex: getEntrypoint(Side.LEFT))");
+    }
+    
+    @Override
+    public Vector3f getExitpoint()
+    {
+        throw new UnsupportedOperationException("Pl0x add side as parameter (ex: getExitpoint(Side.LEFT))");
+    }
+    
+    @Override
+    protected void createCranes() { /*ignore */ }
 
     @Override
     protected void createExtVehicleSpots() {/* ignore */}

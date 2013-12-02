@@ -31,6 +31,7 @@ public class SeashipPlatform extends Platform {
         setEntrypoint(new Vector3f(WIDTH,0,0));
         setExitpoint(new Vector3f(0,0,0));
         setTransportType(TransportType.Seaship);
+        setMaxAgvQueue(CRANES);
         createAgvSpots(new Vector3f(0, 0, CRANE_OFFSET /* + SeashipCrane.length */ + AGV_OFFSET));
         createExtVehicleSpots();
         createCranes();
@@ -65,6 +66,7 @@ public class SeashipPlatform extends Platform {
     public void update()
     {
         time += Settings.ClockDelay;
+        requestNextJob();
     }
     
 }

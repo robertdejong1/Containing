@@ -1,24 +1,33 @@
 package containing.Platform;
 
 import containing.Container;
+import containing.Dimension2f;
+import containing.ParkingSpot.AgvSpot;
+import containing.Platform.StoragePlatform.Side;
 import containing.Point3D;
+import containing.Vector3f;
+import containing.Vehicle.Crane;
+import containing.Vehicle.StorageCrane;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Queue;
 
 /**
  * StorageStrip.java
- * Keeps track of positions of containers
  * @author Minardus
  */
 public class StorageStrip {
     
     public enum StorageState { FREE, FULL }
     public enum StorageJobState { FREE, FULL }
-    private enum Side { LEFT, RIGHT }
     
     private StorageState storageState;
     private StorageJobState storageJobState;
+    
+    private final float AGV_OFFSET  = 0f;
+    private final int MAX_AGV_SPOTS = 12;
     
     private final int MAX_X = 40;
     private final int MAX_Y = 6;
@@ -26,14 +35,26 @@ public class StorageStrip {
     
     private final int MAX_JOBS = 12;
     
+    private final Dimension2f dimension;
+    
     private HashMap<Point3D, Container> containers;
     private Queue<StorageJob> jobs;
     
-    public StorageStrip() 
+    private final List<AgvSpot> agvSpots;
+    private Crane crane;
+    
+    private final StoragePlatform platform;
+    
+    public StorageStrip(StoragePlatform platform) 
     {
+        this.platform = platform;
         containers = new HashMap<>();
         storageState = StorageState.FREE;
         storageJobState = StorageJobState.FREE;
+        dimension = new Dimension2f(platform.STRIP_WIDTH, platform.STRIP_LENGTH);
+        agvSpots = new ArrayList<>();
+        createAgvSpots();
+        createCrane();
     }
     
     public void createJob(int stripId, Container c)
@@ -110,6 +131,38 @@ public class StorageStrip {
     public StorageJobState getStorageJobState()
     {
         return storageJobState;
+    }
+    
+    private void createAgvSpots()
+    {
+        float space = dimension.width / ((float)MAX_AGV_SPOTS / 2f);
+        float offset = (space / 2f) - ( AgvSpot.width / 2f);
+        int subcount = 0;
+        for(int i = 0; i < MAX_AGV_SPOTS*2; i++) 
+        {
+            Vector3f agvSpotPosition;
+            if(i % 2 == 0)
+            {
+                agvSpotPosition = new Vector3f(AGV_OFFSET, 0, space*subcount + offset);
+            }
+            else
+            {
+                agvSpotPosition = new Vector3f((dimension.length - AgvSpot.length) + AGV_OFFSET, 0, space*subcount + offset);
+                subcount++;
+            }
+            agvSpots.add(new AgvSpot(agvSpotPosition));
+        }
+    }
+    
+    private void createCrane()
+    {
+        Vector3f cranePosition = new Vector3f(0,0,0);
+        crane = new StorageCrane(cranePosition, platform);
+    }
+    
+    public Dimension2f getDimension()
+    {
+        return dimension;
     }
     
 }

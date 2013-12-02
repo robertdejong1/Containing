@@ -31,6 +31,7 @@ public class TruckPlatform extends Platform {
         setEntrypoint(new Vector3f(0,0,0));
         setExitpoint(new Vector3f(0,0,LENGTH));
         setTransportType(TransportType.Truck);
+        setMaxAgvQueue(CRANES);
         createAgvSpots(new Vector3f(CRANE_OFFSET /* - TruckCrane.length */ - AGV_OFFSET, 0, 0));
         createExtVehicleSpots();
         createCranes();
@@ -65,6 +66,7 @@ public class TruckPlatform extends Platform {
     public void update()
     {
         time += Settings.ClockDelay;
+        requestNextJob();
     }
     
 }

@@ -3,12 +3,14 @@ package containing.Platform;
 import containing.Container.TransportType;
 import containing.Controller;
 import containing.Dimension2f;
+import containing.Exceptions.AgvQueueSpaceOutOfBounds;
 import containing.Exceptions.NoJobException;
 import containing.Job;
 import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.ParkingSpot;
 import containing.Settings;
 import containing.Vector3f;
+import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -17,7 +19,7 @@ import java.util.Queue;
 
 public abstract class Platform {
     
-    public enum State { BUSY, FREE }
+    public enum State { FREE, LOAD, UNLOAD }
     protected enum DynamicAxis { X, Z }
     
     protected final float AGVSPOT_OFFSET = 0f;
@@ -27,6 +29,7 @@ public abstract class Platform {
     private final int id;
     private final Vector3f position;
     private Dimension2f dimension;
+    protected State state;
     protected DynamicAxis axis;
     private Vector3f entrypoint = null;
     private Vector3f exitpoint = null;
@@ -37,6 +40,8 @@ public abstract class Platform {
     protected List<ParkingSpot> extVehicleSpots;
     
     protected Queue<Job> jobs = null;
+    protected Queue<AGV> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
+    private int maxAgvQueue = 1;
     
     protected int time = 0;
     
@@ -44,11 +49,18 @@ public abstract class Platform {
     {
         id = idCounter++;
         this.position = position;
+        state = State.FREE;
         /* initialize arraylists */
         agvSpots = new ArrayList<>();
         cranes = new ArrayList<>();
         extVehicleSpots = new ArrayList<>();
         jobs = new LinkedList<>();
+        agvQueue = new LinkedList<>();
+    }
+    
+    protected void requestNextContainer()
+    {
+        //Controller.RequestNextContainer(null, this);
     }
     
     protected void requestNextJob()
@@ -61,6 +73,31 @@ public abstract class Platform {
         {
             System.out.println(e.getMessage());
         }
+    }
+    
+    private void agvToQueue(AGV agv) throws AgvQueueSpaceOutOfBounds
+    {
+        if(agvQueue.size() < maxAgvQueue)
+            agvQueue.add(agv);
+        else
+            throw new AgvQueueSpaceOutOfBounds("No space available for AGV in agvQueue");
+    }
+    
+    protected void addAgvToQueue(AGV agv)
+    {
+        try
+        {
+            agvToQueue(agv);
+        }
+        catch(AgvQueueSpaceOutOfBounds e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    protected AGV getFreeAgv()
+    {
+        return Settings.port.getStoragePlatform().getFreeAgv();
     }
     
     protected void createAgvSpots(Vector3f baseposition)
@@ -141,6 +178,12 @@ public abstract class Platform {
     protected void setTransportType(TransportType transportType)
     {
         this.transportType = transportType;
+    }
+    
+    protected void setMaxAgvQueue(int max)
+    {
+        //calculate how much AGV's fit in queue
+        maxAgvQueue = max;
     }
     
     public int getId()

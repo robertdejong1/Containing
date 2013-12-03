@@ -34,9 +34,26 @@ public class CommandHandler {
             HashMap<String, Object> map = (HashMap<String, Object>)cmd.getObject();
             int id = Integer.parseInt(map.get("id").toString());
             System.out.println(""+id);
-            
-            Container[][][] containers = (Container[][][]) map.get("cargo");
-            Type type = (Type) map.get("vehicleType");
+                        
+            Type type = Type.valueOf(map.get("vehicleType").toString());
+            System.out.println("" + type.toString());
+            Object[][][] containers = (Object[][][]) map.get("cargo");
+                    
+            switch (type)
+            {
+                case TRAIN:
+                    for (int i = 0; i < containers.length; i++)
+                    {
+                        if (containers[i][0][0] != null)
+                        {
+                            
+                        }
+                    }
+                    break;
+                    
+                default:
+                    break;
+            }
         }
         
     }

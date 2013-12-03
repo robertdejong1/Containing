@@ -14,26 +14,29 @@ public class Train
 {
     Node train;
     Node node;
+    Spatial wag;
+    int wagons;
     
-    public Train(AssetManager assetManager, Node node, int wagons)
+    public Train(AssetManager assetManager, Node node)
     {
         train = new Node();
         this.node = node;
         
         Spatial loco = assetManager.loadModel("Models/locomotive.j3o");
-        Spatial wag = assetManager.loadModel("Models/trainwagon.j3o");
+        wag = assetManager.loadModel("Models/trainwagon.j3o");
         
         wag.scale(0.2f);
         wag.scale(1.2f, 1, 1);
         
         loco.scale(0.17f);
         train.attachChild(loco);
-        
-        for (int i = 0; i < wagons; i++)
-        {
-            wag.setLocalTranslation(0, 0, -1.5f*(i+1));
-            train.attachChild(wag.clone());
-        }
+    }
+    
+    public void addWagon()
+    {
+        wagons++;
+        wag.setLocalTranslation(0, 0, -1.5f*(wagons+1));
+        train.attachChild(wag.clone());
     }
     
     private void place(Vector3f loc)

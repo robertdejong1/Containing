@@ -1,3 +1,7 @@
 Error while connecting to Controller Server(Connection timed out: connect)Error while decoding serialization(null)
 Error while decoding serialization(null)
 Error while decoding serialization(containing.Container; class invalid for deserialization)
+Error while decoding serialization(containing.ParkingSpot.ParkingSpot; local class incompatible: stream classdesc serialVersionUID = 4431689169260838673, local class serialVersionUID = -9219708061610591945)
+Error while decoding serialization(containing.ParkingSpot.ParkingSpot; local class incompatible: stream classdesc serialVersionUID = 4431689169260838673, local class serialVersionUID = -9219708061610591945)
+Error while decoding serialization(containing.ParkingSpot.ParkingSpot; local class incompatible: stream classdesc serialVersionUID = 4431689169260838673, local class serialVersionUID = -9219708061610591945)
+Error while decoding serialization(containing.ParkingSpot.ParkingSpot; local class incompatible: stream classdesc serialVersionUID = 4431689169260838673, local class serialVersionUID = -9219708061610591945)

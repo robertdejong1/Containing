@@ -37,7 +37,7 @@ public class PortSimulation extends SimpleApplication
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.222.88", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.222.124", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -48,7 +48,6 @@ public class PortSimulation extends SimpleApplication
         flyCam.setMoveSpeed(50f);
         cam.setLocation(new Vector3f(0f, 20f, 0));
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
-
 
         for (int i = 0; i < 4; i++)
         {
@@ -77,7 +76,7 @@ public class PortSimulation extends SimpleApplication
         railCrane = new RailCrane(assetManager, rootNode);
         railCrane.place(-42f,5f,-1.52f);
         
-        train = new Train(assetManager, rootNode, 19);
+        train = new Train(assetManager, rootNode);
         train.place(-42,5f,0);
         
         //avg = new AVG(assetManager, rootNode);

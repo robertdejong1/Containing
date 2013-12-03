@@ -83,7 +83,7 @@ public abstract class ExternVehicle extends Vehicle {
         {
             try
             {
-            if (coordinates.x  > this.nrContainersWidth || coordinates.z > this.nrContainersHeight || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y > this.nrContainersDepth )
+            if (coordinates.x  > this.nrContainersWidth || coordinates.z > this.nrContainersDepth || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y > this.nrContainersHeight )
             {
             
                 throw new CargoOutOfBoundsException("CargoOutOfBoundsException");

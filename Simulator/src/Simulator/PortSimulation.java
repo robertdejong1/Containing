@@ -38,7 +38,7 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.222.124", 1337);
+        Runnable networkHandler = new NetworkHandler("localhost", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -158,12 +158,15 @@ public class PortSimulation extends SimpleApplication {
 
             switch (type) {
                 case TRAIN:
+                    Train train = new Train(assetManager, rootNode);
                     for (int i = 0; i < containers.length; i++) {
                         if (containers[i][0][0] != null) {
+                            train.addWagon();
                         }
                     }
+                    train.place(0, 5, 0);
                     break;
-
+                    
                 default:
                     break;
             }

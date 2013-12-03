@@ -71,7 +71,7 @@ public class StoragePlatform extends Platform {
                 for(int i = agvSpots.size() - 1; i >= 0; i--)
                 {
                     AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();
-                    if(agv.isAvailable())
+                    if(agv.getIsAvailable())
                     {
                         //agv.followRoute(route);
                         return agv;
@@ -83,7 +83,7 @@ public class StoragePlatform extends Platform {
                 for(int i = 0; i < agvSpots.size(); i++)
                 {
                     AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();
-                    if(agv.isAvailable())
+                    if(agv.getIsAvailable())
                     {
                         //agv.followRoute(route);
                         return agv;

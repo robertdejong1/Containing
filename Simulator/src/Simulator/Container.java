@@ -14,25 +14,25 @@ import java.util.Date;
 
 public class Container extends Model
 {
-    private int containerId;
-    private Date arrivalDate;
-    private float arrivalTimeFrom;
-    private float arrivalTimeTill;
-    private TransportType arrivalTransport;
-    private String arrivalTransportCompany;
-    private Vector3f arrivalPosition;
-    private String owner;
-    private Date departureDate;
-    private float departureTimeFrom;
-    private float departureTimeTill;
-    private TransportType departureTransport;
+    public int containerId;
+    public Date arrivalDate;
+    public float arrivalTimeFrom;
+    public float arrivalTimeTill;
+    public TransportType arrivalTransport;
+    public String arrivalTransportCompany;
+    public containing.Vector3f arrivalPosition;
+    public String owner;
+    public Date departureDate;
+    public float departureTimeFrom;
+    public float departureTimeTill;
+    public TransportType departureTransport;
     
     public Container(AssetManager assetManager, Node node, ColorRGBA color)
     {
         super(assetManager, "Models/container.j3o", node, color);
     }
     
-    public void setData(int containerId, Date arrivalDate, float arrivalTimeFrom, float arrivalTimeTill, TransportType arrivalTransport, String arrivalTransportCompany, Vector3f arrivalPosition, String owner, Date departureDate, float departureTimeFrom, float departureTimeTill, TransportType departureTransport) 
+    public void setData(int containerId, Date arrivalDate, float arrivalTimeFrom, float arrivalTimeTill, TransportType arrivalTransport, String arrivalTransportCompany, containing.Vector3f arrivalPosition, String owner, Date departureDate, float departureTimeFrom, float departureTimeTill, TransportType departureTransport) 
     {
         this.containerId = containerId;
         this.arrivalDate = arrivalDate;

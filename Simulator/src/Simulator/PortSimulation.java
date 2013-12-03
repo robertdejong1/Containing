@@ -25,20 +25,19 @@ public class PortSimulation extends SimpleApplication {
 
     AGV avg;
     Barge barge;
-    Container[] container = new Container[19];
+    //Container[] container = new Container[19];
     FreeCrane[] freeCranes = new FreeCrane[4];
     Port port;
     Freighter freighter;
     RailCrane railCrane;
     //private StorageCrane storageCrane = new StorageCrane(assetManager, rootNode);
-    Train train;
-    Truck[] truck = new Truck[20];
+    //Truck[] truck = new Truck[20];
 
     public static void main(String[] args) {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("localhost", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.222.124", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -58,12 +57,12 @@ public class PortSimulation extends SimpleApplication {
         //port.scale(10f);
         //port.place();
 
-        for (int i = 0; i < 20; i++) {
-            truck[i] = new Truck(assetManager, rootNode);
-            truck[i].rotate(0, -90 * FastMath.DEG_TO_RAD, 0);
-            truck[i].scale(0.15f);
-            truck[i].place(40.32f, 5f, i);
-        }
+        //for (int i = 0; i < 20; i++) {
+            //truck[i] = new Truck(assetManager, rootNode);
+            //truck[i].rotate(0, -90 * FastMath.DEG_TO_RAD, 0);
+            //truck[i].scale(0.15f);
+            //truck[i].place(40.32f, 5f, i);
+        //}
 
 
         freeCranes[0].place(0, 5f, 81);
@@ -71,12 +70,8 @@ public class PortSimulation extends SimpleApplication {
         freeCranes[2].place(-40, 5f, 81);
         freeCranes[3].place(-30, 5f, 81);
 
-        railCrane = new RailCrane(assetManager, rootNode);
-        railCrane.place(-42f, 5f, -1.52f);
-
-        train = new Train(assetManager, rootNode);
-        train.place(-42, 5f, 0);
-
+        //railCrane = new RailCrane(assetManager, rootNode);
+        //railCrane.place(-42f, 5f, -1.52f);
         //avg = new AVG(assetManager, rootNode);
 
         freighter = new Freighter(assetManager, rootNode);
@@ -87,12 +82,12 @@ public class PortSimulation extends SimpleApplication {
         barge.scale(3f);
         barge.place(44, 4.5f, 70);
 
-        for (int i = 0; i < 19; i++) {
-            container[i] = new Container(assetManager, rootNode, ColorRGBA.randomColor());
-            container[i].place(-42, 5.23f, -1.5f * (i + 1));
-        }
+        //for (int i = 0; i < 19; i++) {
+            //container[i] = new Container(assetManager, rootNode, ColorRGBA.randomColor());
+            //container[i].place(-42, 5.23f, -1.5f * (i + 1));
+        //}
 
-        railCrane.attachContainer(container);
+        //railCrane.attachContainer(container);
 
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
@@ -141,7 +136,7 @@ public class PortSimulation extends SimpleApplication {
         //{
         //    container[i].move(0, 0, tpf*2);
         //}
-        railCrane.update(tpf);
+        //railCrane.update(tpf);
         Command cmd = CommandHandler.getStackedCommand();
         if(cmd == null){
             return;
@@ -161,10 +156,14 @@ public class PortSimulation extends SimpleApplication {
                     Train train = new Train(assetManager, rootNode);
                     for (int i = 0; i < containers.length; i++) {
                         if (containers[i][0][0] != null) {
-                            train.addWagon();
+                            containing.Container c = (containing.Container) containers[i][0][0];
+                            Container cont = new Container(assetManager, rootNode, ColorRGBA.randomColor());
+                            cont.setData(c.getContainerId(), c.getArrivalDate(), c.getArrivalTimeFrom(), c.getArrivalTimeTill(), c.getArrivalTransport(), c.getArrivalTransportCompany(), c.getArrivalPosition(), c.getOwner(), c.getDepartureDate(), c.getDepartureTimeFrom(), c.getDepartureTimeTill(), c.getDepartureTransport());
+                            train.addWagon(cont);
+                            
                         }
                     }
-                    train.place(0, 5, 0);
+                    train.place(-42, 5f, 0);
                     break;
                     
                 default:

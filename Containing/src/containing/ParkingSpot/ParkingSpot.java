@@ -38,7 +38,7 @@ public abstract class ParkingSpot implements Serializable
         this.ParkedVehicle = null;
     }
     
-    protected abstract void ParkVehicle(Vehicle VehicleToPark) throws InvalidVehicleException;
+    public abstract void ParkVehicle(Vehicle VehicleToPark) throws InvalidVehicleException;
     
     private static int requestNewParkingSpotID()
     {

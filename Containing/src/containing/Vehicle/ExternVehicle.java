@@ -84,7 +84,7 @@ public abstract class ExternVehicle extends Vehicle {
             {
                 try
                 {
-                if (coordinates.x  > this.nrContainersWidth || coordinates.z > this.nrContainersDepth || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y > this.nrContainersHeight )
+                if (coordinates.x  >= this.nrContainersWidth || coordinates.z >= this.nrContainersDepth || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y >= this.nrContainersHeight )
                 {
             
                     throw new CargoOutOfBoundsException("CargoOutOfBoundsException");
@@ -133,6 +133,29 @@ public abstract class ExternVehicle extends Vehicle {
             }
         
       
+        
+    }
+    
+     public Container unload(Container container) throws ContainerNotFoundException
+    {
+
+        if (cargo.isEmpty()) { throw new ContainerNotFoundException("No containers"); }
+
+        if(cargo.remove(container) == false)
+        { 
+            throw new ContainerNotFoundException("ContainerNotFound");
+        }
+        
+       
+       this.getGrid()[(int)container.getArrivalPosition().x][(int)container.getArrivalPosition().y][(int)container.getArrivalPosition().z] = null;
+        
+        
+        
+        
+        
+            
+        return container;
+
         
     }
     

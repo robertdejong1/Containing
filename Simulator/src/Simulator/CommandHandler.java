@@ -18,27 +18,20 @@ import java.util.List;
  *
  * @author Robert
  */
+enum Type {
 
-enum Type {TRUCK, AGV, BARGE, BARGECRANE, SEASHIP, SEASHIPCRANE, TRAIN, TRAINCRANE, TRUCKCRANE, STORAGECRANE }
+    TRUCK, AGV, BARGE, BARGECRANE, SEASHIP, SEASHIPCRANE, TRAIN, TRAINCRANE, TRUCKCRANE, STORAGECRANE
+}
 
 public class CommandHandler {
 
     private static volatile List<String> queuedCommands = new ArrayList<String>();
+    private static volatile List<Command> stackedCommands = new ArrayList<Command>();
 
     static void handle(String input) {
         //Handle de command
         Command cmd = (Command) decode(input);
-        
-        if (cmd.getCommand().equals("enterExternVehicle"))
-        {
-            HashMap<String, Object> map = (HashMap<String, Object>)cmd.getObject();
-            int id = Integer.parseInt(map.get("id").toString());
-            System.out.println(""+id);
-            
-            Container[][][] containers = (Container[][][]) map.get("cargo");
-            Type type = (Type) map.get("vehicleType");
-        }
-        
+        stackedCommands.add(cmd);
     }
 
     private static Object decode(String encoded) {
@@ -74,5 +67,15 @@ public class CommandHandler {
 
     public static boolean newCommandsAvailable() {
         return queuedCommands.size() > 0;
+    }
+
+    public static Command getStackedCommand() {
+        if (stackedCommands.size() > 0) {
+            Command cmd = stackedCommands.get(0);
+            stackedCommands.remove(0);
+            return cmd;
+        } else {
+            return null;
+        }
     }
 }

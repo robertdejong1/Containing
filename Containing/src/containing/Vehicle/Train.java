@@ -21,8 +21,8 @@ public class Train extends ExternVehicle{
     protected int timeCounter = 0;
     public static float width = 5f; //????????
     public static float length = 30f; //??????????
-    private static int nrContainersDepth = 1;
-    private static int nrContainersHeight = 25;
+    private static int nrContainersDepth = 25;
+    private static int nrContainersHeight = 1;
     private static int nrContainersWidth = 1;
     public Train(Date arrivalDate, float arrivalTime, Platform platform, String company)
     {

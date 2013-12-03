@@ -24,7 +24,7 @@ import java.util.List;
  * @author Miriam
  */
 public abstract class ExternVehicle extends Vehicle {
-    
+    //x=width y=height z=depth
     private Date arrivalDate;
     private float arrivalTime;
     private String company;
@@ -73,39 +73,42 @@ public abstract class ExternVehicle extends Vehicle {
     @Override
     public void load(Container container) throws VehicleOverflowException,CargoOutOfBoundsException
     {
-        //set isLoaded true when it wasn't already done
-        if (this.cargo.isEmpty()){this.isLoaded = true;} 
         
-        Vector3f coordinates = container.getArrivalPosition();
+        //set isLoaded true when it wasn't already done
+            if (this.cargo.isEmpty()){this.isLoaded = true;} 
+        
+            Vector3f coordinates = container.getArrivalPosition();
         
    
-        if (grid!=null)
-        {
-            try
+            if (grid!=null)
             {
-            if (coordinates.x  > this.nrContainersWidth || coordinates.z > this.nrContainersDepth || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y > this.nrContainersHeight )
-            {
+                try
+                {
+                if (coordinates.x  > this.nrContainersWidth || coordinates.z > this.nrContainersDepth || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y > this.nrContainersHeight )
+                {
             
-                throw new CargoOutOfBoundsException("CargoOutOfBoundsException");
+                    throw new CargoOutOfBoundsException("CargoOutOfBoundsException");
             
-            }
+                }
                 
-            if (grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]!=null){throw new VehicleOverflowException("VehicleOverflowException");}//dubbel
+                if (grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]!=null){throw new VehicleOverflowException("VehicleOverflowException");}//dubbel
         
-                grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z] = container; 
+                    grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z] = container; 
 
-                super.load(container);
+                    super.load(container);
                 
                 //if status not waiting
                 //CommandHandler.addCommand(new Command("loadVehicle", this));
                 
-            }
+                }
             
-            catch(Exception e)
-            {
-                throw e;
+                catch(Exception e)
+                {
+                    throw e;
+                }
             }
-        }
+        
+       //status waiting ..... anders load op vrije plaats
     }
     
     public Container unload() throws ContainerNotFoundException

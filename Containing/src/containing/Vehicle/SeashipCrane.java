@@ -27,9 +27,7 @@ public class SeashipCrane extends Crane {
 
     }
     
-    
-    public void reset(){super.reset();}
-  
+
  
     
     @Override

@@ -6,6 +6,7 @@
 
 package containing.Road;
 
+import containing.ErrorLog;
 import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
 import containing.Vector3f;
@@ -52,7 +53,15 @@ public class Route implements Serializable {
                 //motionpath from waypoint to parkingspot
                 if (destinationPlatform == null)
                 {
-                    this.destinationParkingSpot.ParkVehicle(vehicle);
+                    try
+                    {
+                        this.destinationParkingSpot.ParkVehicle(vehicle);
+                    }
+                    catch(Exception e)
+                    {
+                        ErrorLog.logMsg(e.getMessage());
+                    }
+                    
                 }
                 
                 //hier kraan geparkeerd ... ga unload

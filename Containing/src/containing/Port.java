@@ -15,7 +15,7 @@ public class Port implements Serializable
 {
     private int ID = 0;
     private List<Platform> Platforms;
-    private List<AGV> aGVs;
+    //private List<AGV> aGVs;
     private StoragePlatform storagePlatform;
 
     public Port() 
@@ -29,7 +29,7 @@ public class Port implements Serializable
         Platforms.add(new TruckPlatform(new Vector3f(0, 0, 0)));
         
         storagePlatform = new StoragePlatform(new Vector3f(0,0,0));
-        aGVs = storagePlatform.getAllCreatedAgvs();
+        //aGVs = storagePlatform.getAllCreatedAgvs();
         Platforms.add(storagePlatform);
         
         

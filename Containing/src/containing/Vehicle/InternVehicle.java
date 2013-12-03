@@ -31,6 +31,11 @@ public abstract class InternVehicle extends Vehicle{
         this.startPosition = startPosition;
     }
     
+   public boolean isAvailable()
+   {
+       return this.isAvailable;
+   }
+    
     public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException {
         try
         {

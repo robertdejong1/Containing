@@ -5,6 +5,7 @@
 package containing;
 
 
+import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Vehicle.Barge;
 import java.io.File;
@@ -13,6 +14,7 @@ import static junit.framework.Assert.fail;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -152,7 +154,7 @@ public class VehicleTest extends TestCase {
        }
        catch(Exception e)
        {
-           fail("Should not fail");
+           assertEquals(CargoOutOfBoundsException.class, e.getClass());
        }    
        
        try

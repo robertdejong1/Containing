@@ -54,6 +54,11 @@ public class StoragePlatform extends Platform {
         log("Created StoragePlatform object: " + toString());
     }
     
+    public void loadContainerInAgv(Container container)
+    {
+        //todo
+    }
+    
     private void createAgvSpots()
     {
         float space = LENGTH / ((float)StorageStrip.MAX_AGV_SPOTS*getStripAmount() / 2f);

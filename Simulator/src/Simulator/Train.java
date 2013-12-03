@@ -8,6 +8,8 @@ import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Train
@@ -17,8 +19,11 @@ public class Train
     Spatial wag;
     int wagons;
     
+    public List<Container> containers;
+    
     public Train(AssetManager assetManager, Node node)
     {
+        containers = new ArrayList<Container>();
         train = new Node();
         this.node = node;
         
@@ -32,11 +37,16 @@ public class Train
         train.attachChild(loco);
     }
     
-    public void addWagon()
+    public void addWagon(Container con)
     {
-        wagons++;
         wag.setLocalTranslation(0, 0, -1.5f*(wagons+1));
         train.attachChild(wag.clone());
+        
+        con.place(0, 0.23f, -1.5f*(wagons+1));
+        train.attachChild(con.model);
+        containers.add(con);
+        
+        wagons++;
     }
     
     private void place(Vector3f loc)

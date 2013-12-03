@@ -35,7 +35,7 @@ public class CommandHandler {
 
         switch (prefix) {
             case "PORT":
-                return new Command("port", new Command("test", "test"));
+                return new Command("port", new Command("port", Settings.port));
                 
 
             case "STATS":

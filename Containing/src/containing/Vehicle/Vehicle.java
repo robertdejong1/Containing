@@ -64,10 +64,10 @@ public abstract class Vehicle implements Serializable
         
         else 
         {
-            throw new CargoOutOfBoundsException("CargoOutOfBounds");
+            throw new VehicleOverflowException("VehicleOverFlowException");
         }
         
-        CommandHandler.addCommand(new Command("loadVehicle", this));
+        //CommandHandler.addCommand(new Command("loadVehicle", this));
     } 
     
     public Vector3f getPosition(){return this.position;}

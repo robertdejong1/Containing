@@ -2,6 +2,7 @@ package containing.ParkingSpot;
 
 import containing.Command;
 import containing.CommandHandler;
+import containing.Exceptions.InvalidVehicleException;
 import containing.Road.Route;
 import containing.Vector3f;
 import containing.Vehicle.Vehicle;
@@ -28,11 +29,6 @@ public abstract class ParkingSpot implements Serializable
         return this.ParkedVehicle == null;
     }
     
-    public void ParkVehicle(Vehicle VehicleToPark) 
-    {
-        this.ParkedVehicle = VehicleToPark;
-    }
-    
     public void UnparkVehicle(Route RouteToFollow) 
     {
         HashMap<String, Object> map = new HashMap<>();
@@ -41,6 +37,8 @@ public abstract class ParkingSpot implements Serializable
         CommandHandler.addCommand(new Command("unparkVehicle", map));
         this.ParkedVehicle = null;
     }
+    
+    protected abstract void ParkVehicle(Vehicle VehicleToPark) throws InvalidVehicleException;
     
     private static int requestNewParkingSpotID()
     {

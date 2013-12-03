@@ -29,9 +29,10 @@ public abstract class InternVehicle extends Vehicle{
         super(capicity, platform, type);
         isAvailable = false;
         this.startPosition = startPosition;
+        this.isAvailable = true;
     }
     
-   public boolean isAvailable()
+   public boolean getIsAvailable()
    {
        return this.isAvailable;
    }

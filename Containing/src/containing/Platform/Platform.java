@@ -4,6 +4,7 @@ import containing.Container.TransportType;
 import containing.Controller;
 import containing.Dimension2f;
 import containing.Exceptions.AgvQueueSpaceOutOfBounds;
+import containing.Exceptions.NoFreeAgvException;
 import containing.Exceptions.NoJobException;
 import containing.Job;
 import containing.ParkingSpot.AgvSpot;
@@ -90,14 +91,9 @@ public abstract class Platform implements Serializable {
         catch(AgvQueueSpaceOutOfBounds e){/* ignore */}
     }
     
-    protected AGV getFreeAgv()
+    protected AGV requestFreeAgv() throws NoFreeAgvException
     {
-        return Settings.port.getStoragePlatform().getFreeAgv(getTransportType());
-    }
-    
-    protected AGV getFreeAgv(TransportType tt)
-    {
-        return Settings.port.getStoragePlatform().getFreeAgv(tt);
+        return Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
     }
     
     protected void createAgvSpots(Vector3f baseposition)

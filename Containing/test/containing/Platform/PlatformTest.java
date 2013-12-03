@@ -1,7 +1,9 @@
 package containing.Platform;
 
 import containing.Container;
+import containing.ControlleralgorithmsTest;
 import containing.Dimension2f;
+import containing.Exceptions.NoFreeAgvException;
 import containing.MessageLog;
 import containing.Port;
 import containing.Settings;
@@ -92,11 +94,20 @@ public class PlatformTest {
     public void testGetFreeAgv() {
         System.out.println("getFreeAgv");
         
-        List<AGV> agvs = new ArrayList<>();
-        agvs = Settings.port.getStoragePlatform().getAllCreatedAgvs();
-        
-        AGV expResult = agvs.get(99);
-        AGV result = instance.getFreeAgv();
+        if(Settings.port.getStoragePlatform().agvs.isEmpty())
+            fail("AGV's arent created");
+
+        int expResult = Settings.port.getStoragePlatform().agvs.get(99).getID();
+        int result = 0;
+        try
+        {
+            result = instance.requestFreeAgv().getID();
+        } catch(NoFreeAgvException e) { 
+            System.out.println(e.getMessage());
+            fail("kon geen vrije AGV vinden");
+        }
+        System.out.println("exp: " + expResult);
+        System.out.println("res: " + result);
         assertEquals(expResult, result);
     }
 

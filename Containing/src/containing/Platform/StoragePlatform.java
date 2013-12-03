@@ -35,6 +35,8 @@ public class StoragePlatform extends Platform {
     private Vector3f[] entrypoints;
     private Vector3f[] exitpoints;
     
+    protected List<AGV> agvs;
+    
     public StoragePlatform(Vector3f position)
     {
         super(position);
@@ -44,31 +46,21 @@ public class StoragePlatform extends Platform {
         setExitpoints();
         setAxis(Platform.DynamicAxis.X);
         createStrips();
+        agvs = getAllCreatedAgvs();
         /* no vehicles on this platform */
         extVehicleSpots = null;
         log("Created StoragePlatform object: " + toString());
     }
     
-    public List<AGV> getAllCreatedAgvs()
+    public final List<AGV> getAllCreatedAgvs()
     {
-        List<AGV> agvs = new ArrayList<>();
+        agvs = new ArrayList<>();
         for(int i = 0; i < AGVS; i++)
             agvs.add(new AGV(this, new Vector3f(0,0,0))); // todo
         return agvs;
     }
     
-    @Override
-    public AGV getFreeAgv(TransportType tt)
-    {
-        try
-        {
-            return requestFreeAgv(tt);
-        } 
-        catch(NoFreeAgvException e) { /* ignore */ }
-        return null;
-    }
-    
-    private AGV requestFreeAgv(TransportType tt) throws NoFreeAgvException
+    public AGV requestFreeAgv(TransportType tt) throws NoFreeAgvException
     {
         List<Vector3f> waypoints = new ArrayList<>();
         Route route;
@@ -79,7 +71,7 @@ public class StoragePlatform extends Platform {
                 for(int i = agvSpots.size() - 1; i >= 0; i--)
                 {
                     AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();
-                    if(agv.getStatus().equals(Vehicle.Status.WAITING))
+                    if(agv.isAvailable())
                     {
                         //agv.followRoute(route);
                         return agv;
@@ -91,7 +83,7 @@ public class StoragePlatform extends Platform {
                 for(int i = 0; i < agvSpots.size(); i++)
                 {
                     AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();
-                    if(agv.getStatus().equals(Vehicle.Status.WAITING))
+                    if(agv.isAvailable())
                     {
                         //agv.followRoute(route);
                         return agv;

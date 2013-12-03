@@ -2,6 +2,7 @@ package containing.Platform;
 
 import containing.Container.TransportType;
 import containing.Dimension2f;
+import containing.Exceptions.NoFreeAgvException;
 import containing.ParkingSpot.BargeSpot;
 import containing.Settings;
 import containing.Vector3f;
@@ -75,10 +76,13 @@ public class BargePlatform extends Platform {
         if(state.equals(State.UNLOAD))
         {
             /* request new AGV's */
-            if(jobs.size() > maxAgvQueue)
-                getFreeAgv();
-            else if(jobs.size() == maxAgvQueue && agvQueue.size() != maxAgvQueue)
-                getFreeAgv();
+            if((jobs.size() > maxAgvQueue) || (jobs.size() == maxAgvQueue && agvQueue.size() != maxAgvQueue))
+            {
+                try
+                {
+                    requestFreeAgv();
+                } catch(NoFreeAgvException e) { /* ignore */ }
+            }
         }
         
         

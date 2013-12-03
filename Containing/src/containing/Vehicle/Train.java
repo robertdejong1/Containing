@@ -27,7 +27,7 @@ public class Train extends ExternVehicle{
     public Train(Date arrivalDate, float arrivalTime, Platform platform, String company)
     {
 
-        super(arrivalDate, arrivalTime,  nrContainersDepth,nrContainersHeight,nrContainersWidth, platform, company, Type.TRAIN); //true if vehicle comes to load, otherwise false
+        super(arrivalDate, arrivalTime,  nrContainersDepth,nrContainersWidth,nrContainersHeight, platform, company, Type.TRAIN); //true if vehicle comes to load, otherwise false
         
 
     }

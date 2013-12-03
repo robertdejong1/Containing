@@ -13,13 +13,15 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.SimpleWaterProcessor;
+import containing.Command;
+import java.util.HashMap;
+
 /**
  * test
  *
  * @author normenhansen
  */
-public class PortSimulation extends SimpleApplication
-{
+public class PortSimulation extends SimpleApplication {
 
     AGV avg;
     Barge barge;
@@ -32,8 +34,7 @@ public class PortSimulation extends SimpleApplication
     Train train;
     Truck[] truck = new Truck[20];
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         PortSimulation app = new PortSimulation();
         app.start();
 
@@ -43,14 +44,12 @@ public class PortSimulation extends SimpleApplication
     }
 
     @Override
-    public void simpleInitApp()
-    {
+    public void simpleInitApp() {
         flyCam.setMoveSpeed(50f);
         cam.setLocation(new Vector3f(0f, 20f, 0));
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
 
-        for (int i = 0; i < 4; i++)
-        {
+        for (int i = 0; i < 4; i++) {
             freeCranes[i] = new FreeCrane(assetManager, rootNode);
             freeCranes[i].scale(0.5f);
             freeCranes[i].rotate(0, 180 * FastMath.DEG_TO_RAD, 0);
@@ -58,43 +57,41 @@ public class PortSimulation extends SimpleApplication
         port = new Port(assetManager, rootNode);
         //port.scale(10f);
         //port.place();
-        
-        for (int i = 0; i < 20; i++)
-        {
+
+        for (int i = 0; i < 20; i++) {
             truck[i] = new Truck(assetManager, rootNode);
-            truck[i].rotate(0, -90*FastMath.DEG_TO_RAD, 0);
+            truck[i].rotate(0, -90 * FastMath.DEG_TO_RAD, 0);
             truck[i].scale(0.15f);
-            truck[i].place(40.32f,5f,i);
+            truck[i].place(40.32f, 5f, i);
         }
-        
+
 
         freeCranes[0].place(0, 5f, 81);
         freeCranes[1].place(10, 5f, 81);
         freeCranes[2].place(-40, 5f, 81);
         freeCranes[3].place(-30, 5f, 81);
-        
+
         railCrane = new RailCrane(assetManager, rootNode);
-        railCrane.place(-42f,5f,-1.52f);
-        
+        railCrane.place(-42f, 5f, -1.52f);
+
         train = new Train(assetManager, rootNode);
-        train.place(-42,5f,0);
-        
+        train.place(-42, 5f, 0);
+
         //avg = new AVG(assetManager, rootNode);
-        
+
         freighter = new Freighter(assetManager, rootNode);
         freighter.scale(3f);
         freighter.place(0, 4f, 85);
-        
+
         barge = new Barge(assetManager, rootNode);
         barge.scale(3f);
         barge.place(44, 4.5f, 70);
-        
-        for (int i = 0; i < 19; i++)
-        {
+
+        for (int i = 0; i < 19; i++) {
             container[i] = new Container(assetManager, rootNode, ColorRGBA.randomColor());
-            container[i].place(-42,5.23f,-1.5f*(i+1));
+            container[i].place(-42, 5.23f, -1.5f * (i + 1));
         }
-        
+
         railCrane.attachContainer(container);
 
         DirectionalLight sun = new DirectionalLight();
@@ -111,19 +108,19 @@ public class PortSimulation extends SimpleApplication
 
         SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
         waterProcessor.setReflectionScene(rootNode);
-        
-        Vector3f waterLocation=new Vector3f(0,4.5f,0);
+
+        Vector3f waterLocation = new Vector3f(0, 4.5f, 0);
         waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, waterLocation.dot(Vector3f.UNIT_Y)));
         viewPort.addProcessor(waterProcessor);
-        
+
         waterProcessor.setWaterDepth(40);         // transparency of water
         waterProcessor.setDistortionScale(0.05f); // strength of waves
         waterProcessor.setWaveSpeed(0.05f);       // speed of waves
-        
-        Quad quad = new Quad(400,400);
-        quad.scaleTextureCoordinates(new Vector2f(24f,24f));
-        
-        Geometry water=new Geometry("water", quad);
+
+        Quad quad = new Quad(400, 400);
+        quad.scaleTextureCoordinates(new Vector2f(24f, 24f));
+
+        Geometry water = new Geometry("water", quad);
         water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
         water.setLocalTranslation(-200, 4.5f, 250);
         water.setShadowMode(ShadowMode.Receive);
@@ -135,17 +132,43 @@ public class PortSimulation extends SimpleApplication
     }
 
     @Override
-    public void simpleUpdate(float tpf)
-    {
+    public void simpleUpdate(float tpf) {
         //freeCranes[0].move(tpf/2, 0, 0);
         //train.move(0,0,tpf*2);
         //train.model.rotate(tpf, tpf, tpf)
-        
+
         //for (int i = 0; i < 19; i++)
         //{
         //    container[i].move(0, 0, tpf*2);
         //}
-        
         railCrane.update(tpf);
+        Command cmd = CommandHandler.getStackedCommand();
+        if(cmd == null){
+            return;
+        }
+
+        if (cmd.getCommand().equals("enterExternVehicle")) {
+            HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
+            int id = Integer.parseInt(map.get("id").toString());
+            System.out.println("" + id);
+
+            Type type = Type.valueOf(map.get("vehicleType").toString());
+            System.out.println("" + type.toString());
+            Object[][][] containers = (Object[][][]) map.get("cargo");
+
+            switch (type) {
+                case TRAIN:
+                    for (int i = 0; i < containers.length; i++) {
+                        if (containers[i][0][0] != null) {
+                        }
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+
     }
 }

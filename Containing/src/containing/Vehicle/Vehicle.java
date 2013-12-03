@@ -67,7 +67,7 @@ public abstract class Vehicle implements Serializable
             throw new CargoOutOfBoundsException("CargoOutOfBounds");
         }
         
-        CommandHandler.addCommand(new Command("loadVehicle", this));
+        //CommandHandler.addCommand(new Command("loadVehicle", this));
     } 
     
     public Vector3f getPosition(){return this.position;}

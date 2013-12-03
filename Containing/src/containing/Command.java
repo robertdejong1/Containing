@@ -45,6 +45,7 @@ public class Command implements Serializable {
 
     @Override
     public String toString() {
+        System.out.println(this.command);
         try {
             ByteArrayOutputStream bo = new ByteArrayOutputStream();
             ObjectOutputStream so = new ObjectOutputStream(bo);

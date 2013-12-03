@@ -60,6 +60,6 @@ public class Port implements Serializable
 
     @Override
     public String toString() {
-        return "Port{" + "ID=" + ID + ", Platforms=" + Platforms + ", aGVs=" + aGVs + ", storagePlatform=" + storagePlatform + '}';
+        return "Port{" + "ID=" + ID + ", Platforms=" + Platforms + ", storagePlatform=" + storagePlatform + '}';
     }
 }

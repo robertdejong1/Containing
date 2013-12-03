@@ -16,7 +16,7 @@ import java.util.List;
 
 public abstract class Vehicle implements Serializable 
 { 
-    private int counter = 0;
+    private static int counter = 0;
     protected boolean isLoaded = false;
     protected int capicity;
     protected List<Container> cargo;

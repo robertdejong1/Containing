@@ -92,7 +92,12 @@ public abstract class Platform implements Serializable {
     
     protected AGV getFreeAgv()
     {
-        return Settings.port.getStoragePlatform().getFreeAgv();
+        return Settings.port.getStoragePlatform().getFreeAgv(getTransportType());
+    }
+    
+    protected AGV getFreeAgv(TransportType tt)
+    {
+        return Settings.port.getStoragePlatform().getFreeAgv(tt);
     }
     
     protected void createAgvSpots(Vector3f baseposition)

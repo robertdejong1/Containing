@@ -3,6 +3,7 @@ package containing.Platform;
 import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
+import containing.Exceptions.AgvQueueSpaceOutOfBounds;
 import containing.Exceptions.NoFreeAgvException;
 import containing.Platform.StorageStrip.StorageState;
 import containing.Road.Route;
@@ -56,7 +57,18 @@ public class StoragePlatform extends Platform {
         return agvs;
     }
     
-    protected AGV requestFreeAgv(TransportType tt) throws NoFreeAgvException
+    @Override
+    public AGV getFreeAgv(TransportType tt)
+    {
+        try
+        {
+            return requestFreeAgv(tt);
+        } 
+        catch(NoFreeAgvException e) { /* ignore */ }
+        return null;
+    }
+    
+    private AGV requestFreeAgv(TransportType tt) throws NoFreeAgvException
     {
         List<Vector3f> waypoints = new ArrayList<>();
         Route route;

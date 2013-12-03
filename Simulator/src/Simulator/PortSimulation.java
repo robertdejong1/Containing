@@ -160,7 +160,7 @@ public class PortSimulation extends SimpleApplication {
                             Container cont = new Container(assetManager, rootNode, ColorRGBA.randomColor());
                             cont.setData(c.getContainerId(), c.getArrivalDate(), c.getArrivalTimeFrom(), c.getArrivalTimeTill(), c.getArrivalTransport(), c.getArrivalTransportCompany(), c.getArrivalPosition(), c.getOwner(), c.getDepartureDate(), c.getDepartureTimeFrom(), c.getDepartureTimeTill(), c.getDepartureTransport());
                             train.addWagon(cont);
-                            
+                            System.out.println(cont);
                         }
                     }
                     train.place(-42, 5f, 0);

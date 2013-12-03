@@ -47,4 +47,22 @@ public class Container extends Model
         this.departureTimeTill = departureTimeTill;
         this.departureTransport = departureTransport;
     }
-}
+    
+    @Override
+    public String toString()
+    {
+        return "Container info: ---------------------------------------" +
+                "\n   ID: "+this.containerId +
+                "\n   ArrivalDate: "+this.arrivalDate +
+                "\n   ArrivalTimeFrom: "+this.arrivalTimeFrom +
+                "\n   ArrivalTimeTill: "+this.arrivalTimeTill +
+                "\n   ArrivalTransport: "+this.arrivalTransport +
+                "\n   ArrivalTransportCompany: "+this.arrivalTransportCompany +
+                "\n   ArrivalPosition: "+this.arrivalPosition +
+                "\n   Owner: "+this.owner +
+                "\n   DepartureDate: "+this.departureDate +
+                "\n   DepartureTimeFrom: "+this.departureTimeFrom +
+                "\n   DepartureTimeTill: "+this.departureTimeTill +
+                "\n   DepartureTransport: "+this.departureTransport + "\n";
+    }
+} 

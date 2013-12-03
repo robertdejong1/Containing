@@ -28,8 +28,7 @@ public class StorageStrip implements Serializable {
     private StorageState storageState;
     private StorageJobState storageJobState;
     
-    private final float AGV_OFFSET  = 0f;
-    private final int MAX_AGV_SPOTS = 12;
+    public final static int MAX_AGV_SPOTS = 12;
     
     private final int MAX_X = 40;
     private final int MAX_Y = 6;
@@ -57,7 +56,6 @@ public class StorageStrip implements Serializable {
         storageJobState = StorageJobState.FREE;
         dimension = new Dimension2f(platform.STRIP_WIDTH, platform.STRIP_LENGTH);
         agvSpots = new ArrayList<>();
-        createAgvSpots();
         createCrane();
     }
     
@@ -137,31 +135,15 @@ public class StorageStrip implements Serializable {
         return storageJobState;
     }
     
-    private void createAgvSpots()
-    {
-        float space = dimension.width / ((float)MAX_AGV_SPOTS / 2f);
-        float offset = (space / 2f) - ( AgvSpot.width / 2f);
-        int subcount = 0;
-        for(int i = 0; i < MAX_AGV_SPOTS*2; i++) 
-        {
-            Vector3f agvSpotPosition;
-            if(i % 2 == 0)
-            {
-                agvSpotPosition = new Vector3f(AGV_OFFSET, 0, space*subcount + offset);
-            }
-            else
-            {
-                agvSpotPosition = new Vector3f((dimension.length - AgvSpot.length) + AGV_OFFSET, 0, space*subcount + offset);
-                subcount++;
-            }
-            agvSpots.add(new AgvSpot(agvSpotPosition));
-        }
-    }
-    
     private void createCrane()
     {
         Vector3f cranePosition = new Vector3f(0,0,0);
         crane = new StorageCrane(cranePosition, platform);
+    }
+    
+    public List<AgvSpot> getAgvSpots()
+    {
+        return agvSpots;
     }
     
     public Vector3f getPosition()

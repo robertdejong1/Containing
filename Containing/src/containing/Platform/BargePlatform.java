@@ -80,7 +80,7 @@ public class BargePlatform extends Platform {
             {
                 try
                 {
-                    requestFreeAgv();
+                    Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
                 } catch(NoFreeAgvException e) { /* ignore */ }
             }
         }

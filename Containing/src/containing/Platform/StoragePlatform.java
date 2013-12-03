@@ -3,14 +3,14 @@ package containing.Platform;
 import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
-import containing.Exceptions.AgvQueueSpaceOutOfBounds;
+import containing.Exceptions.InvalidVehicleException;
 import containing.Exceptions.NoFreeAgvException;
+import containing.ParkingSpot.AgvSpot;
 import containing.Platform.StorageStrip.StorageState;
 import containing.Road.Route;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
-import containing.Vehicle.Vehicle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +30,7 @@ public class StoragePlatform extends Platform {
     public final float STRIP_LENGTH = WIDTH;
     
     private final int AGVS          = 100;
+    private final float AGV_OFFSET  = 0f;
     
     private final StorageStrip[] strips;
     private Vector3f[] entrypoints;
@@ -46,18 +47,56 @@ public class StoragePlatform extends Platform {
         setExitpoints();
         setAxis(Platform.DynamicAxis.X);
         createStrips();
-        agvs = getAllCreatedAgvs();
+        createAgvSpots();
+        createAllAgvs();
         /* no vehicles on this platform */
         extVehicleSpots = null;
         log("Created StoragePlatform object: " + toString());
     }
     
-    public final List<AGV> getAllCreatedAgvs()
+    private void createAgvSpots()
+    {
+        float space = LENGTH / ((float)StorageStrip.MAX_AGV_SPOTS*getStripAmount() / 2f);
+        float offset = (space / 2f) - ( AgvSpot.width / 2f);
+        int subcount = 0;
+        for(int i = 0; i < StorageStrip.MAX_AGV_SPOTS*getStripAmount(); i++) 
+        {
+            Vector3f agvSpotPosition;
+            if(i % 2 == 0)
+            {
+                agvSpotPosition = new Vector3f(AGV_OFFSET, 0, space*subcount + offset);
+            }
+            else
+            {
+                agvSpotPosition = new Vector3f((WIDTH - AgvSpot.length) + AGV_OFFSET, 0, space*subcount + offset);
+                subcount++;
+            }
+            agvSpots.add(new AgvSpot(agvSpotPosition));
+        }
+    }
+    
+    public final void createAllAgvs()
     {
         agvs = new ArrayList<>();
-        for(int i = 0; i < AGVS; i++)
-            agvs.add(new AGV(this, new Vector3f(0,0,0))); // todo
-        return agvs;
+        
+        for(int i = 0; i < AGVS; i++) 
+            agvs.add(new AGV(this, new Vector3f(0,0,0)));
+        
+        int currentAgv = 0;
+        for(int i = 1; i <= AGVS*2; i += 2)
+        {
+            try
+            {
+                agvSpots.get(i).ParkVehicle(agvs.get(currentAgv));
+                agvs.get(currentAgv).setPosition(agvSpots.get(i).getPosition());
+                currentAgv++;
+            } 
+            catch(InvalidVehicleException e) 
+            {
+                System.out.println(e.getMessage());
+            }
+        }
+        
     }
     
     public AGV requestFreeAgv(TransportType tt) throws NoFreeAgvException
@@ -71,7 +110,7 @@ public class StoragePlatform extends Platform {
                 for(int i = agvSpots.size() - 1; i >= 0; i--)
                 {
                     AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();
-                    if(agv.isAvailable())
+                    if(agv != null && agv.getIsAvailable())
                     {
                         //agv.followRoute(route);
                         return agv;
@@ -83,7 +122,7 @@ public class StoragePlatform extends Platform {
                 for(int i = 0; i < agvSpots.size(); i++)
                 {
                     AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();
-                    if(agv.isAvailable())
+                    if(agv != null && agv.getIsAvailable())
                     {
                         //agv.followRoute(route);
                         return agv;
@@ -114,7 +153,7 @@ public class StoragePlatform extends Platform {
         return false;
     }
     
-    private int getStripAmount()
+    public int getStripAmount()
     {
         return (int)((float)LENGTH / STRIP_WIDTH);
     }

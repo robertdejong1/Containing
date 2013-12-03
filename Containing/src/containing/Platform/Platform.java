@@ -4,6 +4,7 @@ import containing.Container.TransportType;
 import containing.Controller;
 import containing.Dimension2f;
 import containing.Exceptions.AgvQueueSpaceOutOfBounds;
+import containing.Exceptions.AgvSpotOutOfBounds;
 import containing.Exceptions.NoFreeAgvException;
 import containing.Exceptions.NoJobException;
 import containing.Job;
@@ -91,11 +92,6 @@ public abstract class Platform implements Serializable {
         catch(AgvQueueSpaceOutOfBounds e){/* ignore */}
     }
     
-    protected AGV requestFreeAgv() throws NoFreeAgvException
-    {
-        return Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
-    }
-    
     protected void createAgvSpots(Vector3f baseposition)
     {   
         float x = baseposition.x;
@@ -113,6 +109,13 @@ public abstract class Platform implements Serializable {
     protected int getAgvSpotAmount()
     {
         return (int)((float)(axis.equals(DynamicAxis.X) ? dimension.width : dimension.length) / AgvSpot.width);
+    }
+    
+    protected AgvSpot getAgvSpot(int spot) throws AgvSpotOutOfBounds
+    {
+        if(agvSpots.size() > spot)
+            return agvSpots.get(spot);
+        throw new AgvSpotOutOfBounds("The requested AGV Spot does not exist");
     }
     
     public boolean hasFreeParkingSpot()

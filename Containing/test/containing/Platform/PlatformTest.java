@@ -1,10 +1,9 @@
 package containing.Platform;
 
-import containing.Container;
-import containing.ControlleralgorithmsTest;
-import containing.Dimension2f;
+import containing.Exceptions.AgvSpotOutOfBounds;
 import containing.Exceptions.NoFreeAgvException;
 import containing.MessageLog;
+import containing.ParkingSpot.AgvSpot;
 import containing.Port;
 import containing.Settings;
 import containing.Vector3f;
@@ -47,6 +46,7 @@ public class PlatformTest {
     /**
      * Test of requestNextContainer method, of class Platform.
      */
+    /*
     @Test
     public void testRequestNextContainer() {
         System.out.println("requestNextContainer");
@@ -55,6 +55,7 @@ public class PlatformTest {
 
         fail("The test case is a prototype.");
     }
+    */
 
     /**
      * Test of requestNextJob method, of class Platform.
@@ -101,7 +102,7 @@ public class PlatformTest {
         int result = 0;
         try
         {
-            result = instance.requestFreeAgv().getID();
+            result = Settings.port.getStoragePlatform().requestFreeAgv(instance.getTransportType()).getID();
         } catch(NoFreeAgvException e) { 
             System.out.println(e.getMessage());
             fail("kon geen vrije AGV vinden");
@@ -120,8 +121,16 @@ public class PlatformTest {
         Vector3f baseposition = new Vector3f(0,0,0);
 
         instance.createAgvSpots(baseposition);
-
-        fail("The test case is a prototype.");
+        List<AgvSpot> result = new ArrayList<>();
+        for(int i = 0; i < 999999; i++)
+        {
+            try
+            {
+                result.add(instance.getAgvSpot(i));
+            } 
+            catch(AgvSpotOutOfBounds e) { /* ignore */ }
+        }
+        assertEquals(instance.agvSpots.size(), result.size());
     }
 
     /**
@@ -130,11 +139,11 @@ public class PlatformTest {
     @Test
     public void testGetAgvSpotAmount() {
         System.out.println("getAgvSpotAmount");
-        int expResult = 0;
-        int result = instance.getAgvSpotAmount();
+        
+        int expResult = instance.getAgvSpotAmount();
+        int result = instance.agvSpots.size();
+        
         assertEquals(expResult, result);
-
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -144,11 +153,10 @@ public class PlatformTest {
     public void testHasFreeParkingSpot() {
         System.out.println("hasFreeParkingSpot");
 
-        boolean expResult = false;
+        boolean expResult = true;
         boolean result = instance.hasFreeParkingSpot();
+        
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -157,10 +165,11 @@ public class PlatformTest {
     @Test
     public void testCreateCranes() {
         System.out.println("createCranes");
-        Platform instance = null;
-        instance.createCranes();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        int expResult = 8;
+        int result = instance.cranes.size();
+        
+        assertEquals(expResult, result);
     }
 
     /**
@@ -169,10 +178,11 @@ public class PlatformTest {
     @Test
     public void testCreateExtVehicleSpots() {
         System.out.println("createExtVehicleSpots");
-        Platform instance = null;
-        instance.createExtVehicleSpots();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        int expResult = 2;
+        int result = instance.extVehicleSpots.size();
+        
+        assertEquals(expResult, result);
     }
 
     public class PlatformImpl extends Platform {

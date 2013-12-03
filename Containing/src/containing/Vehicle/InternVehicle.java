@@ -27,7 +27,7 @@ public abstract class InternVehicle extends Vehicle{
     
     public InternVehicle(int capicity, Vector3f startPosition, Platform platform, Type type){
         super(capicity, platform, type);
-        isAvailable = false;
+
         this.startPosition = startPosition;
         this.isAvailable = true;
     }

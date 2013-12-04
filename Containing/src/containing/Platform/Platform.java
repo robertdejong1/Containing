@@ -1,12 +1,15 @@
 package containing.Platform;
 
+import containing.Container;
 import containing.Container.TransportType;
 import containing.Controller;
 import containing.Dimension2f;
 import containing.Exceptions.AgvQueueSpaceOutOfBounds;
 import containing.Exceptions.AgvSpotOutOfBounds;
-import containing.Exceptions.NoFreeAgvException;
+import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.NoJobException;
+import containing.Exceptions.VehicleOverflowException;
 import containing.Job;
 import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.ParkingSpot;
@@ -14,6 +17,7 @@ import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
+import containing.Vehicle.ExternVehicle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -59,6 +63,106 @@ public abstract class Platform implements Serializable {
         extVehicleSpots = new ArrayList<>();
         jobs = new LinkedList<>();
         agvQueue = new LinkedList<>();
+    }
+    
+    protected boolean hasExtVehicle()
+    {
+        for(ParkingSpot vs : extVehicleSpots)
+            if(!vs.isEmpty())
+                return true;
+        return false;
+    }
+    
+    public void load(final Platform instance)
+    {
+        /* platform -> requestNextContainer -> agv from storagePlatform -> crane -> externVehicle */
+        Crane craneTemp = null;
+        for(Crane c : cranes)
+        {
+            if(c.getIsAvailable())
+                craneTemp = c;
+        }
+        
+        final Crane crane = craneTemp;
+        new Thread() {
+            
+            @Override
+            public void run()
+            {
+                int index = 0;
+                boolean hasContainer = false;
+                for(int i = 0; i < jobs.peek().getContainers().size(); i++)
+                {
+                    if(Controller.RequestNextContainer(jobs.peek().getContainers().get(index), instance))
+                    {
+                        hasContainer = true;
+                        break;
+                    }
+                    index++;
+                }
+                
+                if(hasContainer)
+                {
+                    Container container = jobs.peek().getContainers().remove(index);
+                    try
+                    {
+                        crane.load(container);
+                        extVehicleSpots.get(0).getParkedVehicle().load(crane.unload());
+                    }
+                    catch(ContainerNotFoundException | CargoOutOfBoundsException | VehicleOverflowException e)
+                    {
+                        System.out.println(e.getMessage());
+                        this.interrupt();
+                    }
+                    
+                }
+            }
+     
+        }.start();
+        
+    }
+    
+    public void unload()
+    {   
+        Crane craneTemp = null;
+        for(Crane c : cranes)
+        {
+            if(c.getIsAvailable())
+                craneTemp = c;
+        }
+        
+        final Crane crane = craneTemp;
+        if(crane != null)
+        {
+            final AGV agv = agvQueue.poll();
+            if(agv != null)
+            {
+                new Thread() {
+
+                    @Override
+                    public void run()
+                    {
+                        Container c = null;
+                        try
+                        {
+                            crane.load(((ExternVehicle)(extVehicleSpots.get(0).getParkedVehicle())).unload());
+                            c = crane.unload();
+                            crane.load(c);
+                            crane.unload(agv);
+                        } catch(CargoOutOfBoundsException | ContainerNotFoundException | VehicleOverflowException e) {
+                            System.out.println(e.getMessage());
+                            this.interrupt();
+                        }
+                    }
+
+                }.start();
+            }
+        }
+    }
+    
+    protected void unloadAGV(Container container)
+    {
+        //todo
     }
     
     protected void requestNextContainer()

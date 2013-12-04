@@ -2,7 +2,6 @@ package containing.Platform;
 
 import containing.Container.TransportType;
 import containing.Dimension2f;
-import containing.Exceptions.NoFreeAgvException;
 import containing.ParkingSpot.BargeSpot;
 import containing.Settings;
 import containing.Vector3f;
@@ -33,7 +32,7 @@ public class BargePlatform extends Platform {
         setExitpoint(new Vector3f(0,0,LENGTH));
         setTransportType(TransportType.Barge);
         setMaxAgvQueue(CRANES);
-        createAgvSpots(new Vector3f(CRANE_OFFSET /* - BargeCrane.length */ - AGV_OFFSET, 0, 0));
+        createAgvSpots(new Vector3f(CRANE_OFFSET - BargeCrane.length - AGV_OFFSET, 0, 0));
         createExtVehicleSpots();
         createCranes();        
         log("Created BargePlatform object: " + toString());
@@ -43,7 +42,7 @@ public class BargePlatform extends Platform {
     protected final void createCranes() 
     {
         float space = LENGTH / (float)CRANES;
-        float offset = (space / 2f) - ( /*BargeCrane.width*/ 5f / 2f);
+        float offset = (space / 2f) - ( BargeCrane.width / 2f);
         for(int i = 0; i < CRANES; i++) 
         {
             Vector3f cranePosition = new Vector3f(CRANE_OFFSET, 0, space*i + offset);
@@ -72,19 +71,24 @@ public class BargePlatform extends Platform {
         if(state.equals(State.FREE))
             requestNextJob();
         
+        if(jobs.size() > 0)
+            state = State.LOAD;
+        else if(hasExtVehicle())
+            state = State.UNLOAD;
+        else
+            state = State.FREE;
+        
         /* UNLOAD EXTERNAL VEHICLE */
         if(state.equals(State.UNLOAD))
         {
-            /* request new AGV's */
-            if((jobs.size() > maxAgvQueue) || (jobs.size() == maxAgvQueue && agvQueue.size() != maxAgvQueue))
-            {
-                try
-                {
-                    Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
-                } catch(NoFreeAgvException e) { /* ignore */ }
-            }
+            unload();
         }
         
+        /* LOAD EXTERNAL VEHICLE */
+        if(state.equals(State.LOAD))
+        {
+            load(this);
+        }
         
     }
     

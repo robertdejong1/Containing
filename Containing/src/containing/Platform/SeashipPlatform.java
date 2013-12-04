@@ -32,7 +32,7 @@ public class SeashipPlatform extends Platform {
         setExitpoint(new Vector3f(0,0,0));
         setTransportType(TransportType.Seaship);
         setMaxAgvQueue(CRANES);
-        createAgvSpots(new Vector3f(0, 0, CRANE_OFFSET /* + SeashipCrane.length */ + AGV_OFFSET));
+        createAgvSpots(new Vector3f(0, 0, CRANE_OFFSET + SeashipCrane.length + AGV_OFFSET));
         createExtVehicleSpots();
         createCranes();
         log("Created SeashipPlatform object: " + toString());
@@ -42,7 +42,7 @@ public class SeashipPlatform extends Platform {
     protected final void createCranes() 
     {
         float space = WIDTH / (float)CRANES;
-        float offset = (space / 2f) - ( /*SeashipCrane.width*/ 5f / 2f);
+        float offset = (space / 2f) - ( SeashipCrane.width / 2f);
         for(int i = 0; i < CRANES; i++) 
         {
             Vector3f cranePosition = new Vector3f(space*i + offset, 0, CRANE_OFFSET);
@@ -66,7 +66,29 @@ public class SeashipPlatform extends Platform {
     public void update()
     {
         time += Settings.ClockDelay;
-        requestNextJob();
+        
+        /* if platform is free, request next job */
+        if(state.equals(State.FREE))
+            requestNextJob();
+        
+        if(jobs.size() > 0)
+            state = State.LOAD;
+        else if(hasExtVehicle())
+            state = State.UNLOAD;
+        else
+            state = State.FREE;
+        
+        /* UNLOAD EXTERNAL VEHICLE */
+        if(state.equals(State.UNLOAD))
+        {
+            unload();
+        }
+        
+        /* LOAD EXTERNAL VEHICLE */
+        if(state.equals(State.LOAD))
+        {
+            load(this);
+        }
     }
     
 }

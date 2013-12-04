@@ -32,7 +32,7 @@ public class TruckPlatform extends Platform {
         setExitpoint(new Vector3f(0,0,LENGTH));
         setTransportType(TransportType.Truck);
         setMaxAgvQueue(CRANES);
-        createAgvSpots(new Vector3f(CRANE_OFFSET /* - TruckCrane.length */ - AGV_OFFSET, 0, 0));
+        createAgvSpots(new Vector3f(CRANE_OFFSET - TruckCrane.length - AGV_OFFSET, 0, 0));
         createExtVehicleSpots();
         createCranes();
         log("Created TruckPlatform object: " + toString());
@@ -42,7 +42,7 @@ public class TruckPlatform extends Platform {
     protected final void createCranes() 
     {
         float space = LENGTH / (float)CRANES;
-        float offset = (space / 2f) - ( /*TruckCrane.width*/ 5f / 2f);
+        float offset = (space / 2f) - ( TruckCrane.width / 2f);
         for(int i = 0; i < CRANES; i++) 
         {
             Vector3f cranePosition = new Vector3f(CRANE_OFFSET, 0, space*i + offset);
@@ -66,7 +66,29 @@ public class TruckPlatform extends Platform {
     public void update()
     {
         time += Settings.ClockDelay;
-        requestNextJob();
+        
+        /* if platform is free, request next job */
+        if(state.equals(State.FREE))
+            requestNextJob();
+        
+        if(jobs.size() > 0)
+            state = State.LOAD;
+        else if(hasExtVehicle())
+            state = State.UNLOAD;
+        else
+            state = State.FREE;
+        
+        /* UNLOAD EXTERNAL VEHICLE */
+        if(state.equals(State.UNLOAD))
+        {
+            unload();
+        }
+        
+        /* LOAD EXTERNAL VEHICLE */
+        if(state.equals(State.LOAD))
+        {
+            load(this);
+        }
     }
     
 }

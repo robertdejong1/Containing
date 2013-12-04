@@ -138,6 +138,12 @@ public class StoragePlatform extends Platform {
         throw new NoFreeAgvException("No free AGV available");
     }
     
+    public void loadContainerInAgv(AGV agv, Container container, TransportType tt)
+    {
+        // last thing to do, send to platform (identifiable with tt)
+        //agv.followRoute();
+    }
+    
     private void createStrips() 
     {
         Vector3f stripPosition;

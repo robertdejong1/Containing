@@ -27,6 +27,7 @@ public class RoadTest {
     
     public RoadTest() {
         road = new Road(road1);
+        
     }
     
     @BeforeClass
@@ -65,7 +66,13 @@ public class RoadTest {
         
     }
     
-    
+    @Test
+    public void testPathLength()
+    {
+       float expected = Road.getPathLength(road1);
+       assertEquals(5,(int)expected);
+       
+    }
 
     /**
      * Test of getPathLength method, of class Road.

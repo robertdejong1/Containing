@@ -23,67 +23,88 @@ public class NetworkHandler implements Runnable {
     private int port;
     private Socket client;
     private long lastPing;
+    private long lastPong;
 
     public NetworkHandler(String ip, int port) {
         this.ip = ip;
         this.port = port;
-        Date date = new Date();
-        this.lastPing = (date.getTime() / 1000);
+    }
+
+    public static void main(String[] args) {
+        Runnable r = new NetworkHandler("localhost", 1337);
+        Thread t = new Thread(r);
+        t.start();
     }
 
     @Override
     public void run() {
-        try{
+        try {
             client = new Socket(ip, port);
+            Date date = new Date();
+            this.lastPing = (date.getTime() / 1000);
+            this.lastPong = (date.getTime() / 1000);
             client.setSoTimeout(1000);
-            System.out.println("Connected to " +ip +":" +port);
+            System.out.println("Connected to " + ip + ":" + port);
             PrintWriter writer = new PrintWriter(client.getOutputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            
+
             CommandHandler.addCommand("IDENTIFY:SIM");
-            
-            while(true){
-                if(sendPing()){
+
+            while (true) {
+                if (!isAlive()) {
+                    client.close();
+                    break;
+                }
+                if (sendPing()) {
                     System.out.println("Sending: PING");
                     writer.println("PING");
                     writer.flush();
                 }
-                if(!reader.ready()){
-                    if(CommandHandler.newCommandsAvailable()){
+                if (!reader.ready()) {
+                    if (CommandHandler.newCommandsAvailable()) {
                         List<String> commands = CommandHandler.getCommands();
-                        for(String cmd : commands){
-                            System.out.println("Sending: " +cmd);
+                        for (String cmd : commands) {
+                            System.out.println("Sending: " + cmd);
                             writer.println(cmd);
                             writer.flush();
                         }
                         CommandHandler.clearCommands();
                     }
-                    
-                }
-                else{
-                    try{
+                } else {
+                    try {
                         String inputLine = reader.readLine();
-                        System.out.println("Received: " +inputLine);
-                        CommandHandler.handle(inputLine);
-                    }
-                    catch(SocketTimeoutException e){
+                        System.out.println("Received: " + inputLine);
+                        if (inputLine.equals("PONG")) {
+                            Date date = new Date();
+                            this.lastPong = (date.getTime() / 1000);
+                        } else {
+                            CommandHandler.handle(inputLine);
+                        }
+                    } catch (SocketTimeoutException e) {
                         System.out.println("Socket blocked for 1 second. Continueing.");
                     }
-                    
+
                 }
             }
-        }
-        catch(IOException e){
+            System.out.println("Connection lost. Trying to reconnect....");
+            run();
+        } catch (IOException e) {
             ErrorLog.logMsg("Error while connecting to Controller Server", e);
             System.out.println("Connection lost. Trying to reconnect...");
             run();
         }
     }
-    
-    private boolean sendPing(){
+
+    private boolean isAlive() {
         Date date = new Date();
         long currentTime = (date.getTime() / 1000);
-        if(currentTime - this.lastPing > 60){
+        return !(currentTime - this.lastPong > 90);
+    }
+
+    private boolean sendPing() {
+        Date date = new Date();
+        long currentTime = (date.getTime() / 1000);
+        if (currentTime - this.lastPing > 60) {
             this.lastPing = currentTime;
             return true;
         }

@@ -6,11 +6,13 @@ package containing.Vehicle;
 
 import containing.Container;
 import containing.Exceptions.CargoOutOfBoundsException;
-import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.VehicleOverflowException;
+
 import containing.Vector3f;
 import containing.XmlHandler;
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -23,9 +25,8 @@ import static org.junit.Assert.*;
  * @author Miriam
  */
 public class Load {
-     public Load() {
+    
 
-    }
     
     @BeforeClass
     public static void setUpClass() {
@@ -139,4 +140,6 @@ public class Load {
            assertEquals(container3, barge.getGrid()[4][2][5]);
        }
     }
+    
+    
 }

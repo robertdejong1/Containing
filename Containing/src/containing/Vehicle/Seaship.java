@@ -20,14 +20,14 @@ public class Seaship extends ExternVehicle {
 
     public static float width = 10f; //????????
     public static float length = 20f; //??????????
-    private static int nrContainersDepth= 20;
-    private static int nrContainersHeight = 16;
-    private static int nrContainersWidth = 6;
+    public static int nrContainersDepth= 90;
+    public static int nrContainersHeight = 40;
+    public static int nrContainersWidth = 40;
     
     public Seaship(Date arrivalDate, float arrivalTime, Platform platform, String company)
     {
         
-        super(arrivalDate, arrivalTime,nrContainersDepth,nrContainersHeight,nrContainersWidth, platform, company, Type.SEASHIP); //true if vehicle comes to load, otherwise false
+        super(arrivalDate, arrivalTime,nrContainersDepth,nrContainersWidth,nrContainersHeight, platform, company, Type.SEASHIP); //true if vehicle comes to load, otherwise false
     }
    
 

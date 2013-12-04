@@ -5,8 +5,6 @@
  */
 package containing.ParkingSpot;
 
-import static com.oracle.nio.BufferSecrets.instance;
-import static containing.Container.TransportType.Train;
 import containing.Exceptions.InvalidVehicleException;
 import containing.Vector3f;
 import containing.Vehicle.Barge;
@@ -85,6 +83,26 @@ public class ParkingSpotTest {
             fail("Exception occured");
         }
         assertEquals(train, spot.getParkedVehicle());
+        // TODO review the generated test code and remove the default call to fail.
+    }
+    
+        /**
+     * Test of getParkedVehicle method, of class ParkingSpot.
+     */
+    @Test
+    public void testUnparkVehicle() {
+        System.out.println("unparkVehicle");
+        
+        Vehicle train = new Train(null, 1f, null, null);
+
+        ParkingSpot spot = new TrainSpot(new Vector3f(0, 0, 0));
+        try {
+            spot.ParkVehicle(train);
+            spot.UnparkVehicle();
+        } catch (InvalidVehicleException e) {
+            fail("Exception occured");
+        }
+        assertEquals(null, spot.getParkedVehicle());
         // TODO review the generated test code and remove the default call to fail.
     }
 

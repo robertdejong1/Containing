@@ -187,6 +187,7 @@ public abstract class ExternVehicle extends Vehicle {
         map.put("id", this.getID());
         map.put("vehicleType", this.getVehicleType());
         map.put("cargo", this.getGrid()); 
+        map.put("numberContainers", this.getCargo().size());
         
         CommandHandler.addCommand(new Command("enterExternVehicle",map));
     }

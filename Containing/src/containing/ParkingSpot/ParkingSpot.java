@@ -29,11 +29,10 @@ public abstract class ParkingSpot implements Serializable
         return this.ParkedVehicle == null;
     }
     
-    public void UnparkVehicle(Route RouteToFollow) 
+    public void UnparkVehicle() 
     {
         HashMap<String, Object> map = new HashMap<>();
         map.put("parkingSpot", this);
-        map.put("route", RouteToFollow);
         CommandHandler.addCommand(new Command("unparkVehicle", map));
         this.ParkedVehicle = null;
     }

@@ -6,11 +6,13 @@ package containing.Vehicle;
 
 import containing.Container;
 import containing.Exceptions.CargoOutOfBoundsException;
-import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.VehicleOverflowException;
+
 import containing.Vector3f;
 import containing.XmlHandler;
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -23,8 +25,12 @@ import static org.junit.Assert.*;
  * @author Miriam
  */
 public class Load {
-     public Load() {
-
+    
+    List<Vector3f> road1 = Arrays.asList(new Vector3f(0f,0f,0f),new Vector3f(3f,0f,0f), new Vector3f(2f,0f,0f), new Vector3f(5f,0f,0f),new Vector3f(1f,0f,0f));
+    Road2 road;
+    public Load() {
+        List<Vector3f> road1 = Arrays.asList(new Vector3f(0f,0f,0f),new Vector3f(3f,0f,0f), new Vector3f(2f,0f,0f), new Vector3f(5f,0f,0f),new Vector3f(1f,0f,0f));
+        road = new Road2();
     }
     
     @BeforeClass
@@ -139,4 +145,28 @@ public class Load {
            assertEquals(container3, barge.getGrid()[4][2][5]);
        }
     }
+    ///---
+    @Test
+    public void testSortRoad()
+    {
+        
+        Collections.sort(road1);
+        for(Vector3f v : road1)
+        {
+            System.out.println(v);
+        }
+       
+        assertEquals(0,(int)road1.get(0).x);
+        assertEquals(1,(int)road1.get(1).x);
+        assertEquals(2,(int)road1.get(2).x);
+        assertEquals(3,(int)road1.get(3).x);
+        assertEquals(5,(int)road1.get(4).x);
+        
+    }
+   @Test
+   public void setPathCorrectOrder()
+   {
+       
+   }
+    
 }

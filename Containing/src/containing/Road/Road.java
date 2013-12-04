@@ -101,7 +101,7 @@ public class Road implements Serializable
         else return new Route(outsidetrack, length_outsidetrack);
     }
     
-    private List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Vector3f source, Vector3f destination){
+    public List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Vector3f source, Vector3f destination){
         int indexSource = path.indexOf(source);
         int indexDestination =  path.indexOf(destination);
         List<Vector3f> weg1 = path.subList(indexSource, path.size());
@@ -115,6 +115,8 @@ public class Road implements Serializable
         }
         return weg;
     }
+    
+    
     
 
     

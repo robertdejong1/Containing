@@ -66,7 +66,8 @@ class Controlleralgorithms
                     }
                     catch (Exception e)
                     {
-                        ErrorLog.logMsg("Vehicle has no room for this container.", e);
+                        
+                        ErrorLog.logMsg(VehicleWithMatchingDateAndTime.getVehicleType() + " has no room for this container.", e);
                     }
                 }
                 else

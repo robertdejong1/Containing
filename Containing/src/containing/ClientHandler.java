@@ -84,7 +84,8 @@ public class ClientHandler implements Runnable {
                 }
             }
             System.out.println("Client disconnected from server");
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             ErrorLog.logMsg("An error occured while handling a client connection", e);
         }
     }

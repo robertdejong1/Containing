@@ -69,7 +69,9 @@ public class RoadTest {
     @Test
     public void testPathLength()
     {
+       Collections.sort(road1);
        float expected = Road.getPathLength(road1);
+       
        assertEquals(5,(int)expected);
        
     }

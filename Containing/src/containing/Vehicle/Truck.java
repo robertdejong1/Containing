@@ -24,9 +24,9 @@ public class Truck extends ExternVehicle{
 
     public static float width = 3f; //????????
     public static float length = 5f; //??????????
-    private static int nrContainersDepth= 1;
-    private static int nrContainersHeight = 1;
-    private static int nrContainersWidth = 1;
+    public static int nrContainersDepth= 1;
+    public static int nrContainersHeight = 1;
+    public static int nrContainersWidth = 1;
     
     public Truck(Date arrivalDate, float arrivalTime, Platform platform, String company)
     { 

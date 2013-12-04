@@ -51,8 +51,9 @@ public class Road implements Serializable
     }
     
      public static float getPathLength(List<Vector3f> weg){
+         
         if (weg.size() > 1){
-            if (weg.get(0).x != weg.get(1).x){return Math.abs(weg.get(1).x - weg.get(0).x) + getPathLength(weg.subList(1, weg.size()));}
+            if (weg.get(0).x != weg.get(1).x){ return Math.abs(weg.get(1).x - weg.get(0).x) + getPathLength(weg.subList(1, weg.size()));}
             return Math.abs(weg.get(1).z - weg.get(0).z) + getPathLength(weg.subList(1, weg.size()));
         }
         else return 0;
@@ -82,7 +83,7 @@ public class Road implements Serializable
      * There are two possible roads for agv, the function selects the road with minimum distance (=shortest).
      * The shortest way is converted into a Route.
      */
-    private Route calculateShortestPath(Vehicle vehicle, Vector3f destination){ //only for mainroad
+    public Route calculateShortestPath(Vehicle vehicle, Vector3f destination){ //only for mainroad
         List<Vector3f> outsidetrack = new ArrayList<Vector3f>(this.track);
 
         outsidetrack.add(destination);
@@ -101,7 +102,7 @@ public class Road implements Serializable
         else return new Route(outsidetrack, length_outsidetrack);
     }
     
-    public List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Vector3f source, Vector3f destination){
+    public static List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Vector3f source, Vector3f destination){
         int indexSource = path.indexOf(source);
         int indexDestination =  path.indexOf(destination);
         List<Vector3f> weg1 = path.subList(indexSource, path.size());

@@ -47,24 +47,28 @@ public class ClientHandler implements Runnable {
                 if (reader.ready()) {
                     String inputLine = reader.readLine();
                     System.out.println("Received: " + inputLine);
-
-                    if (inputLine.equals("PING")) {
-                        Date date = new Date();
-                        this.lastPing = (date.getTime() / 1000);
-                    }
-                    else if(inputLine.equals("IDENTIFY:APP")){
-                        this.app = true;
-                    }
-                    else if(inputLine.equals("IDENTIFY:SIM")){
-                        this.app = false;
-                    }
-                    else{
-                        Command returnCmd = CommandHandler.handle(inputLine);
-                        if (returnCmd != null) {
-                            System.out.println("Sending in reply to " + inputLine + ": " + returnCmd.toString());
-                            writer.println(returnCmd.toString());
+                    
+                    switch (inputLine) {
+                        case "PING":
+                            Date date = new Date();
+                            this.lastPing = (date.getTime() / 1000);
+                            System.out.println("Sending: PONG");
+                            writer.println("PONG"); //PONG terug sturen
                             writer.flush();
-                        }
+                            break;
+                        case "IDENTIFY:APP":
+                            this.app = true;
+                            break;
+                        case "IDENTIFY:SIM":
+                            this.app = false;
+                            break;
+                        default:
+                            Command returnCmd = CommandHandler.handle(inputLine);
+                            if (returnCmd != null) {
+                                System.out.println("Sending in reply to " + inputLine + ": " + returnCmd.toString());
+                                writer.println(returnCmd.toString());
+                                writer.flush();
+                            }   break;
                     }
 
                 }

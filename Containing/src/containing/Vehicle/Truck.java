@@ -10,6 +10,9 @@ import containing.Container;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
+import static containing.Vehicle.Barge.nrContainersDepth;
+import static containing.Vehicle.Barge.nrContainersHeight;
+import static containing.Vehicle.Barge.nrContainersWidth;
 import java.util.Date;
 
 /**
@@ -28,7 +31,7 @@ public class Truck extends ExternVehicle{
     public Truck(Date arrivalDate, float arrivalTime, Platform platform, String company)
     { 
         
-        super(arrivalDate, arrivalTime, nrContainersDepth,nrContainersHeight,nrContainersWidth, platform, company, Type.TRUCK); //true if vehicle comes to load, otherwise false
+        super(arrivalDate, arrivalTime, nrContainersDepth,nrContainersWidth,nrContainersHeight, platform, company, Type.TRUCK); //true if vehicle comes to load, otherwise false
         
 
     }

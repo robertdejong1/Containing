@@ -20,9 +20,9 @@ public class Barge extends ExternVehicle {
 
     public static float width = 5f; //????????
     public static float length = 10f; //??????????
-    public static int nrContainersDepth = 6;
-    public static int nrContainersHeight = 3;
-    public static int nrContainersWidth = 5;
+    public static int nrContainersDepth = 25;
+    public static int nrContainersHeight = 25;
+    public static int nrContainersWidth = 25;
 
     
     public Barge(Date arrivalDate, float arrivalTime, Platform platform, String company)

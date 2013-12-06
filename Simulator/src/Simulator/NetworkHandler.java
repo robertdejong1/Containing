@@ -75,7 +75,6 @@ public class NetworkHandler implements Runnable {
                         String inputLine = reader.readLine();
                         System.out.println("Received: " + inputLine);
                         if (inputLine.equals("PONG")) {
-                            Date date = new Date();
                             this.lastPong = (date.getTime() / 1000);
                         } else {
                             CommandHandler.handle(inputLine);

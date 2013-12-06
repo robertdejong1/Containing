@@ -6,7 +6,6 @@ package Simulator;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import containing.Container.TransportType;
 import java.util.Date;
@@ -14,6 +13,10 @@ import java.util.Date;
 
 public class Container extends Model
 {
+    public static float width = 2.44f;
+    public static float height = 2.59f;
+    public static float depth = 12.19f;
+            
     public int containerId;
     public Date arrivalDate;
     public float arrivalTimeFrom;

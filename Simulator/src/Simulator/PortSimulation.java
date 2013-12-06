@@ -1,11 +1,17 @@
 package Simulator;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.collision.CollisionResult;
+import com.jme3.collision.CollisionResults;
+import com.jme3.input.MouseInput;
+import com.jme3.input.controls.AnalogListener;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Plane;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
@@ -24,11 +30,9 @@ import java.util.HashMap;
 public class PortSimulation extends SimpleApplication {
 
     AGV avg;
-    Barge barge;
     //Container[] container = new Container[19];
     FreeCrane[] freeCranes = new FreeCrane[4];
     Port port;
-    Freighter freighter;
     RailCrane railCrane;
     //private StorageCrane storageCrane = new StorageCrane(assetManager, rootNode);
     //Truck[] truck = new Truck[20];
@@ -70,17 +74,10 @@ public class PortSimulation extends SimpleApplication {
         freeCranes[2].place(-40, 5f, 81);
         freeCranes[3].place(-30, 5f, 81);
 
-        //railCrane = new RailCrane(assetManager, rootNode);
-        //railCrane.place(-42f, 5f, -1.52f);
+        railCrane = new RailCrane(assetManager, rootNode);
+        railCrane.place(-42f, 5f, -1.52f);
         //avg = new AVG(assetManager, rootNode);
 
-        freighter = new Freighter(assetManager, rootNode);
-        freighter.scale(3f);
-        freighter.place(0, 4f, 85);
-
-        barge = new Barge(assetManager, rootNode);
-        barge.scale(3f);
-        barge.place(44, 4.5f, 70);
 
         //for (int i = 0; i < 19; i++) {
             //container[i] = new Container(assetManager, rootNode, ColorRGBA.randomColor());
@@ -124,10 +121,30 @@ public class PortSimulation extends SimpleApplication {
         rootNode.attachChild(water);
 
         viewPort.addProcessor(waterProcessor);
+        
+        inputManager.addMapping("mousedown", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputManager.addListener(analogListener,"mousedown");
     }
+    
+    private AnalogListener analogListener = new AnalogListener() {
+        public void onAnalog(String name, float intensity, float tpf) 
+        {
+            if (name.equals("mousedown"))
+            {
+                CollisionResults results = new CollisionResults();
+                Ray ray = new Ray(cam.getLocation(), cam.getDirection());
+                
+                rootNode.collideWith(ray, results);
+                if (results.size() > 0) 
+                {
+                    
+                }
+            }
+        }
+    };
 
     @Override
-    public void simpleUpdate(float tpf) {
+    public void simpleUpdate(float tpf) { 
         //freeCranes[0].move(tpf/2, 0, 0);
         //train.move(0,0,tpf*2);
         //train.model.rotate(tpf, tpf, tpf)
@@ -160,10 +177,49 @@ public class PortSimulation extends SimpleApplication {
                             Container cont = new Container(assetManager, rootNode, ColorRGBA.randomColor());
                             cont.setData(c.getContainerId(), c.getArrivalDate(), c.getArrivalTimeFrom(), c.getArrivalTimeTill(), c.getArrivalTransport(), c.getArrivalTransportCompany(), c.getArrivalPosition(), c.getOwner(), c.getDepartureDate(), c.getDepartureTimeFrom(), c.getDepartureTimeTill(), c.getDepartureTransport());
                             train.addWagon(cont);
-                            System.out.println(cont);
+                            //System.out.println(cont);
+                            
                         }
                     }
                     train.place(-42, 5f, 0);
+                    break;
+                    
+                case BARGE:
+                    Barge barge = new Barge(assetManager, rootNode);
+                    for (int i = 0; i < containing.Vehicle.Barge.nrContainersWidth; i++) {
+                        for (int j = 0; j < containing.Vehicle.Barge.nrContainersHeight; j++) {
+                            for (int k = 0; k < containing.Vehicle.Barge.nrContainersDepth; k++) {
+                                if (containers[i][j][k] != null) {
+                                    containing.Container c = (containing.Container) containers[i][j][k];
+                                    Container cont = new Container(assetManager, rootNode, ColorRGBA.randomColor());
+                                    cont.setData(c.getContainerId(), c.getArrivalDate(), c.getArrivalTimeFrom(), c.getArrivalTimeTill(), c.getArrivalTransport(), c.getArrivalTransportCompany(), c.getArrivalPosition(), c.getOwner(), c.getDepartureDate(), c.getDepartureTimeFrom(), c.getDepartureTimeTill(), c.getDepartureTransport());
+                                    barge.addContainer(cont);
+                                    //System.out.println(cont);
+                                }
+                            }
+                        }
+                    }
+                    
+                    barge.place(44, 4.5f, 70);
+                    break;
+                    
+                case SEASHIP:
+                    Freighter freighter = new Freighter(assetManager, rootNode);
+                    for (int i = 0; i < containing.Vehicle.Seaship.nrContainersWidth; i++) {
+                        for (int j = 0; j < containing.Vehicle.Seaship.nrContainersHeight; j++) {
+                            for (int k = 0; k < containing.Vehicle.Seaship.nrContainersDepth; k++) {
+                                if (containers[i][j][k] != null) {
+                                    containing.Container c = (containing.Container) containers[i][j][k];
+                                    Container cont = new Container(assetManager, rootNode, ColorRGBA.randomColor());
+                                    cont.setData(c.getContainerId(), c.getArrivalDate(), c.getArrivalTimeFrom(), c.getArrivalTimeTill(), c.getArrivalTransport(), c.getArrivalTransportCompany(), c.getArrivalPosition(), c.getOwner(), c.getDepartureDate(), c.getDepartureTimeFrom(), c.getDepartureTimeTill(), c.getDepartureTransport());
+                                    freighter.addContainer(cont);
+                                    //System.out.println(cont);
+                                }
+                            }
+                        }
+                    }
+                    freighter.place(0, 4f, 85);
+
                     break;
                     
                 default:

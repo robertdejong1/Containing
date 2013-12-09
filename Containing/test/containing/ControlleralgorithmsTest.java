@@ -146,7 +146,7 @@ public class ControlleralgorithmsTest {
         
         try
         {
-            Job result = Controlleralgorithms.getNextJob(platform);
+            Job result = Controlleralgorithms.getNextJob(platform, new Timestamp(System.currentTimeMillis()));
         }
         catch (NoJobException e)
         {

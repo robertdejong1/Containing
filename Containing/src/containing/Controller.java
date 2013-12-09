@@ -68,9 +68,9 @@ public class Controller
     
     public static void update(Timestamp timestamp)
     {
+        Settings.CurrentTime = timestamp;
         Settings.port.update();
         Controlleralgorithms.checkIncomingVehicles(timestamp);
-        Settings.CurrentTime = timestamp;
     }
     
     public static void addCommand(Command command)
@@ -115,7 +115,7 @@ public class Controller
     {
         try
         {
-            return Controlleralgorithms.getNextJob(platform);
+            return Controlleralgorithms.getNextJob(platform, Settings.CurrentTime);
         }
         catch (NoJobException e)
         {

@@ -27,7 +27,7 @@ class Controlleralgorithms
     private static Stack<Job> jobQeueSorted;
     private static List<ExternVehicle> scheduledArrivingVehicles;
     
-    public static void sortnCommingContainers(List<Container> ContainersFromXML)
+    public static void sortInCommingContainers(List<Container> ContainersFromXML)
     {
         scheduledArrivingVehicles = new ArrayList<>();
         
@@ -164,9 +164,16 @@ class Controlleralgorithms
     *if not create a new vehicle
     *return job
     */ 
-    public static Job getNextJob(Platform platform) throws NoJobException
+    public static Job getNextJob(Platform platform, Timestamp timeStamp) throws NoJobException
     {
         Job job = null;
+        
+        //Create date and time from timestamp
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timeStamp);
+        
+        Date date = new Date(calendar.getTime().getYear(), calendar.getTime().getMonth(), calendar.getTime().getDate());
+        float arrivalTime = timeStamp.getHours() + ((float)timeStamp.getMinutes() / 100);
         
         //Get job and remove from qeue
         try
@@ -178,7 +185,17 @@ class Controlleralgorithms
             throw new NoJobException("No jobs in qeue.");
         }
         
-        if (job.getVehicleType() == platform.getTransportType())
+        if (
+                job.getVehicleType() == platform.getTransportType()
+                &&
+                (
+                    job.getDate().equals(date) || job.getDate().after(date)
+                )
+                &&
+                (
+                    job.getDepartureTime() >= arrivalTime
+                )
+            )
         {
             jobQeueUnsorted.remove(job);
             

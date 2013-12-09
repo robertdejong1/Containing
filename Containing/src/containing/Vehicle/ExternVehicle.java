@@ -73,6 +73,11 @@ public abstract class ExternVehicle extends Vehicle {
         getContainerWithHighestPriority();
     }
     
+    public void update()
+    {
+        super.update();
+    }
+    
     private List<Container> getContainerWithHighestPriority()
     {
         
@@ -233,8 +238,9 @@ public abstract class ExternVehicle extends Vehicle {
     
     public void enter()
     {
+        Settings.messageLog.AddMessage("Enter vehicle: " + this.getID());
         this.status = Status.MOVING;
-        
+        Settings.messageLog.AddMessage("Vehicle: " + this.getID() + " Status: Moving");
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", this.getID());
         map.put("vehicleType", this.getVehicleType());
@@ -242,9 +248,9 @@ public abstract class ExternVehicle extends Vehicle {
         map.put("numberContainers", this.getCargo().size());
         
         CommandHandler.addCommand(new Command("enterExternVehicle",map));
-        
+        Settings.messageLog.AddMessage("AddCommand enterExternVehicle");
         this.currentPlatform.registerExternVehicle(this);
-
+        Settings.messageLog.AddMessage("Register Vehicle @ Platform");
         
     }
     

@@ -5,6 +5,7 @@ import containing.Dimension2f;
 import containing.ParkingSpot.AgvSpot;
 import containing.Platform.StoragePlatform.Side;
 import containing.Point3D;
+import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.Crane;
 import containing.Vehicle.StorageCrane;
@@ -106,8 +107,8 @@ public class StorageStrip implements Serializable {
                     if(containers.containsKey(cur) && y != (MAX_Y - 1))
                     {
                         Container c = containers.get(cur);
-                        long curTimeStamp = getTimeStamp(c.getDepartureDate(), c.getDepartureTimeFrom());
-                        long newTimeStamp = getTimeStamp(date, from);
+                        long curTimeStamp = Settings.getTimeStamp(c.getDepartureDate(), c.getDepartureTimeFrom());
+                        long newTimeStamp = Settings.getTimeStamp(date, from);
                         if(newTimeStamp < curTimeStamp)
                         {
                             return cur;
@@ -118,11 +119,6 @@ public class StorageStrip implements Serializable {
             x = (side.equals(Side.LEFT) ? ++x : --x);
         }
         return null;
-    }
-    
-    private long getTimeStamp(Date date, float from)
-    {
-        return date.getTime() + (long)((int)(from*3600) * 1000) + (long)((((from % 1) * 100) * 60) * 1000);
     }
     
     public StorageState getStorageState()

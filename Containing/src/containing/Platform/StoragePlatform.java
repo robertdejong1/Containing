@@ -164,7 +164,7 @@ public class StoragePlatform extends Platform {
         return false;
     }
     
-    public int getStripAmount()
+    public final int getStripAmount()
     {
         return (int)((float)LENGTH / STRIP_WIDTH);
     }

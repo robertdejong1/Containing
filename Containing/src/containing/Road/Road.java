@@ -110,7 +110,7 @@ public class Road implements Serializable
     public static List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Vector3f source, Vector3f destination){
         int indexSource = path.indexOf(source);
         int indexDestination =  path.indexOf(destination);
-        List<Vector3f> weg1 = path.subList(indexSource, path.size());
+        List<Vector3f> weg1 = path.subList(indexSource, path.size()-1);
         List<Vector3f> weg2 = path.subList(0, indexSource);
         List<Vector3f> weg = new ArrayList<Vector3f>(weg1);
         weg.addAll(weg2);

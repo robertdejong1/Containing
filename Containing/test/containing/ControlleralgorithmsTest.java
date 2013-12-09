@@ -5,6 +5,7 @@
 package containing;
 
 import containing.Exceptions.NoJobException;
+import containing.Exceptions.ParseErrorException;
 import containing.Platform.BargePlatform;
 import containing.Platform.Platform;
 import containing.Platform.TruckPlatform;
@@ -55,7 +56,7 @@ public class ControlleralgorithmsTest {
      * Test of sortInCommingContainers method, of class Controlleralgorithms.
      */
     @Test
-    public void testSortInCommingContainers() {
+    public void testSortInCommingContainers() throws ParseErrorException {
         System.out.println("sortInCommingContainers");
         
         Settings.messageLog = new MessageLog();
@@ -80,7 +81,7 @@ public class ControlleralgorithmsTest {
      * Test of sortOutgoingContainer method, of class Controlleralgorithms.
      */
     @Test
-    public void testSortOutgoingContainer() 
+    public void testSortOutgoingContainer() throws ParseErrorException 
     {
         System.out.println("sortOutgoingContainer");
 
@@ -170,7 +171,17 @@ public class ControlleralgorithmsTest {
         Settings.messageLog = new MessageLog();
         Settings.port = new Port();
         XmlHandler xml = new XmlHandler();
-        List<Container> ContainersFromXML = xml.openXml(new File("C:\\Users\\Speedy\\Desktop\\xml2.xml"));
+        List<Container> ContainersFromXML = null;
+        
+        try
+        {
+            ContainersFromXML = xml.openXml(new File("C:\\Users\\Speedy\\Desktop\\xml2.xml"));
+        }
+        catch (ParseErrorException e)
+        {
+            fail("Could not read xml");
+        }
+        
         Controlleralgorithms.sortInCommingContainers(ContainersFromXML);
         
         for (Container c : ContainersFromXML)
@@ -198,7 +209,7 @@ public class ControlleralgorithmsTest {
      * Test of getFirstDate method, of class Controlleralgorithms.
      */
     @Test
-    public void testGetFirstDate() {
+    public void testGetFirstDate() throws ParseErrorException {
         System.out.println("getFirstDate");
         
         XmlHandler xml = new XmlHandler();

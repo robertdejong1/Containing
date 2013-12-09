@@ -38,14 +38,14 @@ public class MessageLog
             MessageCounter = Messages.size();
         }
         
-        String StringToReturn = "<html>";
+        String StringToReturn = "<html><div>";
         
         for (int i = MessageCounter - 1; i > -1; i--)
         {
             StringToReturn = StringToReturn + Messages.get(i) + "<br />";
         }
         
-        StringToReturn += "</html>";
+        StringToReturn += "</html></div>";
         return StringToReturn;
         
     }

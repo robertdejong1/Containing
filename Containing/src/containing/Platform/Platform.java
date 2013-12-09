@@ -119,6 +119,7 @@ public abstract class Platform implements Serializable {
                     {
                         crane.load(container);
                         extVehicleSpots.get(0).getParkedVehicle().load(crane.unload());
+                        Settings.messageLog.AddMessage("loading some containers in some vehicle boi");
                     }
                     catch(ContainerNotFoundException | CargoOutOfBoundsException | VehicleOverflowException e)
                     {
@@ -175,6 +176,7 @@ public abstract class Platform implements Serializable {
                             try
                             {
                                 crane.load(ev, row);
+                                Settings.messageLog.AddMessage("Give row (" + row + ") to unload to crane: " + crane.getID());
                             } 
                             catch(CargoOutOfBoundsException | ContainerNotFoundException | VehicleOverflowException e) 
                             {

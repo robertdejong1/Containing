@@ -48,6 +48,7 @@ public abstract class Platform implements Serializable {
     protected List<AgvSpot> agvSpots;
     protected List<Crane> cranes;
     protected List<ParkingSpot> extVehicleSpots;
+    protected List<ExternVehicle> extVehicles;
     
     protected Queue<Job> jobs = null;
     protected Queue<AGV> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
@@ -64,6 +65,7 @@ public abstract class Platform implements Serializable {
         agvSpots = new ArrayList<>();
         cranes = new ArrayList<>();
         extVehicleSpots = new ArrayList<>();
+        extVehicles = new ArrayList<>();
         jobs = new LinkedList<>();
         agvQueue = new LinkedList<>();
     }
@@ -74,6 +76,7 @@ public abstract class Platform implements Serializable {
         wayshit.add(new Vector3f(0,0,0));
         wayshit.add(extVehicleSpots.get(0).getEntryPoint());
         ev.followRoute(new Route(wayshit, 0));
+        extVehicles.add(ev);
     }
     
     protected boolean hasExtVehicle()
@@ -345,9 +348,8 @@ public abstract class Platform implements Serializable {
         time += Settings.ClockDelay;
         for(Crane c : cranes)
             c.update();
-        try {
-            extVehicleSpots.get(0).getParkedVehicle().update();
-        } catch(NullPointerException e) { /* ignore */ }
+        for(ExternVehicle ev : extVehicles)
+            ev.update();
     }
     
     @Override

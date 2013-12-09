@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class Platform implements Serializable {
     
@@ -142,17 +144,35 @@ public abstract class Platform implements Serializable {
             craneId++;
         }
         
-        /* give available crane job */
-        final Crane crane = craneTemp;
+        /* get row with highest priority */
         int startIndex = craneId + (rowsPerCrane - 1);
+        long highestPriority = 0L;
         int rowToGive = 0;
         for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
         {
             for(Container c : extVehicleSpots.get(0).getParkedVehicle().getCargo()) 
             {
-                
+                if(c.getArrivalPosition().x == i) 
+                {
+                    long time = Settings.getTimeStamp(c.getDepartureDate(), c.getDepartureTimeFrom());
+                    if(highestPriority == 0L)
+                    {
+                        highestPriority = time;
+                    }
+                    else
+                    {
+                        if(time < highestPriority) {
+                            rowToGive = (int)c.getArrivalPosition().x;
+                            highestPriority = time;
+                        }
+                    }      
+                }
             }
         }
+        
+        /* give available crane job */
+        final Crane crane = craneTemp;
+        final int row = rowToGive;
         if(crane != null)
         {
             final AGV agv = agvQueue.poll();
@@ -165,10 +185,15 @@ public abstract class Platform implements Serializable {
                     {
                         try
                         {
-                            crane.load(((ExternVehicle)(extVehicleSpots.get(0).getParkedVehicle()), );
-                        } catch(CargoOutOfBoundsException | ContainerNotFoundException | VehicleOverflowException e) {
+                            crane.load(((ExternVehicle)(extVehicleSpots.get(0).getParkedVehicle())), row);
+                        } 
+                        catch(CargoOutOfBoundsException | ContainerNotFoundException | VehicleOverflowException e) 
+                        {
                             System.out.println(e.getMessage());
                             this.interrupt();
+                        } catch (Exception ex) 
+                        {
+                            Logger.getLogger(Platform.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
 

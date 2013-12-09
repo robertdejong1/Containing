@@ -15,6 +15,7 @@ import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Vector3f;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public abstract class ExternVehicle extends Vehicle {
     private List<Integer> priorityColumns = new ArrayList<>();
     private List<Container> priorityCargo = new ArrayList<Container>();
     private HashMap<Integer, List<Integer>> unloadOrderY = new HashMap();
-    
+    private List<Boolean> unloadedColumn;
     private int nrContainersDepth;
     private int nrContainersHeight;
     private int nrContainersWidth;
@@ -55,7 +56,7 @@ public abstract class ExternVehicle extends Vehicle {
         
         //only relevant for unloading externvehicles 
         List<Integer> unloadOrderYDefault = new ArrayList<>();
-        for (int i = 0; i < heightGrid; i++)
+        for (int i = 0; i < depthGrid; i++)
         {
             unloadOrderYDefault.add(i);
         }
@@ -64,7 +65,11 @@ public abstract class ExternVehicle extends Vehicle {
         {
           
             unloadOrderY.put(i, unloadOrderYDefault);
+            unloadedColumn.add(false);
+        
         }
+        
+        
         
         getContainerWithHighestPriority();
     }
@@ -124,7 +129,7 @@ public abstract class ExternVehicle extends Vehicle {
             {
                 try
                 {
-                if (coordinates.x  >= this.nrContainersWidth || coordinates.z >= this.nrContainersDepth || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y >= this.nrContainersHeight )
+                if (coordinates.x  > this.nrContainersWidth || coordinates.z > this.nrContainersDepth || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y > this.nrContainersHeight )
                 {
             
                     throw new CargoOutOfBoundsException("CargoOutOfBoundsException");
@@ -202,6 +207,7 @@ public abstract class ExternVehicle extends Vehicle {
     public List<Integer> getPriorityColumns(){ return this.priorityColumns; }
     
     public Integer getGridWidth(){ return this.nrContainersWidth; }
+    
     public void leave()
     {
         this.status = Status.MOVING;

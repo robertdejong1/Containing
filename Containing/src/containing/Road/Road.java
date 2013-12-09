@@ -107,17 +107,16 @@ public class Road implements Serializable
         else return new Route(outsidetrack, length_outsidetrack);
     }
     
-    public static List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Vector3f source, Vector3f destination){
-        int indexSource = path.indexOf(source);
-        int indexDestination =  path.indexOf(destination);
+    public List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Vector3f source, Vector3f destination){
+        
+        int indexSource = path.indexOf(createCorrespondingWaypoint(source));
+        int indexDestination =  path.indexOf(createCorrespondingWaypoint(destination));
         System.out.println("indexSource: " + indexSource);
         System.out.println("pathSize: " + path.size());
         List<Vector3f> weg1 = new ArrayList();
-        if (indexSource != path.size())
-        {
-            weg1 = path.subList(indexSource, path.size());
-        }
-        else{weg1.add(source); }
+        
+        weg1 = path.subList(indexSource, path.size());
+    
         
        
         List<Vector3f> weg2 = path.subList(0, indexSource);

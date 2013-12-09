@@ -72,17 +72,12 @@ public class TrainPlatform extends Platform {
         if(state.equals(State.FREE))
             requestNextJob();
         
-        if(jobs.size() > 0) {
-            state = State.LOAD;
-            System.out.println("State of platform is: LOAD");
-        }
-        else if(hasExtVehicle()) {
+        if(hasExtVehicle()) {
             state = State.UNLOAD;
-            System.out.println("State of platform is: UNLOAD" + State.LOAD);
-        }
-        else {
+        } else if(jobs.size() > 0) {
+            state = State.LOAD;
+        } else {
             state = State.FREE;
-            System.out.println("State of platform is: FREE" + State.LOAD);
         }
         
         /* UNLOAD EXTERNAL VEHICLE */

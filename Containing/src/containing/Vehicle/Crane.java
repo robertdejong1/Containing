@@ -45,13 +45,16 @@ public abstract class Crane extends InternVehicle {
     private float resetTime;
     
     private AGV agvToUnload = null;
-
+    
+    boolean readyForNextContainer = true;
 
     protected final int metersToNextAgvSpot = 10;
     
     public float width;
     public float length;
     
+    
+
     public Crane(Vector3f startPosition, Platform platform, Type type, float width, float length){
         super(CAPICITY, startPosition, platform, type);
         this.width = width;
@@ -67,30 +70,19 @@ public abstract class Crane extends InternVehicle {
         //platform moet agv volgende route geven
     }
     
-    public void loadContainer()
-    {
-    
-        
-    }
-    
+
     public void load(ExternVehicle ev, int column) throws Exception
     {
-       
         for (Integer row : ev.getUnloadOrderY(column))
         {
-
                 for (Container container : ev.getGrid()[column][row])
                 {
-                    System.out.println("New Load: " + container.getArrivalPosition());
-                    
-                    /*
-                    
+                    while (readyForNextContainer)
                     try
                     {
                         if (container != null)
                         {
-                            System.out.println("New Load: " + container.getArrivalPosition());
-                            
+                            readyForNextContainer = false;
                             //ask agv!
                             super.load(ev.unload(container));
                             
@@ -110,12 +102,16 @@ public abstract class Crane extends InternVehicle {
                     {
                         throw e;
                     }
-                    */
+                    
                 }
             
        
         }
+        
+        this.isAvailable = true;
     }
+    
+    
 
     
     public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException{ //container from extern verhicle
@@ -141,6 +137,8 @@ public abstract class Crane extends InternVehicle {
         //update: while (this.timeCounter < starttime + liftTimeMax + moveContainerSpeed * 2){} //aan het laden
         //roep evt nieuwe agv aan (op zelfde parkeerplaats of op parkeerplaats opzij [moet platform doen]
     }
+    
+    
     
     public void move(int direction) //-1 is left 1 is right
     {
@@ -180,6 +178,8 @@ public abstract class Crane extends InternVehicle {
            if (this.loadTime <= 0)
            { 
                this.status = Status.UNLOADING;
+        
+               
                //command simulator
            }
            
@@ -196,21 +196,21 @@ public abstract class Crane extends InternVehicle {
                }
                catch(Exception e){ System.out.println(e.getMessage()); }
                this.agvToUnload = null;
+               this.currentPlatform.getAGV();
                this.status = Status.WAITING;
+               readyForNextContainer = true;
                //new load
            }
        }
        
     }
     
+    public void setAGV(AGV agv){ this.agvToUnload = agv; }
+    
+    
+    
     public void reset(){
-        /*
-        int starttime = this.timeCounter;
-        while (this.timeCounter < starttime + resetTime){} //kraan gaat t
-        //evt ga opzij [moet platform doen]
-        this.isAvailable = true;
-        this.timeCounter = 0;
-        */
+       
     }
     
  

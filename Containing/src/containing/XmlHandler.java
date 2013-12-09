@@ -99,7 +99,7 @@ public class XmlHandler {
                 
                 String dd = getNestedValue(node, Arrays.asList("vertrek", "datum", "d")).getNodeValue();
                 String dm = getNestedValue(node, Arrays.asList("vertrek", "datum", "m")).getNodeValue();
-                String dj = getNestedValue(node, Arrays.asList("vertrek", "datum", "j")).getNodeValue();
+                String dj = "20" +getNestedValue(node, Arrays.asList("vertrek", "datum", "j")).getNodeValue();
                 
                 Date departureDate = new Date(Integer.parseInt(dj) - 1900, Integer.parseInt(dm) - 1, Integer.parseInt(dd));
                 
@@ -133,7 +133,6 @@ public class XmlHandler {
                 }
                 Container con = new Container(id, arrivalDate, arrivalTimeFrom, arrivalTimeTill, arrivalTransport, arrivalTransportCompany, arrivalPosition, owner, departureDate, departureTimeFrom, departureTimeTill, departureTransport);
                 containers.add(con);
-                System.out.println(con.getArrivalDate());
             }
             
         }

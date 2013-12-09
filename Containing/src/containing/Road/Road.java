@@ -1,5 +1,6 @@
 package containing.Road;
 
+import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
@@ -59,7 +60,7 @@ public class Road implements Serializable
         else return 0;
     }
     
-  
+    //public Route getPath(Vehicle vehicle, VehicleSpot)
     public Route getPath(Vehicle vehicle, Platform destination){ 
         Route shortestPath = calculateShortestPath(vehicle, this.createCorrespondingWaypoint(destination.getExitpoint()));
         shortestPath.setDestinationPlatform(destination);
@@ -67,14 +68,18 @@ public class Road implements Serializable
         return shortestPath;
     }
     
-    public Route getPath(Vehicle vehicle, Vector3f position){
+    public Route getPath(Vehicle vehicle, ParkingSpot ps){
+        
         List<Vector3f> track = new ArrayList<Vector3f>(this.track);
         track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
-        track.add(this.createCorrespondingWaypoint(position));
+        track.add(this.createCorrespondingWaypoint(ps.getPosition()));
         Collections.sort(track);
-        track = this.setPathCorrectOrder(track, createCorrespondingWaypoint(vehicle.getPosition()), this.createCorrespondingWaypoint(position));
+        track = this.setPathCorrectOrder(track, createCorrespondingWaypoint(vehicle.getPosition()), this.createCorrespondingWaypoint(ps.getPosition()));
         float length = this.getPathLength(track);
-        return (new Route(track,length));
+        Route route = new Route(track,length);
+        route.destinationPlatform = null;
+        route.destinationParkingSpot = ps;
+        return route;
       
     }
     

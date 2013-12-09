@@ -121,6 +121,7 @@ public abstract class Vehicle implements Serializable
     
     public void update(){
         Settings.messageLog.AddMessage("Status vehicle: " + this.status);
+        System.out.println("Status vehicle: " + this.status);
         if (this.status == Status.MOVING){
             this.route.follow(this);
         }

@@ -83,6 +83,7 @@ public class Controller
         Settings.CurrentTime = timestamp;
         Settings.port.update();
         Controlleralgorithms.checkIncomingVehicles(timestamp);
+        UserInterface.setTitle("Containing 2013 - " + timestamp.toString());
     }
     
     public static void addCommand(Command command)

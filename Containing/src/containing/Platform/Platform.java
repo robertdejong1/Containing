@@ -74,7 +74,6 @@ public abstract class Platform implements Serializable {
         wayshit.add(new Vector3f(0,0,0));
         wayshit.add(extVehicleSpots.get(0).getEntryPoint());
         ev.followRoute(new Route(wayshit, 0));
-        state = State.UNLOAD;
     }
     
     protected boolean hasExtVehicle()
@@ -198,7 +197,7 @@ public abstract class Platform implements Serializable {
     
     public void getAGV(Vector3f cranePosition) {
         AGV agv = agvQueue.poll();
-        List<Vector3f> wayshit = new ArrayList<Vector3f>();
+        List<Vector3f> wayshit = new ArrayList<>();
         wayshit.add(agv.getPosition());
         wayshit.add(cranePosition);
         agv.followRoute(new Route(wayshit, 0));

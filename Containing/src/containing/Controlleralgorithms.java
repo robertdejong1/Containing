@@ -27,7 +27,7 @@ class Controlleralgorithms
     private static Stack<Job> jobQeueSorted;
     private static List<ExternVehicle> scheduledArrivingVehicles;
     
-    public static void sortInCommingContainers(List<Container> ContainersFromXML)
+    public static void sortnCommingContainers(List<Container> ContainersFromXML)
     {
         scheduledArrivingVehicles = new ArrayList<>();
         

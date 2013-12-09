@@ -70,6 +70,7 @@ public class Controller
     {
         Settings.port.update();
         Controlleralgorithms.checkIncomingVehicles(timestamp);
+        Settings.CurrentTime = timestamp;
     }
     
     public static void addCommand(Command command)

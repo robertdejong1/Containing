@@ -35,7 +35,7 @@ public abstract class ExternVehicle extends Vehicle {
     private List<Integer> priorityColumns = new ArrayList<>();
     private List<Container> priorityCargo = new ArrayList<Container>();
     private HashMap<Integer, List<Integer>> unloadOrderY = new HashMap();
-    private List<Boolean> unloadedColumn;
+    private List<Boolean> unloadedColumn = new ArrayList<Boolean>();
     private int nrContainersDepth;
     private int nrContainersHeight;
     private int nrContainersWidth;

@@ -26,7 +26,7 @@ public class UserInterface extends JFrame
         this.setLayout(null);
         this.getContentPane().setBackground(Color.white);
         this.setTitle("Containing 2013");
-        this.setBounds(25, 25, 500, 500);
+        this.setBounds(25, 25, 800, 500);
         AddButtons();
         AddLabels();
         this.setVisible(true);
@@ -120,7 +120,7 @@ public class UserInterface extends JFrame
     private void AddLabels()
     {
         MessageLogLabel = new JLabel("");
-        MessageLogLabel.setBounds(5, 35, 485, 430);
+        MessageLogLabel.setBounds(5, 35, 785, 430);
         MessageLogLabel.setVerticalAlignment(1);
         
         MessageLogLabel.setBorder(BorderFactory.createLineBorder(Color.black));

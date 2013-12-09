@@ -42,7 +42,7 @@ public class Controller
         }
         catch (ParseErrorException e)
         {
-                
+               Settings.messageLog.AddMessage("Could not parse xml!");
         }
         
         

@@ -91,8 +91,6 @@ public class TrainPlatform extends Platform {
         {
             load(this);
         }
-        
-        System.out.println("State of platform is: " + State.LOAD);
     }
     
 }

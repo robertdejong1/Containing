@@ -74,6 +74,7 @@ public abstract class Platform implements Serializable {
         wayshit.add(new Vector3f(0,0,0));
         wayshit.add(extVehicleSpots.get(0).getEntryPoint());
         ev.followRoute(new Route(wayshit, 0));
+        state = State.UNLOAD;
     }
     
     protected boolean hasExtVehicle()

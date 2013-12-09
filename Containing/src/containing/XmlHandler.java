@@ -6,7 +6,10 @@
 package containing;
 
 import containing.Container.TransportType;
+import containing.Exceptions.InvalidTransportException;
+import containing.Exceptions.ParseErrorException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -18,6 +21,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -25,26 +29,25 @@ import org.w3c.dom.NodeList;
  */
 public class XmlHandler {
 
-    public List<Container> openXml(File xmlfile) {
+    public List<Container> openXml(File xmlfile) throws ParseErrorException{
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = null;
         try {
             builder = builderFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            ErrorLog.logMsg("Error while parsing xml", e);
-            return null;
+            throw new ParseErrorException("Error while parsing xml file" +e.getMessage());
         }
 
         try {
             Document doc = builder.parse(xmlfile);
             return this.parse(doc);
-        } catch (Exception e) {
-            ErrorLog.logMsg("Error while parsing xml", e);
-            return null;
+        }
+        catch (InvalidTransportException | IOException | SAXException e) {
+            throw new ParseErrorException("Error while parsing xml file" +e.getMessage());
         }
     }
 
-    private List<Container> parse(Document doc) throws Exception {
+    private List<Container> parse(Document doc) throws InvalidTransportException {
         List<Container> containers = new ArrayList<>();
 
         NodeList nodes = doc.getDocumentElement().getChildNodes();
@@ -84,7 +87,7 @@ public class XmlHandler {
                         break;
 
                     default:
-                        throw new Exception("Invalid TransportType");
+                        throw new InvalidTransportException("Invalid transport type: " +Atransport);
                 }
 
                 String arrivalTransportCompany = getNestedValue(node, Arrays.asList("aankomst", "bedrijf")).getNodeValue();
@@ -128,7 +131,7 @@ public class XmlHandler {
                         break;
 
                     default:
-                        throw new Exception("Invalid TransportType");
+                        throw new InvalidTransportException("Invalid transport type: " +Atransport);
                 }
                 Container con = new Container(id, arrivalDate, arrivalTimeFrom, arrivalTimeTill, arrivalTransport, arrivalTransportCompany, arrivalPosition, owner, departureDate, departureTimeFrom, departureTimeTill, departureTransport);
                 containers.add(con);

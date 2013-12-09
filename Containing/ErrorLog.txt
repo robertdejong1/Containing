@@ -2,3 +2,7 @@ Vehicle has no room for this container.(Vehicle has reached capicity, container:
 An error occured while creating Socket Server(Address already in use: JVM_Bind)
 An error occured while creating Socket Server(Address already in use: JVM_Bind)
 An error occured while creating Socket Server(Address already in use: JVM_Bind)
+Could not load file
+Could not load file
+TRUCK has no room for this container.(CargoOutOfBoundsException)
+TRUCK has no room for this container.(CargoOutOfBoundsException)

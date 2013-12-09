@@ -1,8 +1,8 @@
 package Simulator;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
+import com.jme3.input.ChaseCamera;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.MouseButtonTrigger;
@@ -36,6 +36,8 @@ public class PortSimulation extends SimpleApplication {
     RailCrane railCrane;
     //private StorageCrane storageCrane = new StorageCrane(assetManager, rootNode);
     //Truck[] truck = new Truck[20];
+    
+    ChaseCamera chaseCam;
 
     public static void main(String[] args) {
         PortSimulation app = new PortSimulation();
@@ -48,8 +50,11 @@ public class PortSimulation extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        flyCam.setMoveSpeed(50f);
-        cam.setLocation(new Vector3f(0f, 20f, 0));
+        flyCam.setEnabled(false);
+        chaseCam = new ChaseCamera(cam, inputManager);
+        
+        cam.setLocation(new Vector3f(0f, 140f, 0));
+        cam.lookAt(Vector3f.ZERO, Vector3f.UNIT_X);
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
 
         for (int i = 0; i < 4; i++) {
@@ -57,7 +62,7 @@ public class PortSimulation extends SimpleApplication {
             freeCranes[i].scale(0.5f);
             freeCranes[i].rotate(0, 180 * FastMath.DEG_TO_RAD, 0);
         }
-        port = new Port(assetManager, rootNode);
+        port = new Port(assetManager, rootNode, viewPort);
         //port.scale(10f);
         //port.place();
 
@@ -97,30 +102,6 @@ public class PortSimulation extends SimpleApplication {
         sun2.setDirection(lightDir2);
         sun2.setColor(ColorRGBA.White.clone().multLocal(2));
         rootNode.addLight(sun2);
-
-        SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
-        waterProcessor.setReflectionScene(rootNode);
-
-        Vector3f waterLocation = new Vector3f(0, 4.5f, 0);
-        waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, waterLocation.dot(Vector3f.UNIT_Y)));
-        viewPort.addProcessor(waterProcessor);
-
-        waterProcessor.setWaterDepth(40);         // transparency of water
-        waterProcessor.setDistortionScale(0.05f); // strength of waves
-        waterProcessor.setWaveSpeed(0.05f);       // speed of waves
-
-        Quad quad = new Quad(400, 400);
-        quad.scaleTextureCoordinates(new Vector2f(24f, 24f));
-
-        Geometry water = new Geometry("water", quad);
-        water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
-        water.setLocalTranslation(-200, 4.5f, 250);
-        water.setShadowMode(ShadowMode.Receive);
-        water.setMaterial(waterProcessor.getMaterial());
-
-        rootNode.attachChild(water);
-
-        viewPort.addProcessor(waterProcessor);
         
         inputManager.addMapping("mousedown", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(analogListener,"mousedown");
@@ -137,7 +118,11 @@ public class PortSimulation extends SimpleApplication {
                 rootNode.collideWith(ray, results);
                 if (results.size() > 0) 
                 {
-                    
+                    Geometry closest = results.getClosestCollision().getGeometry();
+                    if (!closest.getName().equals("port"))
+                    {
+                        chaseCam.setSpatial(closest);
+                    }
                 }
             }
         }

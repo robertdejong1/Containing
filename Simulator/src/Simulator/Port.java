@@ -8,11 +8,18 @@ import com.jme3.asset.AssetManager;
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
+import com.jme3.math.Plane;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
+import com.jme3.water.SimpleWaterProcessor;
 
 /**
  *
@@ -20,14 +27,14 @@ import com.jme3.texture.Texture;
  */
 public class Port
 {
-    Node port_node = new Node();
+    Node port_node = new Node("port");
     Spatial port;
     Spatial cranerail;
     Spatial trainrail;
     Spatial storage;
     Spatial road;
     
-    public Port(AssetManager assetManager, Node node)
+    public Port(AssetManager assetManager, Node node, ViewPort viewPort)
     {
         port = assetManager.loadModel("Models/port.j3o");
         cranerail = assetManager.loadModel("Models/rail.j3o");
@@ -68,6 +75,31 @@ public class Port
         trainrail.setLocalTranslation(-42f, 5f, -77.25f+((10.4f/5)*i));
         port_node.attachChild(trainrail.clone());
         }
+        
+        //Water
+        SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
+        waterProcessor.setReflectionScene(node);
+
+        Vector3f waterLocation = new Vector3f(0, 4.5f, 0);
+        waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, waterLocation.dot(Vector3f.UNIT_Y)));
+        viewPort.addProcessor(waterProcessor);
+
+        waterProcessor.setWaterDepth(40);         // transparency of water
+        waterProcessor.setDistortionScale(0.05f); // strength of waves
+        waterProcessor.setWaveSpeed(0.05f);       // speed of waves
+
+        Quad quad = new Quad(400, 400);
+        quad.scaleTextureCoordinates(new Vector2f(24f, 24f));
+
+        Geometry water = new Geometry("water", quad);
+        water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
+        water.setLocalTranslation(-200, 4.5f, 250);
+        water.setShadowMode(RenderQueue.ShadowMode.Receive);
+        water.setMaterial(waterProcessor.getMaterial());
+
+        port_node.attachChild(water);
+
+        viewPort.addProcessor(waterProcessor);
         
         node.attachChild(port_node);
     }

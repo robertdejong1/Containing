@@ -124,14 +124,35 @@ public abstract class Platform implements Serializable {
     
     public void unload()
     {   
+        /* determine rows on vehicle */
+        int rows = 0;
+        for(Container c : extVehicleSpots.get(0).getParkedVehicle().getCargo()) 
+        {
+            rows = (int)c.getArrivalPosition().x + 1;
+        }
+        int rowsPerCrane = rows / cranes.size();
+        
+        /* get available crane */
         Crane craneTemp = null;
+        int craneId = 0; 
         for(Crane c : cranes)
         {
             if(c.getIsAvailable())
                 craneTemp = c;
+            craneId++;
         }
         
+        /* give available crane job */
         final Crane crane = craneTemp;
+        int startIndex = craneId + (rowsPerCrane - 1);
+        int rowToGive = 0;
+        for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
+        {
+            for(Container c : extVehicleSpots.get(0).getParkedVehicle().getCargo()) 
+            {
+                
+            }
+        }
         if(crane != null)
         {
             final AGV agv = agvQueue.poll();
@@ -142,13 +163,9 @@ public abstract class Platform implements Serializable {
                     @Override
                     public void run()
                     {
-                        Container c = null;
                         try
                         {
-                            crane.load(((ExternVehicle)(extVehicleSpots.get(0).getParkedVehicle())).unload());
-                            c = crane.unload();
-                            crane.load(c);
-                            crane.unload(agv);
+                            crane.load(((ExternVehicle)(extVehicleSpots.get(0).getParkedVehicle()), );
                         } catch(CargoOutOfBoundsException | ContainerNotFoundException | VehicleOverflowException e) {
                             System.out.println(e.getMessage());
                             this.interrupt();

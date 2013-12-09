@@ -68,6 +68,14 @@ public abstract class Platform implements Serializable {
         agvQueue = new LinkedList<>();
     }
     
+    public void registerExternVehicle(ExternVehicle ev)
+    {
+        List<Vector3f> wayshit = new ArrayList<>();
+        wayshit.add(new Vector3f(0,0,0));
+        wayshit.add(extVehicleSpots.get(0).getEntryPoint());
+        ev.followRoute(new Route(wayshit, 0));
+    }
+    
     protected boolean hasExtVehicle()
     {
         for(ParkingSpot vs : extVehicleSpots)

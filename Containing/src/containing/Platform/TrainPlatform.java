@@ -66,7 +66,7 @@ public class TrainPlatform extends Platform {
     @Override
     public void update()
     {
-        time += Settings.ClockDelay;
+        super.update();
         
         /* if platform is free, request next job */
         if(state.equals(State.FREE))

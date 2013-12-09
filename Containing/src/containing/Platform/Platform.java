@@ -13,6 +13,7 @@ import containing.Exceptions.VehicleOverflowException;
 import containing.Job;
 import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.ParkingSpot;
+import containing.Road.Route;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
@@ -127,79 +128,68 @@ public abstract class Platform implements Serializable {
     public void unload()
     {   
         /* determine rows on vehicle */
-        int rows = 0;
-        for(Container c : extVehicleSpots.get(0).getParkedVehicle().getCargo()) 
-        {
-            rows = (int)c.getArrivalPosition().x + 1;
-        }
+        ExternVehicle ev = (ExternVehicle)extVehicleSpots.get(0).getParkedVehicle();
+        int rows = ev.getGridWidth();
         int rowsPerCrane = rows / cranes.size();
         
-        /* get available crane */
-        Crane craneTemp = null;
-        int craneId = 0; 
-        for(Crane c : cranes)
-        {
-            if(c.getIsAvailable())
-                craneTemp = c;
-            craneId++;
-        }
+        List<Boolean> unloadedColumns = ev.getColumns();
+        List<Integer> priorityColumns = ev.getPriorityColumns();
         
-        /* get row with highest priority */
-        int startIndex = craneId + (rowsPerCrane - 1);
-        long highestPriority = 0L;
-        int rowToGive = 0;
-        for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
+        /* give available crane a job */
+        int craneId = 0;
+        for(Crane crane : cranes)
         {
-            for(Container c : extVehicleSpots.get(0).getParkedVehicle().getCargo()) 
-            {
-                if(c.getArrivalPosition().x == i) 
+            if(crane.getIsAvailable()) {
+                /* get row with highest priority */
+                int startIndex = craneId + rowsPerCrane;
+                int rowToGive = 0;
+                for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
                 {
-                    long time = Settings.getTimeStamp(c.getDepartureDate(), c.getDepartureTimeFrom());
-                    if(highestPriority == 0L)
-                    {
-                        highestPriority = time;
+                    if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
+                        rowToGive = i;
+                        break;
+                    } else if(!unloadedColumns(i)) {
+                        rowToGive = i;
+                        break;
                     }
-                    else
-                    {
-                        if(time < highestPriority) {
-                            rowToGive = (int)c.getArrivalPosition().x;
-                            highestPriority = time;
+                }
+                
+                final AGV agv = agvQueue.poll();
+                final int row = rowToGive;
+                if(agv != null)
+                {
+                    new Thread() {
+
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                crane.load(((ExternVehicle)(extVehicleSpots.get(0).getParkedVehicle())), row);
+                            } 
+                            catch(CargoOutOfBoundsException | ContainerNotFoundException | VehicleOverflowException e) 
+                            {
+                                System.out.println(e.getMessage());
+                                this.interrupt();
+                            } 
+                            catch (Exception ex) 
+                            {
+                                Logger.getLogger(Platform.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
-                    }      
+                    }.start();
                 }
             }
+            craneId++;
         }
-        
-        /* give available crane job */
-        final Crane crane = craneTemp;
-        final int row = rowToGive;
-        if(crane != null)
-        {
-            final AGV agv = agvQueue.poll();
-            if(agv != null)
-            {
-                new Thread() {
-
-                    @Override
-                    public void run()
-                    {
-                        try
-                        {
-                            crane.load(((ExternVehicle)(extVehicleSpots.get(0).getParkedVehicle())), row);
-                        } 
-                        catch(CargoOutOfBoundsException | ContainerNotFoundException | VehicleOverflowException e) 
-                        {
-                            System.out.println(e.getMessage());
-                            this.interrupt();
-                        } catch (Exception ex) 
-                        {
-                            Logger.getLogger(Platform.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-
-                }.start();
-            }
-        }
+    }
+    
+    public void getAGV(Vector3f cranePosition) {
+        AGV agv = agvQueue.poll();
+        List<Vector3f> wayshit = new ArrayList<Vector3f>();
+        wayshit.add(agv.getPosition());
+        wayshit.add(cranePosition);
+        agv.followRoute(new Route(wayshit, 0));
     }
     
     protected void unloadAGV(Container container)
@@ -339,7 +329,12 @@ public abstract class Platform implements Serializable {
     protected abstract void createCranes();
     protected abstract void createExtVehicleSpots();
     
-    public abstract void update();
+    public void update()
+    {
+        time += Settings.ClockDelay;
+        for(Crane c : cranes)
+            c.update();
+    }
     
     @Override
     public String toString() {

@@ -67,18 +67,30 @@ public abstract class Crane extends InternVehicle {
         //platform moet agv volgende route geven
     }
     
+    public void loadContainer()
+    {
+    
+        
+    }
+    
     public void load(ExternVehicle ev, int column) throws Exception
     {
+       
         for (Integer row : ev.getUnloadOrderY(column))
         {
-            for (int i = ev.getGridWidth()-1; i >= 0; i--)
-            {
-                for (Container container : ev.getGrid()[i][column])
+
+                for (Container container : ev.getGrid()[column][row])
                 {
+                    System.out.println("New Load: " + container.getArrivalPosition());
+                    
+                    /*
+                    
                     try
                     {
                         if (container != null)
                         {
+                            System.out.println("New Load: " + container.getArrivalPosition());
+                            
                             //ask agv!
                             super.load(ev.unload(container));
                             
@@ -98,8 +110,9 @@ public abstract class Crane extends InternVehicle {
                     {
                         throw e;
                     }
+                    */
                 }
-            }
+            
        
         }
     }

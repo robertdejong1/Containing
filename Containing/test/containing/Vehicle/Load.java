@@ -43,6 +43,40 @@ public class Load {
     @After
     public void tearDown() {
     }
+    
+    @Test 
+    public void testLoadRow()
+    {
+       XmlHandler xml = new XmlHandler();
+       List<Container> ContainersFromXML = xml.openXml(new File("C:\\Users\\Miriam\\Desktop\\xml1.xml"));
+       Container bc = ContainersFromXML.get(0);
+       Container container0 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,1,1), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
+       Container container1 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(-1,-1,-1), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
+     
+       Container container2 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(0,0,0), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
+       Container container3 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,0,0), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
+       Container container4 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,1,0), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
+       
+       Barge barge = new Barge(null,0,null,null); //date/float/platform/string
+       
+       BargeCrane bg = new BargeCrane(new Vector3f(0f,0f,0f), null);
+       
+       try{
+       barge.load(container4);
+       barge.load(container2);
+       barge.load(container3);
+  
+       barge.load(container0);}
+       catch(Exception e){}
+       try
+       {
+        bg.load(barge, 1);
+       }
+       catch(Exception e){System.out.println("Barge: " + e.getMessage()); }
+       
+    }
+    
+    /*
     @Test
     public void testLoading() 
     {
@@ -140,6 +174,6 @@ public class Load {
            assertEquals(container3, barge.getGrid()[4][2][5]);
        }
     }
-    
+    */
     
 }

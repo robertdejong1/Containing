@@ -61,7 +61,14 @@ public abstract class InternVehicle extends Vehicle{
         {
             Container container = cargo.get(0);
             
-            this.isAvailable = true;
+            if (this.getVehicleType() ==  Type.AGV)
+            {
+                this.isAvailable = true;
+            }
+            else 
+            {
+                
+            }
             
             this.cargo = null;
             

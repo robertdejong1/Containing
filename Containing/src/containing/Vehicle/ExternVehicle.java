@@ -35,7 +35,7 @@ public abstract class ExternVehicle extends Vehicle {
     private List<Integer> priorityColumns = new ArrayList<>();
     private List<Container> priorityCargo = new ArrayList<Container>();
     private HashMap<Integer, List<Integer>> unloadOrderY = new HashMap();
-    private List<Boolean> unloadedColumn = new ArrayList<Boolean>();
+    private List<Boolean> unloadedColumn = new ArrayList<>();
     private int nrContainersDepth;
     private int nrContainersHeight;
     private int nrContainersWidth;
@@ -63,10 +63,8 @@ public abstract class ExternVehicle extends Vehicle {
         
         for (int i = 0; i < widthGrid; i++)
         {
-          
             unloadOrderY.put(i, unloadOrderYDefault);
-            unloadedColumn.add(false);
-        
+            unloadedColumn.add(false);     
         }
         
         
@@ -205,6 +203,8 @@ public abstract class ExternVehicle extends Vehicle {
     public List<Integer> getUnloadOrderY(Integer row){ return this.unloadOrderY.get(row); }
     
     public List<Integer> getPriorityColumns(){ return this.priorityColumns; }
+    
+    public List<Boolean> getColumns(){ return this.unloadedColumn; }
     
     public Integer getGridWidth(){ return this.nrContainersWidth; }
     

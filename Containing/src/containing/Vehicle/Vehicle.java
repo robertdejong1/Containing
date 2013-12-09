@@ -120,7 +120,7 @@ public abstract class Vehicle implements Serializable
     public int getCapicity(){return this.capicity;}
     
     public void update(){
-        
+        Settings.messageLog.AddMessage("Status vehicle: " + this.status);
         if (this.status == Status.MOVING){
             this.route.follow(this);
         }

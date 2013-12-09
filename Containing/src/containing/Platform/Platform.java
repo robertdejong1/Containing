@@ -13,6 +13,7 @@ import containing.Exceptions.VehicleOverflowException;
 import containing.Job;
 import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.ParkingSpot;
+import containing.Road.Road;
 import containing.Road.Route;
 import containing.Settings;
 import containing.Vector3f;
@@ -49,6 +50,7 @@ public abstract class Platform implements Serializable {
     protected List<Crane> cranes;
     protected List<ParkingSpot> extVehicleSpots;
     protected List<ExternVehicle> extVehicles;
+    protected Road road = null;
     
     protected Queue<Job> jobs = null;
     protected Queue<AGV> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
@@ -70,12 +72,19 @@ public abstract class Platform implements Serializable {
         agvQueue = new LinkedList<>();
     }
     
+    protected void setRoad() {
+        List<Vector3f> wayshit = new ArrayList<>();
+        wayshit.add(entrypoint);
+        wayshit.add(exitpoint);
+        road = new Road(wayshit);
+    }
+    
     public void registerExternVehicle(ExternVehicle ev)
     {
         List<Vector3f> wayshit = new ArrayList<>();
         wayshit.add(new Vector3f(0,0,0));
         wayshit.add(extVehicleSpots.get(0).getEntryPoint());
-        ev.followRoute(new Route(wayshit, 0));
+        ev.followRoute(road.getPath(ev, extVehicleSpots.get(0)));
         extVehicles.add(ev);
     }
     

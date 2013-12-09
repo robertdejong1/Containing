@@ -30,6 +30,7 @@ public class TruckPlatform extends Platform {
         setAxis(Platform.DynamicAxis.Z);
         setEntrypoint(new Vector3f(0,0,0));
         setExitpoint(new Vector3f(0,0,LENGTH));
+        setRoad();
         setTransportType(TransportType.Truck);
         setMaxAgvQueue(CRANES);
         createAgvSpots(new Vector3f(CRANE_OFFSET - TruckCrane.length - AGV_OFFSET, 0, 0));

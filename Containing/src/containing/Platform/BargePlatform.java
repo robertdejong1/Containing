@@ -29,6 +29,7 @@ public class BargePlatform extends Platform {
         setAxis(DynamicAxis.Z);
         setEntrypoint(new Vector3f(0,0,0));
         setExitpoint(new Vector3f(0,0,LENGTH));
+        setRoad();
         setTransportType(TransportType.Barge);
         setMaxAgvQueue(CRANES);
         createAgvSpots(new Vector3f(CRANE_OFFSET - BargeCrane.length - AGV_OFFSET, 0, 0));

@@ -22,7 +22,7 @@ public class NetworkHandler implements Runnable {
         try {
             server = new ServerSocket(port);
             server.setSoTimeout(999999999);
-            System.out.println("Server running.");
+            Settings.messageLog.AddMessage("Server running.");
         } catch (IOException e) {
             ErrorLog.logMsg("An error occured while creating Socket Server", e);
         }
@@ -33,7 +33,7 @@ public class NetworkHandler implements Runnable {
         try {
             while(true){
                 Socket client = server.accept();
-                System.out.println("Client connected from: " +client.getInetAddress().getHostAddress());
+                Settings.messageLog.AddMessage("Client connected from: " +client.getInetAddress().getHostAddress());
                 Runnable clientHandler = new ClientHandler(client, getNewId());
                 Thread t =  new Thread(clientHandler);
                 t.start();

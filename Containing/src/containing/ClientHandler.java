@@ -46,13 +46,13 @@ public class ClientHandler implements Runnable {
                 }
                 if (reader.ready()) {
                     String inputLine = reader.readLine();
-                    System.out.println("Received: " + inputLine);
+                    Settings.messageLog.AddMessage("Received: " + inputLine);
                     
                     switch (inputLine) {
                         case "PING":
                             Date date = new Date();
                             this.lastPing = (date.getTime() / 1000);
-                            System.out.println("Sending: PONG");
+                            Settings.messageLog.AddMessage("Sending: PONG");
                             writer.println("PONG"); //PONG terug sturen
                             writer.flush();
                             break;
@@ -65,7 +65,7 @@ public class ClientHandler implements Runnable {
                         default:
                             Command returnCmd = CommandHandler.handle(inputLine);
                             if (returnCmd != null) {
-                                System.out.println("Sending in reply to " + inputLine + ": " + returnCmd.toString());
+                                Settings.messageLog.AddMessage("Sending in reply to " + inputLine + ": " + returnCmd.toString());
                                 writer.println(returnCmd.toString());
                                 writer.flush();
                             }   break;
@@ -76,14 +76,14 @@ public class ClientHandler implements Runnable {
                     List<Command> commands = CommandHandler.getNewCommands(this.id, this.app);
                     if (commands != null && commands.size() > 0) {
                         for (Command cmd : commands) {
-                            System.out.println("Sending: " + cmd.toString());
+                            Settings.messageLog.AddMessage("Sending: " + cmd.toString());
                             writer.println(cmd.toString());
                             writer.flush();
                         }
                     }
                 }
             }
-            System.out.println("Client disconnected from server");
+            Settings.messageLog.AddMessage("Client disconnected from server");
         }
         catch (IOException e) {
             ErrorLog.logMsg("An error occured while handling a client connection", e);

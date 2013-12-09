@@ -9,6 +9,7 @@ package containing.Road;
 import containing.ErrorLog;
 import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
+import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.Crane;
 import containing.Vehicle.Vehicle;
@@ -39,10 +40,15 @@ public class Route implements Serializable {
     
     public void follow(Vehicle vehicle){
         //if destinationParkingSpot == null ga vanaf exitpoint naar midden weg en start volg route
+        Settings.messageLog.AddMessage("Vehicle: " + vehicle.getID() + "follows route");
+        Settings.messageLog.AddMessage("Current speed: " + vehicle.getCurrentSpeed());
+        Settings.messageLog.AddMessage("Distance to drive: " + distance);
         
         distance = distance - (vehicle.getCurrentSpeed()*1000/3600)/100;
         if (distance <= 0){
-            
+            Settings.messageLog.AddMessage("Reached end of path");
+            Settings.messageLog.AddMessage("DestinationPlatform: " + destinationPlatform);
+            Settings.messageLog.AddMessage("DestinationParkingSpot: " + destinationParkingSpot);
             vehicle.stopDriving();
             if (destinationParkingSpot == null){
                 //motionpath from waypoint to platform
@@ -56,9 +62,11 @@ public class Route implements Serializable {
                     try
                     {
                         this.destinationParkingSpot.ParkVehicle(vehicle);
+                        Settings.messageLog.AddMessage("Park vehicle");
                     }
                     catch(Exception e)
                     {
+                        
                         ErrorLog.logMsg(e.getMessage());
                     }
                     

@@ -120,8 +120,9 @@ public abstract class Vehicle implements Serializable
     public int getCapicity(){return this.capicity;}
     
     public void update(){
-      
-        if (this.status == Status.MOVING){this.route.follow(this);
+        
+        if (this.status == Status.MOVING){
+            this.route.follow(this);
         }
         
     }

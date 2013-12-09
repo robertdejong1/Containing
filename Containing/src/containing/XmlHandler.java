@@ -18,6 +18,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import sun.util.calendar.CalendarSystem;
 
 /**
  *
@@ -57,7 +58,7 @@ public class XmlHandler {
                 String m = getNestedValue(node, Arrays.asList("aankomst", "datum", "m")).getNodeValue();
                 String j = "20" + getNestedValue(node, Arrays.asList("aankomst", "datum", "j")).getNodeValue();
                 Date arrivalDate = new Date(Integer.parseInt(j) - 1900, Integer.parseInt(m) - 1, Integer.parseInt(d));
-
+                
                 String Atill = getNestedValue(node, Arrays.asList("aankomst", "tijd", "van")).getNodeValue();
                 float arrivalTimeFrom = Float.parseFloat(Atill);
 
@@ -130,7 +131,9 @@ public class XmlHandler {
                     default:
                         throw new Exception("Invalid TransportType");
                 }
-                containers.add(new Container(id, arrivalDate, arrivalTimeFrom, arrivalTimeTill, arrivalTransport, arrivalTransportCompany, arrivalPosition, owner, departureDate, departureTimeFrom, departureTimeTill, departureTransport));
+                Container con = new Container(id, arrivalDate, arrivalTimeFrom, arrivalTimeTill, arrivalTransport, arrivalTransportCompany, arrivalPosition, owner, departureDate, departureTimeFrom, departureTimeTill, departureTransport);
+                containers.add(con);
+                System.out.println(con.getArrivalDate());
             }
             
         }

@@ -43,7 +43,7 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.222.124", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.222.81", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -145,6 +145,8 @@ public class PortSimulation extends SimpleApplication {
         }
 
         if (cmd.getCommand().equals("enterExternVehicle")) {
+            System.out.println(cmd.getCommand());
+            
             HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
             int id = Integer.parseInt(map.get("id").toString());
             System.out.println("" + id);
@@ -210,8 +212,31 @@ public class PortSimulation extends SimpleApplication {
                 default:
                     break;
             }
-        }
+        } else if (cmd.getCommand().equals("loadInternVehicle")) 
+        {
+            System.out.println(cmd.getCommand());
+            
+            HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
+            int id = Integer.parseInt(map.get("id").toString());
+            System.out.println("" + id);
 
+            Type type = Type.valueOf(map.get("vehicleType").toString());
+            System.out.println("" + type.toString());
+           
+        } else if (cmd.getCommand().equals("followPath")) 
+        {
+            System.out.println(cmd.getCommand());
+            
+            HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
+            int id = Integer.parseInt(map.get("id").toString());
+            System.out.println("" + id);
+
+            Type type = Type.valueOf(map.get("vehicleType").toString());
+            System.out.println("" + type.toString());
+            
+            
+           
+        }
 
     }
 }

@@ -13,6 +13,7 @@ import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
+import containing.Settings;
 import containing.Vector3f;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,7 +81,10 @@ public abstract class ExternVehicle extends Vehicle {
         for (Container container : this.cargo)
         {
             
-            Date currentDate = new Date(); //van controller current date?? + time
+            Date currentDate = new Date(Settings.CurrentTime.getYear(), Settings.CurrentTime.getMonth(), Settings.CurrentTime.getDate());//van controller current date?? + time
+            currentDate.setHours(Settings.CurrentTime.getHours());
+            currentDate.setMinutes(Settings.CurrentTime.getMinutes());
+            
             Date containerDate = container.getDepartureDate();
             containerDate.setHours((int)container.getDepartureTimeTill());
             containerDate.setMinutes(((int)container.getDepartureTimeTill() % 1) * 100);
@@ -208,6 +212,11 @@ public abstract class ExternVehicle extends Vehicle {
     
     public Integer getGridWidth(){ return this.nrContainersWidth; }
     
+    public void updateColumn(int i, boolean bool) 
+    {
+       //unloadedColumn.
+    }
+    
     public void leave()
     {
         this.status = Status.MOVING;
@@ -233,6 +242,10 @@ public abstract class ExternVehicle extends Vehicle {
         map.put("numberContainers", this.getCargo().size());
         
         CommandHandler.addCommand(new Command("enterExternVehicle",map));
+        
+        this.currentPlatform.registerExternVehicle(this);
+
+        
     }
     
     public Container[][][] getGrid(){ return this.grid; }

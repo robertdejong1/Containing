@@ -72,11 +72,9 @@ public abstract class ExternVehicle extends Vehicle {
         
         getContainerWithHighestPriority();
     }
+
     
-    public void update()
-    {
-        super.update();
-    }
+
     
     private List<Container> getContainerWithHighestPriority()
     {

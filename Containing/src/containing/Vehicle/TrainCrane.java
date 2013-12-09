@@ -34,7 +34,7 @@ public class TrainCrane extends Crane {
        
     }
     
-    public void reset(){super.reset();}
+  
     
   
 

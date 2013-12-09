@@ -13,6 +13,7 @@ import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
+import containing.Settings;
 import containing.Vector3f;
 import java.util.HashMap;
 
@@ -40,6 +41,7 @@ public abstract class InternVehicle extends Vehicle{
     public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException {
         try
         {
+         
             super.load(container);
             if (isAvailable) isAvailable = false;
             
@@ -65,10 +67,7 @@ public abstract class InternVehicle extends Vehicle{
             {
                 this.isAvailable = true;
             }
-            else 
-            {
-                
-            }
+           
             
             this.cargo = null;
             

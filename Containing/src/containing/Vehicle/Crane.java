@@ -207,12 +207,7 @@ public abstract class Crane extends InternVehicle {
     
     public void setAGV(AGV agv){ this.agvToUnload = agv; }
     
-    
-    
-    public void reset(){
-       
-    }
-    
+
  
     
 

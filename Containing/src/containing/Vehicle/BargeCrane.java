@@ -34,7 +34,7 @@ public class BargeCrane extends Crane {
 
     }
     
-    public void reset(){super.reset();}
+    
   
     public void move(int direction){ //-1 = left + 1 = rechts
         /*

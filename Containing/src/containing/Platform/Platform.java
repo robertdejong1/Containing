@@ -128,7 +128,7 @@ public abstract class Platform implements Serializable {
     public void unload()
     {   
         /* determine rows on vehicle */
-        ExternVehicle ev = (ExternVehicle)extVehicleSpots.get(0).getParkedVehicle();
+        final ExternVehicle ev = (ExternVehicle)extVehicleSpots.get(0).getParkedVehicle();
         int rows = ev.getGridWidth();
         int rowsPerCrane = rows / cranes.size();
         
@@ -137,9 +137,9 @@ public abstract class Platform implements Serializable {
         
         /* give available crane a job */
         int craneId = 0;
-        for(Crane crane : cranes)
+        for(Crane c : cranes)
         {
-            if(crane.getIsAvailable()) {
+            if(c.getIsAvailable()) {
                 /* get row with highest priority */
                 int startIndex = craneId + rowsPerCrane;
                 int rowToGive = 0;
@@ -148,12 +148,13 @@ public abstract class Platform implements Serializable {
                     if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
                         rowToGive = i;
                         break;
-                    } else if(!unloadedColumns(i)) {
+                    } else if(!unloadedColumns.get(i)) {
                         rowToGive = i;
                         break;
                     }
                 }
                 
+                final Crane crane = c;
                 final AGV agv = agvQueue.poll();
                 final int row = rowToGive;
                 if(agv != null)
@@ -165,7 +166,7 @@ public abstract class Platform implements Serializable {
                         {
                             try
                             {
-                                crane.load(((ExternVehicle)(extVehicleSpots.get(0).getParkedVehicle())), row);
+                                crane.load(ev, row);
                             } 
                             catch(CargoOutOfBoundsException | ContainerNotFoundException | VehicleOverflowException e) 
                             {

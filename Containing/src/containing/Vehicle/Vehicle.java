@@ -8,6 +8,7 @@ import containing.Exceptions.VehicleOverflowException;
 import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
 import containing.Road.Route;
+import containing.Settings;
 import containing.Vector3f;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -102,7 +103,7 @@ public abstract class Vehicle implements Serializable
             
         CommandHandler.addCommand(new Command("followPath", map));
         
-        
+        Settings.messageLog.AddMessage("Vehicle: " + this.getID() + "start following path" );
     
         
     } 

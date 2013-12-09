@@ -173,7 +173,7 @@ class Controlleralgorithms
         calendar.setTime(timeStamp);
         
         Date date = new Date(calendar.getTime().getYear(), calendar.getTime().getMonth(), calendar.getTime().getDate());
-        float arrivalTime = timeStamp.getHours() + ((float)timeStamp.getMinutes() / 100);
+        float departureTime = timeStamp.getHours() + ((float)timeStamp.getMinutes() / 100);
         
         //Get job and remove from qeue
         try
@@ -189,11 +189,11 @@ class Controlleralgorithms
                 job.getVehicleType() == platform.getTransportType()
                 &&
                 (
-                    job.getDate().equals(date) || job.getDate().after(date)
+                    job.getDate().equals(date) || job.getDate().before(date)
                 )
                 &&
                 (
-                    job.getDepartureTime() >= arrivalTime
+                    job.getDepartureTime() <= departureTime
                 )
             )
         {
@@ -212,7 +212,7 @@ class Controlleralgorithms
             }
             else
             {
-                job.changeContainerDepartureTime(job.getDepartureTime());
+                //job.changeContainerDepartureTime(job.getDepartureTime());
                 jobQeueSorted.push(job);
                 jobQeueUnsorted.add(job);
             

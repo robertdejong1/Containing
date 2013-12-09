@@ -1,6 +1,7 @@
 package containing;
 
 import containing.Exceptions.NoJobException;
+import containing.Exceptions.ParseErrorException;
 import containing.Platform.Platform;
 import java.io.File;
 import java.sql.Timestamp;
@@ -31,9 +32,20 @@ public class Controller
         buildPort();
         
         XmlHandler xmlHandler = new XmlHandler();
-        List<Container> ContainersFromXMList = xmlHandler.openXml(XMLFile);
-        Controlleralgorithms.sortInCommingContainers(ContainersFromXMList);
-        clock = new Clock(Controlleralgorithms.getFirstDate(ContainersFromXMList));
+        List<Container> ContainersFromXMList;
+        
+        try
+        {
+            ContainersFromXMList = xmlHandler.openXml(XMLFile);
+            Controlleralgorithms.sortInCommingContainers(ContainersFromXMList);
+            clock = new Clock(Controlleralgorithms.getFirstDate(ContainersFromXMList));
+        }
+        catch (ParseErrorException e)
+        {
+                
+        }
+        
+        
     }
     
     private static void buildPort()

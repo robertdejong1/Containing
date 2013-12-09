@@ -346,6 +346,9 @@ public abstract class Platform implements Serializable {
         time += Settings.ClockDelay;
         for(Crane c : cranes)
             c.update();
+        try {
+            extVehicleSpots.get(0).getParkedVehicle().update();
+        } catch(NullPointerException e) { /* ignore */ }
     }
     
     @Override

@@ -15,6 +15,7 @@ import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Vector3f;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,45 +29,84 @@ public abstract class ExternVehicle extends Vehicle {
     private Date arrivalDate;
     private float arrivalTime;
     private String company;
+    
     protected Container[][][] grid;
+    private List<Integer> priorityColumns = new ArrayList<>();
     private List<Container> priorityCargo = new ArrayList<Container>();
+    private HashMap<Integer, List<Integer>> unloadOrderY = new HashMap();
+    
     private int nrContainersDepth;
     private int nrContainersHeight;
     private int nrContainersWidth;
     
-    public ExternVehicle(Date arrivalDate, float arrivalTime, int depthGrid,int widthGrid,int heightGrid, Platform platform, String company, Type type){
+    public ExternVehicle(Date arrivalDate, float arrivalTime, int depthGrid,int widthGrid,int heightGrid, Platform platform, String company, Type type)
+    {
+        
         super(depthGrid*widthGrid*heightGrid, platform, type);
         this.arrivalDate = arrivalDate;
         this.arrivalTime = arrivalTime;
         status = Status.WAITING; 
         this.grid = new Container[widthGrid][heightGrid][depthGrid];
+        
         this.company = company;
         this.nrContainersDepth = depthGrid;
         this.nrContainersHeight = heightGrid;
         this.nrContainersWidth = widthGrid;
+        
+        //only relevant for unloading externvehicles 
+        List<Integer> unloadOrderYDefault = new ArrayList<>();
+        for (int i = 0; i < heightGrid; i++)
+        {
+            unloadOrderYDefault.add(i);
+        }
+        
+        for (int i = 0; i < widthGrid; i++)
+        {
+          
+            unloadOrderY.put(i, unloadOrderYDefault);
+        }
+        
+        getContainerWithHighestPriority();
     }
     
-   
-    
-    public String getCompanyName(){return this.company;}
-    
-    public void getContainerWithHighestPriority(){
+    private List<Container> getContainerWithHighestPriority()
+    {
+        
         List<Container> priority = new ArrayList<>();
-        for (Container container : this.cargo){
-            Date currentDate = new Date();
-            if (currentDate.getDay() >= container.getDepartureDate().getDay() && currentDate.getMonth() >= container.getDepartureDate().getMonth() && currentDate.getYear() >= container.getDepartureDate().getYear()){
-                if (currentDate.getDay() == container.getDepartureDate().getDay() && currentDate.getMonth() == container.getDepartureDate().getMonth() && currentDate.getYear() == container.getDepartureDate().getYear()){
-                    long diff = currentDate.getTime() - container.getDepartureDate().getTime();
-                    long diffMinutes = diff / (60 * 1000) % 60;
-                    long diffHours = diff / (60 * 60 * 1000) % 24;
-                    diff = Math.abs(diffHours + diffMinutes/60);
-                    if (diff > 2.5){priority.add(container);}
-                }
-                else priority.add(container); //container had al bij extern vehicle moeten zijn
-            }
+        
+        for (Container container : this.cargo)
+        {
             
+            Date currentDate = new Date(); //van controller current date?? + time
+            Date containerDate = container.getDepartureDate();
+            containerDate.setHours((int)container.getDepartureTimeTill());
+            containerDate.setMinutes(((int)container.getDepartureTimeTill() % 1) * 100);
+
+            long diff = containerDate.getTime() - currentDate.getTime();
+            long diffHours = diff / (60 * 60 * 1000);
+
+            if (diffHours < 5) //5 uur grens?
+            {
+                priority.add(container);
+            }        
            
         }
+        
+        //evt sorteer priority list
+        
+        //update unloadOrder met prioriteitskolommen
+        for (Container container : priority)
+        {
+           
+            priorityColumns.add(0, (int)container.getArrivalPosition().x);
+            
+            List<Integer> orderY = unloadOrderY.get((int)container.getArrivalPosition().x);
+            orderY.remove((int)container.getArrivalPosition().y);
+            orderY.add(0,(int)container.getArrivalPosition().y);
+            unloadOrderY.put((int)container.getArrivalPosition().x, orderY);
+        }
+        
+        return priority;
         
     }
     ///[0,0,0] add grid container position
@@ -116,7 +156,6 @@ public abstract class ExternVehicle extends Vehicle {
             try
             {
                 if (cargo.isEmpty()) { throw new ContainerNotFoundException("No containers"); }
-            
      
                 Container container = cargo.get(0);
             
@@ -146,25 +185,23 @@ public abstract class ExternVehicle extends Vehicle {
             throw new ContainerNotFoundException("ContainerNotFound");
         }
         
-       
        this.getGrid()[(int)container.getArrivalPosition().x][(int)container.getArrivalPosition().y][(int)container.getArrivalPosition().z] = null;
-        
-        
-        
-        
-        
-            
+
         return container;
 
-        
     }
     
-   
+    public String getCompanyName(){ return this.company; }
     
-    public Date getArrivalDate(){return arrivalDate;}
+    public Date getArrivalDate(){ return arrivalDate; }
     
-    public Float getArrivalTime(){return arrivalTime;}
+    public Float getArrivalTime(){ return arrivalTime; }
     
+    public List<Integer> getUnloadOrderY(Integer row){ return this.unloadOrderY.get(row); }
+    
+    public List<Integer> getPriorityColumns(){ return this.priorityColumns; }
+    
+    public Integer getGridWidth(){ return this.nrContainersWidth; }
     public void leave()
     {
         this.status = Status.MOVING;

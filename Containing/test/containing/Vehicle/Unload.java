@@ -9,6 +9,9 @@ import containing.Exceptions.ContainerNotFoundException;
 import containing.Vector3f;
 import containing.XmlHandler;
 import java.io.File;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -18,15 +21,18 @@ import static org.junit.Assert.*;
  */
 public class Unload {
     
+    XmlHandler xml = new XmlHandler();
+    List<Container> ContainersFromXML = xml.openXml(new File("C:\\Users\\Miriam\\Desktop\\xml2.xml")); 
+    
+    Container bc = ContainersFromXML.get(0);
+    Container container0 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,1,1), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
+    Container container1 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,1,1), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
+    Barge barge = new Barge(null,0,null,null);
+    
     @Test
     public void testUnload()
     {
-        XmlHandler xml = new XmlHandler();
-        List<Container> ContainersFromXML = xml.openXml(new File("C:\\Users\\Miriam\\Desktop\\xml1.xml"));    
-        Container bc = ContainersFromXML.get(0);
-        Container container0 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,1,1), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
-        Container container1 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,1,1), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
-        Barge barge = new Barge(null,0,null,null);
+        
         
         //unloaded vehicle
         try
@@ -85,5 +91,44 @@ public class Unload {
             assertEquals(container0,barge.getGrid()[1][1][1]);
         }
       
+    }
+    
+    @Test
+    public void testGetContainerHighestPriority()
+    {
+        
+        /*
+        for (Container container : ContainersFromXML ){ 
+            try
+            {
+                barge.load(container);
+            }
+            catch(Exception e)
+            {
+                System.out.println(container.getArrivalPosition());
+            }
+            
+        }*/
+        //Date date = new Date(2004,11,12);
+        try
+        {
+            barge.load(container0);
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error @ priority");
+        }
+        
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(Timestamp.valueOf("0004-12-13 00:00:00.0"));
+        
+       
+        Date date = new Date(calendar.getTime().getYear(), calendar.getTime().getMonth(), calendar.getTime().getDate());
+
+        //this.ContainersFromXML.get(0).getDepartureDate().setYear(date.getYear());
+
+        System.out.println(date.compareTo(this.ContainersFromXML.get(0).getDepartureDate()));
+        //System.out.println("Priority: " + barge.getContainerWithHighestPriority().size());
+        //System.out.println("Priority: " + this.ContainersFromXML.get(3).getArrivalDate());
     }
 }

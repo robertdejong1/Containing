@@ -4,9 +4,9 @@
  */
 package containing.Road;
 
-import containing.Platform.Platform;
 import containing.Vector3f;
-import containing.Vehicle.Vehicle;
+import containing.Vehicle.AGV;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
  */
 public class RoadTest {
     List<Vector3f> road1 = Arrays.asList(new Vector3f(0f,0f,0f),new Vector3f(3f,0f,0f), new Vector3f(2f,0f,0f), new Vector3f(5f,0f,0f),new Vector3f(1f,0f,0f));
+    List<Vector3f> road2;
     Road road;
     
     public RoadTest() {
@@ -70,10 +71,40 @@ public class RoadTest {
     public void testPathLength()
     {
        Collections.sort(road1);
-       float expected = Road.getPathLength(road1);
        
+       float expected = Road.getPathLength(road1);   
        assertEquals(5,(int)expected);
        
+    }
+    
+    @Test
+    public void testPathCorrectOrder()
+    {
+        Collections.sort(road1);
+        
+        for (Vector3f v : Road.setPathCorrectOrder(road1, new Vector3f(3,0,0), new Vector3f(5,0,0)))
+        {
+            System.out.println(v);
+        }
+    }
+    
+    @Test
+    public void testShortestPath()
+    {
+       Collections.sort(road1);
+       road2 = new ArrayList(road1);
+       Collections.reverse(road1);
+       
+       
+       
+       AGV agv = new AGV(null, new Vector3f(0,0,0));
+       
+       /*
+       for (Vector3f v : road.calculateShortestPath(agv, new Vector3f(2,0,0)))
+       {
+           System.out.println(v);
+       }
+       */
     }
 
     /**

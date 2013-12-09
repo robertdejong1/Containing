@@ -29,16 +29,24 @@ public abstract class Crane extends InternVehicle {
     protected int timeCountDown = 0;
     protected final static int CAPICITY = 1;
     protected int counter;
-    protected final float SECURETIME = 0.5f;
+    protected final float SECURETIME = 0.5f * 60;
     
     //testvariables -> for every crane and container different
-    private final int liftTimeMin = 0;
+    private final int liftTimeMin = 0 * 60;
     private final float liftTimeMax = 3.5f * 60;
-    private final float dropTimeMin = 0;
+    private final float dropTimeMin = 0 * 60;
     private final float dropTimeMax = 3.5f * 60;
-    private final float moveContainerSpeed = 5;
+    private final float moveContainerSpeed = 5; //meter per seconde
     protected final int maxSpeedUnloaded = 4;
-    private final int resetTime = 50;
+    protected final int maxSpeedLoaded = 5;
+    
+    private float loadTime;
+    private float unloadTime;
+    private float resetTime;
+    
+    private AGV agvToUnload = null;
+
+
     protected final int metersToNextAgvSpot = 10;
     
     public float width;
@@ -51,26 +59,72 @@ public abstract class Crane extends InternVehicle {
     }
     
     public void unload(AGV agv) throws VehicleOverflowException, ContainerNotFoundException, CargoOutOfBoundsException{
-        try{
-        agv.load(super.unload());
+        try
+        {
+            agv.load(super.unload());
         }
-        catch(Exception e){throw e;}
+        catch(Exception e){ throw e; }
         //platform moet agv volgende route geven
+    }
+    
+    public void load(ExternVehicle ev, int column) throws Exception
+    {
+        for (Integer row : ev.getUnloadOrderY(column))
+        {
+            for (int i = ev.getGridWidth()-1; i >= 0; i--)
+            {
+                for (Container container : ev.getGrid()[i][column])
+                {
+                    try
+                    {
+                        if (container != null)
+                        {
+                            //ask agv!
+                            super.load(ev.unload(container));
+                            
+                            this.loadTime = (Math.abs(this.position.y-container.getArrivalPosition().y) / this.moveContainerSpeed //move gripper to position of container
+                            //+ this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) //droptime depended on z position of container //???
+                            + this.SECURETIME
+                            + this.liftTimeMin + (this.liftTimeMax - this.liftTimeMin) / ((int)container.getArrivalPosition().z + 1) //lifttime depended on z position of container
+                            + Math.abs(this.position.y-container.getArrivalPosition().y) / this.moveContainerSpeed) * 100;
+                            this.status = Status.LOADING;
+                            
+                            this.unloadTime = (this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) + this.SECURETIME) * 100;
+                            
+                             
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        throw e;
+                    }
+                }
+            }
+       
+        }
     }
 
     
     public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException{ //container from extern verhicle
         try
         {
-            
             super.load(container);
+            this.loadTime = (Math.abs(this.position.y-container.getArrivalPosition().y) / this.moveContainerSpeed //move gripper to position of container
+                            //+ this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) //droptime depended on z position of container
+                            + this.SECURETIME
+                            + this.liftTimeMin + (this.liftTimeMax - this.liftTimeMin) / ((int)container.getArrivalPosition().z + 1) //lifttime depended on z position of container
+                            + Math.abs(this.position.y-container.getArrivalPosition().y) / this.moveContainerSpeed) * 100;
+            
+            this.status = Status.LOADING;
+            
+            this.unloadTime = (this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) + this.SECURETIME) * 100;
         }
         catch(Exception e)
         {
             throw e;
         }
-        this.status = Status.LOADING;
-        this.timeCountDown = (int) liftTimeMax;
+
+        //this.timeCountDown = (int) liftTimeMax;
         //update: while (this.timeCounter < starttime + liftTimeMax + moveContainerSpeed * 2){} //aan het laden
         //roep evt nieuwe agv aan (op zelfde parkeerplaats of op parkeerplaats opzij [moet platform doen]
     }
@@ -109,8 +163,31 @@ public abstract class Crane extends InternVehicle {
        super.update();
        if (this.status == Status.LOADING )
        {
+           this.loadTime--;
+           if (this.loadTime <= 0)
+           { 
+               this.status = Status.UNLOADING;
+               //command simulator
+           }
            
        }
+       
+       if (this.status == Status.UNLOADING && this.agvToUnload != null)
+       {
+           this.unloadTime--;
+           if (this.unloadTime <= 0)
+           {
+               try
+               {
+                this.unload(agvToUnload);
+               }
+               catch(Exception e){ System.out.println(e.getMessage()); }
+               this.agvToUnload = null;
+               this.status = Status.WAITING;
+               //new load
+           }
+       }
+       
     }
     
     public void reset(){

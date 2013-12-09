@@ -20,9 +20,9 @@ public class Seaship extends ExternVehicle {
 
     public static float width = 10f; //????????
     public static float length = 20f; //??????????
-    public static int nrContainersDepth= 90;
-    public static int nrContainersHeight = 40;
-    public static int nrContainersWidth = 40;
+    public static int nrContainersDepth= 20;
+    public static int nrContainersHeight = 20;
+    public static int nrContainersWidth = 20;
     
     public Seaship(Date arrivalDate, float arrivalTime, Platform platform, String company)
     {

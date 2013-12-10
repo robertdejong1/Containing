@@ -14,8 +14,8 @@ import containing.Vehicle.TruckCrane;
  */
 public class TruckPlatform extends Platform {
     
-    private final float WIDTH          = 100f;  // ???
-    private final float LENGTH         = 725f;  // ???
+    private final float WIDTH          = 100f*Settings.METER;  // ???
+    private final float LENGTH         = 821.5f*Settings.METER;  // ???
     private final int MAX_VEHICLES     = 20;    // ???
     private final int CRANES           = 20;
     

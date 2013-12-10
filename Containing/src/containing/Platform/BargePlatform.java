@@ -3,6 +3,7 @@ package containing.Platform;
 import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.ParkingSpot.BargeSpot;
+import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.BargeCrane;
 
@@ -13,8 +14,8 @@ import containing.Vehicle.BargeCrane;
  */
 public class BargePlatform extends Platform {
     
-    private final float WIDTH          = 100f;  // ???
-    private final float LENGTH         = 725f;  // ???
+    private final float WIDTH          = 100f*Settings.METER;  // ???
+    private final float LENGTH         = 821.5f*Settings.METER;  // ???
     private final int MAX_VEHICLES     = 2;
     private final int CRANES           = 8;
     

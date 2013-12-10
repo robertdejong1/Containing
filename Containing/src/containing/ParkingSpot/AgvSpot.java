@@ -23,7 +23,7 @@ public class AgvSpot extends ParkingSpot
             this.ParkedVehicle = VehicleToPark;
         }
         else{
-            throw new InvalidVehicleException("Vehicle invalid for this parkingspot");
+            throw new InvalidVehicleException("Vehicle " +VehicleToPark.getVehicleType() +" invalid for this parkingspot");
         }
     }
 }

@@ -21,9 +21,9 @@ public abstract class Vehicle implements Serializable
     protected boolean isLoaded = false;
     protected int capicity;
     protected List<Container> cargo;
-    protected static int maxSpeedLoaded;
-    protected static int maxSpeedUnloaded;
-    protected int currentSpeed;
+    protected int maxSpeedLoaded = 30;
+    protected int maxSpeedUnloaded = 30;
+    protected int currentSpeed = 30;
     protected enum Status{ UNLOADING, LOADING, WAITING, MOVING };
     protected enum Type{ TRUCK, AGV, BARGE, BARGECRANE, SEASHIP, SEASHIPCRANE, TRAIN, TRAINCRANE, TRUCKCRANE, STORAGECRANE};
     private Type vehicleType;
@@ -94,7 +94,7 @@ public abstract class Vehicle implements Serializable
         //currentplatform sign out
         
        
-        this.currentSpeed = (this.isLoaded) ? Vehicle.maxSpeedLoaded : Vehicle.maxSpeedUnloaded;
+        this.currentSpeed = (this.isLoaded) ? this.maxSpeedLoaded : this.maxSpeedUnloaded;
         HashMap<String, Object> map = new HashMap<>();
             
         map.put("id", this.getID());
@@ -125,7 +125,7 @@ public abstract class Vehicle implements Serializable
     public int getCapicity(){return this.capicity;}
     
     public void update(){
-    
+        
         if (this.getStatus() == Status.MOVING){
             Settings.messageLog.AddMessage("Vehicle follows route");
             this.route.follow(this);

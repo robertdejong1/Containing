@@ -22,12 +22,15 @@ public class Train extends ExternVehicle{
     private static int nrContainersDepth = 1;
     private static int nrContainersHeight = 1;
     private static int nrContainersWidth = 25;
-    
+   
     public Train(Date arrivalDate, float arrivalTime, Platform platform, String company)
     {
 
         super(arrivalDate, arrivalTime,  nrContainersDepth,nrContainersWidth,nrContainersHeight, platform, company, Type.TRAIN); //true if vehicle comes to load, otherwise false
         this.position = new Vector3f(-41.5f, 5.5f, -82.15f);
+        this.currentSpeed = 20;
+        this.maxSpeedLoaded = 20;
+        this.maxSpeedUnloaded = 30;
 
     }
 

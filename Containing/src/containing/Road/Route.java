@@ -40,11 +40,9 @@ public class Route implements Serializable {
     
     public void follow(Vehicle vehicle){
         //if destinationParkingSpot == null ga vanaf exitpoint naar midden weg en start volg route
-        Settings.messageLog.AddMessage("Vehicle: " + vehicle.getID() + "follows route");
-        Settings.messageLog.AddMessage("Current speed: " + vehicle.getCurrentSpeed());
-        Settings.messageLog.AddMessage("Distance to drive: " + distance);
-        
-        distance = distance - (vehicle.getCurrentSpeed()*1000/3600)/100;
+       
+        distance = distance - (float)((float)vehicle.getCurrentSpeed()*1000f/3600f)/100f;
+        System.out.println("Distance to drive: " + distance);
         if (distance <= 0){
             Settings.messageLog.AddMessage("Reached end of path");
             Settings.messageLog.AddMessage("DestinationPlatform: " + destinationPlatform);

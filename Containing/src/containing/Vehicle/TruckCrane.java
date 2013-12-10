@@ -48,7 +48,7 @@ public class TruckCrane extends Crane {
             route.add(new Vector3f(this.position.x + Container.width, this.position.y, this.position.z));
         }
         
-        this.currentSpeed = (this.isLoaded) ? Vehicle.maxSpeedLoaded : Vehicle.maxSpeedUnloaded;
+        this.currentSpeed = (this.isLoaded) ? this.maxSpeedLoaded : this.maxSpeedUnloaded;
         
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", this.getID());

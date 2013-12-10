@@ -2,9 +2,9 @@ package containing.Road;
 
 import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
-import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
+import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.Vehicle;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -69,6 +69,18 @@ public class Road implements Serializable
         return shortestPath;
     }
     
+    public Route getPath(ExternVehicle ev, ParkingSpot ps )
+    {
+        List<Vector3f> track = new ArrayList<Vector3f>();
+        track.add(ev.getPosition());
+        track.add(ps.getPosition());
+        float length = this.getPathLength(track);
+        Route route = new Route(track, length);
+        route.destinationPlatform = null;
+        route.destinationParkingSpot = ps;
+        return route;
+    }
+    
     public Route getPath(Vehicle vehicle, ParkingSpot ps){
         Vector3f source = this.createCorrespondingWaypoint(vehicle.getPosition());
         Vector3f destination = this.createCorrespondingWaypoint(ps.getPosition());
@@ -130,7 +142,7 @@ public class Road implements Serializable
         List<Vector3f> weg = new ArrayList<Vector3f>(weg1);
         weg.addAll(weg2);
         try{
-        weg = weg.subList(0, indexDestination+1);}
+        weg = new ArrayList(weg.subList(0, indexDestination+1));}
         catch(Exception e){
             //destination is laatste waypoint
         }

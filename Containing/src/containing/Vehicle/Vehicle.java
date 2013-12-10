@@ -44,7 +44,6 @@ public abstract class Vehicle implements Serializable
         this.currentPlatform = platform;
         this.status = Status.WAITING;
         id = counter;
-        this.setID(id);
         counter++;
             
     }
@@ -126,8 +125,7 @@ public abstract class Vehicle implements Serializable
     public int getCapicity(){return this.capicity;}
     
     public void update(){
-        System.out.println("Route: " + this.route);
-        System.out.println("Status vehicle: " + this.status);
+    
         if (this.getStatus() == Status.MOVING){
             Settings.messageLog.AddMessage("Vehicle follows route");
             this.route.follow(this);

@@ -122,11 +122,11 @@ public class Road implements Serializable
         System.out.println("pathSize: " + path.size());
      
         
-        List<Vector3f> weg1 = path.subList(indexSource, path.size());
+        List<Vector3f> weg1 = new ArrayList(path.subList(indexSource, path.size()));
     
         
        
-        List<Vector3f> weg2 = path.subList(0, indexSource);
+        List<Vector3f> weg2 = new ArrayList(path.subList(0, indexSource));
         List<Vector3f> weg = new ArrayList<Vector3f>(weg1);
         weg.addAll(weg2);
         try{

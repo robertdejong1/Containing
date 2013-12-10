@@ -13,6 +13,7 @@ import containing.Exceptions.VehicleOverflowException;
 import containing.Job;
 import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.ParkingSpot;
+import containing.ParkingSpot.TrainSpot;
 import containing.Road.Road;
 import containing.Road.Route;
 import containing.Settings;

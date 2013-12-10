@@ -6,6 +6,7 @@ import containing.ParkingSpot.BargeSpot;
 import containing.ParkingSpot.TrainSpot;
 import containing.Settings;
 import containing.Vector3f;
+import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.TrainCrane;
 
 /**
@@ -60,7 +61,7 @@ public class TrainPlatform extends Platform {
         for(int i = 0; i < MAX_VEHICLES; i++)
         {
             Vector3f spotPosition = new Vector3f(VEHICLE_OFFSET,0,space*i + offset);
-            extVehicleSpots.add(new BargeSpot(spotPosition));
+            extVehicleSpots.add(new TrainSpot(spotPosition));
         }
     }
     

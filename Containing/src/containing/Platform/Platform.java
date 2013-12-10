@@ -81,9 +81,6 @@ public abstract class Platform implements Serializable {
     
     public void registerExternVehicle(ExternVehicle ev)
     {
-        List<Vector3f> wayshit = new ArrayList<>();
-        wayshit.add(new Vector3f(0,0,0));
-        wayshit.add(extVehicleSpots.get(0).getEntryPoint());
         extVehicles.add(ev);
         ev.followRoute(road.getPath(ev, extVehicleSpots.get(0)));
     }

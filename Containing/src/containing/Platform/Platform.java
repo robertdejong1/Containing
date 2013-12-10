@@ -276,7 +276,7 @@ public abstract class Platform implements Serializable {
     
     public boolean hasFreeParkingSpot()
     {
-        for(AgvSpot spot : agvSpots)
+        for(ParkingSpot spot : extVehicleSpots)
             if(spot.isEmpty())
                 return true;
         return false;

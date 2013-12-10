@@ -17,15 +17,16 @@ public class Port implements Serializable
     private List<Platform> Platforms;
     //private List<AGV> aGVs;
     private StoragePlatform storagePlatform;
+    
 
     public Port() 
     {
         this.Platforms = new ArrayList<>();
         Settings.messageLog.AddMessage("Created Harbor Object with id: " + ID);
 
-        Platforms.add(new BargePlatform(new Vector3f(0, 0, 0)));
+        Platforms.add(new BargePlatform(new Vector3f(3, 0, 0)));
         Platforms.add(new SeashipPlatform(new Vector3f(0, 0, 0)));
-        Platforms.add(new TrainPlatform(new Vector3f(0, 0, 0)));
+        Platforms.add(new TrainPlatform(new Vector3f(-42.57f, 0, -82.15f)));
         Platforms.add(new TruckPlatform(new Vector3f(0, 0, 0)));
         
         storagePlatform = new StoragePlatform(new Vector3f(0,0,0));

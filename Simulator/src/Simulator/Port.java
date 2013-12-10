@@ -40,8 +40,8 @@ public class Port
         //port = assetManager.loadModel("Models/port.j3o");
         cranerail = assetManager.loadModel("Models/rail.j3o");
         trainrail = assetManager.loadModel("Models/trainrails.j3o");
-        storage = assetManager.loadModel("Models/storageplatform.j3o");
-        road = assetManager.loadModel("Models/road.j3o");
+        //storage = assetManager.loadModel("Models/storageplatform.j3o");
+        //road = assetManager.loadModel("Models/road.j3o");
         
         Material port_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture tex2 = assetManager.loadTexture(new TextureKey("Textures/haven.jpg"));
@@ -68,18 +68,18 @@ public class Port
         //road.move(0,1f,-4);
         //port_node.attachChild(road);
         
-        cranerail.setLocalTranslation(-1, 5, 81);
-        cranerail.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-        cranerail.scale(1, 1, 10);
-        port_node.attachChild(cranerail.clone());
-        cranerail.setLocalTranslation(-1, 5, 78.95f);
-        port_node.attachChild(cranerail);
+        //cranerail.setLocalTranslation(-1, 5, 81);
+        //cranerail.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+        //cranerail.scale(1, 1, 10);
+        //port_node.attachChild(cranerail.clone());
+        //cranerail.setLocalTranslation(-1, 5, 78.95f);
+        //port_node.attachChild(cranerail);
         
         trainrail.scale(2);
-        for (int i = 0; i < 14*5; i++)
+        for (int i = 0; i < 14*5+4; i++)
         {
-        trainrail.setLocalTranslation(-41.5f, 5.5f, -77.25f+((10.4f/5)*i));
-        port_node.attachChild(trainrail.clone());
+            trainrail.setLocalTranslation(-41.5f, 5.5f, -81f+((10.4f/5)*i));
+            port_node.attachChild(trainrail.clone());
         }
         
         //Water

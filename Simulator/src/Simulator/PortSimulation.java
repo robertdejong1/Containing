@@ -1,6 +1,8 @@
 package Simulator;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.MouseInput;
@@ -15,6 +17,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.util.SkyFactory;
 import containing.Command;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * test
@@ -69,10 +72,10 @@ public class PortSimulation extends SimpleApplication {
         //}
 
 
-        freeCranes[0].place(0, 5f, 81);
-        freeCranes[1].place(10, 5f, 81);
-        freeCranes[2].place(-40, 5f, 81);
-        freeCranes[3].place(-30, 5f, 81);
+        freeCranes[0].place(0, 5.5f, 81);
+        freeCranes[1].place(10, 5.5f, 81);
+        freeCranes[2].place(-40, 5.5f, 81);
+        freeCranes[3].place(-30, 5.5f, 81);
 
         railCrane = new RailCrane(assetManager, rootNode);
         railCrane.place(-41.25f, 5.5f, -1.52f);
@@ -149,7 +152,16 @@ public class PortSimulation extends SimpleApplication {
             Type type = Type.valueOf(map.get("vehicleType").toString());
             System.out.println("" + type.toString());
             Object[][][] containers = (Object[][][]) map.get("cargo");
-
+            
+            MotionPath path = new MotionPath();
+            List<containing.Vector3f> motion = (List<containing.Vector3f>)map.get("motionPath");
+            for (containing.Vector3f v : motion)
+            {
+                path.addWayPoint(new Vector3f(v.x, v.y, v.z));
+            }
+            int speed = Integer.parseInt(map.get("speed").toString());
+      
+            
             switch (type) {
                 case TRAIN:
                     Train train = new Train(assetManager, rootNode);
@@ -163,7 +175,10 @@ public class PortSimulation extends SimpleApplication {
                             
                         }
                     }
-                    train.place(-42, 5f, 0);
+                    MotionEvent motev = new MotionEvent(train.train,path);
+                    speed = 1;
+                    motev.setSpeed(speed);
+                    motev.play();
                     break;
                     
                 case BARGE:

@@ -42,10 +42,7 @@ public class AGV extends InternVehicle {
         this.status = status;
     }
     
-    public void update(){
-       super.update();
-       if (this.status == Status.MOVING){this.route.follow(this);}
-    }
+
     
     
     

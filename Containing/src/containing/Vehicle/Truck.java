@@ -42,7 +42,5 @@ public class Truck extends ExternVehicle{
     @Override
     public int getMaxSpeedLoaded(){return 15;}
     
-     public void update(){
-     
-    }
+  
 }

@@ -33,9 +33,7 @@ public class Barge extends ExternVehicle {
     
     }
     
-     public void update(){
 
-    }
     
     @Override
     public int getMaxSpeedUnloaded(){return 25;}

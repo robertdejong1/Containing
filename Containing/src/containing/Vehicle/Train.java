@@ -37,7 +37,5 @@ public class Train extends ExternVehicle{
     @Override
     public int getMaxSpeedLoaded(){return 10;}
     
-     public void update(){
-        timeCounter++;
-    }
+   
 }

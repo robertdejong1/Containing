@@ -24,7 +24,7 @@ public abstract class Vehicle implements Serializable
     protected static int maxSpeedLoaded;
     protected static int maxSpeedUnloaded;
     protected int currentSpeed;
-    protected enum Status{ UNLOADING, LOADING, WAITING, MOVING};
+    protected enum Status{ UNLOADING, LOADING, WAITING, MOVING };
     protected enum Type{ TRUCK, AGV, BARGE, BARGECRANE, SEASHIP, SEASHIPCRANE, TRAIN, TRAINCRANE, TRUCKCRANE, STORAGECRANE};
     private Type vehicleType;
     protected Status status;

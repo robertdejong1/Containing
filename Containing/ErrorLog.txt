@@ -6,3 +6,7 @@ Could not load file
 Could not load file
 TRUCK has no room for this container.(CargoOutOfBoundsException)
 TRUCK has no room for this container.(CargoOutOfBoundsException)
+Error while serializing command object(java.util.ArrayList$SubList)
+Error while serializing command object(java.util.ArrayList$SubList)
+Error while serializing command object(java.util.ArrayList$SubList)
+Error while serializing command object(java.util.ArrayList$SubList)

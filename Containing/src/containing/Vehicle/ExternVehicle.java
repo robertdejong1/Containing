@@ -47,7 +47,8 @@ public abstract class ExternVehicle extends Vehicle {
         super(depthGrid*widthGrid*heightGrid, platform, type);
         this.arrivalDate = arrivalDate;
         this.arrivalTime = arrivalTime;
-        status = Status.WAITING; 
+
+
         this.grid = new Container[widthGrid+1][heightGrid+1][depthGrid+1];
         
         this.company = company;
@@ -129,19 +130,23 @@ public abstract class ExternVehicle extends Vehicle {
         
             Vector3f coordinates = container.getArrivalPosition();
         
-   
+    
             if (grid!=null)
             {
                 try
                 {
-                if (coordinates.x  >= this.nrContainersWidth || coordinates.z >= this.nrContainersDepth || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y >= this.nrContainersHeight )
+                if (coordinates.x  > this.nrContainersWidth || coordinates.z > this.nrContainersDepth || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y > this.nrContainersHeight )
                 {
-            
+                    //Settings.messageLog.AddMessage("Cargo: " + container.getArrivalPosition());
                     throw new CargoOutOfBoundsException("CargoOutOfBoundsException");
             
                 }
                 
-                if (grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]!=null){throw new VehicleOverflowException("VehicleOverflowException");}//dubbel
+                if (grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]!=null)
+                {
+                    Settings.messageLog.AddMessage("Vehicle: " + this.getID() +  " has already container on position: " + coordinates);
+                    throw new VehicleOverflowException("VehicleOverflowException");
+                }//dubbel
         
                     grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z] = container; 
 
@@ -185,6 +190,8 @@ public abstract class ExternVehicle extends Vehicle {
         
     }
     
+ 
+    
      public Container unload(Container container) throws ContainerNotFoundException
     {
 
@@ -222,7 +229,7 @@ public abstract class ExternVehicle extends Vehicle {
     
     public void leave()
     {
-        this.status = Status.MOVING;
+        this.status= Status.MOVING;
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", this.getID());
         map.put("vehicleType", this.getVehicleType());
@@ -237,8 +244,8 @@ public abstract class ExternVehicle extends Vehicle {
     public void enter()
     {
         Settings.messageLog.AddMessage("Enter vehicle: " + this.getID());
-        this.status = Status.MOVING;
-        Settings.messageLog.AddMessage("Vehicle: " + this.getID() + " Status: Moving");
+       
+       
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", this.getID());
         map.put("vehicleType", this.getVehicleType());

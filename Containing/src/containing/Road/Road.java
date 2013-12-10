@@ -2,6 +2,7 @@ package containing.Road;
 
 import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
+import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Vehicle;
@@ -69,13 +70,15 @@ public class Road implements Serializable
     }
     
     public Route getPath(Vehicle vehicle, ParkingSpot ps){
-        
+        Vector3f source = this.createCorrespondingWaypoint(vehicle.getPosition());
+        Vector3f destination = this.createCorrespondingWaypoint(ps.getPosition());
         List<Vector3f> track = new ArrayList<Vector3f>(this.track);
-        track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
-        track.add(this.createCorrespondingWaypoint(ps.getPosition()));
+        track.add(source);
+        track.add(destination);
         Collections.sort(track);
-        track = this.setPathCorrectOrder(track, createCorrespondingWaypoint(vehicle.getPosition()), this.createCorrespondingWaypoint(ps.getPosition()));
+        track = this.setPathCorrectOrder(track, source, destination);
         float length = this.getPathLength(track);
+  
         Route route = new Route(track,length);
         route.destinationPlatform = null;
         route.destinationParkingSpot = ps;
@@ -108,14 +111,18 @@ public class Road implements Serializable
     }
     
     public List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Vector3f source, Vector3f destination){
-        
-        int indexSource = path.indexOf(createCorrespondingWaypoint(source));
-        int indexDestination =  path.indexOf(createCorrespondingWaypoint(destination));
+        for (Vector3f v : path){
+            System.out.println("V: " + v);
+        }
+        System.out.println("Source: " + source);
+        System.out.println("Destination: " + destination);
+        int indexSource = path.indexOf(source);
+        int indexDestination =  path.indexOf(destination);
         System.out.println("indexSource: " + indexSource);
         System.out.println("pathSize: " + path.size());
-        List<Vector3f> weg1 = new ArrayList();
+     
         
-        weg1 = path.subList(indexSource, path.size());
+        List<Vector3f> weg1 = path.subList(indexSource, path.size());
     
         
        

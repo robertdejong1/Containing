@@ -6,6 +6,7 @@
 package containing;
 
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -22,7 +23,7 @@ public class NetworkHandler implements Runnable {
         try {
             server = new ServerSocket(port);
             server.setSoTimeout(999999999);
-            Settings.messageLog.AddMessage("Server running.");
+            Settings.messageLog.AddMessage("Server running on " +Inet4Address.getLocalHost().getHostAddress() +".");
         } catch (IOException e) {
             ErrorLog.logMsg("An error occured while creating Socket Server", e);
         }

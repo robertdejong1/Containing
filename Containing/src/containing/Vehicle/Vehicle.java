@@ -24,14 +24,14 @@ public abstract class Vehicle implements Serializable
     protected static int maxSpeedLoaded;
     protected static int maxSpeedUnloaded;
     protected int currentSpeed;
-    public enum Status{ UNLOADING, LOADING, WAITING, MOVING};
+    protected enum Status{ UNLOADING, LOADING, WAITING, MOVING};
     protected enum Type{ TRUCK, AGV, BARGE, BARGECRANE, SEASHIP, SEASHIPCRANE, TRAIN, TRAINCRANE, TRUCKCRANE, STORAGECRANE};
     private Type vehicleType;
     protected Status status;
     protected Route route;
     protected Platform currentPlatform;
     protected ParkingSpot currentParkingSpot;
-    protected Vector3f position = new Vector3f(0,0,0);
+    protected Vector3f position = new Vector3f(1,0,0);
     private int id;
 
     
@@ -42,6 +42,7 @@ public abstract class Vehicle implements Serializable
         this.capicity = capicity;
         this.vehicleType = type;
         this.currentPlatform = platform;
+        this.status = Status.WAITING;
         id = counter;
         this.setID(id);
         counter++;
@@ -56,7 +57,7 @@ public abstract class Vehicle implements Serializable
     {
         
         if (cargo.isEmpty()) isLoaded = true;
-
+        
         if (cargo.size() < capicity) 
         {
             cargo.add(container);
@@ -65,6 +66,7 @@ public abstract class Vehicle implements Serializable
         
         else 
         {
+            Settings.messageLog.AddMessage("VehicleOverflowInVehicle");
             throw new VehicleOverflowException("VehicleOverFlowException");
         }
         
@@ -89,10 +91,10 @@ public abstract class Vehicle implements Serializable
     
     public void followRoute(Route route){
         this.route = route;
-        
-        //currentplatform sign out
         this.status = Status.MOVING;
+        //currentplatform sign out
         
+       
         this.currentSpeed = (this.isLoaded) ? Vehicle.maxSpeedLoaded : Vehicle.maxSpeedUnloaded;
         HashMap<String, Object> map = new HashMap<>();
             
@@ -104,11 +106,15 @@ public abstract class Vehicle implements Serializable
         CommandHandler.addCommand(new Command("followPath", map));
         
         Settings.messageLog.AddMessage("Vehicle: " + this.getID() + "start following path" );
-    
+        Settings.messageLog.AddMessage("VehicleStatus: " + this.status);
+        Settings.messageLog.AddMessage("Route: " + this.route);
+        System.out.println("VehicleStatus: " + this.status);
+        
         
     } 
     
     public void stopDriving(){
+        Settings.messageLog.AddMessage("Stop driving");
         this.status = Status.WAITING;
         this.currentSpeed = 0;
     }
@@ -120,9 +126,10 @@ public abstract class Vehicle implements Serializable
     public int getCapicity(){return this.capicity;}
     
     public void update(){
-       
+        System.out.println("Route: " + this.route);
         System.out.println("Status vehicle: " + this.status);
-        if (this.status == Status.MOVING){
+        if (this.getStatus() == Status.MOVING){
+            Settings.messageLog.AddMessage("Vehicle follows route");
             this.route.follow(this);
         }
         

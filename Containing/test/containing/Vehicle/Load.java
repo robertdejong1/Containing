@@ -67,7 +67,7 @@ public class Load {
        barge.load(container3);
   
        barge.load(container0);}
-       catch(Exception e){}
+       catch(Exception e){"Barge: " + e.getMessage());}
        try
        {
         bg.load(barge, 1);

@@ -76,7 +76,7 @@ public class ClientHandler implements Runnable {
                     List<Command> commands = CommandHandler.getNewCommands(this.id, this.app);
                     if (commands != null && commands.size() > 0) {
                         for (Command cmd : commands) {
-                            Settings.messageLog.AddMessage("Sending: " + cmd.toString());
+                            Settings.messageLog.AddMessage("Sending: (" +cmd.getCommand() +") " + cmd.toString());
                             writer.println(cmd.toString());
                             writer.flush();
                         }

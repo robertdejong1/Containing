@@ -17,6 +17,7 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
 import com.jme3.water.SimpleWaterProcessor;
@@ -28,7 +29,7 @@ import com.jme3.water.SimpleWaterProcessor;
 public class Port
 {
     Node port_node = new Node("port");
-    Spatial port;
+    //Spatial port;
     Spatial cranerail;
     Spatial trainrail;
     Spatial storage;
@@ -36,30 +37,35 @@ public class Port
     
     public Port(AssetManager assetManager, Node node, ViewPort viewPort)
     {
-        port = assetManager.loadModel("Models/port.j3o");
+        //port = assetManager.loadModel("Models/port.j3o");
         cranerail = assetManager.loadModel("Models/rail.j3o");
         trainrail = assetManager.loadModel("Models/trainrails.j3o");
         storage = assetManager.loadModel("Models/storageplatform.j3o");
         road = assetManager.loadModel("Models/road.j3o");
         
-        Material stone_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        Texture tex2 = assetManager.loadTexture(new TextureKey("Textures/asphalt.jpg"));
-        tex2.setWrap(Texture.WrapMode.Repeat);
-        stone_mat.setTexture("ColorMap", tex2);
-        ((Geometry) port).getMesh().scaleTextureCoordinates(new Vector2f(64, 64));
+        Material port_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Texture tex2 = assetManager.loadTexture(new TextureKey("Textures/haven.jpg"));
+        port_mat.setTexture("ColorMap", tex2);
+        //((Geometry) port).getMesh().scaleTextureCoordinates(new Vector2f(1, 1));
         //port.setMaterial(stone_mat);
         
-        port.scale(10);
+        //port.scale(10);
         //port.scale(1f, 0.2f, 1f);
         //port.move(0,4,0);
-        port_node.attachChild(port);
         
-        storage.scale(10);
-        storage.move(0,0.01f,-4);
-        port_node.attachChild(storage);
+        Box port = new Box(855f, 10f, 1643f);
+        Geometry port_geo = new Geometry("port", port);
+        port_geo.setMaterial(port_mat);
+        port_geo.scale(0.05f);
+        port_geo.move(0,5,0);
+        port_node.attachChild(port_geo);
+        
+        //storage.scale(10);
+        //storage.move(0,0.01f,-4);
+        //port_node.attachChild(storage);
         
         //road.scale(10);
-        //road.move(0,0.01f,-4);
+        //road.move(0,1f,-4);
         //port_node.attachChild(road);
         
         cranerail.setLocalTranslation(-1, 5, 81);
@@ -72,7 +78,7 @@ public class Port
         trainrail.scale(2);
         for (int i = 0; i < 14*5; i++)
         {
-        trainrail.setLocalTranslation(-42f, 5f, -77.25f+((10.4f/5)*i));
+        trainrail.setLocalTranslation(-41.5f, 5.5f, -77.25f+((10.4f/5)*i));
         port_node.attachChild(trainrail.clone());
         }
         
@@ -93,7 +99,7 @@ public class Port
 
         Geometry water = new Geometry("water", quad);
         water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
-        water.setLocalTranslation(-200, 4.5f, 250);
+        water.setLocalTranslation(-200, 4.5f, 200);
         water.setShadowMode(RenderQueue.ShadowMode.Receive);
         water.setMaterial(waterProcessor.getMaterial());
 

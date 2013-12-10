@@ -9,16 +9,10 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
-import com.jme3.math.Plane;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
-import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
-import com.jme3.water.SimpleWaterProcessor;
 import containing.Command;
 import java.util.HashMap;
 
@@ -43,14 +37,15 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.222.81", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.222.189", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
 
     @Override
     public void simpleInitApp() {
-        flyCam.setEnabled(false);
+        flyCam.setEnabled(true);
+        flyCam.setMoveSpeed(50f);       
         chaseCam = new ChaseCamera(cam, inputManager);
         
         cam.setLocation(new Vector3f(0f, 140f, 0));
@@ -80,7 +75,7 @@ public class PortSimulation extends SimpleApplication {
         freeCranes[3].place(-30, 5f, 81);
 
         railCrane = new RailCrane(assetManager, rootNode);
-        railCrane.place(-42f, 5f, -1.52f);
+        railCrane.place(-41.25f, 5.5f, -1.52f);
         //avg = new AVG(assetManager, rootNode);
 
 

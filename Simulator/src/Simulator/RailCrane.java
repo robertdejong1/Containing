@@ -57,10 +57,11 @@ public class RailCrane
         crane.attachChild(cable5);
         
         agv = new AGV(assetManager, node);
-        agv.place(-40.32f,5f,-1.5f);
+        agv.place(-40.32f,5.5f,-1.5f);
         
         crane.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         crane.scale(0.33f);
+        crane.scale(1f, 1f, 1.1f);
     }
     
     private void place(Vector3f loc)

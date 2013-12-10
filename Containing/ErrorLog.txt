@@ -12,4 +12,3 @@ Error while serializing command object(java.util.ArrayList$SubList)
 Error while serializing command object(java.util.ArrayList$SubList)
 TRUCK has no room for this container.(VehicleOverflowException)
 TRUCK has no room for this container.(VehicleOverflowException)
-Vehicle invalid for this parkingspot

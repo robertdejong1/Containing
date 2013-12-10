@@ -9,7 +9,7 @@ import containing.Vehicle.Vehicle;
 import java.io.Serializable;
 import java.util.HashMap;
 
-protected abstract class ParkingSpot implements Serializable
+public abstract class ParkingSpot implements Serializable
 {
     private static int idCounter = 0; //Statische counter die functioneert als auto_increment veld
     protected int id; //id van de parkingspot

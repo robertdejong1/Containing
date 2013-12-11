@@ -66,6 +66,10 @@ public class CommandHandler {
     public static boolean newCommandsAvailable() {
         return queuedCommands.size() > 0;
     }
+    
+    public static boolean newStackedCommandsAvailable(){
+        return stackedCommands.size() > 0;
+    }
 
     public static Command getStackedCommand() {
         if (stackedCommands.size() > 0) {

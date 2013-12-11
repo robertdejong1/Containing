@@ -137,6 +137,11 @@ public class PortSimulation extends SimpleApplication {
         //    container[i].move(0, 0, tpf*2);
         //}
         //railCrane.update(tpf);
+        Train train = null;
+        
+        if(!CommandHandler.newStackedCommandsAvailable()){
+            return;
+        }
         Command cmd = CommandHandler.getStackedCommand();
         if(cmd == null){
             return;
@@ -153,18 +158,9 @@ public class PortSimulation extends SimpleApplication {
             System.out.println("" + type.toString());
             Object[][][] containers = (Object[][][]) map.get("cargo");
             
-            MotionPath path = new MotionPath();
-            List<containing.Vector3f> motion = (List<containing.Vector3f>)map.get("motionPath");
-            for (containing.Vector3f v : motion)
-            {
-                path.addWayPoint(new Vector3f(v.x, v.y, v.z));
-            }
-            int speed = Integer.parseInt(map.get("speed").toString());
-      
-            
             switch (type) {
                 case TRAIN:
-                    Train train = new Train(assetManager, rootNode);
+                    train = new Train(assetManager, rootNode);
                     for (int i = 0; i < containers.length; i++) {
                         if (containers[i][0][0] != null) {
                             containing.Container c = (containing.Container) containers[i][0][0];
@@ -175,10 +171,6 @@ public class PortSimulation extends SimpleApplication {
                             
                         }
                     }
-                    MotionEvent motev = new MotionEvent(train.train,path);
-                    speed = 1;
-                    motev.setSpeed(speed);
-                    motev.play();
                     break;
                     
                 case BARGE:
@@ -244,8 +236,19 @@ public class PortSimulation extends SimpleApplication {
             Type type = Type.valueOf(map.get("vehicleType").toString());
             System.out.println("" + type.toString());
             
+            MotionPath path = new MotionPath();
+            containing.Road.Route route = (containing.Road.Route)map.get("motionPath");
+            List<containing.Vector3f> motion = route.getWeg();
+            for (containing.Vector3f v : motion)
+            {
+                path.addWayPoint(new Vector3f(v.x, v.y, v.z));
+            }
+            int movspeed = Integer.parseInt(map.get("speed").toString());
+            float mov_speed = (float)movspeed/100;
             
-           
+            MotionEvent motev = new MotionEvent(train.train, path);
+            motev.setSpeed(mov_speed);
+            motev.play();
         }
 
     }

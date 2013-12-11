@@ -265,7 +265,7 @@ class Controlleralgorithms
         float arrivalTime = timeStamp.getHours() + ((float)timeStamp.getMinutes() / 100);
         
         for (ExternVehicle ev : scheduledArrivingVehicles)
-        {             
+        {       
             if (
                     (date.equals(ev.getArrivalDate()) && (arrivalTime == ev.getArrivalTime()))
                     &&
@@ -276,6 +276,7 @@ class Controlleralgorithms
                 Settings.messageLog.AddMessage(ev.toString() + " is entering.");
                 scheduledArrivingVehicles.remove(ev);
                 break;
+                //ik doe nog niks met het feit dat er geen parkingspots kunnen zijn
             }
         }
     }

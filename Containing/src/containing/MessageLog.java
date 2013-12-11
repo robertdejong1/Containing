@@ -22,7 +22,10 @@ public class MessageLog
         String formattedDate = sdf.format(date);
         
         Messages.add("[" + formattedDate + "]: " + Message);
-        Controller.updateMessageLogWindow();
+        if (!Controller.started)
+        {
+            Controller.updateUserInterface();
+        }
     }
     
     public String GetLastMessagesAsHTMLString()
@@ -54,7 +57,6 @@ public class MessageLog
     {
         Messages = new ArrayList();
         Messages.add("Controller Version: " + Settings.version);
-        Controller.updateMessageLogWindow();
     }
     
     public void WriteMessagesToFile()

@@ -58,6 +58,10 @@ public class ClientHandler implements Runnable {
                             break;
                         case "IDENTIFY:APP":
                             this.app = true;
+                            Settings.messageLog.AddMessage("Sending init info");
+                            Command cmd = new Command("INIT", Settings.port);
+                            writer.println(cmd);
+                            writer.flush();
                             break;
                         case "IDENTIFY:SIM":
                             this.app = false;

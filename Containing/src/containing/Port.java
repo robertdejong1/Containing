@@ -26,7 +26,7 @@ public class Port implements Serializable
 
         Platforms.add(new BargePlatform(new Vector3f(3, 0, 0)));
         Platforms.add(new SeashipPlatform(new Vector3f(0, 0, 0)));
-        Platforms.add(new TrainPlatform(new Vector3f(-42.75f, 0, -82.15f)));
+        Platforms.add(new TrainPlatform(new Vector3f(-42.75f, 5.5f, -82.15f)));
         Platforms.add(new TruckPlatform(new Vector3f(0, 0, 0)));
         
         storagePlatform = new StoragePlatform(new Vector3f(0,0,0));

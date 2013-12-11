@@ -44,6 +44,7 @@ public class Route implements Serializable {
         distance = distance - (float)((float)vehicle.getCurrentSpeed()*1000f/3600f)/100f;
         System.out.println("Distance to drive: " + distance);
         if (distance <= 0){
+         
             Settings.messageLog.AddMessage("Reached end of path");
             Settings.messageLog.AddMessage("DestinationPlatform: " + destinationPlatform);
             Settings.messageLog.AddMessage("DestinationParkingSpot: " + destinationParkingSpot);

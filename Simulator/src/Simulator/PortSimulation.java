@@ -137,7 +137,7 @@ public class PortSimulation extends SimpleApplication {
         //    container[i].move(0, 0, tpf*2);
         //}
         //railCrane.update(tpf);
-        Train train = null;
+        Train train = new Train(assetManager, rootNode);
         
         if(!CommandHandler.newStackedCommandsAvailable()){
             return;
@@ -160,7 +160,6 @@ public class PortSimulation extends SimpleApplication {
             
             switch (type) {
                 case TRAIN:
-                    train = new Train(assetManager, rootNode);
                     for (int i = 0; i < containers.length; i++) {
                         if (containers[i][0][0] != null) {
                             containing.Container c = (containing.Container) containers[i][0][0];
@@ -241,11 +240,12 @@ public class PortSimulation extends SimpleApplication {
             List<containing.Vector3f> motion = route.getWeg();
             for (containing.Vector3f v : motion)
             {
-                path.addWayPoint(new Vector3f(v.x, v.y, v.z));
+                path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
             }
             int movspeed = Integer.parseInt(map.get("speed").toString());
             float mov_speed = (float)movspeed/100;
             
+            train.place(-41.5f, 5.5f, 0f);
             MotionEvent motev = new MotionEvent(train.train, path);
             motev.setSpeed(mov_speed);
             motev.play();

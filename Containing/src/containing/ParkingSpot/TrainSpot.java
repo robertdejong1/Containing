@@ -15,7 +15,6 @@ public class TrainSpot extends ParkingSpot
     {
         super(position);
         this.entryPoint = position;
-        this.entryPoint.x += width / 2;
     }
     
     @Override

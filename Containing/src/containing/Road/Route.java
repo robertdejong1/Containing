@@ -95,7 +95,7 @@ public class Route implements Serializable {
         return destinationParkingSpot;
     }
     
-    public float getDistance(){return this.distance;}
+   
     
     
     

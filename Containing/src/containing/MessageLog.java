@@ -22,6 +22,10 @@ public class MessageLog
         String formattedDate = sdf.format(date);
         
         Messages.add("[" + formattedDate + "]: " + Message);
+        if (!Controller.started)
+        {
+            Controller.updateUserInterface();
+        }
     }
     
     public String GetLastMessagesAsHTMLString()

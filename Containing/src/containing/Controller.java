@@ -13,6 +13,7 @@ public class Controller
     private static UserInterface UserInterface;
     private static List<Command> QeuedCommands;
     private static Clock clock; 
+    public static boolean started = false;
     
     public static void main(String[] args) 
     {
@@ -43,9 +44,6 @@ public class Controller
         {
                Settings.messageLog.AddMessage("Could not parse xml!");
         }
-        
-        UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
-        
     }
     
     private static void buildPort()
@@ -123,5 +121,10 @@ public class Controller
         {
             throw e;
         }
+    }
+    
+    public static void updateUserInterface()
+    {
+        UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
     }
 }

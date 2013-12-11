@@ -18,8 +18,8 @@ public class TrainPlatform extends Platform {
     
     private final float WIDTH          = 100f*Settings.METER;  // ???
     private final float LENGTH         = 1643f*Settings.METER; // ???
-    private final int MAX_VEHICLES     = 1;
-    private final int CRANES           = 4;
+    public final int MAX_VEHICLES     = 1;
+    public final int CRANES            = 4;
     
     private final float AGV_OFFSET     = 0f;
     private final float CRANE_OFFSET   = 1.5f;   // ???

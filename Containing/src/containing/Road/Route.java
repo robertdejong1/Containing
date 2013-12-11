@@ -30,7 +30,7 @@ public class Route implements Serializable {
         
         this.weg = weg;
         this.distance = distanceInMeters;
-     
+        
         
     }
     
@@ -40,8 +40,9 @@ public class Route implements Serializable {
     
     public void follow(Vehicle vehicle){
         //if destinationParkingSpot == null ga vanaf exitpoint naar midden weg en start volg route
-       
+        
         distance = distance - (float)((float)vehicle.getCurrentSpeed()*1000f/3600f)/100f;
+        
         System.out.println("Distance to drive: " + distance);
         if (distance <= 0){
          
@@ -93,6 +94,8 @@ public class Route implements Serializable {
     public ParkingSpot getDestinationParkingSpot() {
         return destinationParkingSpot;
     }
+    
+    public float getDistance(){return this.distance;}
     
     
     

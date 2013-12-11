@@ -95,12 +95,14 @@ public abstract class Vehicle implements Serializable
         
        
         this.currentSpeed = (this.isLoaded) ? this.maxSpeedLoaded : this.maxSpeedUnloaded;
+        float duration = (route.getDistance()*10)/(float)((float)this.getCurrentSpeed()*1000f/3600f);
         HashMap<String, Object> map = new HashMap<>();
             
         map.put("id", this.getID());
         map.put("vehicleType", this.getVehicleType());
         map.put("motionPath", route); 
-        map.put("speed", currentSpeed);
+        //map.put("speed", currentSpeed);
+        map.put("duration", duration);
             
         CommandHandler.addCommand(new Command("followPath", map));
         

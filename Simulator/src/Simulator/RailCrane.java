@@ -14,7 +14,6 @@ import com.jme3.scene.Spatial;
 public class RailCrane
 {
     Container[] containers;
-    AGV agv;
     
     Node crane;
     Node node;
@@ -55,9 +54,6 @@ public class RailCrane
         crane.attachChild(cable4);
         cable5 = cable.clone();
         crane.attachChild(cable5);
-        
-        agv = new AGV(assetManager, node);
-        agv.place(-40.32f,5.5f,-1.5f);
         
         crane.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         crane.scale(0.33f);
@@ -119,8 +115,6 @@ public class RailCrane
     private int grabstate = 1;
     private boolean occupied = false;
     private int con_index = 0;
-    
-    private int avgstate = 1;
     
     public void update(float tpf)
     {
@@ -226,21 +220,7 @@ public class RailCrane
             case 10:
                 break;
         }
-        
-        switch (avgstate)
-        {
-            case 1:
-                break;
-            
-            case 2:
-                agv.attachContainer(containers[0]);
-                avgstate = 3;
-                break;
-                
-            case 3:
-                agv.move(0, 0, 2*tpf);
-                break;
-        }
+
     }
             
 

@@ -23,14 +23,14 @@ public class StoragePlatform extends Platform {
     
     public enum Side { LEFT, RIGHT }
     
-    private final float WIDTH       = 600f*Settings.METER;  // ???
-    private final float LENGTH      = 1550f*Settings.METER; // ???
+    private final float WIDTH       = 624f*Settings.METER;  // ???
+    private final float LENGTH      = 1536f*Settings.METER; // ???
     
     public final float STRIP_WIDTH  = 24f*Settings.METER;   // ???
     public final float STRIP_LENGTH = WIDTH;
     
     private final int AGVS          = 100;
-    private final float AGV_OFFSET  = 0f;
+    private final float AGV_OFFSET  = 1.9f;
     
     private final StorageStrip[] strips;
     private Vector3f[] entrypoints;
@@ -69,11 +69,11 @@ public class StoragePlatform extends Platform {
             Vector3f agvSpotPosition;
             if(i % 2 == 0)
             {
-                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET, getPosition().y, space*subcount + offset - getPosition().z);
+                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET, getPosition().y, (space*subcount + offset) + getPosition().z + AGV.width*Settings.METER);
             }
             else
             {
-                agvSpotPosition = new Vector3f((getPosition().x + WIDTH + AgvSpot.length*Settings.METER) + AGV_OFFSET, getPosition().y, (space*subcount + offset) + getPosition().z);
+                agvSpotPosition = new Vector3f(getPosition().x + WIDTH - AGV_OFFSET, getPosition().y, (space*subcount + offset) + getPosition().z + AGV.width*Settings.METER);
                 subcount++;
             }
             agvSpots.add(new AgvSpot(agvSpotPosition));
@@ -86,8 +86,14 @@ public class StoragePlatform extends Platform {
         
         for(int i = 0; i < AGVS; i++) { 
             agvs.add(new AGV(this, agvSpots.get(i).getPosition()));
+            agvs.get(i).setPosition(agvSpots.get(i).getPosition());
+            try {
+                agvSpots.get(i).ParkVehicle(agvs.get(i));
+            } catch(InvalidVehicleException e) {
+                System.out.println(e.getMessage());
+            }
         }
-        
+        /*
         int currentAgv = 0;
         for(int i = 1; i <= AGVS*2; i += 2)
         {
@@ -102,6 +108,7 @@ public class StoragePlatform extends Platform {
                 System.out.println(e.getMessage());
             }
         }
+        */
         
     }
     

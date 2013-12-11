@@ -26,13 +26,15 @@ import java.util.List;
  */
 public class PortSimulation extends SimpleApplication {
 
-    AGV avg;
+    AGV[] agv = new AGV[100];
     //Container[] container = new Container[19];
     FreeCrane[] freeCranes = new FreeCrane[4];
+    RailCrane[] railCrane;
     Port port;
-    RailCrane railCrane;
     //private StorageCrane storageCrane = new StorageCrane(assetManager, rootNode);
     //Truck[] truck = new Truck[20];
+    
+    Train train; 
     
     ChaseCamera chaseCam;
 
@@ -40,13 +42,14 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.222.189", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.229.101", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
 
     @Override
     public void simpleInitApp() {
+        train = new Train(assetManager, rootNode);
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(50f);       
         chaseCam = new ChaseCamera(cam, inputManager);
@@ -72,13 +75,11 @@ public class PortSimulation extends SimpleApplication {
         //}
 
 
-        freeCranes[0].place(0, 5.5f, 81);
-        freeCranes[1].place(10, 5.5f, 81);
-        freeCranes[2].place(-40, 5.5f, 81);
-        freeCranes[3].place(-30, 5.5f, 81);
+        //freeCranes[0].place(0, 5.5f, 81);
+        //freeCranes[1].place(10, 5.5f, 81);
+        //freeCranes[2].place(-40, 5.5f, 81);
+        //freeCranes[3].place(-30, 5.5f, 81);
 
-        railCrane = new RailCrane(assetManager, rootNode);
-        railCrane.place(-41.25f, 5.5f, -1.52f);
         //avg = new AVG(assetManager, rootNode);
 
 
@@ -125,6 +126,8 @@ public class PortSimulation extends SimpleApplication {
             }
         }
     };
+    
+
 
     @Override
     public void simpleUpdate(float tpf) { 
@@ -137,7 +140,6 @@ public class PortSimulation extends SimpleApplication {
         //    container[i].move(0, 0, tpf*2);
         //}
         //railCrane.update(tpf);
-        Train train = new Train(assetManager, rootNode);
         
         if(!CommandHandler.newStackedCommandsAvailable()){
             return;
@@ -146,8 +148,34 @@ public class PortSimulation extends SimpleApplication {
         if(cmd == null){
             return;
         }
-
-        if (cmd.getCommand().equals("enterExternVehicle")) {
+        
+        if (cmd.getCommand().equals("INIT")) 
+        {
+            System.out.println(cmd.getCommand());
+            
+            containing.Port _port = (containing.Port)cmd.getObject();
+            
+            containing.Platform.TrainPlatform trainPlatform = ((containing.Platform.TrainPlatform)_port.getPlatforms().get(2));
+            int aantal_traincranes = trainPlatform.CRANES;
+            railCrane = new RailCrane[aantal_traincranes];
+            
+            for (int i = 0; i < aantal_traincranes; i++)
+            {
+                containing.Vehicle.TrainCrane crane = (containing.Vehicle.TrainCrane) trainPlatform.getCranes().get(i);
+                railCrane[i] = new RailCrane(assetManager, rootNode);
+                railCrane[i].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().z);
+            }
+            
+            for (int i = 0; i < 100; i++)
+            {
+                containing.Vehicle.AGV _agv = _port.getStoragePlatform().getAgvs().get(i);
+                agv[i] = new AGV(assetManager, rootNode);
+                agv[i].rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+                agv[i].place(_agv.getPosition().x, _agv.getPosition().y, _agv.getPosition().z);
+            }
+            
+        } else if (cmd.getCommand().equals("enterExternVehicle")) 
+        {
             System.out.println(cmd.getCommand());
             
             HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
@@ -242,12 +270,11 @@ public class PortSimulation extends SimpleApplication {
             {
                 path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
             }
-            int movspeed = Integer.parseInt(map.get("speed").toString());
-            float mov_speed = (float)movspeed/100;
+            float duration = Float.parseFloat(map.get("duration").toString());
             
             train.place(-41.5f, 5.5f, 0f);
-            MotionEvent motev = new MotionEvent(train.train, path);
-            motev.setSpeed(mov_speed);
+            MotionEvent motev = new MotionEvent(train.train, path, duration);
+            motev.setSpeed(1f);
             motev.play();
         }
 

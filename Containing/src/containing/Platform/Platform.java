@@ -73,7 +73,8 @@ public abstract class Platform implements Serializable {
         agvQueue = new LinkedList<>();
     }
     
-    protected void setRoad() {
+    protected void setRoad() 
+    {
         List<Vector3f> wayshit = new ArrayList<>();
         wayshit.add(entrypoint);
         wayshit.add(exitpoint);

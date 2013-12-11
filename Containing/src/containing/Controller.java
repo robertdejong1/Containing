@@ -44,6 +44,8 @@ public class Controller
         {
                Settings.messageLog.AddMessage("Could not parse xml!");
         }
+        
+        started = false;
     }
     
     private static void buildPort()

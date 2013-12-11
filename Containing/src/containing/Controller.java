@@ -21,16 +21,16 @@ public class Controller
        Settings.messageLog = new MessageLog();
        Settings.userInterface = UserInterface;
        
+       //Create new Port
+       buildPort();
+       
        Runnable networkHandler = new NetworkHandler(1337);
        Thread networkHandlerThread = new Thread(networkHandler);
        networkHandlerThread.start();
     }
    
     public static void ReadXMLAndSortOutput(File XMLFile)
-    {
-        //Create new Port
-        buildPort();
-        
+    {   
         XmlHandler xmlHandler = new XmlHandler();
         List<Container> ContainersFromXMList;
         

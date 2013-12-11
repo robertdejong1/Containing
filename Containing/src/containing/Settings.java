@@ -11,7 +11,7 @@ public class Settings
     public static MessageLog messageLog;
     public static UserInterface userInterface;
     public static Timestamp CurrentTime;
-    public final static float METER = 0.001f;
+    public final static float METER = 0.1f;
     
     public static long getTimeStamp(Date date, float from)
     {

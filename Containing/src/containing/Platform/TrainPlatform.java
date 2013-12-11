@@ -46,9 +46,12 @@ public class TrainPlatform extends Platform {
     {
         float space = LENGTH / (float)CRANES;
         float offset = (space / 2f) - ( TrainCrane.width / 2f);
+        System.out.println("space: " + space);
+        System.out.println("offset: " + offset);
         for(int i = 0; i < CRANES; i++) 
         {
             Vector3f cranePosition = new Vector3f(getPosition().x + CRANE_OFFSET, getPosition().y, space*i + offset - getPosition().z);
+            System.out.println("position: " + cranePosition.z);
             cranes.add(new TrainCrane(cranePosition, this));
         }
     }

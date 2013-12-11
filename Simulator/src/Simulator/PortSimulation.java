@@ -159,7 +159,7 @@ public class PortSimulation extends SimpleApplication {
             {
                 path.addWayPoint(new Vector3f(v.x, v.y, v.z));
             }
-            int speed = Integer.parseInt(map.get("speed").toString());
+            int movspeed = Integer.parseInt(map.get("speed").toString());
       
             
             switch (type) {
@@ -176,8 +176,8 @@ public class PortSimulation extends SimpleApplication {
                         }
                     }
                     MotionEvent motev = new MotionEvent(train.train,path);
-                    speed = 1;
-                    motev.setSpeed(speed);
+                    movspeed = 1;
+                    motev.setSpeed(movspeed);
                     motev.play();
                     break;
                     

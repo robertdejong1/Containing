@@ -23,10 +23,10 @@ public class StoragePlatform extends Platform {
     
     public enum Side { LEFT, RIGHT }
     
-    private final float WIDTH       = 400f;  // ???
-    private final float LENGTH      = 1400f; // ???
+    private final float WIDTH       = 600f*Settings.METER;  // ???
+    private final float LENGTH      = 1550f*Settings.METER; // ???
     
-    public final float STRIP_WIDTH  = 24f;   // ???
+    public final float STRIP_WIDTH  = 24f*Settings.METER;   // ???
     public final float STRIP_LENGTH = WIDTH;
     
     private final int AGVS          = 100;
@@ -62,18 +62,18 @@ public class StoragePlatform extends Platform {
     private void createAgvSpots()
     {
         float space = LENGTH / ((float)StorageStrip.MAX_AGV_SPOTS*getStripAmount() / 2f);
-        float offset = (space / 2f) - ( AgvSpot.width / 2f);
+        float offset = (space / 2f) - ( AgvSpot.width*Settings.METER / 2f);
         int subcount = 0;
         for(int i = 0; i < StorageStrip.MAX_AGV_SPOTS*getStripAmount(); i++) 
         {
             Vector3f agvSpotPosition;
             if(i % 2 == 0)
             {
-                agvSpotPosition = new Vector3f(AGV_OFFSET, 0, space*subcount + offset);
+                agvSpotPosition = new Vector3f(AGV_OFFSET, getPosition().y, space*subcount + offset);
             }
             else
             {
-                agvSpotPosition = new Vector3f((WIDTH - AgvSpot.length) + AGV_OFFSET, 0, space*subcount + offset);
+                agvSpotPosition = new Vector3f((WIDTH - AgvSpot.length*Settings.METER) + AGV_OFFSET, getPosition().y, space*subcount + offset);
                 subcount++;
             }
             agvSpots.add(new AgvSpot(agvSpotPosition));
@@ -84,8 +84,9 @@ public class StoragePlatform extends Platform {
     {
         agvs = new ArrayList<>();
         
-        for(int i = 0; i < AGVS; i++) 
-            agvs.add(new AGV(this, new Vector3f(0,0,0)));
+        for(int i = 0; i < AGVS; i++) { 
+            agvs.add(new AGV(this, agvSpots.get(i).getPosition()));
+        }
         
         int currentAgv = 0;
         for(int i = 1; i <= AGVS*2; i += 2)
@@ -102,6 +103,10 @@ public class StoragePlatform extends Platform {
             }
         }
         
+    }
+    
+    public List<AGV> getAgvs() {
+        return agvs;
     }
     
     public AGV requestFreeAgv(TransportType tt) throws NoFreeAgvException

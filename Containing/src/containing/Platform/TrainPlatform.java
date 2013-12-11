@@ -17,8 +17,8 @@ import containing.Vehicle.TrainCrane;
 public class TrainPlatform extends Platform {
     
     private final float WIDTH          = 100f*Settings.METER;  // ???
-    private final float LENGTH         = 1643f*Settings.METER; // ???
-    public final int MAX_VEHICLES      = 1;
+    private final float LENGTH         = 1543f*Settings.METER; // ???
+    public final int MAX_VEHICLES      = 3;
     public final int CRANES            = 4;
     
     private final float AGV_OFFSET     = 0f;
@@ -46,12 +46,9 @@ public class TrainPlatform extends Platform {
     {
         float space = LENGTH / (float)CRANES;
         float offset = (space / 2f) - ( TrainCrane.width*Settings.METER / 2f);
-        System.out.println("space: " + space);
-        System.out.println("offset: " + offset);
         for(int i = 0; i < CRANES; i++) 
         {
             Vector3f cranePosition = new Vector3f(getPosition().x + CRANE_OFFSET, getPosition().y, getPosition().z + (space*i + offset));
-            System.out.println("position: " + cranePosition.z);
             cranes.add(new TrainCrane(cranePosition, this));
         }
     }
@@ -60,12 +57,11 @@ public class TrainPlatform extends Platform {
     protected final void createExtVehicleSpots() 
     {
         float space = LENGTH / (float)MAX_VEHICLES;
-        float offset = (space / 2f) - (TrainSpot.length*Settings.METER / 2f);
+        //float offset = (space / 2f) - (TrainSpot.length*Settings.METER / 2f);
         for(int i = 0; i < MAX_VEHICLES; i++)
         {
-            Vector3f spotPosition = new Vector3f(getPosition().x + VEHICLE_OFFSET,getPosition().y,space*i + offset - getPosition().z);
+            Vector3f spotPosition = new Vector3f(getPosition().x + VEHICLE_OFFSET, getPosition().y, (-getPosition().z + 11.75f) - space*i);
             extVehicleSpots.add(new TrainSpot(spotPosition));
-            System.out.println("position: " + spotPosition.z);
         }
     }
     

@@ -69,11 +69,11 @@ public class StoragePlatform extends Platform {
             Vector3f agvSpotPosition;
             if(i % 2 == 0)
             {
-                agvSpotPosition = new Vector3f(AGV_OFFSET, getPosition().y, space*subcount + offset - getPosition().z);
+                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET, getPosition().y, space*subcount + offset - getPosition().z);
             }
             else
             {
-                agvSpotPosition = new Vector3f((WIDTH - AgvSpot.length*Settings.METER) + AGV_OFFSET, getPosition().y, space*subcount + offset - getPosition().z);
+                agvSpotPosition = new Vector3f((getPosition().x + WIDTH - AgvSpot.length*Settings.METER) + AGV_OFFSET, getPosition().y, space*subcount + offset - getPosition().z);
                 subcount++;
             }
             agvSpots.add(new AgvSpot(agvSpotPosition));
@@ -93,8 +93,8 @@ public class StoragePlatform extends Platform {
         {
             try
             {
-                agvSpots.get(i).ParkVehicle(agvs.get(currentAgv));
                 agvs.get(currentAgv).setPosition(agvSpots.get(i).getPosition());
+                agvSpots.get(i).ParkVehicle(agvs.get(currentAgv));
                 currentAgv++;
             } 
             catch(InvalidVehicleException e) 

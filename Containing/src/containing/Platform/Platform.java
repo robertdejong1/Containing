@@ -88,6 +88,10 @@ public abstract class Platform implements Serializable {
         ev.followRoute(road.getPath(ev, extVehicleSpots.get(0)));
     }
     
+    public List<Crane> getCranes() {
+        return cranes;
+    }
+    
     protected boolean hasExtVehicle()
     {
         for(ParkingSpot vs : extVehicleSpots)

@@ -77,7 +77,23 @@ public class Route implements Serializable {
         }
         
     }
-    
 
+    public List<Vector3f> getWeg() {
+        return weg;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public Platform getDestinationPlatform() {
+        return destinationPlatform;
+    }
+
+    public ParkingSpot getDestinationParkingSpot() {
+        return destinationParkingSpot;
+    }
+    
+    
     
 }

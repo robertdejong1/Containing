@@ -84,6 +84,7 @@ public abstract class Platform implements Serializable {
     public void registerExternVehicle(ExternVehicle ev)
     {
         extVehicles.add(ev);
+        System.out.println("extVehicleSpot.position().x: " + extVehicleSpots.get(0).getPosition().x);
         ev.followRoute(road.getPath(ev, extVehicleSpots.get(0)));
     }
     

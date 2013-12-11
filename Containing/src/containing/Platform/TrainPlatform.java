@@ -22,8 +22,8 @@ public class TrainPlatform extends Platform {
     private final int CRANES           = 4;
     
     private final float AGV_OFFSET     = 0f;
-    private final float CRANE_OFFSET   = 25f*Settings.METER;   // ???
-    private final float VEHICLE_OFFSET = 0f;
+    private final float CRANE_OFFSET   = 1.5f;   // ???
+    private final float VEHICLE_OFFSET = 1.25f;
     
     public TrainPlatform(Vector3f position)
     {
@@ -48,7 +48,7 @@ public class TrainPlatform extends Platform {
         float offset = (space / 2f) - ( TrainCrane.width / 2f);
         for(int i = 0; i < CRANES; i++) 
         {
-            Vector3f cranePosition = new Vector3f(CRANE_OFFSET, 0, space*i + offset);
+            Vector3f cranePosition = new Vector3f(getPosition().x + CRANE_OFFSET, 0, space*i + offset - getPosition().z);
             cranes.add(new TrainCrane(cranePosition, this));
         }
     }
@@ -60,7 +60,7 @@ public class TrainPlatform extends Platform {
         float offset = (space / 2f) - (TrainSpot.length / 2f);
         for(int i = 0; i < MAX_VEHICLES; i++)
         {
-            Vector3f spotPosition = new Vector3f(-41.5f,0,space*i + offset - getPosition().z);
+            Vector3f spotPosition = new Vector3f(getPosition().x + VEHICLE_OFFSET,0,space*i + offset - getPosition().z);
             extVehicleSpots.add(new TrainSpot(spotPosition));
         }
     }

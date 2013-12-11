@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
@@ -41,6 +42,7 @@ public class StorageStrip implements Serializable {
     private final Dimension2f dimension;
     
     private HashMap<Point3D, Container> containers;
+    private PriorityQueue<Point3D> freePositions;
     private Queue<StorageJob> jobs;
     
     private final List<AgvSpot> agvSpots;
@@ -53,6 +55,7 @@ public class StorageStrip implements Serializable {
         this.platform = platform;
         this.position = position;
         containers = new HashMap<>();
+        freePositions = new PriorityQueue<>();
         storageState = StorageState.FREE;
         storageJobState = StorageJobState.FREE;
         dimension = new Dimension2f(platform.STRIP_WIDTH, platform.STRIP_LENGTH);

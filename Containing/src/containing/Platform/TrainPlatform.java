@@ -45,7 +45,7 @@ public class TrainPlatform extends Platform {
     protected final void createCranes() 
     {
         float space = LENGTH / (float)CRANES;
-        float offset = (space / 2f) - ( TrainCrane.width / 2f);
+        float offset = (space / 2f) - ( TrainCrane.width*Settings.METER / 2f);
         System.out.println("space: " + space);
         System.out.println("offset: " + offset);
         for(int i = 0; i < CRANES; i++) 

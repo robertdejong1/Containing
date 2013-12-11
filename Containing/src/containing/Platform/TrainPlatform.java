@@ -60,11 +60,12 @@ public class TrainPlatform extends Platform {
     protected final void createExtVehicleSpots() 
     {
         float space = LENGTH / (float)MAX_VEHICLES;
-        float offset = (space / 2f) - (TrainSpot.length / 2f);
+        float offset = (space / 2f) - (TrainSpot.length*Settings.METER / 2f);
         for(int i = 0; i < MAX_VEHICLES; i++)
         {
             Vector3f spotPosition = new Vector3f(getPosition().x + VEHICLE_OFFSET,getPosition().y,space*i + offset - getPosition().z);
             extVehicleSpots.add(new TrainSpot(spotPosition));
+            System.out.println("position: " + spotPosition.z);
         }
     }
     

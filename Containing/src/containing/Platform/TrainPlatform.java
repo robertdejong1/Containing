@@ -8,6 +8,7 @@ import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.TrainCrane;
+import java.util.Collections;
 
 /**
  * TrainPlatform.java
@@ -17,7 +18,7 @@ import containing.Vehicle.TrainCrane;
 public class TrainPlatform extends Platform {
     
     private final float WIDTH          = 100f*Settings.METER;  // ???
-    private final float LENGTH         = 1543f*Settings.METER; // ???
+    private final float LENGTH         = 1523f*Settings.METER; // ???
     public final int MAX_VEHICLES      = 3;
     public final int CRANES            = 4;
     
@@ -58,11 +59,16 @@ public class TrainPlatform extends Platform {
     {
         float space = LENGTH / (float)MAX_VEHICLES;
         //float offset = (space / 2f) - (TrainSpot.length*Settings.METER / 2f);
-        for(int i = 0; i < MAX_VEHICLES; i++)
+        for(int i = MAX_VEHICLES-1; i >= 0; i--)
         {
-            Vector3f spotPosition = new Vector3f(getPosition().x + VEHICLE_OFFSET, getPosition().y, (-getPosition().z + 11.75f) - space*i);
+            Vector3f spotPosition;
+            if(i == 2)
+                spotPosition = new Vector3f(getPosition().x + VEHICLE_OFFSET, getPosition().y, getPosition().z + LENGTH);
+            else
+                spotPosition = new Vector3f(getPosition().x + VEHICLE_OFFSET, getPosition().y, getPosition().z + space*i);
             extVehicleSpots.add(new TrainSpot(spotPosition));
         }
+        Collections.reverse(extVehicleSpots);
     }
     
     @Override

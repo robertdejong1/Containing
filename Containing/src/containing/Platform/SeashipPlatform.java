@@ -14,8 +14,8 @@ import containing.Vehicle.SeashipCrane;
  */
 public class SeashipPlatform extends Platform {
     
-    private final float WIDTH          = 855f*Settings.METER; // ???
-    private final float LENGTH         = 100f*Settings.METER; // ???
+    public final float WIDTH          = 100f*Settings.METER; // ???
+    public final float LENGTH         = 855f*Settings.METER; // ???
     private final int MAX_VEHICLES     = 2;
     private final int CRANES           = 10;
     

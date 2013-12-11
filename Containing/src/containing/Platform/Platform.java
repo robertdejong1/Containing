@@ -367,7 +367,7 @@ public abstract class Platform implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("[%d, width=%.1f, length=%.1f]", id, dimension.width, dimension.length);
+        return String.format("[%d, width=%.1f, length=%.1f]", id, dimension.width*10f, dimension.length*10f);
     }
     
     protected void log(String msg)

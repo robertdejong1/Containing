@@ -18,7 +18,6 @@ public class Controller
     {
        UserInterface = new UserInterface(); 
        Settings.messageLog = new MessageLog();
-       updateMessageLogWindow();
        Settings.userInterface = UserInterface;
        
        Runnable networkHandler = new NetworkHandler(1337);
@@ -45,6 +44,7 @@ public class Controller
                Settings.messageLog.AddMessage("Could not parse xml!");
         }
         
+        UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
         
     }
     
@@ -66,24 +66,13 @@ public class Controller
         
     }
     
-    public static void updateMessageLogWindow()
-    {
-        try
-        {
-            UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
-        }
-        catch (NullPointerException e)
-        {
-            //Catch voor unit tests vanwege het hebben van geen interface
-        }
-    }
-    
     public static void update(Timestamp timestamp)
     {
         Settings.CurrentTime = timestamp;
         Settings.port.update();
         Controlleralgorithms.checkIncomingVehicles(timestamp);
         UserInterface.setTitle("Containing 2013 - " + timestamp.toString());
+        UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
     }
     
     public static void addCommand(Command command)

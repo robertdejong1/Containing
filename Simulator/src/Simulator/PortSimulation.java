@@ -139,7 +139,7 @@ public class PortSimulation extends SimpleApplication {
         //railCrane.update(tpf);
         Train train = null;
         
-        if(!CommandHandler.newCommandsAvailable()){
+        if(!CommandHandler.newStackedCommandsAvailable()){
             return;
         }
         Command cmd = CommandHandler.getStackedCommand();

@@ -50,7 +50,7 @@ public class TrainPlatform extends Platform {
         System.out.println("offset: " + offset);
         for(int i = 0; i < CRANES; i++) 
         {
-            Vector3f cranePosition = new Vector3f(getPosition().x + CRANE_OFFSET, getPosition().y, space*i + offset - getPosition().z);
+            Vector3f cranePosition = new Vector3f(getPosition().x + CRANE_OFFSET, getPosition().y, getPosition().z + (space*i + offset));
             System.out.println("position: " + cranePosition.z);
             cranes.add(new TrainCrane(cranePosition, this));
         }

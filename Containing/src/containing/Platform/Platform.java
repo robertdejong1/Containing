@@ -208,7 +208,7 @@ public abstract class Platform implements Serializable {
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
                             // geef AGV route naar parkingspot
-                            agv.followRoute(Settings.port.getMainroad().getPath(agv, agvSpots.get(_craneId)));
+                            agv.followRoute(road.getPath(agv, agvSpots.get(_craneId)));
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
                                     Thread.sleep(10);

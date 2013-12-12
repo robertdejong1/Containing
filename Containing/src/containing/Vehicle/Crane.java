@@ -197,7 +197,7 @@ public abstract class Crane extends InternVehicle {
                }
                catch(Exception e){ System.out.println(e.getMessage()); }
                this.agvToUnload = null;
-               this.currentPlatform.getAGV(this.getPosition());
+               //this.currentPlatform.getAGV(this.getPosition());
                this.status = Status.WAITING;
                readyForNextContainer = true;
                //new load

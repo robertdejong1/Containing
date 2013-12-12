@@ -2,13 +2,10 @@ package containing.Platform;
 
 import containing.Container.TransportType;
 import containing.Dimension2f;
-import containing.ParkingSpot.BargeSpot;
 import containing.ParkingSpot.TrainSpot;
 import containing.Settings;
 import containing.Vector3f;
-import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.TrainCrane;
-import java.util.Collections;
 
 /**
  * TrainPlatform.java

@@ -8,6 +8,7 @@ import containing.Exceptions.AgvQueueSpaceOutOfBounds;
 import containing.Exceptions.AgvSpotOutOfBounds;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
+import containing.Exceptions.NoFreeAgvException;
 import containing.Exceptions.NoJobException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Job;
@@ -21,6 +22,7 @@ import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
+import containing.Vehicle.Vehicle.Status;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -189,6 +191,11 @@ public abstract class Platform implements Serializable {
                         @Override
                         public void run()
                         {
+                            while(agv.getStatus() == Status.MOVING) {
+                                try {
+                                    Thread.sleep(10);
+                                } catch(InterruptedException e) {/*ignore*/}
+                            }
                             try
                             {
                                 crane.load(ev, row);
@@ -206,17 +213,20 @@ public abstract class Platform implements Serializable {
                         }
                     }.start();
                 }
+            } else {
+                agvQueue.add(getAGV());
             }
             craneId++;
         }
     }
     
-    public void getAGV(Vector3f cranePosition) {
-        AGV agv = agvQueue.poll();
-        List<Vector3f> wayshit = new ArrayList<>();
-        wayshit.add(agv.getPosition());
-        wayshit.add(cranePosition);
-        agv.followRoute(new Route(wayshit, 0));
+    public AGV getAGV() {
+        try {
+            AGV agv = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
+            agv.followRoute(road.getPath(agv, agvSpots.get(0)));
+            return agv;
+        } catch(NoFreeAgvException e) { /* ignore */ }
+        return null;
     }
     
     protected void unloadAGV(Container container)

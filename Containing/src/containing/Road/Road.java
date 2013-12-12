@@ -67,12 +67,14 @@ public class Road implements Serializable
         Route shortestPath = null;
         if (outin)//ingang
         {
-            shortestPath = calculateShortestPath(vehicle, this.createCorrespondingWaypoint(destination.getEntrypoint()));
+            Vector3f entrypoint = this.createCorrespondingWaypoint(destination.getEntrypoint());
+            shortestPath = calculateShortestPath(vehicle, entrypoint);
       
         }
         else
         {
-          shortestPath = calculateShortestPath(vehicle, this.createCorrespondingWaypoint(destination.getExitpoint()));
+            Vector3f exitpoint = this.createCorrespondingWaypoint(destination.getExitpoint());
+            shortestPath = calculateShortestPath(vehicle, this.createCorrespondingWaypoint(exitpoint));
         }
         
         shortestPath.setDestinationPlatform(destination);
@@ -82,7 +84,7 @@ public class Road implements Serializable
         return shortestPath;
     }
     
-    
+    //70 130 152
     
     public Route getPath(ExternVehicle ev, ParkingSpot ps )
     {
@@ -122,13 +124,14 @@ public class Road implements Serializable
         List<Vector3f> outsidetrack = new ArrayList<Vector3f>(this.track);
 
         outsidetrack.add(destination);
-        outsidetrack.add(this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().getExitpoint()));
+        Vector3f positionvehicle = this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().getExitpoint());
+        outsidetrack.add(positionvehicle);
         Collections.sort(outsidetrack);
         List<Vector3f> insidetrack = new ArrayList<>(outsidetrack);
         Collections.reverse(outsidetrack);
         
-        insidetrack = this.setPathCorrectOrder(insidetrack, this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().getExitpoint()), this.createCorrespondingWaypoint(destination));
-        outsidetrack = this.setPathCorrectOrder(outsidetrack, this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().getExitpoint()), this.createCorrespondingWaypoint(destination));
+        insidetrack = this.setPathCorrectOrder(insidetrack, positionvehicle, destination);
+        outsidetrack = this.setPathCorrectOrder(outsidetrack,positionvehicle, destination);
         
         float length_insidetrack = getPathLength(insidetrack);
         float length_outsidetrack = getPathLength(outsidetrack);

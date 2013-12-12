@@ -62,18 +62,18 @@ public class StoragePlatform extends Platform {
     private void createAgvSpots()
     {
         float space = LENGTH / ((float)StorageStrip.MAX_AGV_SPOTS*getStripAmount() / 2f);
-        float offset = (space / 2f) - ( AgvSpot.width*Settings.METER / 2f);
+        //float offset = (space / 2f) - ( AgvSpot.width*Settings.METER / 2f);
         int subcount = 0;
         for(int i = 0; i < StorageStrip.MAX_AGV_SPOTS*getStripAmount(); i++) 
         {
             Vector3f agvSpotPosition;
             if(i % 2 == 0)
             {
-                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET, getPosition().y, (space*subcount + offset) + getPosition().z + AGV.width*Settings.METER);
+                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET, getPosition().y, (space*subcount) + getPosition().z + 1f);
             }
             else
             {
-                agvSpotPosition = new Vector3f(getPosition().x + WIDTH - AGV_OFFSET*2, getPosition().y, (space*subcount + offset) + getPosition().z + AGV.width*Settings.METER);
+                agvSpotPosition = new Vector3f(getPosition().x + WIDTH - AGV_OFFSET*2, getPosition().y, (space*subcount) + getPosition().z + 1f);
                 subcount++;
             }
             agvSpots.add(new AgvSpot(agvSpotPosition));
@@ -116,7 +116,7 @@ public class StoragePlatform extends Platform {
         return agvs;
     }
     
-    public AGV requestFreeAgv(TransportType tt) throws NoFreeAgvException
+    public int requestFreeAgv(TransportType tt) throws NoFreeAgvException
     {
         List<Vector3f> waypoints = new ArrayList<>();
         Route route;
@@ -130,7 +130,7 @@ public class StoragePlatform extends Platform {
                     if(agv != null && agv.getIsAvailable())
                     {
                         //agv.followRoute(route);
-                        return agv;
+                        return i;
                     }
                 }
                 break;
@@ -142,7 +142,7 @@ public class StoragePlatform extends Platform {
                     if(agv != null && agv.getIsAvailable())
                     {
                         //agv.followRoute(route);
-                        return agv;
+                        return i;
                     }
                 }
                 break;

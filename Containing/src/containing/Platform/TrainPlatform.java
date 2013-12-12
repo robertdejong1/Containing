@@ -2,6 +2,7 @@ package containing.Platform;
 
 import containing.Container.TransportType;
 import containing.Dimension2f;
+import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.TrainSpot;
 import containing.Settings;
 import containing.Vector3f;
@@ -33,10 +34,24 @@ public class TrainPlatform extends Platform {
         setRoad();
         setTransportType(TransportType.Train);
         setMaxAgvQueue(CRANES);
-        createAgvSpots(new Vector3f(CRANE_OFFSET + TrainCrane.length + AGV_OFFSET, 0, 0));
+        //createAgvSpots(new Vector3f(CRANE_OFFSET + TrainCrane.length + AGV_OFFSET, 0, 0));
         createExtVehicleSpots();
         createCranes();
+        createAgvSpots();
         log("Created TrainPlatform object: " + toString());
+    }
+    
+    protected final void createAgvSpots() {
+        float space = LENGTH / (float)CRANES;
+        float offset = (space / 2f) - ( TrainCrane.width*Settings.METER / 2f);
+        for(int i = 0; i < CRANES; i++) 
+        {
+            Vector3f cranePosition = new Vector3f(getPosition().x + CRANE_OFFSET, getPosition().y, getPosition().z + (space*i + offset));
+            float x = cranePosition.x;
+            float y = cranePosition.y;
+            float z = cranePosition.z;
+            agvSpots.add(new AgvSpot(new Vector3f(x + TrainCrane.length, y, z)));
+        }
     }
 
     @Override

@@ -188,6 +188,7 @@ public abstract class Platform implements Serializable {
                 final int row = rowToGive;
                 if(agv != null)
                 {
+                    final int _craneId = craneId;
                     System.out.println("AGV != NULL");
                     new Thread() {
 
@@ -209,7 +210,7 @@ public abstract class Platform implements Serializable {
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
                             // geef AGV route naar parkingspot
-                            agv.followRoute(Settings.port.getMainroad().getPath(agv, agvSpots.get(0)));
+                            agv.followRoute(Settings.port.getMainroad().getPath(agv, agvSpots.get(_craneId)));
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
                                     System.out.println("AGV == MOVING");

@@ -61,23 +61,22 @@ public class StoragePlatform extends Platform {
     
     private void createAgvSpots()
     {
-        float space = LENGTH / ((float)StorageStrip.MAX_AGV_SPOTS*getStripAmount() / 2f);
-        //float offset = (space / 2f) - ( AgvSpot.width*Settings.METER / 2f);
         int subcount = 0;
-        float subspace = 1f*Settings.METER;
+        float offset = 1f*Settings.METER;
+        float z = getPosition().z;
         for(int i = 0; i < StorageStrip.MAX_AGV_SPOTS*getStripAmount(); i++) 
         {
-            if(i % 12 == 0 ) {
-                subspace += 1f*Settings.METER;
+            if(i % 12 == 0 && i != 0) {
+                z += 1f*Settings.METER;
             }
             Vector3f agvSpotPosition;
             if(i % 2 == 0)
             {
-                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET, getPosition().y, (space*subcount) + getPosition().z + subspace);
+                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET, getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.05f);
             }
             else
             {
-                agvSpotPosition = new Vector3f(getPosition().x + WIDTH - AGV_OFFSET*2, getPosition().y, (space*subcount) + getPosition().z + subspace);
+                agvSpotPosition = new Vector3f(getPosition().x + WIDTH - AGV_OFFSET*2 + (AGV.width / 4f), getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.05f);
                 subcount++;
             }
             agvSpots.add(new AgvSpot(agvSpotPosition));
@@ -89,15 +88,9 @@ public class StoragePlatform extends Platform {
         agvs = new ArrayList<>();
         
         for(int i = 0; i < AGVS; i++) { 
-            agvs.add(new AGV(this, agvSpots.get(i).getPosition()));
-            agvs.get(i).setPosition(agvSpots.get(i).getPosition());
-            try {
-                agvSpots.get(i).ParkVehicle(agvs.get(i));
-            } catch(InvalidVehicleException e) {
-                System.out.println(e.getMessage());
-            }
+            agvs.add(new AGV(this, new Vector3f(0,0,0)));
         }
-        /*
+        
         int currentAgv = 0;
         for(int i = 1; i <= AGVS*2; i += 2)
         {
@@ -112,7 +105,6 @@ public class StoragePlatform extends Platform {
                 System.out.println(e.getMessage());
             }
         }
-        */
         
     }
     

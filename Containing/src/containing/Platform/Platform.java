@@ -154,6 +154,7 @@ public abstract class Platform implements Serializable {
     
     public void unload()
     {   
+        System.out.println("ik ga lekker unloaden jonge");
         /* determine rows on vehicle */
         final ExternVehicle ev = (ExternVehicle)extVehicleSpots.get(0).getParkedVehicle();
         int rows = ev.getGridWidth();
@@ -186,6 +187,8 @@ public abstract class Platform implements Serializable {
                 final int row = rowToGive;
                 if(agv != null)
                 {
+                    
+                    System.out.println("AGV != NULL");
                     new Thread() {
 
                         @Override
@@ -193,6 +196,7 @@ public abstract class Platform implements Serializable {
                         {
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
+                                    System.out.println("AGV == MOVING");
                                     Thread.sleep(10);
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
@@ -212,9 +216,12 @@ public abstract class Platform implements Serializable {
                             }
                         }
                     }.start();
+                } else {
+                    agvQueue.add(getAGV());
+                    System.out.println("put some agv in this ma");
                 }
             } else {
-                agvQueue.add(getAGV());
+                System.out.println("crane is not available");
             }
             craneId++;
         }

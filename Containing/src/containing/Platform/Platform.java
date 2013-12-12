@@ -197,7 +197,6 @@ public abstract class Platform implements Serializable {
                         {
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
-                                    System.out.println("AGV == MOVING");
                                     Thread.sleep(10);
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
@@ -205,7 +204,6 @@ public abstract class Platform implements Serializable {
                             agv.followRoute(Settings.port.getMainroad().getPath(agv, Settings.port.getPlatforms().get(2), false));
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
-                                    System.out.println("AGV == MOVING");
                                     Thread.sleep(10);
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
@@ -213,14 +211,8 @@ public abstract class Platform implements Serializable {
                             agv.followRoute(Settings.port.getMainroad().getPath(agv, agvSpots.get(_craneId)));
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
-                                    System.out.println("AGV == MOVING");
                                     Thread.sleep(10);
                                 } catch(InterruptedException e) {/*ignore*/}
-                            }
-                            try {
-                                agvSpots.get(0).ParkVehicle(agv);
-                            } catch(InvalidVehicleException e) {
-                                System.out.println("invalid vehicle to park lololol");
                             }
                             try
                             {

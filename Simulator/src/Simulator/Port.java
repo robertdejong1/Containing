@@ -53,11 +53,11 @@ public class Port
         //port.scale(1f, 0.2f, 1f);
         //port.move(0,4,0);
         
-        Box port = new Box(855f, 10f, 1643f);
+        Box port = new Box(817f, 10f, 1643f);
         Geometry port_geo = new Geometry("port", port);
         port_geo.setMaterial(port_mat);
+        port_geo.move(817*0.05f,5f,1643*0.05f);
         port_geo.scale(0.05f);
-        port_geo.move(0,5,0);
         port_node.attachChild(port_geo);
         
         //storage.scale(10);
@@ -78,7 +78,7 @@ public class Port
         trainrail.scale(2);
         for (int i = 0; i < 14*5+4; i++)
         {
-            trainrail.setLocalTranslation(-41.5f, 5.5f, -81f+((10.4f/5)*i));
+            trainrail.setLocalTranslation(1.4f, 5.5f, (10.4f/5)*i);
             port_node.attachChild(trainrail.clone());
         }
         

@@ -42,7 +42,7 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.229.101", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.236.73", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -169,7 +169,7 @@ public class PortSimulation extends SimpleApplication {
             for (int i = 0; i < 100; i++)
             {
                 containing.Vehicle.AGV _agv = _port.getStoragePlatform().getAgvs().get(i);
-                agv[i] = new AGV(assetManager, rootNode);
+                agv[i] = new AGV(assetManager, rootNode, _agv.getID());
                 agv[i].rotate(0, 90*FastMath.DEG_TO_RAD, 0);
                 agv[i].place(_agv.getPosition().x, _agv.getPosition().y, _agv.getPosition().z);
             }
@@ -272,10 +272,28 @@ public class PortSimulation extends SimpleApplication {
             }
             float duration = Float.parseFloat(map.get("duration").toString());
             
-            train.place(-41.5f, 5.5f, 0f);
-            MotionEvent motev = new MotionEvent(train.train, path, duration);
-            motev.setSpeed(1f);
-            motev.play();
+            MotionEvent motev;
+            switch (type)
+            {
+                case TRAIN:
+                    train.place(-41.5f, 5.5f, 0f);
+                    motev = new MotionEvent(train.train, path, duration);
+                    motev.setSpeed(1f);
+                    motev.play();
+                    break;
+                    
+                case AGV:
+                    for (AGV a : agv)
+                    {
+                        if (a.id == id)
+                        {
+                            motev = new MotionEvent(a.model, path, duration);
+                            motev.setSpeed(1f);
+                            motev.play();
+                        }
+                    }
+                    break;
+            }
         }
 
     }

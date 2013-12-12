@@ -15,6 +15,8 @@ import containing.Vehicle.TrainCrane;
  */
 public class TrainPlatform extends Platform {
     
+    private boolean doItOnce = true;
+    
     private final float WIDTH          = 103f*Settings.METER;  // ???
     private final float LENGTH         = 1523f*Settings.METER; // ???
     public final int MAX_VEHICLES      = 3;
@@ -98,7 +100,10 @@ public class TrainPlatform extends Platform {
         /* UNLOAD EXTERNAL VEHICLE */
         if(state.equals(State.UNLOAD))
         {
-            unload();
+            if(doItOnce) {
+                unload();
+                doItOnce = false;
+            }
         }
         
         /* LOAD EXTERNAL VEHICLE */

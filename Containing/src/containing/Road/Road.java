@@ -62,12 +62,14 @@ public class Road implements Serializable
     }
     
     //public Route getPath(Vehicle vehicle, VehicleSpot)
-    public Route getPath(Vehicle vehicle, Platform destination){ 
+    public Route getPath(Vehicle vehicle, Platform destination, boolean outin){ 
         Route shortestPath = calculateShortestPath(vehicle, this.createCorrespondingWaypoint(destination.getExitpoint()));
         shortestPath.setDestinationPlatform(destination);
         shortestPath.setDestinationParkingSpot(null);
         return shortestPath;
     }
+    
+    
     
     public Route getPath(ExternVehicle ev, ParkingSpot ps )
     {

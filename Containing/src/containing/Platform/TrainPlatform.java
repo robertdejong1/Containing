@@ -24,7 +24,7 @@ public class TrainPlatform extends Platform {
     
     private final float AGV_OFFSET     = 0f;
     private final float CRANE_OFFSET   = 1.5f;   // ???
-    private final float VEHICLE_OFFSET = 1.25f;
+    private final float VEHICLE_OFFSET = 1.4f;
     
     public TrainPlatform(Vector3f position)
     {

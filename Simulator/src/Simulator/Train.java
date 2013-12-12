@@ -42,7 +42,7 @@ public class Train
         wag.setLocalTranslation(0, 0, -1.5f*(wagons+1));
         train.attachChild(wag.clone());
         
-        con.place(0, 0.23f, -1.5f*(wagons+1));
+        con.place(0, 0.23f, 0.1f + -1.5f*(wagons+1));
         train.attachChild(con.model);
         containers.add(con);
         

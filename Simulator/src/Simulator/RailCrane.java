@@ -174,7 +174,6 @@ public class RailCrane
             //dettach container    
             case 6:
                 grabstate = 7;
-                avgstate = 2;
                 occupied = false;
                 break;   
              

@@ -60,12 +60,25 @@ public class Road implements Serializable
         }   
         else return 0;
     }
+     
     
     //public Route getPath(Vehicle vehicle, VehicleSpot)
     public Route getPath(Vehicle vehicle, Platform destination, boolean outin){ 
-        Route shortestPath = calculateShortestPath(vehicle, this.createCorrespondingWaypoint(destination.getExitpoint()));
+        Route shortestPath = null;
+        if (outin)//ingang
+        {
+            shortestPath = calculateShortestPath(vehicle, this.createCorrespondingWaypoint(destination.getEntrypoint()));
+      
+        }
+        else
+        {
+          shortestPath = calculateShortestPath(vehicle, this.createCorrespondingWaypoint(destination.getExitpoint()));
+        }
+        
         shortestPath.setDestinationPlatform(destination);
         shortestPath.setDestinationParkingSpot(null);
+        
+        
         return shortestPath;
     }
     

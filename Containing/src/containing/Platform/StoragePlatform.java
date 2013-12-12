@@ -229,13 +229,13 @@ public class StoragePlatform extends Platform {
     @Override
     public Vector3f getEntrypoint()
     {
-        throw new UnsupportedOperationException("Pl0x add side as parameter (ex: getEntrypoint(Side.LEFT))");
+        return getEntrypoint(Side.RIGHT);
     }
     
     @Override
     public Vector3f getExitpoint()
     {
-        throw new UnsupportedOperationException("Pl0x add side as parameter (ex: getExitpoint(Side.LEFT))");
+        return getExitpoint(Side.RIGHT);
     }
     
     /* begin ignore */

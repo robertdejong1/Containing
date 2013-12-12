@@ -165,6 +165,10 @@ public abstract class Platform implements Serializable {
         List<Integer> priorityColumns = ev.getPriorityColumns();
         
         /* give available crane a job */
+        if(agvQueue.isEmpty()) {
+            for(int i = 0; i < maxAgvQueue; i++)
+                agvQueue.add(getAGV());
+        }
         int craneId = 0;
         for(Crane c : cranes)
         {
@@ -230,11 +234,6 @@ public abstract class Platform implements Serializable {
                             }
                         }
                     }.start();
-                } else {
-                    if(agvQueue.size() < maxAgvQueue) {
-                        agvQueue.add(getAGV());
-                        System.out.println("put some agv in this ma");
-                    }
                 }
             } else {
                 System.out.println("crane is not available");

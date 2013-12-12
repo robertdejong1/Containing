@@ -27,7 +27,8 @@ public class AGV extends InternVehicle {
     { 
         super(capicityAGV,startPosition, currentPlatform, Type.AGV);
         this.currentPlatform = currentPlatform; //storageplatform @ default?
-        
+        this.maxSpeedLoaded = 40;
+        this.maxSpeedUnloaded = 50;
     }
     
 

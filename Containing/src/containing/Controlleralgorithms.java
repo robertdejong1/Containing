@@ -85,7 +85,7 @@ class Controlleralgorithms
                     }
                     catch (CargoOutOfBoundsException | VehicleOverflowException e)
                     {
-                        //isvoor later
+                        ErrorLog.logMsg("Cant load container in vehicle :(", e);
                     }
                     
                     scheduledArrivingVehicles.add(NewVehicle);
@@ -267,7 +267,11 @@ class Controlleralgorithms
         for (ExternVehicle ev : scheduledArrivingVehicles)
         {       
             if (
-                    (date.equals(ev.getArrivalDate()) && (arrivalTime == ev.getArrivalTime()))
+                    (
+                        (date.equals(ev.getArrivalDate()) && (arrivalTime >= ev.getArrivalTime()))
+                        ||
+                        (date.after(ev.getArrivalDate()))
+                    )
                     &&
                     (ev.getCurrentPlatform().hasFreeParkingSpot())
                 ) 
@@ -276,7 +280,6 @@ class Controlleralgorithms
                 Settings.messageLog.AddMessage(ev.toString() + " is entering.");
                 scheduledArrivingVehicles.remove(ev);
                 break;
-                //ik doe nog niks met het feit dat er geen parkingspots kunnen zijn
             }
         }
     }

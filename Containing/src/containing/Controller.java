@@ -104,7 +104,7 @@ public class Controller
         if (Settings.port.getStoragePlatform().hasContainer(container))
         {
             //Route route = new Route(requestingPlatform);
-            //Settings.port.getStoragePlatform().loadContainerInAgv(); // Moet route meegeven maar ik snap eigenlijk niet hoe ik dat moet doen :D
+            Settings.port.getStoragePlatform().loadContainerInAgv(container, requestingPlatform); 
             return true;
         }
         else
@@ -127,6 +127,13 @@ public class Controller
     
     public static void updateUserInterface()
     {
-        UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
+        try
+        {
+            UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
+        }
+        catch (NullPointerException e)
+        {
+            //unit test
+        }
     }
 }

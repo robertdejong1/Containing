@@ -29,7 +29,7 @@ public class Port implements Serializable
         Platforms.add(new TrainPlatform(new Vector3f(0, 5.5f, 0)));
         Platforms.add(new TruckPlatform(new Vector3f(0, 0, 0)));
         
-        storagePlatform = new StoragePlatform(new Vector3f(115f*Settings.METER , 5.5f, 19f*Settings.METER));
+        storagePlatform = new StoragePlatform(new Vector3f(110f*Settings.METER , 5.5f, 19f*Settings.METER));
         //aGVs = storagePlatform.getAllCreatedAgvs();
         Platforms.add(storagePlatform);
         

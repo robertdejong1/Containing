@@ -49,7 +49,7 @@ public class XmlHandlerTest {
         
         XmlHandler instance = new XmlHandler();
 
-        List<Container> containers = instance.openXml(new File("C:\\Users\\Robert\\Desktop\\Containing\\xmlfiles\\xml7.xml"));
+        List<Container> containers = instance.openXml(new File("C:\\Users\\Speedy\\Desktop\\Github\\xml7.xml"));
         int amountContainers = containers.size();
         //51669 id
         System.out.println(amountContainers);

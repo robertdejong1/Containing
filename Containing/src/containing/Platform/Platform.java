@@ -8,6 +8,7 @@ import containing.Exceptions.AgvQueueSpaceOutOfBounds;
 import containing.Exceptions.AgvSpotOutOfBounds;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
+import containing.Exceptions.InvalidVehicleException;
 import containing.Exceptions.NoFreeAgvException;
 import containing.Exceptions.NoJobException;
 import containing.Exceptions.VehicleOverflowException;
@@ -187,7 +188,6 @@ public abstract class Platform implements Serializable {
                 final int row = rowToGive;
                 if(agv != null)
                 {
-                    
                     System.out.println("AGV != NULL");
                     new Thread() {
 
@@ -199,6 +199,27 @@ public abstract class Platform implements Serializable {
                                     System.out.println("AGV == MOVING");
                                     Thread.sleep(10);
                                 } catch(InterruptedException e) {/*ignore*/}
+                            }
+                            // geef AGV route naar ingang van platform
+                            agv.followRoute(Settings.port.getMainroad().getPath(agv, Settings.port.getPlatforms().get(2), false));
+                            while(agv.getStatus() == Status.MOVING) {
+                                try {
+                                    System.out.println("AGV == MOVING");
+                                    Thread.sleep(10);
+                                } catch(InterruptedException e) {/*ignore*/}
+                            }
+                            // geef AGV route naar parkingspot
+                            agv.followRoute(Settings.port.getMainroad().getPath(agv, agvSpots.get(0)));
+                            while(agv.getStatus() == Status.MOVING) {
+                                try {
+                                    System.out.println("AGV == MOVING");
+                                    Thread.sleep(10);
+                                } catch(InterruptedException e) {/*ignore*/}
+                            }
+                            try {
+                                agvSpots.get(0).ParkVehicle(agv);
+                            } catch(InvalidVehicleException e) {
+                                System.out.println("invalid vehicle to park lololol");
                             }
                             try
                             {
@@ -217,8 +238,10 @@ public abstract class Platform implements Serializable {
                         }
                     }.start();
                 } else {
-                    agvQueue.add(getAGV());
-                    System.out.println("put some agv in this ma");
+                    if(agvQueue.size() < maxAgvQueue) {
+                        agvQueue.add(getAGV());
+                        System.out.println("put some agv in this ma");
+                    }
                 }
             } else {
                 System.out.println("crane is not available");
@@ -233,7 +256,7 @@ public abstract class Platform implements Serializable {
             AGV agv = (AGV)Settings.port.getStoragePlatform().agvSpots.get(spot).getParkedVehicle();
             System.out.println("agv met id " + agv.getID() +" gaat een stukje rijden");
             Settings.port.getStoragePlatform().agvSpots.get(spot).UnparkVehicle();
-            agv.followRoute(road.getPath(agv, agvSpots.get(0)));
+            agv.followRoute(road.getPath(agv, Settings.port.getStoragePlatform(), true));
             return agv;
         } catch(NoFreeAgvException e) {
             System.out.println("er is geen vrije agv beschikbaar");

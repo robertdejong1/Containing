@@ -59,6 +59,7 @@ public abstract class Crane extends InternVehicle {
         super(CAPICITY, startPosition, platform, type);
         this.width = width;
         this.length = length;
+
     }
     
     public void unload(AGV agv) throws VehicleOverflowException, ContainerNotFoundException, CargoOutOfBoundsException{

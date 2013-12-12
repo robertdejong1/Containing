@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Platform.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing.Platform</a> &gt; <span class="el_source">Platform.java</span></div><h1>Platform.java</h1><pre class="source lang-java linenums">package containing.Platform;
+
+import containing.Container;
+import containing.Container.TransportType;
+import containing.Controller;
+import containing.Dimension2f;
+import containing.Exceptions.AgvQueueSpaceOutOfBounds;
+import containing.Exceptions.AgvSpotOutOfBounds;
+import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.ContainerNotFoundException;
+import containing.Exceptions.NoJobException;
+import containing.Exceptions.VehicleOverflowException;
+import containing.Job;
+import containing.ParkingSpot.AgvSpot;
+import containing.ParkingSpot.ParkingSpot;
+import containing.ParkingSpot.TrainSpot;
+import containing.Road.Road;
+import containing.Road.Route;
+import containing.Settings;
+import containing.Vector3f;
+import containing.Vehicle.AGV;
+import containing.Vehicle.Crane;
+import containing.Vehicle.ExternVehicle;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public abstract class Platform implements Serializable {
+    
+<span class="pc" id="L34">    public enum State { FREE, LOAD, UNLOAD }</span>
+<span class="pc" id="L35">    protected enum DynamicAxis { X, Z }</span>
+    
+<span class="fc" id="L37">    protected final float AGVSPOT_OFFSET = 0f;</span>
+    
+<span class="fc" id="L39">    private static int idCounter = 1;</span>
+    
+    private final int id;
+    private final Vector3f position;
+    private Dimension2f dimension;
+    protected State state;
+    protected DynamicAxis axis;
+<span class="fc" id="L46">    private Vector3f entrypoint = null;</span>
+<span class="fc" id="L47">    private Vector3f exitpoint = null;</span>
+<span class="fc" id="L48">    private TransportType transportType = null;</span>
+    
+    protected List&lt;AgvSpot&gt; agvSpots;
+    protected List&lt;Crane&gt; cranes;
+    protected List&lt;ParkingSpot&gt; extVehicleSpots;
+    protected List&lt;ExternVehicle&gt; extVehicles;
+<span class="fc" id="L54">    protected Road road = null;</span>
+    
+<span class="fc" id="L56">    protected Queue&lt;Job&gt; jobs = null;</span>
+<span class="fc" id="L57">    protected Queue&lt;AGV&gt; agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat</span>
+<span class="fc" id="L58">    protected int maxAgvQueue = 1;</span>
+    
+<span class="fc" id="L60">    protected int time = 0;</span>
+    
+    public Platform(Vector3f position) 
+<span class="fc" id="L63">    {</span>
+<span class="fc" id="L64">        id = idCounter++;</span>
+<span class="fc" id="L65">        this.position = position;</span>
+<span class="fc" id="L66">        state = State.FREE;</span>
+        /* initialize arraylists */
+<span class="fc" id="L68">        agvSpots = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L69">        cranes = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L70">        extVehicleSpots = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L71">        extVehicles = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L72">        jobs = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L73">        agvQueue = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L74">    }</span>
+    
+    protected void setRoad() 
+    {
+<span class="fc" id="L78">        List&lt;Vector3f&gt; wayshit = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L79">        wayshit.add(entrypoint);</span>
+<span class="fc" id="L80">        wayshit.add(exitpoint);</span>
+<span class="fc" id="L81">        road = new Road(wayshit);</span>
+<span class="fc" id="L82">    }</span>
+    
+    public void registerExternVehicle(ExternVehicle ev)
+    {
+<span class="nc" id="L86">        extVehicles.add(ev);</span>
+<span class="nc" id="L87">        System.out.println(&quot;extVehicleSpot.position().x: &quot; + extVehicleSpots.get(0).getPosition().x);</span>
+<span class="nc" id="L88">        ev.followRoute(road.getPath(ev, extVehicleSpots.get(0)));</span>
+<span class="nc" id="L89">    }</span>
+    
+    public List&lt;Crane&gt; getCranes() {
+<span class="nc" id="L92">        return cranes;</span>
+    }
+    
+    protected boolean hasExtVehicle()
+    {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        for(ParkingSpot vs : extVehicleSpots)</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            if(!vs.isEmpty())</span>
+<span class="nc" id="L99">                return true;</span>
+<span class="nc" id="L100">        return false;</span>
+    }
+    
+    public void load(final Platform instance)
+    {
+        /* platform -&gt; requestNextContainer -&gt; agv from storagePlatform -&gt; crane -&gt; externVehicle */
+<span class="nc" id="L106">        Crane craneTemp = null;</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        for(Crane c : cranes)</span>
+        {
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            if(c.getIsAvailable())</span>
+<span class="nc" id="L110">                craneTemp = c;</span>
+<span class="nc" id="L111">        }</span>
+        
+<span class="nc" id="L113">        final Crane crane = craneTemp;</span>
+<span class="nc" id="L114">        new Thread() {</span>
+            
+            @Override
+            public void run()
+            {
+<span class="nc" id="L119">                int index = 0;</span>
+<span class="nc" id="L120">                boolean hasContainer = false;</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">                for(int i = 0; i &lt; jobs.peek().getContainers().size(); i++)</span>
+                {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                    if(Controller.RequestNextContainer(jobs.peek().getContainers().get(index), instance))</span>
+                    {
+<span class="nc" id="L125">                        hasContainer = true;</span>
+<span class="nc" id="L126">                        break;</span>
+                    }
+<span class="nc" id="L128">                    index++;</span>
+                }
+                
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                if(hasContainer)</span>
+                {
+<span class="nc" id="L133">                    Container container = jobs.peek().getContainers().remove(index);</span>
+                    try
+                    {
+<span class="nc" id="L136">                        crane.load(container);</span>
+<span class="nc" id="L137">                        extVehicleSpots.get(0).getParkedVehicle().load(crane.unload());</span>
+<span class="nc" id="L138">                        Settings.messageLog.AddMessage(&quot;loading some containers in some vehicle boi&quot;);</span>
+                    }
+<span class="nc" id="L140">                    catch(ContainerNotFoundException | CargoOutOfBoundsException | VehicleOverflowException e)</span>
+                    {
+<span class="nc" id="L142">                        System.out.println(e.getMessage());</span>
+<span class="nc" id="L143">                        this.interrupt();</span>
+<span class="nc" id="L144">                    }</span>
+                    
+                }
+<span class="nc" id="L147">            }</span>
+     
+        }.start();
+        
+<span class="nc" id="L151">    }</span>
+    
+    public void unload()
+    {   
+        /* determine rows on vehicle */
+<span class="nc" id="L156">        final ExternVehicle ev = (ExternVehicle)extVehicleSpots.get(0).getParkedVehicle();</span>
+<span class="nc" id="L157">        int rows = ev.getGridWidth();</span>
+<span class="nc" id="L158">        int rowsPerCrane = rows / cranes.size();</span>
+        
+<span class="nc" id="L160">        List&lt;Boolean&gt; unloadedColumns = ev.getColumns();</span>
+<span class="nc" id="L161">        List&lt;Integer&gt; priorityColumns = ev.getPriorityColumns();</span>
+        
+        /* give available crane a job */
+<span class="nc" id="L164">        int craneId = 0;</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        for(Crane c : cranes)</span>
+        {
+<span class="nc bnc" id="L167" title="All 2 branches missed.">            if(c.getIsAvailable()) {</span>
+                /* get row with highest priority */
+<span class="nc" id="L169">                int startIndex = craneId + rowsPerCrane;</span>
+<span class="nc" id="L170">                int rowToGive = 0;</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">                for(int i = startIndex; i &lt; startIndex + rowsPerCrane; i++) </span>
+                {
+<span class="nc bnc" id="L173" title="All 4 branches missed.">                    if(priorityColumns.contains(i) &amp;&amp; !unloadedColumns.get(i)) {</span>
+<span class="nc" id="L174">                        rowToGive = i;</span>
+<span class="nc" id="L175">                        break;</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">                    } else if(!unloadedColumns.get(i)) {</span>
+<span class="nc" id="L177">                        rowToGive = i;</span>
+<span class="nc" id="L178">                        break;</span>
+                    }
+                }
+                
+<span class="nc" id="L182">                final Crane crane = c;</span>
+<span class="nc" id="L183">                final AGV agv = agvQueue.poll();</span>
+<span class="nc" id="L184">                final int row = rowToGive;</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">                if(agv != null)</span>
+                {
+<span class="nc" id="L187">                    new Thread() {</span>
+
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+<span class="nc" id="L194">                                crane.load(ev, row);</span>
+<span class="nc" id="L195">                                Settings.messageLog.AddMessage(&quot;Give row (&quot; + row + &quot;) to unload to crane: &quot; + crane.getID());</span>
+                            } 
+<span class="nc" id="L197">                            catch(CargoOutOfBoundsException | ContainerNotFoundException | VehicleOverflowException e) </span>
+                            {
+<span class="nc" id="L199">                                System.out.println(e.getMessage());</span>
+<span class="nc" id="L200">                                this.interrupt();</span>
+                            } 
+<span class="nc" id="L202">                            catch (Exception ex) </span>
+                            {
+<span class="nc" id="L204">                                Logger.getLogger(Platform.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L205">                            }</span>
+<span class="nc" id="L206">                        }</span>
+                    }.start();
+                }
+            }
+<span class="nc" id="L210">            craneId++;</span>
+<span class="nc" id="L211">        }</span>
+<span class="nc" id="L212">    }</span>
+    
+    public void getAGV(Vector3f cranePosition) {
+<span class="nc" id="L215">        AGV agv = agvQueue.poll();</span>
+<span class="nc" id="L216">        List&lt;Vector3f&gt; wayshit = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L217">        wayshit.add(agv.getPosition());</span>
+<span class="nc" id="L218">        wayshit.add(cranePosition);</span>
+<span class="nc" id="L219">        agv.followRoute(new Route(wayshit, 0));</span>
+<span class="nc" id="L220">    }</span>
+    
+    protected void unloadAGV(Container container)
+    {
+        //todo
+<span class="nc" id="L225">    }</span>
+    
+    protected void requestNextContainer()
+    {
+        //Controller.RequestNextContainer(null, this);
+<span class="nc" id="L230">    }</span>
+    
+    protected void requestNextJob()
+    {
+        try 
+        {
+<span class="nc" id="L236">            jobs.add(Controller.RequestNewJob(this));</span>
+        } 
+<span class="nc" id="L238">        catch(NoJobException e){/* ignore */}</span>
+<span class="nc" id="L239">    }</span>
+    
+    private void agvToQueue(AGV agv) throws AgvQueueSpaceOutOfBounds
+    {
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        if(agvQueue.size() &lt; maxAgvQueue)</span>
+<span class="nc" id="L244">            agvQueue.add(agv);</span>
+        else
+<span class="nc" id="L246">            throw new AgvQueueSpaceOutOfBounds(&quot;No space available for AGV in agvQueue&quot;);</span>
+<span class="nc" id="L247">    }</span>
+    
+    protected void addAgvToQueue(AGV agv)
+    {
+        try
+        {
+<span class="nc" id="L253">            agvToQueue(agv);</span>
+        }
+<span class="nc" id="L255">        catch(AgvQueueSpaceOutOfBounds e){/* ignore */}</span>
+<span class="nc" id="L256">    }</span>
+    
+    protected void createAgvSpots(Vector3f baseposition)
+    {   
+<span class="fc" id="L260">        float x = baseposition.x;</span>
+<span class="fc" id="L261">        float z = baseposition.z;</span>
+        
+<span class="fc bfc" id="L263" title="All 2 branches covered.">        for(int i = 0; i &lt; getAgvSpotAmount(); i++)</span>
+        {
+            Vector3f spotPosition;
+<span class="fc" id="L266">            float currentWidth = AgvSpot.width*i+AGVSPOT_OFFSET;</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">            spotPosition = axis.equals(DynamicAxis.X) ? new Vector3f(currentWidth,0,z) : new Vector3f(x,0,currentWidth);</span>
+<span class="fc" id="L268">            agvSpots.add(new AgvSpot(spotPosition));</span>
+        }
+<span class="fc" id="L270">    }</span>
+    
+    protected int getAgvSpotAmount()
+    {
+<span class="fc bfc" id="L274" title="All 2 branches covered.">        return (int)((float)(axis.equals(DynamicAxis.X) ? dimension.width : dimension.length) / AgvSpot.width);</span>
+    }
+    
+    protected AgvSpot getAgvSpot(int spot) throws AgvSpotOutOfBounds
+    {
+<span class="nc bnc" id="L279" title="All 2 branches missed.">        if(agvSpots.size() &gt; spot)</span>
+<span class="nc" id="L280">            return agvSpots.get(spot);</span>
+<span class="nc" id="L281">        throw new AgvSpotOutOfBounds(&quot;The requested AGV Spot does not exist&quot;);</span>
+    }
+    
+    public boolean hasFreeParkingSpot()
+    {
+<span class="nc bnc" id="L286" title="All 2 branches missed.">        for(ParkingSpot spot : extVehicleSpots)</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">            if(spot.isEmpty())</span>
+<span class="nc" id="L288">                return true;</span>
+<span class="nc" id="L289">        return false;</span>
+    }
+    
+    public Vector3f getPosition()
+    {
+<span class="fc" id="L294">        return position;</span>
+    }
+    
+    public Dimension2f getDimension() 
+    {
+<span class="nc" id="L299">        return dimension;</span>
+    }
+    
+    protected void setDimension(Dimension2f dimension)
+    {
+<span class="fc" id="L304">        this.dimension = dimension;</span>
+<span class="fc" id="L305">    }</span>
+    
+    public DynamicAxis getAxis()
+    {
+<span class="nc" id="L309">        return axis;</span>
+    }
+    
+    protected void setAxis(DynamicAxis axis) 
+    {
+<span class="fc" id="L314">        this.axis = axis;</span>
+<span class="fc" id="L315">    }</span>
+    
+    public Vector3f getEntrypoint()
+    {
+<span class="nc" id="L319">        return entrypoint;</span>
+    }
+    
+    protected void setEntrypoint(Vector3f entrypoint)
+    {
+<span class="fc" id="L324">        this.entrypoint = entrypoint;</span>
+<span class="fc" id="L325">    }</span>
+    
+    public Vector3f getExitpoint() {
+<span class="nc" id="L328">        return exitpoint;</span>
+    }
+    
+    protected void setExitpoint(Vector3f exitpoint)
+    {
+<span class="fc" id="L333">        this.exitpoint = exitpoint;</span>
+<span class="fc" id="L334">    }</span>
+    
+    public TransportType getTransportType() {
+<span class="nc" id="L337">        return transportType;</span>
+    }
+    
+    protected void setTransportType(TransportType transportType)
+    {
+<span class="fc" id="L342">        this.transportType = transportType;</span>
+<span class="fc" id="L343">    }</span>
+    
+    protected void setMaxAgvQueue(int max)
+    {
+        //calculate how much AGV's fit in queue
+<span class="fc" id="L348">        maxAgvQueue = max;</span>
+<span class="fc" id="L349">    }</span>
+    
+    public int getId()
+    {
+<span class="nc" id="L353">        return id;</span>
+    }
+    
+    protected abstract void createCranes();
+    protected abstract void createExtVehicleSpots();
+    
+    public void update()
+    {
+<span class="nc" id="L361">        time += Settings.ClockDelay;</span>
+<span class="nc bnc" id="L362" title="All 2 branches missed.">        for(Crane c : cranes)</span>
+<span class="nc" id="L363">            c.update();</span>
+<span class="nc bnc" id="L364" title="All 2 branches missed.">        for(ExternVehicle ev : extVehicles)</span>
+<span class="nc" id="L365">            ev.update();</span>
+<span class="nc" id="L366">    }</span>
+    
+    @Override
+    public String toString() {
+<span class="fc" id="L370">        return String.format(&quot;[%d, width=%.1f, length=%.1f]&quot;, id, dimension.width*10f, dimension.length*10f);</span>
+    }
+    
+    protected void log(String msg)
+    {
+<span class="fc" id="L375">        Settings.messageLog.AddMessage(msg);</span>
+<span class="fc" id="L376">    }</span>
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

@@ -42,7 +42,7 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.229.101", 1337);
+        Runnable networkHandler = new NetworkHandler("localhost", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }

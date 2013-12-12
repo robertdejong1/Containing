@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Container.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing</a> &gt; <span class="el_source">Container.java</span></div><h1>Container.java</h1><pre class="source lang-java linenums">package containing;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class Container implements Serializable
+{
+    private int containerId;
+    private Date arrivalDate;
+    private float arrivalTimeFrom;
+    private float arrivalTimeTill;
+    private TransportType arrivalTransport;
+    private String arrivalTransportCompany;
+    private Vector3f arrivalPosition;
+    private String owner;
+    private Date departureDate;
+    private float departureTimeFrom;
+    private float departureTimeTill;
+    private TransportType departureTransport;
+<span class="nc" id="L20">    public static float width = 2.44f;</span>
+<span class="nc" id="L21">    public static float height = 2.59f;</span>
+<span class="nc" id="L22">    public static float depth = 12.19f;</span>
+    
+<span class="pc" id="L24">    public enum TransportType{</span>
+<span class="fc" id="L25">        Truck, Train, Barge, Seaship</span>
+    }
+
+<span class="nc" id="L28">    public Container(int containerId, Date arrivalDate, float arrivalTimeFrom, float arrivalTimeTill, TransportType arrivalTransport, String arrivalTransportCompany, Vector3f arrivalPosition, String owner, Date departureDate, float departureTimeFrom, float departureTimeTill, TransportType departureTransport) {</span>
+<span class="nc" id="L29">        this.containerId = containerId;</span>
+<span class="nc" id="L30">        this.arrivalDate = arrivalDate;</span>
+<span class="nc" id="L31">        this.arrivalTimeFrom = arrivalTimeFrom;</span>
+<span class="nc" id="L32">        this.arrivalTimeTill = arrivalTimeTill;</span>
+<span class="nc" id="L33">        this.arrivalTransport = arrivalTransport;</span>
+<span class="nc" id="L34">        this.arrivalTransportCompany = arrivalTransportCompany;</span>
+<span class="nc" id="L35">        this.arrivalPosition = arrivalPosition;</span>
+<span class="nc" id="L36">        this.owner = owner;</span>
+<span class="nc" id="L37">        this.departureDate = departureDate;</span>
+<span class="nc" id="L38">        this.departureTimeFrom = departureTimeFrom;</span>
+<span class="nc" id="L39">        this.departureTimeTill = departureTimeTill;</span>
+<span class="nc" id="L40">        this.departureTransport = departureTransport;</span>
+<span class="nc" id="L41">    }</span>
+
+    public Vector3f getArrivalPosition() {
+<span class="nc" id="L44">        return arrivalPosition;</span>
+    }
+    
+    public int getContainerId() {
+<span class="nc" id="L48">        return containerId;</span>
+    }
+
+    public Date getArrivalDate() {
+<span class="nc" id="L52">        return arrivalDate;</span>
+    }
+
+    public float getArrivalTimeFrom() {
+<span class="nc" id="L56">        return arrivalTimeFrom;</span>
+    }
+
+    public float getArrivalTimeTill() {
+<span class="nc" id="L60">        return arrivalTimeTill;</span>
+    }
+
+    public TransportType getArrivalTransport() {
+<span class="nc" id="L64">        return arrivalTransport;</span>
+    }
+
+    public String getArrivalTransportCompany() {
+<span class="nc" id="L68">        return arrivalTransportCompany;</span>
+    }
+
+    public String getOwner() {
+<span class="nc" id="L72">        return owner;</span>
+    }
+
+    public Date getDepartureDate() {
+<span class="nc" id="L76">        return departureDate;</span>
+    }
+
+    public float getDepartureTimeFrom() {
+<span class="nc" id="L80">        return departureTimeFrom;</span>
+    }
+
+    public float getDepartureTimeTill() {
+<span class="nc" id="L84">        return departureTimeTill;</span>
+    }
+
+    public TransportType getDepartureTransport() {
+<span class="nc" id="L88">        return departureTransport;</span>
+    }
+
+    public void setDepartureDate(Date departureDate) {
+<span class="nc" id="L92">        this.departureDate = departureDate;</span>
+<span class="nc" id="L93">    }</span>
+
+    public void setDepartureTimeFrom(float departureTimeFrom) {
+<span class="nc" id="L96">        this.departureTimeFrom = departureTimeFrom;</span>
+<span class="nc" id="L97">    }</span>
+
+    public void setDepartureTimeTill(float departureTimeTill) {
+<span class="nc" id="L100">        this.departureTimeTill = departureTimeTill;</span>
+<span class="nc" id="L101">    }</span>
+    
+    @Override
+    public String toString(){
+<span class="nc" id="L105">        String ret = &quot;Container:[&quot;;</span>
+<span class="nc" id="L106">        ret += this.containerId +&quot;, &quot;;</span>
+<span class="nc" id="L107">        ret += this.arrivalDate.toString() +&quot;, &quot;;</span>
+<span class="nc" id="L108">        ret += this.arrivalTimeFrom +&quot;, &quot;;</span>
+<span class="nc" id="L109">        ret += this.arrivalTimeTill +&quot;, &quot;;</span>
+<span class="nc" id="L110">        ret += this.arrivalTransport +&quot;, &quot;;</span>
+<span class="nc" id="L111">        ret += this.arrivalTransportCompany +&quot;, &quot;;</span>
+<span class="nc" id="L112">        ret += this.arrivalPosition.toString() +&quot;, &quot;;</span>
+<span class="nc" id="L113">        ret += this.owner +&quot;, &quot;;</span>
+<span class="nc" id="L114">        ret += this.departureDate +&quot;, &quot;;</span>
+<span class="nc" id="L115">        ret += this.departureTimeFrom +&quot;, &quot;;</span>
+<span class="nc" id="L116">        ret += this.departureTimeTill +&quot;, &quot;;</span>
+<span class="nc" id="L117">        ret += this.departureTransport +&quot;]&quot;;</span>
+        
+<span class="nc" id="L119">        return ret;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

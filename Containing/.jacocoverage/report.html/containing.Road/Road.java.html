@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Road.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing.Road</a> &gt; <span class="el_source">Road.java</span></div><h1>Road.java</h1><pre class="source lang-java linenums">package containing.Road;
+
+import containing.ParkingSpot.ParkingSpot;
+import containing.Platform.Platform;
+import containing.Vector3f;
+import containing.Vehicle.AGV;
+import containing.Vehicle.ExternVehicle;
+import containing.Vehicle.Vehicle;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Road implements Serializable 
+{
+<span class="fc" id="L16">    float roadWidth = AGV.width + AGV.width * 0.25f;</span>
+    //testvariabelen, simulatie is bepalend 
+<span class="fc" id="L18">    Vector3f vertex_outsidetrack_leftbottom = new Vector3f(0,0,0); </span>
+<span class="fc" id="L19">    Vector3f vertex_outsidetrack_rightbottom = new Vector3f(0,0,100);</span>
+<span class="fc" id="L20">    Vector3f vertex_outsidetrack_lefttop = new Vector3f(100,0,0);</span>
+<span class="fc" id="L21">    Vector3f vertex_outsidetrack_righttop = new Vector3f(100,0,100);</span>
+    
+<span class="fc" id="L23">    Vector3f vertex_insidetrack_leftbottom = new Vector3f(vertex_outsidetrack_leftbottom.x + roadWidth,0,vertex_outsidetrack_leftbottom.z + roadWidth); </span>
+<span class="fc" id="L24">    Vector3f vertex_insidetrack_rightbottom = new Vector3f(vertex_outsidetrack_rightbottom.x - roadWidth,0,vertex_outsidetrack_rightbottom.z + roadWidth);</span>
+<span class="fc" id="L25">    Vector3f vertex_insidetrack_lefttop = new Vector3f(vertex_outsidetrack_lefttop.x + roadWidth,0,vertex_outsidetrack_lefttop.z - roadWidth);</span>
+<span class="fc" id="L26">    Vector3f vertex_insidetrack_righttop = new Vector3f(vertex_outsidetrack_righttop.x - roadWidth,0,vertex_outsidetrack_righttop.z - roadWidth);</span>
+    
+    //List&lt;Vector3f&gt; outsidetrack = new ArrayList&lt;&gt;();
+    
+    //List&lt;Vector3f&gt; insidetrack = new ArrayList&lt;&gt;();
+    
+    //List&lt;Vector3f&gt; singletrack = new ArrayList&lt;&gt;();
+    
+<span class="fc" id="L34">    List&lt;Vector3f&gt; track = new ArrayList&lt;&gt;();</span>
+        
+<span class="fc" id="L36">    public Road(List&lt;Vector3f&gt; roadPoints){ //vaste punten voor main road = 4, voor platform road = 2</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        for (Vector3f v : roadPoints){</span>
+<span class="fc" id="L38">            track.add(v);</span>
+<span class="fc" id="L39">        }</span>
+<span class="fc" id="L40">        Collections.sort(track); //links onder links boven rechts boven rechtsonder</span>
+        //for (Vector3f v : entryPoints){this.createCorrespondingWaypoint(v);}
+<span class="fc" id="L42">    } </span>
+    
+
+    private Vector3f createCorrespondingWaypoint(Vector3f point){
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if (track.size() == 4){</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            if (point.x &lt; track.get(0).x){ return new Vector3f(track.get(0).x, point.y, point.z);}</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">            if (point.x &gt; track.get(2).x) {return new Vector3f(track.get(2).x, point.y, point.z); }</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">            if (point.z &lt; track.get(1).z){return new Vector3f(point.x, point.y, track.get(1).z);}</span>
+<span class="nc" id="L50">            return new Vector3f(point.x,point.y, track.get(0).z);</span>
+        }
+<span class="nc" id="L52">        return new Vector3f(track.get(0).x, point.y, point.z);</span>
+    }
+    
+     public static float getPathLength(List&lt;Vector3f&gt; weg){
+         
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (weg.size() &gt; 1){</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            if (weg.get(0).x != weg.get(1).x){ return Math.abs(weg.get(1).x - weg.get(0).x) + getPathLength(weg.subList(1, weg.size()));}</span>
+<span class="nc" id="L59">            return Math.abs(weg.get(1).z - weg.get(0).z) + getPathLength(weg.subList(1, weg.size()));</span>
+        }
+<span class="nc" id="L61">        else return 0;</span>
+    }
+    
+    //public Route getPath(Vehicle vehicle, VehicleSpot)
+    public Route getPath(Vehicle vehicle, Platform destination){ 
+<span class="nc" id="L66">        Route shortestPath = calculateShortestPath(vehicle, this.createCorrespondingWaypoint(destination.getExitpoint()));</span>
+<span class="nc" id="L67">        shortestPath.setDestinationPlatform(destination);</span>
+<span class="nc" id="L68">        shortestPath.setDestinationParkingSpot(null);</span>
+<span class="nc" id="L69">        return shortestPath;</span>
+    }
+    
+    public Route getPath(ExternVehicle ev, ParkingSpot ps )
+    {
+<span class="nc" id="L74">        List&lt;Vector3f&gt; track = new ArrayList&lt;Vector3f&gt;();</span>
+<span class="nc" id="L75">        track.add(ev.getPosition());</span>
+<span class="nc" id="L76">        track.add(ps.getPosition());</span>
+<span class="nc" id="L77">        float length = this.getPathLength(track);</span>
+<span class="nc" id="L78">        Route route = new Route(track, length);</span>
+<span class="nc" id="L79">        route.destinationPlatform = null;</span>
+<span class="nc" id="L80">        route.destinationParkingSpot = ps;</span>
+<span class="nc" id="L81">        return route;</span>
+    }
+    
+    public Route getPath(Vehicle vehicle, ParkingSpot ps){
+<span class="nc" id="L85">        Vector3f source = this.createCorrespondingWaypoint(vehicle.getPosition());</span>
+<span class="nc" id="L86">        Vector3f destination = this.createCorrespondingWaypoint(ps.getPosition());</span>
+<span class="nc" id="L87">        List&lt;Vector3f&gt; track = new ArrayList&lt;Vector3f&gt;(this.track);</span>
+<span class="nc" id="L88">        track.add(source);</span>
+<span class="nc" id="L89">        track.add(destination);</span>
+<span class="nc" id="L90">        Collections.sort(track);</span>
+<span class="nc" id="L91">        track = this.setPathCorrectOrder(track, source, destination);</span>
+<span class="nc" id="L92">        float length = this.getPathLength(track);</span>
+  
+<span class="nc" id="L94">        Route route = new Route(track,length);</span>
+<span class="nc" id="L95">        route.destinationPlatform = null;</span>
+<span class="nc" id="L96">        route.destinationParkingSpot = ps;</span>
+<span class="nc" id="L97">        return route;</span>
+      
+    }
+    
+     /*
+     * Calculates distance from current platform of agv to desination platform.
+     * There are two possible roads for agv, the function selects the road with minimum distance (=shortest).
+     * The shortest way is converted into a Route.
+     */
+    public Route calculateShortestPath(Vehicle vehicle, Vector3f destination){ //only for mainroad
+<span class="nc" id="L107">        List&lt;Vector3f&gt; outsidetrack = new ArrayList&lt;Vector3f&gt;(this.track);</span>
+
+<span class="nc" id="L109">        outsidetrack.add(destination);</span>
+<span class="nc" id="L110">        outsidetrack.add(this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().getExitpoint()));</span>
+<span class="nc" id="L111">        Collections.sort(outsidetrack);</span>
+<span class="nc" id="L112">        List&lt;Vector3f&gt; insidetrack = new ArrayList&lt;&gt;(outsidetrack);</span>
+<span class="nc" id="L113">        Collections.reverse(outsidetrack);</span>
+        
+<span class="nc" id="L115">        insidetrack = this.setPathCorrectOrder(insidetrack, this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().getExitpoint()), this.createCorrespondingWaypoint(destination));</span>
+<span class="nc" id="L116">        outsidetrack = this.setPathCorrectOrder(outsidetrack, this.createCorrespondingWaypoint(vehicle.getCurrentPlatform().getExitpoint()), this.createCorrespondingWaypoint(destination));</span>
+        
+<span class="nc" id="L118">        float length_insidetrack = getPathLength(insidetrack);</span>
+<span class="nc" id="L119">        float length_outsidetrack = getPathLength(outsidetrack);</span>
+        
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (length_insidetrack &lt; length_outsidetrack){return new Route(insidetrack, length_insidetrack);}</span>
+<span class="nc" id="L122">        else return new Route(outsidetrack, length_outsidetrack);</span>
+    }
+    
+    public List&lt;Vector3f&gt; setPathCorrectOrder(List&lt;Vector3f&gt; path, Vector3f source, Vector3f destination){
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        for (Vector3f v : path){</span>
+<span class="nc" id="L127">            System.out.println(&quot;V: &quot; + v);</span>
+<span class="nc" id="L128">        }</span>
+<span class="nc" id="L129">        System.out.println(&quot;Source: &quot; + source);</span>
+<span class="nc" id="L130">        System.out.println(&quot;Destination: &quot; + destination);</span>
+<span class="nc" id="L131">        int indexSource = path.indexOf(source);</span>
+<span class="nc" id="L132">        int indexDestination =  path.indexOf(destination);</span>
+<span class="nc" id="L133">        System.out.println(&quot;indexSource: &quot; + indexSource);</span>
+<span class="nc" id="L134">        System.out.println(&quot;pathSize: &quot; + path.size());</span>
+     
+        
+<span class="nc" id="L137">        List&lt;Vector3f&gt; weg1 = new ArrayList(path.subList(indexSource, path.size()));</span>
+    
+        
+       
+<span class="nc" id="L141">        List&lt;Vector3f&gt; weg2 = new ArrayList(path.subList(0, indexSource));</span>
+<span class="nc" id="L142">        List&lt;Vector3f&gt; weg = new ArrayList&lt;Vector3f&gt;(weg1);</span>
+<span class="nc" id="L143">        weg.addAll(weg2);</span>
+        try{
+<span class="nc" id="L145">        weg = new ArrayList(weg.subList(0, indexDestination+1));}</span>
+<span class="nc" id="L146">        catch(Exception e){</span>
+            //destination is laatste waypoint
+<span class="nc" id="L148">        }</span>
+<span class="nc" id="L149">        return weg;</span>
+    }
+    
+    
+    
+
+    
+     
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

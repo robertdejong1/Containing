@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>NetworkHandler.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing</a> &gt; <span class="el_source">NetworkHandler.java</span></div><h1>NetworkHandler.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containing;
+
+import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+/**
+ *
+ * @author Robert
+ */
+public class NetworkHandler implements Runnable {
+
+    private ServerSocket server;
+<span class="fc" id="L20">    static int idCounter = 0;</span>
+
+<span class="fc" id="L22">    public NetworkHandler(int port) {</span>
+        try {
+<span class="fc" id="L24">            server = new ServerSocket(port);</span>
+<span class="fc" id="L25">            server.setSoTimeout(999999999);</span>
+<span class="fc" id="L26">            Settings.messageLog.AddMessage(&quot;Server running on &quot; +Inet4Address.getLocalHost().getHostAddress() +&quot;.&quot;);</span>
+<span class="nc" id="L27">        } catch (IOException e) {</span>
+<span class="nc" id="L28">            ErrorLog.logMsg(&quot;An error occured while creating Socket Server&quot;, e);</span>
+<span class="fc" id="L29">        }</span>
+<span class="fc" id="L30">    }</span>
+
+    @Override
+    public void run() {
+        try {
+            while(true){
+<span class="fc" id="L36">                Socket client = server.accept();</span>
+<span class="fc" id="L37">                Settings.messageLog.AddMessage(&quot;Client connected from: &quot; +client.getInetAddress().getHostAddress());</span>
+<span class="fc" id="L38">                Runnable clientHandler = new ClientHandler(client, getNewId());</span>
+<span class="fc" id="L39">                Thread t =  new Thread(clientHandler);</span>
+<span class="fc" id="L40">                t.start();</span>
+<span class="fc" id="L41">            }</span>
+        }
+<span class="nc" id="L43">        catch(IOException e){</span>
+<span class="nc" id="L44">            ErrorLog.logMsg(&quot;An error occured while creating socket client&quot;, e);</span>
+<span class="nc" id="L45">            run();</span>
+        }
+
+<span class="nc" id="L48">    }</span>
+    
+    static int getNewId(){
+<span class="fc" id="L51">        return ++idCounter;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SeashipCrane.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing.Vehicle</a> &gt; <span class="el_source">SeashipCrane.java</span></div><h1>SeashipCrane.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package containing.Vehicle;
+
+import containing.Container;
+import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.VehicleOverflowException;
+import containing.Platform.Platform;
+import containing.Vector3f;
+
+/**
+ *
+ * @author Robert
+ */
+public class SeashipCrane extends Crane {
+
+<span class="fc" id="L21">    public static float width = 5f; //????????</span>
+<span class="fc" id="L22">    public static float length = 6f; //??????????</span>
+    //hier SeashipCrane specific variables
+    
+    public SeashipCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
+<span class="fc" id="L26">        super(startPosition, platform, Type.SEASHIPCRANE, width, length);</span>
+
+<span class="fc" id="L28">    }</span>
+    
+
+ 
+    
+    @Override
+<span class="nc" id="L34">    public int getMaxSpeedUnloaded(){return 4;}</span>
+    @Override
+<span class="nc" id="L36">    public int getMaxSpeedLoaded(){return 0;}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

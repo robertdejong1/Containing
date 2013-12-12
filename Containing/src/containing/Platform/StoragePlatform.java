@@ -23,14 +23,14 @@ public class StoragePlatform extends Platform {
     
     public enum Side { LEFT, RIGHT }
     
-    private final float WIDTH       = 624f*Settings.METER;  // ???
-    private final float LENGTH      = 1536f*Settings.METER; // ???
+    private final float WIDTH       = 600f*Settings.METER;  // ???
+    private final float LENGTH      = 1525f*Settings.METER; // ???
     
-    public final float STRIP_WIDTH  = 24f*Settings.METER;   // ???
+    public final float STRIP_WIDTH  = 25f*Settings.METER;   // ???
     public final float STRIP_LENGTH = WIDTH;
     
     private final int AGVS          = 100;
-    private final float AGV_OFFSET  = 1.9f;
+    private final float AGV_OFFSET  = 1.8f;
     
     private final StorageStrip[] strips;
     private Vector3f[] entrypoints;
@@ -54,7 +54,7 @@ public class StoragePlatform extends Platform {
         log("Created StoragePlatform object: " + toString());
     }
     
-    public void loadContainerInAgv(Container container)
+    public void loadContainerInAgv(Container container, Platform platformToGo)
     {
         //todo
     }

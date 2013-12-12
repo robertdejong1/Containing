@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Job.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing</a> &gt; <span class="el_source">Job.java</span></div><h1>Job.java</h1><pre class="source lang-java linenums">package containing;
+
+import containing.Vehicle.ExternVehicle;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Stack;
+
+public class Job implements Serializable
+{
+    private Date date;
+    private float departureTime;
+    private Container.TransportType vehicleType;
+    private List&lt;Container&gt; Containers;
+    private ExternVehicle targetVehicle;
+    private String companyName;
+    
+    public Job(Date date, float departureTime, Container.TransportType vehicleType, String companyName) 
+<span class="nc" id="L20">    {</span>
+<span class="nc" id="L21">        this.date = date;</span>
+<span class="nc" id="L22">        this.departureTime = departureTime;</span>
+<span class="nc" id="L23">        this.vehicleType = vehicleType;</span>
+<span class="nc" id="L24">        this.Containers = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L25">        this.companyName = companyName;</span>
+<span class="nc" id="L26">    }</span>
+    
+    public void addContainer(Container container)
+    {
+<span class="nc" id="L30">        Containers.add(container);</span>
+<span class="nc" id="L31">    }</span>
+
+    public Date getDate() 
+    {
+<span class="nc" id="L35">        return date;</span>
+    }
+
+    public float getDepartureTime() 
+    {
+<span class="nc" id="L40">        return departureTime;</span>
+    }
+
+    public Container.TransportType getVehicleType() 
+    {
+<span class="nc" id="L45">        return vehicleType;</span>
+    }
+
+    public List&lt;Container&gt; getContainers() 
+    {
+<span class="nc" id="L50">        return Containers;</span>
+    }
+
+    public ExternVehicle getTargetVehicle() 
+    {
+<span class="nc" id="L55">        return targetVehicle;</span>
+    }
+
+    public void setTargetVehicle(ExternVehicle TargetVehicle) 
+    {
+<span class="nc" id="L60">        this.targetVehicle = TargetVehicle;</span>
+<span class="nc" id="L61">    }</span>
+    
+    public void changeContainerDepartureTime(float departureTime)
+    {
+<span class="nc" id="L65">        this.departureTime = departureTime;</span>
+        
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        for (Container c : Containers)</span>
+        {
+<span class="nc" id="L69">            c.setDepartureTimeFrom(departureTime);</span>
+<span class="nc" id="L70">        }</span>
+<span class="nc" id="L71">    }</span>
+
+    public String getCompanyName() 
+    {
+<span class="nc" id="L75">        return companyName;</span>
+    }
+    
+    
+    
+    public static Stack&lt;Job&gt; sortOutGoingJobs(List&lt;Job&gt; Jobs)
+    {   
+<span class="nc" id="L82">        Stack JobStack = new Stack&lt;&gt;();</span>
+<span class="nc" id="L83">        List&lt;Job&gt; JobsTemp = new ArrayList&lt;&gt;();</span>
+        
+<span class="nc" id="L85">        JobsTemp.addAll(Jobs);</span>
+        
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (JobsTemp.size() &gt; 0)</span>
+        {
+<span class="nc" id="L89">            Job LatestJob = JobsTemp.get(0);</span>
+        
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            while (JobsTemp.size() &gt; 0)</span>
+            {
+<span class="nc bnc" id="L93" title="All 2 branches missed.">                for (Job j : JobsTemp)</span>
+                {
+<span class="nc bnc" id="L95" title="All 4 branches missed.">                    if (j.date.after(LatestJob.date) || j.date.equals(LatestJob.date))</span>
+                    {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                        if (j.departureTime &gt; LatestJob.getDepartureTime())</span>
+                        {
+<span class="nc" id="L99">                            LatestJob = j;</span>
+                        }
+                    }
+<span class="nc" id="L102">                }</span>
+                
+<span class="nc" id="L104">                JobStack.push(LatestJob);</span>
+<span class="nc" id="L105">                JobsTemp.remove(LatestJob);</span>
+                
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                if (JobsTemp.size() &gt; 0)</span>
+                {
+<span class="nc" id="L109">                    LatestJob = JobsTemp.get(0);</span>
+                }
+                
+            }
+        }
+        
+<span class="nc" id="L115">        return JobStack;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

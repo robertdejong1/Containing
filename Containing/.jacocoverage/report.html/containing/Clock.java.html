@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Clock.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing</a> &gt; <span class="el_source">Clock.java</span></div><h1>Clock.java</h1><pre class="source lang-java linenums">package containing;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+import java.util.Calendar;
+import javax.swing.Timer;
+
+public class Clock 
+{
+    private int delay;
+    private Timer timer;
+    private Timestamp currentDateAndTime;
+
+    public Clock(long startTimeMil) 
+<span class="nc" id="L16">    {</span>
+<span class="nc" id="L17">        startTimeMil -= 10000;</span>
+<span class="nc" id="L18">        this.currentDateAndTime = new Timestamp(startTimeMil);</span>
+        
+<span class="nc" id="L20">        timer = new Timer(100, new ActionListener() </span>
+<span class="nc" id="L21">        {</span>
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+<span class="nc" id="L25">                TimerFunctions();</span>
+<span class="nc" id="L26">            }</span>
+        });
+
+<span class="nc" id="L29">        timer.setRepeats(true);</span>
+<span class="nc" id="L30">    }</span>
+
+    public boolean StartClock(int delay) 
+    {
+<span class="nc" id="L34">        this.delay = delay;</span>
+        
+        try 
+        {
+<span class="nc bnc" id="L38" title="All 2 branches missed.">            if (!timer.isRunning()) </span>
+            {
+<span class="nc" id="L40">                timer.setDelay(delay);</span>
+<span class="nc" id="L41">                timer.start();</span>
+<span class="nc" id="L42">                return true;</span>
+            } 
+            else 
+            {
+<span class="nc" id="L46">                return false;</span>
+            }
+        } 
+<span class="nc" id="L49">        catch (Exception e) </span>
+        {
+<span class="nc" id="L51">            ErrorLog.logMsg(&quot;Could not start the clock&quot;, e);</span>
+<span class="nc" id="L52">            return false;</span>
+        }
+    }
+
+    public boolean SetDelay(int delay) 
+    {
+<span class="nc" id="L58">        this.delay = delay;</span>
+        
+        try 
+        {
+<span class="nc" id="L62">            timer.setDelay(delay);</span>
+<span class="nc" id="L63">            timer.stop();</span>
+<span class="nc" id="L64">            timer.start();</span>
+<span class="nc" id="L65">            return true;</span>
+        } 
+<span class="nc" id="L67">        catch (Exception e) </span>
+        {
+<span class="nc" id="L69">            ErrorLog.logMsg(&quot;Could not set the delay of the clock&quot;, e);</span>
+<span class="nc" id="L70">            return false;</span>
+        }
+    }
+
+    public boolean StopClock() 
+    {
+        try 
+        {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            if (!timer.isRunning()) </span>
+            {
+<span class="nc" id="L80">                timer.stop();</span>
+<span class="nc" id="L81">                return true;</span>
+            } else {
+<span class="nc" id="L83">                return false;</span>
+            }
+        } 
+<span class="nc" id="L86">        catch (Exception e) </span>
+        {
+<span class="nc" id="L88">            ErrorLog.logMsg(&quot;Could not stop the clock&quot;, e);</span>
+<span class="nc" id="L89">            return false;</span>
+        }
+    }
+
+    public Timestamp getCurrentDateAndTime() 
+    {
+<span class="nc" id="L95">        return currentDateAndTime;</span>
+    }
+
+    private void TimerFunctions() 
+    {   
+        //SetTimeStamp
+<span class="nc" id="L101">        Calendar cal = Calendar.getInstance();</span>
+<span class="nc" id="L102">        cal.setTimeInMillis(currentDateAndTime.getTime());</span>
+<span class="nc" id="L103">        cal.add(Calendar.MILLISECOND, delay);</span>
+<span class="nc" id="L104">        currentDateAndTime = new Timestamp(cal.getTime().getTime());</span>
+        
+        //UpdateController
+<span class="nc" id="L107">        Controller.update(currentDateAndTime);</span>
+<span class="nc" id="L108">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

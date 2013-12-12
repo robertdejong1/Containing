@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>StorageStrip.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing.Platform</a> &gt; <span class="el_source">StorageStrip.java</span></div><h1>StorageStrip.java</h1><pre class="source lang-java linenums">package containing.Platform;
+
+import containing.Container;
+import containing.Dimension2f;
+import containing.ParkingSpot.AgvSpot;
+import containing.Platform.StoragePlatform.Side;
+import containing.Point3D;
+import containing.Settings;
+import containing.Vector3f;
+import containing.Vehicle.Crane;
+import containing.Vehicle.StorageCrane;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+/**
+ * StorageStrip.java
+ * The dynamic axis is: X
+ * @author Minardus
+ */
+public class StorageStrip implements Serializable {
+    
+<span class="pc" id="L27">    public enum StorageState { FREE, FULL }</span>
+<span class="pc" id="L28">    public enum StorageJobState { FREE, FULL }</span>
+    
+    private StorageState storageState;
+    private StorageJobState storageJobState;
+    
+    public final static int MAX_AGV_SPOTS = 12;
+    
+<span class="fc" id="L35">    private final int MAX_X = 40;</span>
+<span class="fc" id="L36">    private final int MAX_Y = 6;</span>
+<span class="fc" id="L37">    private final int MAX_Z = 6;</span>
+    
+<span class="fc" id="L39">    private final int MAX_JOBS = 12;</span>
+    
+    private final Vector3f position;
+    private final Dimension2f dimension;
+    
+    private HashMap&lt;Point3D, Container&gt; containers;
+    private PriorityQueue&lt;Point3D&gt; freePositions;
+    private Queue&lt;StorageJob&gt; jobs;
+    
+    private final List&lt;AgvSpot&gt; agvSpots;
+    private Crane crane;
+    
+    private final StoragePlatform platform;
+    
+    public StorageStrip(StoragePlatform platform, Vector3f position) 
+<span class="fc" id="L54">    {</span>
+<span class="fc" id="L55">        this.platform = platform;</span>
+<span class="fc" id="L56">        this.position = position;</span>
+<span class="fc" id="L57">        containers = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L58">        freePositions = new PriorityQueue&lt;&gt;();</span>
+<span class="fc" id="L59">        storageState = StorageState.FREE;</span>
+<span class="fc" id="L60">        storageJobState = StorageJobState.FREE;</span>
+<span class="fc" id="L61">        dimension = new Dimension2f(platform.STRIP_WIDTH, platform.STRIP_LENGTH);</span>
+<span class="fc" id="L62">        agvSpots = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L63">        createCrane();</span>
+<span class="fc" id="L64">    }</span>
+    
+    public void createJob(int stripId, Container c)
+    {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if(jobs.size() &lt; MAX_JOBS)</span>
+        {
+<span class="nc" id="L70">            Point3D pos = getFreeContainerPosition(c.getDepartureDate(), c.getDepartureTimeFrom(), c.getDepartureTimeTill(), Side.LEFT);</span>
+<span class="nc" id="L71">            jobs.add(new StorageJob(stripId, pos, c));</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if(jobs.size() == MAX_JOBS)</span>
+<span class="nc" id="L73">                storageJobState = StorageJobState.FULL;</span>
+        }
+<span class="nc" id="L75">    }</span>
+    
+    public StorageJob getJob()
+    {
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if(jobs.size() == MAX_JOBS)</span>
+<span class="nc" id="L80">            storageJobState = StorageJobState.FREE;</span>
+<span class="nc" id="L81">        return jobs.poll();</span>
+    }
+    
+    public boolean hasContainer(Container container)
+    {
+<span class="nc" id="L86">        return containers.containsValue(container);</span>
+    }
+    
+    public void loadContainer(StorageJob job)
+    {
+        // geef job aan kraan met container en positie
+<span class="nc" id="L92">    }</span>
+    
+    public Container unloadContainer(Point3D position)
+    {
+<span class="nc" id="L96">        return containers.remove(position);</span>
+    }
+    
+    // todo till, container kan eerder weg moeten, prioriteit is dan hoger
+    private Point3D getFreeContainerPosition(Date date, float from, float till, Side side)
+    {
+        int x, y, z;
+<span class="nc bnc" id="L103" title="All 6 branches missed.">        for(x = 0; (side.equals(Side.LEFT) ? x &lt; MAX_X : MAX_X &gt; x);)</span>
+        {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            for(y = 0; y &lt; MAX_Y; y++) </span>
+            {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                for(z = 0; z &lt; MAX_Z; z++) </span>
+                {
+<span class="nc" id="L109">                    Point3D cur = new Point3D(x,y,z);</span>
+<span class="nc bnc" id="L110" title="All 4 branches missed.">                    if(containers.containsKey(cur) &amp;&amp; y != (MAX_Y - 1))</span>
+                    {
+<span class="nc" id="L112">                        Container c = containers.get(cur);</span>
+<span class="nc" id="L113">                        long curTimeStamp = Settings.getTimeStamp(c.getDepartureDate(), c.getDepartureTimeFrom());</span>
+<span class="nc" id="L114">                        long newTimeStamp = Settings.getTimeStamp(date, from);</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">                        if(newTimeStamp &lt; curTimeStamp)</span>
+                        {
+<span class="nc" id="L117">                            return cur;</span>
+                        }
+                    }
+                }
+            }
+<span class="nc bnc" id="L122" title="All 2 branches missed.">            x = (side.equals(Side.LEFT) ? ++x : --x);</span>
+        }
+<span class="nc" id="L124">        return null;</span>
+    }
+    
+    public StorageState getStorageState()
+    {
+<span class="nc" id="L129">        return storageState;</span>
+    }
+    
+    public StorageJobState getStorageJobState()
+    {
+<span class="nc" id="L134">        return storageJobState;</span>
+    }
+    
+    private void createCrane()
+    {
+<span class="fc" id="L139">        Vector3f cranePosition = new Vector3f(0,0,0);</span>
+<span class="fc" id="L140">        crane = new StorageCrane(cranePosition, platform);</span>
+<span class="fc" id="L141">    }</span>
+    
+    public List&lt;AgvSpot&gt; getAgvSpots()
+    {
+<span class="nc" id="L145">        return agvSpots;</span>
+    }
+    
+    public Vector3f getPosition()
+    {
+<span class="nc" id="L150">        return position;</span>
+    }
+    
+    public Dimension2f getDimension()
+    {
+<span class="nc" id="L155">        return dimension;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

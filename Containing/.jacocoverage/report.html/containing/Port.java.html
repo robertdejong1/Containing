@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Port.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing</a> &gt; <span class="el_source">Port.java</span></div><h1>Port.java</h1><pre class="source lang-java linenums">package containing;
+
+import containing.Platform.BargePlatform;
+import containing.Platform.Platform;
+import containing.Platform.SeashipPlatform;
+import containing.Platform.StoragePlatform;
+import containing.Platform.TrainPlatform;
+import containing.Platform.TruckPlatform;
+import containing.Vehicle.AGV;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Port implements Serializable
+{
+<span class="fc" id="L16">    private int ID = 0;</span>
+    private List&lt;Platform&gt; Platforms;
+    //private List&lt;AGV&gt; aGVs;
+    private StoragePlatform storagePlatform;
+    
+
+    public Port() 
+<span class="fc" id="L23">    {</span>
+<span class="fc" id="L24">        this.Platforms = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L25">        Settings.messageLog.AddMessage(&quot;Created Harbor Object with id: &quot; + ID);</span>
+
+<span class="fc" id="L27">        Platforms.add(new BargePlatform(new Vector3f(3, 0, 0)));</span>
+<span class="fc" id="L28">        Platforms.add(new SeashipPlatform(new Vector3f(0, 0, 0)));</span>
+<span class="fc" id="L29">        Platforms.add(new TrainPlatform(new Vector3f(-42.75f, 5.5f, -82.15f)));</span>
+<span class="fc" id="L30">        Platforms.add(new TruckPlatform(new Vector3f(0, 0, 0)));</span>
+        
+<span class="fc" id="L32">        storagePlatform = new StoragePlatform(new Vector3f(-32.65f , 5.5f, -81.45f));</span>
+        //aGVs = storagePlatform.getAllCreatedAgvs();
+<span class="fc" id="L34">        Platforms.add(storagePlatform);</span>
+        
+        
+<span class="fc" id="L37">    }</span>
+
+    public void update() 
+    {
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        for (Platform P : Platforms) </span>
+        {
+<span class="nc" id="L43">            P.update();</span>
+<span class="nc" id="L44">        }</span>
+<span class="nc" id="L45">    }</span>
+
+    public int getID() 
+    {
+<span class="nc" id="L49">        return ID;</span>
+    }
+
+    public StoragePlatform getStoragePlatform() 
+    {
+<span class="nc" id="L54">        return storagePlatform;</span>
+    }
+
+    public List&lt;Platform&gt; getPlatforms() 
+    {
+<span class="nc" id="L59">        return Platforms;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L64">        return &quot;Port{&quot; + &quot;ID=&quot; + ID + &quot;, Platforms=&quot; + Platforms + &quot;, storagePlatform=&quot; + storagePlatform + '}';</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

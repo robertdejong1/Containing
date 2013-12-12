@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Train.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing.Vehicle</a> &gt; <span class="el_source">Train.java</span></div><h1>Train.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package containing.Vehicle;
+
+import containing.Platform.Platform;
+import containing.Vector3f;
+import java.util.Date;
+
+/**
+ *
+ * @author Robert
+ */
+public class Train extends ExternVehicle{
+ 
+<span class="nc" id="L19">    protected int timeCounter = 0;</span>
+<span class="fc" id="L20">    public static float width = 5f; //????????</span>
+<span class="fc" id="L21">    public static float length = 30f; //??????????</span>
+<span class="fc" id="L22">    private static int nrContainersDepth = 1;</span>
+<span class="fc" id="L23">    private static int nrContainersHeight = 1;</span>
+<span class="fc" id="L24">    private static int nrContainersWidth = 25;</span>
+   
+    public Train(Date arrivalDate, float arrivalTime, Platform platform, String company)
+    {
+
+<span class="nc" id="L29">        super(arrivalDate, arrivalTime,  nrContainersDepth,nrContainersWidth,nrContainersHeight, platform, company, Type.TRAIN); //true if vehicle comes to load, otherwise false</span>
+<span class="nc" id="L30">        this.position = new Vector3f(-41.5f, 5.5f, -82.15f);</span>
+<span class="nc" id="L31">        this.maxSpeedLoaded = 80;</span>
+<span class="nc" id="L32">        this.maxSpeedUnloaded = 70;</span>
+
+<span class="nc" id="L34">    }</span>
+
+    @Override
+<span class="nc" id="L37">    public int getMaxSpeedUnloaded(){return 20;}</span>
+    @Override
+<span class="nc" id="L39">    public int getMaxSpeedLoaded(){return 10;}</span>
+    
+   
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

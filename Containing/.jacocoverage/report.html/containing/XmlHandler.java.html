@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>XmlHandler.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing</a> &gt; <span class="el_source">XmlHandler.java</span></div><h1>XmlHandler.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containing;
+
+import containing.Container.TransportType;
+import containing.Exceptions.InvalidTransportException;
+import containing.Exceptions.ParseErrorException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+/**
+ *
+ * @author Robert
+ */
+<span class="nc" id="L30">public class XmlHandler {</span>
+
+    public List&lt;Container&gt; openXml(File xmlfile) throws ParseErrorException{
+<span class="nc" id="L33">        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();</span>
+<span class="nc" id="L34">        DocumentBuilder builder = null;</span>
+        try {
+<span class="nc" id="L36">            builder = builderFactory.newDocumentBuilder();</span>
+<span class="nc" id="L37">        } catch (ParserConfigurationException e) {</span>
+<span class="nc" id="L38">            throw new ParseErrorException(&quot;Error while parsing xml file&quot; +e.getMessage());</span>
+<span class="nc" id="L39">        }</span>
+
+        try {
+<span class="nc" id="L42">            Document doc = builder.parse(xmlfile);</span>
+<span class="nc" id="L43">            return this.parse(doc);</span>
+        }
+<span class="nc" id="L45">        catch (InvalidTransportException | IOException | SAXException e) {</span>
+<span class="nc" id="L46">            throw new ParseErrorException(&quot;Error while parsing xml file&quot; +e.getMessage());</span>
+        }
+    }
+
+    private List&lt;Container&gt; parse(Document doc) throws InvalidTransportException {
+<span class="nc" id="L51">        List&lt;Container&gt; containers = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L53">        NodeList nodes = doc.getDocumentElement().getChildNodes();</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        for (int i = 0; i &lt; nodes.getLength(); i++) {</span>
+<span class="nc" id="L55">            Node node = nodes.item(i);</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">            if (node instanceof Element) {</span>
+<span class="nc" id="L57">                int id = Integer.parseInt(node.getAttributes().getNamedItem(&quot;id&quot;).getNodeValue().substring(2));</span>
+
+<span class="nc" id="L59">                String d = getNestedValue(node, Arrays.asList(&quot;aankomst&quot;, &quot;datum&quot;, &quot;d&quot;)).getNodeValue();</span>
+<span class="nc" id="L60">                String m = getNestedValue(node, Arrays.asList(&quot;aankomst&quot;, &quot;datum&quot;, &quot;m&quot;)).getNodeValue();</span>
+<span class="nc" id="L61">                String j = &quot;20&quot; + getNestedValue(node, Arrays.asList(&quot;aankomst&quot;, &quot;datum&quot;, &quot;j&quot;)).getNodeValue();</span>
+<span class="nc" id="L62">                Date arrivalDate = new Date(Integer.parseInt(j) - 1900, Integer.parseInt(m) - 1, Integer.parseInt(d));</span>
+                
+<span class="nc" id="L64">                String Atill = getNestedValue(node, Arrays.asList(&quot;aankomst&quot;, &quot;tijd&quot;, &quot;van&quot;)).getNodeValue();</span>
+<span class="nc" id="L65">                float arrivalTimeFrom = Float.parseFloat(Atill);</span>
+
+<span class="nc" id="L67">                String Afrom = getNestedValue(node, Arrays.asList(&quot;aankomst&quot;, &quot;tijd&quot;, &quot;tot&quot;)).getNodeValue();</span>
+<span class="nc" id="L68">                float arrivalTimeTill = Float.parseFloat(Afrom);</span>
+
+<span class="nc" id="L70">                String Atransport = getNestedValue(node, Arrays.asList(&quot;aankomst&quot;, &quot;soort_vervoer&quot;)).getNodeValue();</span>
+                Container.TransportType arrivalTransport;
+<span class="nc bnc" id="L72" title="All 18 branches missed.">                switch (Atransport) {</span>
+                    case &quot;vrachtauto&quot;:
+<span class="nc" id="L74">                        arrivalTransport = TransportType.Truck;</span>
+<span class="nc" id="L75">                        break;</span>
+
+                    case &quot;zeeschip&quot;:
+<span class="nc" id="L78">                        arrivalTransport = TransportType.Seaship;</span>
+<span class="nc" id="L79">                        break;</span>
+
+                    case &quot;binnenschip&quot;:
+<span class="nc" id="L82">                        arrivalTransport = TransportType.Barge;</span>
+<span class="nc" id="L83">                        break;</span>
+
+                    case &quot;trein&quot;:
+<span class="nc" id="L86">                        arrivalTransport = TransportType.Train;</span>
+<span class="nc" id="L87">                        break;</span>
+
+                    default:
+<span class="nc" id="L90">                        throw new InvalidTransportException(&quot;Invalid transport type: &quot; +Atransport);</span>
+                }
+
+<span class="nc" id="L93">                String arrivalTransportCompany = getNestedValue(node, Arrays.asList(&quot;aankomst&quot;, &quot;bedrijf&quot;)).getNodeValue();</span>
+                
+<span class="nc" id="L95">                String x = getNestedValue(node, Arrays.asList(&quot;aankomst&quot;, &quot;positie&quot;, &quot;x&quot;)).getNodeValue();</span>
+<span class="nc" id="L96">                String y = getNestedValue(node, Arrays.asList(&quot;aankomst&quot;, &quot;positie&quot;, &quot;y&quot;)).getNodeValue();</span>
+<span class="nc" id="L97">                String z = getNestedValue(node, Arrays.asList(&quot;aankomst&quot;, &quot;positie&quot;, &quot;z&quot;)).getNodeValue();</span>
+<span class="nc" id="L98">                Vector3f arrivalPosition = new Vector3f(Float.parseFloat(x), Float.parseFloat(y), Float.parseFloat(z));</span>
+                
+<span class="nc" id="L100">                String owner = getNestedValue(node, Arrays.asList(&quot;eigenaar&quot;, &quot;naam&quot;)).getNodeValue();</span>
+                
+<span class="nc" id="L102">                String dd = getNestedValue(node, Arrays.asList(&quot;vertrek&quot;, &quot;datum&quot;, &quot;d&quot;)).getNodeValue();</span>
+<span class="nc" id="L103">                String dm = getNestedValue(node, Arrays.asList(&quot;vertrek&quot;, &quot;datum&quot;, &quot;m&quot;)).getNodeValue();</span>
+<span class="nc" id="L104">                String dj = &quot;20&quot; +getNestedValue(node, Arrays.asList(&quot;vertrek&quot;, &quot;datum&quot;, &quot;j&quot;)).getNodeValue();</span>
+                
+<span class="nc" id="L106">                Date departureDate = new Date(Integer.parseInt(dj) - 1900, Integer.parseInt(dm) - 1, Integer.parseInt(dd));</span>
+                
+<span class="nc" id="L108">                String dFrom = getNestedValue(node, Arrays.asList(&quot;vertrek&quot;, &quot;tijd&quot;, &quot;van&quot;)).getNodeValue();</span>
+<span class="nc" id="L109">                float departureTimeFrom = Float.parseFloat(dFrom);</span>
+                
+<span class="nc" id="L111">                String dTill = getNestedValue(node, Arrays.asList(&quot;vertrek&quot;, &quot;tijd&quot;, &quot;tot&quot;)).getNodeValue();</span>
+<span class="nc" id="L112">                float departureTimeTill = Float.parseFloat(dTill);</span>
+                
+<span class="nc" id="L114">                String dTransport = getNestedValue(node, Arrays.asList(&quot;vertrek&quot;, &quot;soort_vervoer&quot;)).getNodeValue();</span>
+                TransportType departureTransport;
+<span class="nc bnc" id="L116" title="All 18 branches missed.">                switch (dTransport) {</span>
+                    case &quot;vrachtauto&quot;:
+<span class="nc" id="L118">                        departureTransport = TransportType.Truck;</span>
+<span class="nc" id="L119">                        break;</span>
+
+                    case &quot;zeeschip&quot;:
+<span class="nc" id="L122">                        departureTransport = TransportType.Seaship;</span>
+<span class="nc" id="L123">                        break;</span>
+
+                    case &quot;binnenschip&quot;:
+<span class="nc" id="L126">                        departureTransport = TransportType.Barge;</span>
+<span class="nc" id="L127">                        break;</span>
+
+                    case &quot;trein&quot;:
+<span class="nc" id="L130">                        departureTransport = TransportType.Train;</span>
+<span class="nc" id="L131">                        break;</span>
+
+                    default:
+<span class="nc" id="L134">                        throw new InvalidTransportException(&quot;Invalid transport type: &quot; +Atransport);</span>
+                }
+<span class="nc" id="L136">                Container con = new Container(id, arrivalDate, arrivalTimeFrom, arrivalTimeTill, arrivalTransport, arrivalTransportCompany, arrivalPosition, owner, departureDate, departureTimeFrom, departureTimeTill, departureTransport);</span>
+<span class="nc" id="L137">                containers.add(con);</span>
+            }
+            
+        }
+<span class="nc" id="L141">        return containers;</span>
+
+    }
+
+    private Node getNestedValue(Node node, List&lt;String&gt; nests) {
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (nests.isEmpty()) {</span>
+<span class="nc" id="L147">            return node.getChildNodes().item(0);</span>
+        }
+
+<span class="nc" id="L150">        NodeList nodes = node.getChildNodes();</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        for (int i = 0; i &lt; nodes.getLength(); i++) {</span>
+<span class="nc" id="L152">            Node n = nodes.item(i);</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">            if (nests.get(0).equalsIgnoreCase(n.getNodeName())) {</span>
+<span class="nc" id="L154">                return getNestedValue(n, nests.subList(1, nests.size()));</span>
+            }
+        }
+<span class="nc" id="L157">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

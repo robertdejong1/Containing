@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>StoragePlatform.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing.Platform</a> &gt; <span class="el_source">StoragePlatform.java</span></div><h1>StoragePlatform.java</h1><pre class="source lang-java linenums">package containing.Platform;
+
+import containing.Container;
+import containing.Container.TransportType;
+import containing.Dimension2f;
+import containing.Exceptions.InvalidVehicleException;
+import containing.Exceptions.NoFreeAgvException;
+import containing.ParkingSpot.AgvSpot;
+import containing.Platform.StorageStrip.StorageState;
+import containing.Road.Route;
+import containing.Settings;
+import containing.Vector3f;
+import containing.Vehicle.AGV;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * SeashipPlatform.java
+ * The dynamic axis is: X
+ * @author Minardus
+ */
+public class StoragePlatform extends Platform {
+    
+<span class="nc" id="L24">    public enum Side { LEFT, RIGHT }</span>
+    
+<span class="fc" id="L26">    private final float WIDTH       = 600f*Settings.METER;  // ???</span>
+<span class="fc" id="L27">    private final float LENGTH      = 1548f*Settings.METER; // ???</span>
+    
+<span class="fc" id="L29">    public final float STRIP_WIDTH  = 25f*Settings.METER;   // ???</span>
+<span class="fc" id="L30">    public final float STRIP_LENGTH = WIDTH;</span>
+    
+<span class="fc" id="L32">    private final int AGVS          = 100;</span>
+<span class="fc" id="L33">    private final float AGV_OFFSET  = 1.9f;</span>
+    
+    private final StorageStrip[] strips;
+    private Vector3f[] entrypoints;
+    private Vector3f[] exitpoints;
+    
+    protected List&lt;AGV&gt; agvs;
+    
+    public StoragePlatform(Vector3f position)
+    {
+<span class="fc" id="L43">        super(position);</span>
+<span class="fc" id="L44">        strips = new StorageStrip[getStripAmount()];</span>
+<span class="fc" id="L45">        setDimension(new Dimension2f(WIDTH, LENGTH));</span>
+<span class="fc" id="L46">        setEntrypoints();</span>
+<span class="fc" id="L47">        setExitpoints();</span>
+<span class="fc" id="L48">        setAxis(Platform.DynamicAxis.X);</span>
+<span class="fc" id="L49">        createStrips();</span>
+<span class="fc" id="L50">        createAgvSpots();</span>
+<span class="fc" id="L51">        createAllAgvs();</span>
+        /* no vehicles on this platform */
+<span class="fc" id="L53">        extVehicleSpots = null;</span>
+<span class="fc" id="L54">        log(&quot;Created StoragePlatform object: &quot; + toString());</span>
+<span class="fc" id="L55">    }</span>
+    
+    public void loadContainerInAgv(Container container)
+    {
+        //todo
+<span class="nc" id="L60">    }</span>
+    
+    private void createAgvSpots()
+    {
+<span class="fc" id="L64">        float space = LENGTH / ((float)StorageStrip.MAX_AGV_SPOTS*getStripAmount() / 2f);</span>
+<span class="fc" id="L65">        float offset = (space / 2f) - ( AgvSpot.width*Settings.METER / 2f);</span>
+<span class="fc" id="L66">        int subcount = 0;</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        for(int i = 0; i &lt; StorageStrip.MAX_AGV_SPOTS*getStripAmount(); i++) </span>
+        {
+            Vector3f agvSpotPosition;
+<span class="fc bfc" id="L70" title="All 2 branches covered.">            if(i % 2 == 0)</span>
+            {
+<span class="fc" id="L72">                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET, getPosition().y, (space*subcount + offset) + getPosition().z + AGV.width*Settings.METER);</span>
+            }
+            else
+            {
+<span class="fc" id="L76">                agvSpotPosition = new Vector3f(getPosition().x + WIDTH - AGV_OFFSET, getPosition().y, (space*subcount + offset) + getPosition().z + AGV.width*Settings.METER);</span>
+<span class="fc" id="L77">                subcount++;</span>
+            }
+<span class="fc" id="L79">            agvSpots.add(new AgvSpot(agvSpotPosition));</span>
+        }
+<span class="fc" id="L81">    }</span>
+    
+    public final void createAllAgvs()
+    {
+<span class="fc" id="L85">        agvs = new ArrayList&lt;&gt;();</span>
+        
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        for(int i = 0; i &lt; AGVS; i++) { </span>
+<span class="fc" id="L88">            agvs.add(new AGV(this, agvSpots.get(i).getPosition()));</span>
+<span class="fc" id="L89">            agvs.get(i).setPosition(agvSpots.get(i).getPosition());</span>
+            try {
+<span class="fc" id="L91">                agvSpots.get(i).ParkVehicle(agvs.get(i));</span>
+<span class="nc" id="L92">            } catch(InvalidVehicleException e) {</span>
+<span class="nc" id="L93">                System.out.println(e.getMessage());</span>
+<span class="fc" id="L94">            }</span>
+        }
+        /*
+        int currentAgv = 0;
+        for(int i = 1; i &lt;= AGVS*2; i += 2)
+        {
+            try
+            {
+                agvs.get(currentAgv).setPosition(agvSpots.get(i).getPosition());
+                agvSpots.get(i).ParkVehicle(agvs.get(currentAgv));
+                currentAgv++;
+            } 
+            catch(InvalidVehicleException e) 
+            {
+                System.out.println(e.getMessage());
+            }
+        }
+        */
+        
+<span class="fc" id="L113">    }</span>
+    
+    public List&lt;AGV&gt; getAgvs() {
+<span class="nc" id="L116">        return agvs;</span>
+    }
+    
+    public AGV requestFreeAgv(TransportType tt) throws NoFreeAgvException
+    {
+<span class="nc" id="L121">        List&lt;Vector3f&gt; waypoints = new ArrayList&lt;&gt;();</span>
+        Route route;
+<span class="nc bnc" id="L123" title="All 3 branches missed.">        switch(tt)</span>
+        {
+            case Barge:
+            case Seaship:
+<span class="nc bnc" id="L127" title="All 2 branches missed.">                for(int i = agvSpots.size() - 1; i &gt;= 0; i--)</span>
+                {
+<span class="nc" id="L129">                    AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();</span>
+<span class="nc bnc" id="L130" title="All 4 branches missed.">                    if(agv != null &amp;&amp; agv.getIsAvailable())</span>
+                    {
+                        //agv.followRoute(route);
+<span class="nc" id="L133">                        return agv;</span>
+                    }
+                }
+<span class="nc" id="L136">                break;</span>
+            case Truck:
+            case Train:
+<span class="nc bnc" id="L139" title="All 2 branches missed.">                for(int i = 0; i &lt; agvSpots.size(); i++)</span>
+                {
+<span class="nc" id="L141">                    AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();</span>
+<span class="nc bnc" id="L142" title="All 4 branches missed.">                    if(agv != null &amp;&amp; agv.getIsAvailable())</span>
+                    {
+                        //agv.followRoute(route);
+<span class="nc" id="L145">                        return agv;</span>
+                    }
+                }
+                break;
+        }
+<span class="nc" id="L150">        throw new NoFreeAgvException(&quot;No free AGV available&quot;);</span>
+    }
+    
+    public void loadContainerInAgv(AGV agv, Container container, TransportType tt)
+    {
+        // last thing to do, send to platform (identifiable with tt)
+        //agv.followRoute();
+<span class="nc" id="L157">    }</span>
+    
+    private void createStrips() 
+    {
+        Vector3f stripPosition;
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        for(int i = 0; i &lt; getStripAmount(); i++)</span>
+        {
+<span class="fc" id="L164">            stripPosition = new Vector3f(0,0,STRIP_WIDTH*i);</span>
+<span class="fc" id="L165">            strips[i] = new StorageStrip(this, stripPosition);</span>
+        }
+<span class="fc" id="L167">    }</span>
+    
+    public boolean hasContainer(Container container)
+    {
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        for(StorageStrip strip : strips)</span>
+        {
+<span class="nc bnc" id="L173" title="All 2 branches missed.">            if(strip.hasContainer(container))</span>
+<span class="nc" id="L174">                return true;</span>
+        }
+<span class="nc" id="L176">        return false;</span>
+    }
+    
+    public final int getStripAmount()
+    {
+<span class="fc" id="L181">        return (int)((float)LENGTH / STRIP_WIDTH);</span>
+    }
+    
+    private int getNearbyStrip(TransportType tt)
+    {
+<span class="nc bnc" id="L186" title="All 3 branches missed.">        switch(tt)</span>
+        {
+            case Barge:
+            case Seaship:
+<span class="nc bnc" id="L190" title="All 2 branches missed.">                for(int i = getStripAmount() - 1; i &gt;= 0; i--)</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">                    if(!strips[i].getStorageState().equals(StorageState.FULL))</span>
+<span class="nc" id="L192">                        return i;</span>
+<span class="nc" id="L193">                break;</span>
+            case Train:
+            case Truck:
+<span class="nc bnc" id="L196" title="All 2 branches missed.">                for(int i = 0; i &lt; getStripAmount(); i++)</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">                    if(!strips[i].getStorageState().equals(StorageState.FULL))</span>
+<span class="nc" id="L198">                        return i;</span>
+                break;
+        }
+<span class="nc" id="L201">        return 0;</span>
+    }
+    
+    public Vector3f getEntrypoint(Side side)
+    {
+<span class="nc bnc" id="L206" title="All 2 branches missed.">        if(side.equals(Side.LEFT))</span>
+<span class="nc" id="L207">            return entrypoints[0];</span>
+<span class="nc" id="L208">        return entrypoints[1];</span>
+    }
+    
+    public Vector3f getExitpoint(Side side)
+    {
+<span class="nc bnc" id="L213" title="All 2 branches missed.">        if(side.equals(Side.LEFT))</span>
+<span class="nc" id="L214">            return exitpoints[0];</span>
+<span class="nc" id="L215">        return exitpoints[1];</span>
+    }
+    
+    private void setEntrypoints()
+    {
+<span class="fc" id="L220">        entrypoints = new Vector3f[2];</span>
+<span class="fc" id="L221">        entrypoints[0] = new Vector3f(0,0,0);</span>
+<span class="fc" id="L222">        entrypoints[1] = new Vector3f(WIDTH, 0, 0);</span>
+        
+<span class="fc" id="L224">    }</span>
+    
+    private void setExitpoints()
+    {
+<span class="fc" id="L228">        exitpoints = new Vector3f[2];</span>
+<span class="fc" id="L229">        exitpoints[0] = new Vector3f(0,0,LENGTH);</span>
+<span class="fc" id="L230">        exitpoints[1] = new Vector3f(WIDTH, 0, LENGTH);</span>
+<span class="fc" id="L231">    }</span>
+    
+    @Override
+    public Vector3f getEntrypoint()
+    {
+<span class="nc" id="L236">        throw new UnsupportedOperationException(&quot;Pl0x add side as parameter (ex: getEntrypoint(Side.LEFT))&quot;);</span>
+    }
+    
+    @Override
+    public Vector3f getExitpoint()
+    {
+<span class="nc" id="L242">        throw new UnsupportedOperationException(&quot;Pl0x add side as parameter (ex: getExitpoint(Side.LEFT))&quot;);</span>
+    }
+    
+    /* begin ignore */
+    @Override
+<span class="nc" id="L247">    protected void createCranes() { /*ignore */ }</span>
+    @Override
+<span class="nc" id="L249">    protected void createExtVehicleSpots() {/* ignore */}</span>
+    /* end ignore */
+    
+    @Override
+    public void update()
+    {
+<span class="nc" id="L255">        time += Settings.ClockDelay;</span>
+<span class="nc" id="L256">    }</span>
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

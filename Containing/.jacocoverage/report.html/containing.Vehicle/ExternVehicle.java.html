@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ExternVehicle.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Containing&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing.Vehicle</a> &gt; <span class="el_source">ExternVehicle.java</span></div><h1>ExternVehicle.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package containing.Vehicle;
+
+import containing.Command;
+import containing.CommandHandler;
+import containing.Container;
+import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.ContainerNotFoundException;
+import containing.Exceptions.VehicleOverflowException;
+import containing.Platform.Platform;
+import containing.Settings;
+import containing.Vector3f;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ *
+ * @author Miriam
+ */
+public abstract class ExternVehicle extends Vehicle {
+    //x=width y=height z=depth
+    private Date arrivalDate;
+    private float arrivalTime;
+    private String company;
+    
+    protected Container[][][] grid;
+<span class="nc" id="L36">    private List&lt;Integer&gt; priorityColumns = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L37">    private List&lt;Container&gt; priorityCargo = new ArrayList&lt;Container&gt;();</span>
+<span class="nc" id="L38">    private HashMap&lt;Integer, List&lt;Integer&gt;&gt; unloadOrderY = new HashMap();</span>
+<span class="nc" id="L39">    private List&lt;Boolean&gt; unloadedColumn = new ArrayList&lt;&gt;();</span>
+    private int nrContainersDepth;
+    private int nrContainersHeight;
+    private int nrContainersWidth;
+    
+    public ExternVehicle(Date arrivalDate, float arrivalTime, int depthGrid,int widthGrid,int heightGrid, Platform platform, String company, Type type)
+    {
+        
+<span class="nc" id="L47">        super(depthGrid*widthGrid*heightGrid, platform, type);</span>
+<span class="nc" id="L48">        this.arrivalDate = arrivalDate;</span>
+<span class="nc" id="L49">        this.arrivalTime = arrivalTime;</span>
+
+
+<span class="nc" id="L52">        this.grid = new Container[widthGrid+1][heightGrid+1][depthGrid+1];</span>
+        
+<span class="nc" id="L54">        this.company = company;</span>
+<span class="nc" id="L55">        this.nrContainersDepth = depthGrid;</span>
+<span class="nc" id="L56">        this.nrContainersHeight = heightGrid;</span>
+<span class="nc" id="L57">        this.nrContainersWidth = widthGrid;</span>
+        
+        //only relevant for unloading externvehicles 
+<span class="nc" id="L60">        List&lt;Integer&gt; unloadOrderYDefault = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        for (int i = 0; i &lt; depthGrid; i++)</span>
+        {
+<span class="nc" id="L63">            unloadOrderYDefault.add(i);</span>
+        }
+        
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        for (int i = 0; i &lt; widthGrid; i++)</span>
+        {
+<span class="nc" id="L68">            unloadOrderY.put(i, unloadOrderYDefault);</span>
+<span class="nc" id="L69">            unloadedColumn.add(false);     </span>
+        }
+        
+        
+        
+<span class="nc" id="L74">        getContainerWithHighestPriority();</span>
+<span class="nc" id="L75">    }</span>
+
+    
+
+    
+    private List&lt;Container&gt; getContainerWithHighestPriority()
+    {
+        
+<span class="nc" id="L83">        List&lt;Container&gt; priority = new ArrayList&lt;&gt;();</span>
+        
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        for (Container container : this.cargo)</span>
+        {
+            
+<span class="nc" id="L88">            Date currentDate = new Date(Settings.CurrentTime.getYear(), Settings.CurrentTime.getMonth(), Settings.CurrentTime.getDate());//van controller current date?? + time</span>
+<span class="nc" id="L89">            currentDate.setHours(Settings.CurrentTime.getHours());</span>
+<span class="nc" id="L90">            currentDate.setMinutes(Settings.CurrentTime.getMinutes());</span>
+            
+<span class="nc" id="L92">            Date containerDate = container.getDepartureDate();</span>
+<span class="nc" id="L93">            containerDate.setHours((int)container.getDepartureTimeTill());</span>
+<span class="nc" id="L94">            containerDate.setMinutes(((int)container.getDepartureTimeTill() % 1) * 100);</span>
+
+<span class="nc" id="L96">            long diff = containerDate.getTime() - currentDate.getTime();</span>
+<span class="nc" id="L97">            long diffHours = diff / (60 * 60 * 1000);</span>
+
+<span class="nc bnc" id="L99" title="All 2 branches missed.">            if (diffHours &lt; 5) //5 uur grens?</span>
+            {
+<span class="nc" id="L101">                priority.add(container);</span>
+            }        
+           
+<span class="nc" id="L104">        }</span>
+        
+        //evt sorteer priority list
+        
+        //update unloadOrder met prioriteitskolommen
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        for (Container container : priority)</span>
+        {
+           
+<span class="nc" id="L112">            priorityColumns.add(0, (int)container.getArrivalPosition().x);</span>
+            
+<span class="nc" id="L114">            List&lt;Integer&gt; orderY = unloadOrderY.get((int)container.getArrivalPosition().x);</span>
+<span class="nc" id="L115">            orderY.remove((int)container.getArrivalPosition().y);</span>
+<span class="nc" id="L116">            orderY.add(0,(int)container.getArrivalPosition().y);</span>
+<span class="nc" id="L117">            unloadOrderY.put((int)container.getArrivalPosition().x, orderY);</span>
+<span class="nc" id="L118">        }</span>
+        
+<span class="nc" id="L120">        return priority;</span>
+        
+    }
+    ///[0,0,0] add grid container position
+    @Override
+    public void load(Container container) throws VehicleOverflowException,CargoOutOfBoundsException
+    {
+        
+        //set isLoaded true when it wasn't already done
+<span class="nc bnc" id="L129" title="All 2 branches missed.">            if (this.cargo.isEmpty()){this.isLoaded = true;} </span>
+        
+<span class="nc" id="L131">            Vector3f coordinates = container.getArrivalPosition();</span>
+        
+    
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (grid!=null)</span>
+            {
+                try
+                {
+<span class="nc bnc" id="L138" title="All 12 branches missed.">                if (coordinates.x  &gt; this.nrContainersWidth || coordinates.z &gt; this.nrContainersDepth || (int) coordinates.x &lt; 0 ||(int) coordinates.y &lt; 0 || (int) coordinates.z &lt; 0 || coordinates.y &gt; this.nrContainersHeight )</span>
+                {
+                    //Settings.messageLog.AddMessage(&quot;Cargo: &quot; + container.getArrivalPosition());
+<span class="nc" id="L141">                    throw new CargoOutOfBoundsException(&quot;CargoOutOfBoundsException&quot;);</span>
+            
+                }
+                
+<span class="nc bnc" id="L145" title="All 2 branches missed.">                if (grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]!=null)</span>
+                {
+<span class="nc" id="L147">                    Settings.messageLog.AddMessage(&quot;Vehicle: &quot; + this.getID() +  &quot; has already container on position: &quot; + coordinates);</span>
+<span class="nc" id="L148">                    throw new VehicleOverflowException(&quot;VehicleOverflowException&quot;);</span>
+                }//dubbel
+        
+<span class="nc" id="L151">                    grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z] = container; </span>
+
+<span class="nc" id="L153">                    super.load(container);</span>
+                
+                //if status not waiting
+                //CommandHandler.addCommand(new Command(&quot;loadVehicle&quot;, this));
+                
+                }
+            
+<span class="nc" id="L160">                catch(Exception e)</span>
+                {
+<span class="nc" id="L162">                    throw e;</span>
+<span class="nc" id="L163">                }</span>
+            }
+        
+       //status waiting ..... anders load op vrije plaats
+<span class="nc" id="L167">    }</span>
+    
+    public Container unload() throws ContainerNotFoundException
+    {
+            try
+            {
+<span class="nc bnc" id="L173" title="All 2 branches missed.">                if (cargo.isEmpty()) { throw new ContainerNotFoundException(&quot;No containers&quot;); }</span>
+     
+<span class="nc" id="L175">                Container container = cargo.get(0);</span>
+            
+<span class="nc" id="L177">                cargo.remove(container);</span>
+            
+<span class="nc" id="L179">                this.getGrid()[(int)container.getArrivalPosition().x][(int)container.getArrivalPosition().y][(int)container.getArrivalPosition().z] = null;</span>
+            
+<span class="nc" id="L181">                return container;</span>
+            }
+            
+<span class="nc" id="L184">            catch(ContainerNotFoundException e)</span>
+            {
+<span class="nc" id="L186">                throw e;</span>
+            }
+        
+      
+        
+    }
+    
+ 
+    
+     public Container unload(Container container) throws ContainerNotFoundException
+    {
+
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (cargo.isEmpty()) { throw new ContainerNotFoundException(&quot;No containers&quot;); }</span>
+
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        if(cargo.remove(container) == false)</span>
+        { 
+<span class="nc" id="L202">            throw new ContainerNotFoundException(&quot;ContainerNotFound&quot;);</span>
+        }
+        
+<span class="nc" id="L205">       this.getGrid()[(int)container.getArrivalPosition().x][(int)container.getArrivalPosition().y][(int)container.getArrivalPosition().z] = null;</span>
+
+<span class="nc" id="L207">        return container;</span>
+
+    }
+    
+<span class="nc" id="L211">    public String getCompanyName(){ return this.company; }</span>
+    
+<span class="nc" id="L213">    public Date getArrivalDate(){ return arrivalDate; }</span>
+    
+<span class="nc" id="L215">    public Float getArrivalTime(){ return arrivalTime; }</span>
+    
+<span class="nc" id="L217">    public List&lt;Integer&gt; getUnloadOrderY(Integer row){ return this.unloadOrderY.get(row); }</span>
+    
+<span class="nc" id="L219">    public List&lt;Integer&gt; getPriorityColumns(){ return this.priorityColumns; }</span>
+    
+<span class="nc" id="L221">    public List&lt;Boolean&gt; getColumns(){ return this.unloadedColumn; }</span>
+    
+<span class="nc" id="L223">    public Integer getGridWidth(){ return this.nrContainersWidth; }</span>
+    
+    public void updateColumn(int i, boolean bool) 
+    {
+       //unloadedColumn.
+<span class="nc" id="L228">    }</span>
+    
+    public void leave()
+    {
+<span class="nc" id="L232">        this.status= Status.MOVING;</span>
+<span class="nc" id="L233">        HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L234">        map.put(&quot;id&quot;, this.getID());</span>
+<span class="nc" id="L235">        map.put(&quot;vehicleType&quot;, this.getVehicleType());</span>
+    
+<span class="nc" id="L237">        CommandHandler.addCommand(new Command(&quot;leaveExternVehicle&quot;,map));</span>
+<span class="nc" id="L238">    }</span>
+    
+    public void docking(){
+        //this.status = Status.DOCKING;
+<span class="nc" id="L242">    }</span>
+    
+    public void enter()
+    {
+<span class="nc" id="L246">        Settings.messageLog.AddMessage(&quot;Enter vehicle: &quot; + this.getID());</span>
+       
+       
+<span class="nc" id="L249">        HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L250">        map.put(&quot;id&quot;, this.getID());</span>
+<span class="nc" id="L251">        map.put(&quot;vehicleType&quot;, this.getVehicleType());</span>
+<span class="nc" id="L252">        map.put(&quot;cargo&quot;, this.getGrid()); </span>
+<span class="nc" id="L253">        map.put(&quot;numberContainers&quot;, this.getCargo().size());</span>
+        
+<span class="nc" id="L255">        CommandHandler.addCommand(new Command(&quot;enterExternVehicle&quot;,map));</span>
+<span class="nc" id="L256">        Settings.messageLog.AddMessage(&quot;AddCommand enterExternVehicle&quot;);</span>
+<span class="nc" id="L257">        this.currentPlatform.registerExternVehicle(this);</span>
+<span class="nc" id="L258">        Settings.messageLog.AddMessage(&quot;Register Vehicle @ Platform&quot;);</span>
+        
+<span class="nc" id="L260">    }</span>
+    
+<span class="nc" id="L262">    public Container[][][] getGrid(){ return this.grid; }</span>
+    
+    
+
+    //public void leave(ExternVehicle vehicle){}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

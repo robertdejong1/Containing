@@ -17,7 +17,7 @@ import java.util.Collections;
  */
 public class TrainPlatform extends Platform {
     
-    private final float WIDTH          = 100f*Settings.METER;  // ???
+    private final float WIDTH          = 103f*Settings.METER;  // ???
     private final float LENGTH         = 1523f*Settings.METER; // ???
     public final int MAX_VEHICLES      = 3;
     public final int CRANES            = 4;

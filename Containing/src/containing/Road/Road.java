@@ -57,7 +57,7 @@ public class Road implements Serializable
         if (weg.size() > 1){
             if (weg.get(0).x != weg.get(1).x){ return Math.abs(weg.get(1).x - weg.get(0).x) + getPathLength(weg.subList(1, weg.size()));}
             return Math.abs(weg.get(1).z - weg.get(0).z) + getPathLength(weg.subList(1, weg.size()));
-        }
+        }   
         else return 0;
     }
     

@@ -31,8 +31,8 @@ public class TrainPlatform extends Platform {
         super(position);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(DynamicAxis.Z);
-        setEntrypoint(new Vector3f(WIDTH,0,0));
-        setExitpoint(new Vector3f(WIDTH,0,LENGTH));
+        setEntrypoint(new Vector3f(getPosition().x + WIDTH, getPosition().y, getPosition().z));
+        setExitpoint(new Vector3f(getPosition().x + WIDTH, getPosition().y, getPosition().z + LENGTH));
         setRoad();
         setTransportType(TransportType.Train);
         setMaxAgvQueue(CRANES);

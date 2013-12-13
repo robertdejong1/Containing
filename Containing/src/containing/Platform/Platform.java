@@ -201,24 +201,27 @@ public abstract class Platform implements Serializable {
                         {
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
-                                    Thread.sleep(10);
-                                    System.out.println("Route 1: agv == MOVING");
+                                    Thread.sleep(Settings.ClockDelay);
+                                    agv.update();
+                                    //System.out.println("Route 1: agv == MOVING");
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
                             // geef AGV route naar ingang van platform
                             agv.followRoute(Settings.port.getMainroad().getPath(agv, Settings.port.getPlatforms().get(2), false));
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
-                                    Thread.sleep(10);
-                                    System.out.println("Route 2: agv == MOVING");
+                                    Thread.sleep(Settings.ClockDelay);
+                                    agv.update();
+                                    //System.out.println("Route 2: agv == MOVING");
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
                             // geef AGV route naar parkingspot
                             agv.followRoute(road.getPath(agv, Settings.port.getPlatforms().get(2).agvSpots.get(_craneId)));
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
-                                    Thread.sleep(10);
-                                    System.out.println("Route 3: agv == MOVING");
+                                    Thread.sleep(Settings.ClockDelay);
+                                    agv.update();
+                                    //System.out.println("Route 3: agv == MOVING");
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
                             try

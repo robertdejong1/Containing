@@ -52,7 +52,7 @@ public class TrainPlatform extends Platform {
             float x = cranePosition.x;
             float y = cranePosition.y;
             float z = cranePosition.z;
-            agvSpots.add(new AgvSpot(new Vector3f(x + TrainCrane.length, y, z)));
+            agvSpots.add(new AgvSpot(new Vector3f(x + TrainCrane.length*Settings.METER, y, z)));
         }
     }
 

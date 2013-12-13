@@ -57,7 +57,7 @@ public class Road implements Serializable
     
     public Route getPath()
     {
-       new Route(this.track,getPathLength(track) );
+       return new Route(this.track,getPathLength(track) );
     }
     
     

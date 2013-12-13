@@ -16,4 +16,5 @@ public class StorageCrane extends Model
         super(assetManager, "Models/storagecrane.j3o", node);
     }
     
+    
 }

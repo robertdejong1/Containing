@@ -31,6 +31,7 @@ public class PortSimulation extends SimpleApplication {
     AGV[] agv = new AGV[100];
     //Container[] container = new Container[19];
     FreeCrane[] freeCranes = new FreeCrane[4];
+    StorageCrane[] storageCranes = new StorageCrane[61];
     RailCrane[] railCrane;
     Port port;
     //private StorageCrane storageCrane = new StorageCrane(assetManager, rootNode);

@@ -67,20 +67,30 @@ public class Road implements Serializable
     //van parkeerplaats op platform naar einde platform
     public Route getPath(Vehicle vehicle, ParkingSpot source, Vector3f exitwayPlatform)
     {
+             
+        System.out.println("EXITPOINTPLATFORMBEFORE: " +exitwayPlatform);
+        System.out.println("EXITPOINTPLATFORMAFTER: " + this.createCorrespondingWaypoint(exitwayPlatform));
+        
         List<Vector3f> track = new ArrayList<Vector3f>();
         track.add(vehicle.getPosition());
         track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
+        
         track.add(this.createCorrespondingWaypoint(exitwayPlatform));
         track.add(exitwayPlatform);
         source.UnparkVehicle(); //moet straks bij followroute
         vehicle.setPosition(exitwayPlatform);
         return new Route(track, getPathLength(track));
+   
     }
     
     //van uitgang platform naar ingang andere platform
      public Route getPath(Vehicle vehicle, Vector3f sourcePlatformExitPoint,Platform destination)
      {
-         List<Vector3f> track = this.track;
+         List<Vector3f> track = null;
+         for (Vector3f v : this.track)
+         {
+             track.add(v);
+         }
          track.add(sourcePlatformExitPoint);
          track.add(this.createCorrespondingWaypoint(sourcePlatformExitPoint));
          track.add(this.createCorrespondingWaypoint(destination.getEntrypoint()));
@@ -96,7 +106,8 @@ public class Road implements Serializable
      //van ingang platform naar parkeerplaats
       public Route getPath(Vehicle vehicle, ParkingSpot ps)
       {
-          List<Vector3f> track = this.track;
+          List<Vector3f> track = null;
+         
           track.add(vehicle.getPosition());
           track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
           track.add(this.createCorrespondingWaypoint(this.createCorrespondingWaypoint(ps.getPosition())));

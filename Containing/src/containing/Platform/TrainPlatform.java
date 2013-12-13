@@ -101,7 +101,7 @@ public class TrainPlatform extends Platform {
         if(state.equals(State.UNLOAD))
         {
             if(doItOnce) {
-                unload();
+                agvSpots.get(0).getParkedVehicle().followRoute(Settings.port.getMainroad().getPath());
                 doItOnce = false;
             }
         }

@@ -76,22 +76,12 @@ public class PortSimulation extends SimpleApplication {
             //truck[i].scale(0.15f);
             //truck[i].place(40.32f, 5f, i);
         //}
-
-
-        //freeCranes[0].place(0, 5.5f, 81);
-        //freeCranes[1].place(10, 5.5f, 81);
-        //freeCranes[2].place(-40, 5.5f, 81);
-        //freeCranes[3].place(-30, 5.5f, 81);
-
-        //avg = new AVG(assetManager, rootNode);
-
-
-        //for (int i = 0; i < 19; i++) {
-            //container[i] = new Container(assetManager, rootNode, ColorRGBA.randomColor());
-            //container[i].place(-42, 5.23f, -1.5f * (i + 1));
-        //}
-
-        //railCrane.attachContainer(container);
+        
+        for (int i = 0; i < 61; i++)
+        {
+        storageCranes[0] = new StorageCrane(assetManager, rootNode);
+        storageCranes[0].place(14, 5.5f, 3.1f+(i*2.5f));
+        }
 
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);

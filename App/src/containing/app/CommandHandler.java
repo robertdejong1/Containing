@@ -24,6 +24,9 @@ public class CommandHandler {
     static void handle(String input) {
         //Handle de command
         Command cmd = (Command) decode(input);
+        if(cmd == null){
+        	return;
+        }
         
         if(cmd.getCommand().equals("stats")){
         	if(MainActivity.getStats() == null){
@@ -44,7 +47,7 @@ public class CommandHandler {
             ObjectInputStream si = new ObjectInputStream(bi);
             return si.readObject();
         } catch (Exception e) {
-            System.out.println("An error occured");
+            System.out.println("An error occured while decoding base64");
         }
         return null;
     }

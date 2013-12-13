@@ -43,6 +43,7 @@ public class Road implements Serializable
         //for (Vector3f v : entryPoints){this.createCorrespondingWaypoint(v);}
     } 
     
+    
 
     private Vector3f createCorrespondingWaypoint(Vector3f point){
         if (track.size() == 4){
@@ -53,6 +54,12 @@ public class Road implements Serializable
         }
         return new Vector3f(track.get(0).x, point.y, point.z);
     }
+    
+    public Route getPath()
+    {
+       new Route(this.track,getPathLength(track) );
+    }
+    
     
      public static float getPathLength(List<Vector3f> weg){
          

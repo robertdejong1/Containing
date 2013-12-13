@@ -43,10 +43,10 @@ public class CommandHandler {
                 
 
             case "STATS":
-                HashMap<String, Integer> stats = new HashMap<>();
+                HashMap<String, Double> stats = new HashMap<>();
                 for(int i = 0; i < 7; i++){
                     Random rand = new Random();
-                    int randomNumber = rand.nextInt(10);
+                    Double randomNumber = rand.nextDouble();
                     switch(i){
                         case 0: stats.put("train", randomNumber); break;
                         case 1: stats.put("truck", randomNumber); break;

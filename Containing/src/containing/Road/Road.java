@@ -93,7 +93,7 @@ public class Road implements Serializable
          
      }
      
-     //van ingang platform naar parkeerplaats
+     //v an ingang platform naar parkeerplaats
       public Route getPath(Vehicle vehicle, ParkingSpot ps)
       {
           List<Vector3f> track = this.track;

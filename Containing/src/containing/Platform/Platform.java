@@ -248,7 +248,7 @@ public abstract class Platform implements Serializable {
             AGV agv = (AGV)Settings.port.getStoragePlatform().agvSpots.get(spot).getParkedVehicle();
             System.out.println("agv met id " + agv.getID() +" gaat een stukje rijden");
             Settings.port.getStoragePlatform().agvSpots.get(spot).UnparkVehicle();
-            agv.followRoute(Settings.port.getStoragePlatform().getPath(agv, Settings.port.getStoragePlatform(), true));
+            agv.followRoute(Settings.port.getStoragePlatform().road.getPath(agv, Settings.port.getStoragePlatform(), true));
             return agv;
         } catch(NoFreeAgvException e) {
             System.out.println("er is geen vrije agv beschikbaar");

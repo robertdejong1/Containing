@@ -7,6 +7,7 @@ import containing.Exceptions.InvalidVehicleException;
 import containing.Exceptions.NoFreeAgvException;
 import containing.ParkingSpot.AgvSpot;
 import containing.Platform.StorageStrip.StorageState;
+import containing.Road.Road;
 import containing.Road.Route;
 import containing.Settings;
 import containing.Vector3f;
@@ -49,9 +50,19 @@ public class StoragePlatform extends Platform {
         createStrips();
         createAgvSpots();
         createAllAgvs();
+        setRoad();
         /* no vehicles on this platform */
         extVehicleSpots = null;
         log("Created StoragePlatform object: " + toString());
+    }
+    
+    @Override
+    protected final void setRoad() 
+    {
+        List<Vector3f> wayshit = new ArrayList<>();
+        wayshit.add(getEntrypoint(Side.RIGHT));
+        wayshit.add(getExitpoint(Side.RIGHT));
+        road = new Road(wayshit);
     }
     
     public void loadContainerInAgv(Container container, Platform platformToGo)

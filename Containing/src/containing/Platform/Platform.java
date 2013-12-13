@@ -57,7 +57,8 @@ public abstract class Platform implements Serializable {
     protected Road road = null;
     
     protected Queue<Job> jobs = null;
-    protected Queue<AGV> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
+    protected Queue<AgvSpot> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
+    protected int agvCount = 0;
     protected int maxAgvQueue = 1;
     
     protected int time = 0;
@@ -165,10 +166,6 @@ public abstract class Platform implements Serializable {
         List<Integer> priorityColumns = ev.getPriorityColumns();
         
         /* give available crane a job */
-        if(agvQueue.isEmpty()) {
-            for(int i = 0; i < maxAgvQueue; i++)
-                agvQueue.add(getAGV());
-        }
         int craneId = 0;
         for(Crane c : cranes)
         {
@@ -188,9 +185,13 @@ public abstract class Platform implements Serializable {
                 }
                 
                 final Crane crane = c;
-                final AGV agv = agvQueue.poll();
+                if(agvCount < 4) {
+                    agvQueue.add(getAGV());
+                    agvCount++;
+                }
+                final AgvSpot agvSpot = agvQueue.poll();
                 final int row = rowToGive;
-                if(agv != null)
+                if(agvSpot != null)
                 {
                     final int _craneId = craneId;
                     System.out.println("AGV != NULL");
@@ -199,7 +200,8 @@ public abstract class Platform implements Serializable {
                         @Override
                         public void run()
                         {
-                            agv.followRoute(Settings.port.getStoragePlatform().road.getPath(agv, Settings.port.getStoragePlatform(), false));
+                            AGV agv = (AGV)agvSpot.getParkedVehicle();
+                            agv.followRoute(Settings.port.getStoragePlatform().road.getPath(agv, agvSpot, Settings.port.getStoragePlatform().getExitpoint()));
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
                                     Thread.sleep(Settings.ClockDelay);
@@ -216,13 +218,11 @@ public abstract class Platform implements Serializable {
         }
     }
     
-    public AGV getAGV() {
+    public AgvSpot getAGV() {
         try {
             int spot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
-            AGV agv = (AGV)Settings.port.getStoragePlatform().agvSpots.get(spot).getParkedVehicle();
-            System.out.println("agv met id " + agv.getID() +" gaat een stukje rijden");
-            Settings.port.getStoragePlatform().agvSpots.get(spot).UnparkVehicle();
-            return agv;
+            AgvSpot agvSpot = Settings.port.getStoragePlatform().agvSpots.get(spot);
+            return agvSpot;
         } catch(NoFreeAgvException e) {
             System.out.println("er is geen vrije agv beschikbaar");
         }
@@ -248,19 +248,19 @@ public abstract class Platform implements Serializable {
         catch(NoJobException e){/* ignore */}
     }
     
-    private void agvToQueue(AGV agv) throws AgvQueueSpaceOutOfBounds
+    private void agvToQueue(AgvSpot spot) throws AgvQueueSpaceOutOfBounds
     {
         if(agvQueue.size() < maxAgvQueue)
-            agvQueue.add(agv);
+            agvQueue.add(spot);
         else
             throw new AgvQueueSpaceOutOfBounds("No space available for AGV in agvQueue");
     }
     
-    protected void addAgvToQueue(AGV agv)
+    protected void addAgvToQueue(AgvSpot spot)
     {
         try
         {
-            agvToQueue(agv);
+            agvToQueue(spot);
         }
         catch(AgvQueueSpaceOutOfBounds e){/* ignore */}
     }

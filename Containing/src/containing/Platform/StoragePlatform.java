@@ -125,8 +125,6 @@ public class StoragePlatform extends Platform {
     
     public int requestFreeAgv(TransportType tt) throws NoFreeAgvException
     {
-        List<Vector3f> waypoints = new ArrayList<>();
-        Route route;
         switch(tt)
         {
             case Barge:

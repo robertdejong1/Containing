@@ -39,7 +39,7 @@ public class Road implements Serializable
         for (Vector3f v : roadPoints){
             track.add(v);
         }
-        Collections.sort(track); //links onder links boven rechts boven rechtsonder
+        //Collections.sort(track); //links onder links boven rechts boven rechtsonder
         //for (Vector3f v : entryPoints){this.createCorrespondingWaypoint(v);}
     } 
     

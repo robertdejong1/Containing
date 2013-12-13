@@ -260,6 +260,8 @@ public class StoragePlatform extends Platform {
     public void update()
     {
         time += Settings.ClockDelay;
+        for(AGV agv : agvs)
+            agv.update();
     }
     
 }

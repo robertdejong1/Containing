@@ -203,7 +203,6 @@ public abstract class Platform implements Serializable {
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
                                     Thread.sleep(Settings.ClockDelay);
-                                    agv.update();
                                     //System.out.println("Route 1: agv == MOVING");
                                 } catch(InterruptedException e) {/*ignore*/}
                             }

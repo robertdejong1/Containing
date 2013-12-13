@@ -185,7 +185,7 @@ public abstract class Platform implements Serializable {
                 }
                 
                 final Crane crane = c;
-                if(agvCount < 4) {
+                if(agvCount < 1) {
                     agvQueue.add(getAGV());
                     agvCount++;
                 }

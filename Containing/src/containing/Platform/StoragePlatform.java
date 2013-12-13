@@ -32,6 +32,7 @@ public class StoragePlatform extends Platform {
     
     private final int AGVS          = 100;
     private final float AGV_OFFSET  = 1.8f;
+    private final float ROAD_OFFSET = 1.65f;
     
     private final StorageStrip[] strips;
     private Vector3f[] entrypoints;
@@ -224,7 +225,7 @@ public class StoragePlatform extends Platform {
     {
         entrypoints = new Vector3f[2];
         entrypoints[0] = new Vector3f(getPosition().x, getPosition().y, getPosition().z);
-        entrypoints[1] = new Vector3f(getPosition().x + WIDTH, getPosition().y, getPosition().z);
+        entrypoints[1] = new Vector3f(getPosition().x + WIDTH - ROAD_OFFSET, getPosition().y, getPosition().z);
         
     }
     
@@ -232,7 +233,7 @@ public class StoragePlatform extends Platform {
     {
         exitpoints = new Vector3f[2];
         exitpoints[0] = new Vector3f(getPosition().x, getPosition().y, getPosition().z + LENGTH);
-        exitpoints[1] = new Vector3f(getPosition().x + WIDTH, getPosition().y, getPosition().z + LENGTH);
+        exitpoints[1] = new Vector3f(getPosition().x + WIDTH - ROAD_OFFSET, getPosition().y, getPosition().z + LENGTH);
     }
     
     @Override

@@ -141,7 +141,9 @@ public class Road implements Serializable
     }
     
     public List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Vector3f source, Vector3f destination){
-
+        for (Vector3f v : path){
+            System.out.println("V: " + v);
+        }
         System.out.println("Source: " + source);
         System.out.println("Destination: " + destination);
         int indexSource = path.indexOf(source);

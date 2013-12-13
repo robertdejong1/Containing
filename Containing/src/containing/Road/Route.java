@@ -30,13 +30,8 @@ public class Route implements Serializable {
         
         this.weg = weg;
         this.distance = distanceInMeters;
-        System.out.println("------------");
-        for (Vector3f v : weg){
-            System.out.println("V: " + v);
-        }
         
-        System.out.println("Distance way: " + distance);
-        System.out.println("------------");
+        
     }
     
     public void setDestinationPlatform(Platform destination){this.destinationPlatform = destination;}

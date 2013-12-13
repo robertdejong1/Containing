@@ -129,7 +129,7 @@ public abstract class Vehicle implements Serializable
     public void update(){
         
         if (this.getStatus() == Status.MOVING){
-            
+           
             this.route.follow(this);
         }
         

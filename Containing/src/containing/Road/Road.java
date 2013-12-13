@@ -69,7 +69,7 @@ public class Road implements Serializable
         track.add(this.createCorrespondingWaypoint(destination));
         track.add(destination);
         
-        return new Route(track, getPathLength(track)));
+        return new Route(track, getPathLength(track));
     }
      
     

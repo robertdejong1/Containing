@@ -202,6 +202,7 @@ public abstract class Platform implements Serializable {
                         {
                             AGV agv = (AGV)agvSpot.getParkedVehicle();
                             // geef AGV route naar exit van StoragePlatform
+                            agv.followRoute(Settings.port.getMainroad().getPath());
                             agv.followRoute(Settings.port.getStoragePlatform().road.getPath(agv, agvSpot, Settings.port.getStoragePlatform().getExitpoint()));
                             while(agv.getStatus() == Status.MOVING) {
                                 try {

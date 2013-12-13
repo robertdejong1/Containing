@@ -202,6 +202,7 @@ public abstract class Platform implements Serializable {
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
                                     Thread.sleep(10);
+                                    System.out.println("Route 1: agv == MOVING");
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
                             // geef AGV route naar ingang van platform
@@ -209,6 +210,7 @@ public abstract class Platform implements Serializable {
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
                                     Thread.sleep(10);
+                                    System.out.println("Route 2: agv == MOVING");
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
                             // geef AGV route naar parkingspot
@@ -216,6 +218,7 @@ public abstract class Platform implements Serializable {
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
                                     Thread.sleep(10);
+                                    System.out.println("Route 3: agv == MOVING");
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
                             try

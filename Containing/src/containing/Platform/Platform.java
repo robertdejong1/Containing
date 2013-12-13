@@ -199,6 +199,7 @@ public abstract class Platform implements Serializable {
                         @Override
                         public void run()
                         {
+                            agv.followRoute(Settings.port.getStoragePlatform().road.getPath(agv, Settings.port.getStoragePlatform(), false));
                             while(agv.getStatus() == Status.MOVING) {
                                 try {
                                     Thread.sleep(Settings.ClockDelay);
@@ -222,7 +223,6 @@ public abstract class Platform implements Serializable {
             AGV agv = (AGV)Settings.port.getStoragePlatform().agvSpots.get(spot).getParkedVehicle();
             System.out.println("agv met id " + agv.getID() +" gaat een stukje rijden");
             Settings.port.getStoragePlatform().agvSpots.get(spot).UnparkVehicle();
-            agv.followRoute(Settings.port.getStoragePlatform().road.getPath(agv, Settings.port.getStoragePlatform(), false));
             return agv;
         } catch(NoFreeAgvException e) {
             System.out.println("er is geen vrije agv beschikbaar");

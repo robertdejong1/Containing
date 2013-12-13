@@ -11,11 +11,13 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.util.SkyFactory;
 import containing.Command;
+import containing.Settings;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,9 +44,9 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.236.73", 1337);
-        Thread t = new Thread(networkHandler);
-        t.start();
+        //Runnable networkHandler = new NetworkHandler("141.252.236.70", 1337);
+        //Thread t = new Thread(networkHandler);
+        //t.start();
     }
 
     @Override
@@ -102,7 +104,7 @@ public class PortSimulation extends SimpleApplication {
         sun2.setColor(ColorRGBA.White.clone().multLocal(2));
         rootNode.addLight(sun2);
         
-        inputManager.addMapping("mousedown", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputManager.addMapping("mousedown", new MouseButtonTrigger(MouseInput.BUTTON_MIDDLE));
         inputManager.addListener(analogListener,"mousedown");
     }
     
@@ -117,11 +119,26 @@ public class PortSimulation extends SimpleApplication {
                 rootNode.collideWith(ray, results);
                 if (results.size() > 0) 
                 {
-                    Geometry closest = results.getClosestCollision().getGeometry();
-                    if (!closest.getName().equals("port"))
-                    {
-                        chaseCam.setSpatial(closest);
-                    }
+                    //Geometry closest = results.getClosestCollision().getGeometry();
+                    //if (!closest.getName().equals("port"))
+                    //{
+                        //chaseCam.setSpatial(closest);
+                    //}
+                    agv[0] = new AGV(assetManager, rootNode, 1);
+                    agv[0].rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+                    agv[0].place(103f*Settings.METER,5.5f,0);
+                    
+                    MotionPath path = new MotionPath();
+                    path.addWayPoint(new Vector3f(103f*Settings.METER,5.5f,0));
+                    path.addWayPoint(new Vector3f(103f*Settings.METER,5.5f, 1562f*Settings.METER));
+                    path.addWayPoint(new Vector3f(717f*Settings.METER,5.5f, 1562f*Settings.METER));
+                    path.addWayPoint(new Vector3f(717f*Settings.METER, 5.5f, 0));
+                    path.setCurveTension(0.0f);
+                    
+                    MotionEvent motev = new MotionEvent(agv[0].model, path, 10);
+                    motev.setSpeed(1f);
+                    motev.setDirectionType(MotionEvent.Direction.Path);
+                    motev.play();
                 }
             }
         }
@@ -265,11 +282,13 @@ public class PortSimulation extends SimpleApplication {
             
             MotionPath path = new MotionPath();
             containing.Road.Route route = (containing.Road.Route)map.get("motionPath");
+            //containing.Road.Route route = containing.Settings.port.getMainroad().getPath();
             List<containing.Vector3f> motion = route.getWeg();
             for (containing.Vector3f v : motion)
             {
                 path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
             }
+            path.setCurveTension(0.0f);
             float duration = Float.parseFloat(map.get("duration").toString());
             
             MotionEvent motev;
@@ -289,6 +308,7 @@ public class PortSimulation extends SimpleApplication {
                         {
                             motev = new MotionEvent(a.model, path, duration);
                             motev.setSpeed(1f);
+                            motev.setDirectionType(MotionEvent.Direction.Path);
                             motev.play();
                         }
                     }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package containing;
 
 import java.io.BufferedReader;
@@ -24,6 +19,11 @@ public class ClientHandler implements Runnable {
     private long lastPing;
     private boolean app;
 
+    /**
+     * Creates a ClientHandler instance
+     * @param client Client socket
+     * @param id unique id for this instance
+     */
     public ClientHandler(Socket client, int id) {
         this.client = client;
         this.id = id;
@@ -32,7 +32,7 @@ public class ClientHandler implements Runnable {
         this.lastPing = (date.getTime() / 1000);
         CommandHandler.addidTime(id);
     }
-
+    
     @Override
     public void run() {
         try {
@@ -94,6 +94,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Checks if the connection is still alive
+     * @return true if the connection is alive, false otherwise
+     */
     private boolean isAlive() {
         Date date = new Date();
         long currentTime = (date.getTime() / 1000);

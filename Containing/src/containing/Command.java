@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package containing;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
@@ -21,10 +16,21 @@ public class Command implements Serializable {
     private Object object;
     private boolean app;
 
+    /**
+     * Creates a Command instance
+     * @param command The name of this command
+     * @param object The data wich belongs to this command
+     */
     public Command(String command, Object object) {
         this(command, object, false);
     }
 
+     /**
+     * Creates a Command instance
+     * @param command The name of this command
+     * @param object The data wich belongs to this command
+     * @param app True if this command is only meant for the app, false for the simulator
+     */
     public Command(String command, Object object, boolean app) {
         this.command = command;
         this.object = object;
@@ -43,6 +49,10 @@ public class Command implements Serializable {
         return this.app;
     }
 
+    /**
+     * Serializes this object and returns the value base64 encoded
+     * @return The base64 encoded serialized string of this Command
+     */
     @Override
     public String toString() {
         System.out.println(this.command);

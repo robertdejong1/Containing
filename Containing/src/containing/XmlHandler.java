@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package containing;
 
 import containing.Container.TransportType;
@@ -24,11 +19,17 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * 
  * @author Robert
  */
 public class XmlHandler {
 
+    /**
+     * Returns a list of Containers given an XML file
+     * @param xmlfile XML file to be read
+     * @return List of containers from XML file
+     * @throws ParseErrorException 
+     */
     public List<Container> openXml(File xmlfile) throws ParseErrorException{
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = null;
@@ -47,6 +48,12 @@ public class XmlHandler {
         }
     }
 
+    /**
+     * Parses given document and returns a list of Containers
+     * @param doc Document with containing the XML file
+     * @return a list of containers from XML file
+     * @throws InvalidTransportException 
+     */
     private List<Container> parse(Document doc) throws InvalidTransportException {
         List<Container> containers = new ArrayList<>();
 
@@ -142,6 +149,12 @@ public class XmlHandler {
 
     }
 
+    /**
+     * Gets a nested value from a node given a list of names of nestings
+     * @param node The node to get the value from
+     * @param nests A list of nested names
+     * @return A node whose name equals the last value in nests
+     */
     private Node getNestedValue(Node node, List<String> nests) {
         if (nests.isEmpty()) {
             return node.getChildNodes().item(0);

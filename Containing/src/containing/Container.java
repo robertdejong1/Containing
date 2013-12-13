@@ -25,6 +25,21 @@ public class Container implements Serializable
         Truck, Train, Barge, Seaship
     }
 
+    /**
+     * Creates a Container instance
+     * @param containerId Id for this container
+     * @param arrivalDate Arrival date for this container
+     * @param arrivalTimeFrom Arrival time from for this container
+     * @param arrivalTimeTill Arrival time till for this container
+     * @param arrivalTransport Arrival transport for this container
+     * @param arrivalTransportCompany Arrival transport type for this container
+     * @param arrivalPosition Arrival position for this container
+     * @param owner Owner of this container
+     * @param departureDate Departure date of this container
+     * @param departureTimeFrom Departure time from for this container
+     * @param departureTimeTill Departure time till for this container
+     * @param departureTransport Departure transport type for this container
+     */
     public Container(int containerId, Date arrivalDate, float arrivalTimeFrom, float arrivalTimeTill, TransportType arrivalTransport, String arrivalTransportCompany, Vector3f arrivalPosition, String owner, Date departureDate, float departureTimeFrom, float departureTimeTill, TransportType departureTransport) {
         this.containerId = containerId;
         this.arrivalDate = arrivalDate;
@@ -101,21 +116,7 @@ public class Container implements Serializable
     }
     
     @Override
-    public String toString(){
-        String ret = "Container:[";
-        ret += this.containerId +", ";
-        ret += this.arrivalDate.toString() +", ";
-        ret += this.arrivalTimeFrom +", ";
-        ret += this.arrivalTimeTill +", ";
-        ret += this.arrivalTransport +", ";
-        ret += this.arrivalTransportCompany +", ";
-        ret += this.arrivalPosition.toString() +", ";
-        ret += this.owner +", ";
-        ret += this.departureDate +", ";
-        ret += this.departureTimeFrom +", ";
-        ret += this.departureTimeTill +", ";
-        ret += this.departureTransport +"]";
-        
-        return ret;
+    public String toString() {
+        return "Container{" + "containerId=" + containerId + ", arrivalDate=" + arrivalDate + ", arrivalTimeFrom=" + arrivalTimeFrom + ", arrivalTimeTill=" + arrivalTimeTill + ", arrivalTransport=" + arrivalTransport + ", arrivalTransportCompany=" + arrivalTransportCompany + ", arrivalPosition=" + arrivalPosition + ", owner=" + owner + ", departureDate=" + departureDate + ", departureTimeFrom=" + departureTimeFrom + ", departureTimeTill=" + departureTimeTill + ", departureTransport=" + departureTransport + '}';
     }
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package containing;
 
 import java.util.ArrayList;
@@ -22,10 +17,19 @@ public class CommandHandler {
     static volatile ConcurrentHashMap<Integer, Integer> idLastID = new ConcurrentHashMap<>();
     static volatile int counter = 0;
 
+    /**
+     * Adds a command to the command queue
+     * @param cmd The command to be added
+     */
     public static void addCommand(Command cmd){
         queuedCommands.put(getNewId(), cmd);
     }
     
+    /**
+     * Handles a given input string
+     * @param input The string to be handled
+     * @return A reply Command
+     */
     public static Command handle(String input) {
         String[] command = input.split(":", 2);
         String prefix = command[0];
@@ -61,6 +65,12 @@ public class CommandHandler {
         }
     }
     
+    /**
+     * Checks wether there are new commands available for given id and app
+     * @param id The id of the client connection
+     * @param app Boolean to only check for commands to the app
+     * @return List of new commands
+     */
     public static List<Command> getNewCommands(int id, boolean app){
         List<Command> commands = new ArrayList<>();
         
@@ -80,6 +90,10 @@ public class CommandHandler {
         return commands;
     }
     
+    /**
+     * Adds the last Command id to a client connection id
+     * @param id The client connection id
+     */
     public static void addidTime(int id){
         idLastID.put(id, getLastID());
     }

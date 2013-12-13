@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package containing;
 
 import java.io.FileWriter;
@@ -16,6 +11,11 @@ public class ErrorLog {
 
     static final String LOGFILE = "ErrorLog.txt";
 
+    /**
+     * Writes an error message and an exception to the logfile
+     * @param msg Error message
+     * @param ex Thrown exception
+     */
     public static void logMsg(String msg, Exception ex) {
         System.out.println("ERROR: " + msg +"(" +ex.getMessage() +")");
         try{
@@ -28,7 +28,11 @@ public class ErrorLog {
         }
     }
     
-        public static void logMsg(String msg) {
+    /**
+     * Writes an error message to the logfile
+     * @param msg Error message
+     */
+    public static void logMsg(String msg) {
         System.out.println("ERROR: " + msg);
         try{
             FileWriter writer = new FileWriter(LOGFILE, true);

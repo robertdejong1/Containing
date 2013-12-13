@@ -28,8 +28,8 @@ public class Train extends ExternVehicle{
 
         super(arrivalDate, arrivalTime,  nrContainersDepth,nrContainersWidth,nrContainersHeight, platform, company, Type.TRAIN); //true if vehicle comes to load, otherwise false
         this.position = new Vector3f(1.4f,0f,0f);
-        this.maxSpeedLoaded = 150;
-        this.maxSpeedUnloaded = 160;
+        this.maxSpeedLoaded = 360;
+        this.maxSpeedUnloaded = 360;
 
     }
 

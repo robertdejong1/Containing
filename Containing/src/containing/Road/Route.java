@@ -52,8 +52,7 @@ public class Route implements Serializable {
         if (distance <= 0){
          
             Settings.messageLog.AddMessage("Reached end of path");
-            Settings.messageLog.AddMessage("DestinationPlatform: " + destinationPlatform);
-            Settings.messageLog.AddMessage("DestinationParkingSpot: " + destinationParkingSpot);
+            
             vehicle.stopDriving();
             if (destinationParkingSpot == null){
                 //motionpath from waypoint to platform

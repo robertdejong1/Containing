@@ -61,9 +61,23 @@ public class Road implements Serializable
         else return 0;
     }
      
+    public Route getPath(Vehicle vehicle, ParkingSpot source, Vector3f destination)
+    {
+        List<Vector3f> track = new ArrayList<Vector3f>();
+        track.add(vehicle.getPosition());
+        track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
+        track.add(this.createCorrespondingWaypoint(destination));
+        track.add(destination);
+        
+        return new Route(track, getPathLength(track)));
+    }
+     
     
     //public Route getPath(Vehicle vehicle, VehicleSpot)
     public Route getPath(Vehicle vehicle, Platform destination, boolean outin){ 
+        //\\
+        
+        
         Route shortestPath = null;
         if (outin)//ingang
         {
@@ -74,14 +88,14 @@ public class Road implements Serializable
         else
         {
             Vector3f exitpoint = this.createCorrespondingWaypoint(destination.getExitpoint());
-            shortestPath = calculateShortestPath(vehicle, this.createCorrespondingWaypoint(exitpoint));
+            shortestPath = calculateShortestPath(vehicle.getPosition(), exitpoint);
         }
         
         shortestPath.setDestinationPlatform(destination);
         shortestPath.setDestinationParkingSpot(null);
         
         
-        return shortestPath;
+        return shortestPath; 
     }
     
     //70 130 152
@@ -120,6 +134,26 @@ public class Road implements Serializable
      * There are two possible roads for agv, the function selects the road with minimum distance (=shortest).
      * The shortest way is converted into a Route.
      */
+    
+    public Route calculateShortestPath(Vector3f vehicleposition, Vector3f destination){ //only for mainroad
+        List<Vector3f> outsidetrack = new ArrayList<Vector3f>(this.track);
+
+        outsidetrack.add(destination);
+        Vector3f positionvehicle = vehicleposition;
+        outsidetrack.add(positionvehicle);
+        Collections.sort(outsidetrack);
+        List<Vector3f> insidetrack = new ArrayList<>(outsidetrack);
+        Collections.reverse(outsidetrack);
+        
+        insidetrack = this.setPathCorrectOrder(insidetrack, positionvehicle, destination);
+        outsidetrack = this.setPathCorrectOrder(outsidetrack,positionvehicle, destination);
+        
+        float length_insidetrack = getPathLength(insidetrack);
+        float length_outsidetrack = getPathLength(outsidetrack);
+        
+        if (length_insidetrack < length_outsidetrack){return new Route(insidetrack, length_insidetrack);}
+        else return new Route(outsidetrack, length_outsidetrack);
+    }
     public Route calculateShortestPath(Vehicle vehicle, Vector3f destination){ //only for mainroad
         List<Vector3f> outsidetrack = new ArrayList<Vector3f>(this.track);
 

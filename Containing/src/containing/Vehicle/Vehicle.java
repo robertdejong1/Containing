@@ -109,7 +109,7 @@ public abstract class Vehicle implements Serializable
         Settings.messageLog.AddMessage("Vehicle: " + this.getID() + "start following path" );
         Settings.messageLog.AddMessage("VehicleStatus: " + this.status);
         Settings.messageLog.AddMessage("Route: " + this.route);
-        System.out.println("VehicleStatus: " + this.status);
+     
         
         
     } 

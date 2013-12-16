@@ -63,6 +63,10 @@ public class StorageStrip implements Serializable {
         createCrane();
     }
     
+    public HashMap<Point3D, Container> getContainers() {
+        return containers;
+    }
+    
     public void createJob(int stripId, Container c)
     {
         if(jobs.size() < MAX_JOBS)

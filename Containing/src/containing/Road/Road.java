@@ -58,6 +58,7 @@ public class Road implements Serializable
     //van parkeerplaats op platform naar einde platform
     public Route getPath(Vehicle vehicle, ParkingSpot source, Vector3f exitwayPlatform)
     {
+        System.out.println("hahaah hier heeft vehicle boi : " + vehicle.getCurrentPlatform().toString());
         List<Vector3f> track = new ArrayList<Vector3f>();
         track.add(vehicle.getPosition());
         track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
@@ -170,7 +171,6 @@ public class Road implements Serializable
         {
             for (Vector3f waypoint : track)   
             {
-                System.out.println("waypoint.x : " + waypoint.x + " waypoint.z : " + waypoint.z);
                 System.out.println("source.getExitpoint() " + source.getExitpoint());
               if ((waypoint.x >= source.getExitpoint().x && waypoint.z >= source.getExitpoint().z))
               {

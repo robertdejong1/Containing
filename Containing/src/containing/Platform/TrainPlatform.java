@@ -142,6 +142,7 @@ public class TrainPlatform extends Platform {
                                     //System.out.println("Route 1: agv == MOVING");
                                 } catch(InterruptedException e) {/*ignore*/}
                             }
+                            System.out.println("en hier heeft vehicleboi : " + agv.getCurrentPlatform());
                             agv.followRoute(Settings.port.getMainroad().getPath(agv, Settings.port.getStoragePlatform().getExitpoint(), Settings.port.getPlatforms().get(2)));
                             while(agv.getStatus() == Vehicle.Status.MOVING) {
                                 try {

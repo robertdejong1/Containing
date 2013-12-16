@@ -113,6 +113,7 @@ public class StoragePlatform extends Platform {
             try
             {
                 agvs.get(currentAgv).setPosition(agvSpots.get(i).getPosition());
+                agvs.get(currentAgv).setCurrentPlatform(this);
                 agvSpots.get(i).ParkVehicle(agvs.get(currentAgv));
                 currentAgv++;
             } 

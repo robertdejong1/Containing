@@ -132,7 +132,7 @@ public class TrainPlatform extends Platform {
                         final AGV agv = (AGV)agvSpot.getParkedVehicle();
                         
                         System.out.println("ik ga nu die motherfucking agv een route geven bitch!");
-                        agv.followRoute(agv.getCurrentPlatform().road.getPath(agv, agvSpot, Settings.port.getPlatforms().get(2).agvSpots.get(0), Settings.port.getPlatforms().get(2)));
+                        agv.followRoute(agv.getCurrentPlatform().road.getPathAllIn(agv, agvSpot, Settings.port.getPlatforms().get(2).agvSpots.get(0), Settings.port.getPlatforms().get(2)));
                         //agv.followRoute(Settings.port.getStoragePlatform().road.getPath(agv, agvSpot, Settings.port.getStoragePlatform().getExitpoint()));
                         //agv.followRoute(Settings.port.getMainroad().getPath(agv, Settings.port.getStoragePlatform().getExitpoint(), Settings.port.getPlatforms().get(2)));
                         //agv.followRoute(road.getPath(agv, Settings.port.getPlatforms().get(2).agvSpots.get(_craneId)));

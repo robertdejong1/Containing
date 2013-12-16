@@ -4,11 +4,14 @@ import containing.Platform.BargePlatform;
 import containing.Platform.Platform;
 import containing.Platform.SeashipPlatform;
 import containing.Platform.StoragePlatform;
+import containing.Platform.StorageStrip;
 import containing.Platform.TrainPlatform;
 import containing.Platform.TruckPlatform;
 import containing.Road.Road;
+import containing.Vehicle.ExternVehicle;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Port implements Serializable
@@ -48,6 +51,45 @@ public class Port implements Serializable
         
     }
 
+    public HashMap<String, Double> getStats(){
+        HashMap<String, Double> stats = new HashMap<>();
+        for(Platform p : Platforms){
+            
+            double count = 0;
+            
+            List<ExternVehicle> evs = p.getEvs();
+            for(ExternVehicle ev : evs){
+                count += ev.getCargo().size();
+            }
+            
+            if(p instanceof BargePlatform){
+                stats.put("barge", count);
+            }
+            else if(p instanceof SeashipPlatform){
+                stats.put("seaship", count);
+            }
+            else if(p instanceof TrainPlatform){
+                stats.put("train", count);
+            }
+            else if(p instanceof TruckPlatform){
+                stats.put("truck", count);
+            }
+        }
+        
+        double agvCount = storagePlatform.getAgvs().size();
+        stats.put("agv", agvCount);
+        
+        double stripCount = 0;
+        StorageStrip[] strips = storagePlatform.getStrips();
+        for(StorageStrip strip : strips){
+            stripCount += strip.getContainers().size();
+        }
+        
+        stats.put("storage", stripCount);
+        
+        return stats;
+    }
+    
     public void update() 
     {
         for (Platform P : Platforms) 

@@ -172,7 +172,7 @@ public class Road implements Serializable
     
     public synchronized List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Platform source, Platform destination){
         //path size altijd 4
-        List<Vector3f> correctPath = path;
+        List<Vector3f> correctPath = new ArrayList<>();
         correctPath.add(path.get(0));
         correctPath.add(path.get(1));
         
@@ -191,7 +191,7 @@ public class Road implements Serializable
         {
             for (Vector3f waypoint : _track)   
             {
-                System.out.println("source.getExitpoint() " + source.getExitpoint());
+               
               if ((waypoint.x >= source.getExitpoint().x && waypoint.z >= source.getExitpoint().z))
               {
                   

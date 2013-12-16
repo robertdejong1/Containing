@@ -19,7 +19,7 @@
         android:ems="10"
         android:hint="ip:port"
         android:singleLine="true"
-        android:text="141.252.222.110:1337" >
+        android:text="141.252.222.88:1337" >
 
         <requestFocus />
     </EditText>

@@ -10,8 +10,8 @@ import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.Vehicle;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Road implements Serializable 
 {
@@ -59,14 +59,16 @@ public class Road implements Serializable
     public Route getPath(Vehicle vehicle, ParkingSpot source, Vector3f exitwayPlatform)
     {
         System.out.println("hahaah hier heeft vehicle boi : " + vehicle.getCurrentPlatform().toString());
+        ConcurrentHashMap<String, List<Vector3f>> trackHashMap = new ConcurrentHashMap<String, List<Vector3f>>();
         List<Vector3f> track = new ArrayList<Vector3f>();
         track.add(vehicle.getPosition());
         track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
         track.add(this.createCorrespondingWaypoint(exitwayPlatform));
         track.add(exitwayPlatform);
+        trackHashMap.put("track", track);
         source.UnparkVehicle(); //moet straks bij followroute
         vehicle.setPosition(exitwayPlatform);
-        Route route = new Route(track, getPathLength(track));
+        Route route = new Route(track, getPathLength(trackHashMap.get("track")));
         route.destinationParkingSpot = null;
         route.destinationPlatform = null;
         return route;

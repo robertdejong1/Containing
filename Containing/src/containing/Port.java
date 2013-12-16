@@ -23,6 +23,7 @@ public class Port implements Serializable
     private StoragePlatform storagePlatform;
 
     private int lastUpdate = 0;
+    private HashMap<String,Double> lastStats = null;
     
     public Port() 
     {
@@ -97,9 +98,11 @@ public class Port implements Serializable
     public void update() 
     {
         lastUpdate++;
-        if(lastUpdate == 30){
-            CommandHandler.addCommand(new Command("STATS", getStats(), true));
+        HashMap<String,Double> stats = getStats();
+        if(lastUpdate == 30 && stats != lastStats){
+            CommandHandler.addCommand(new Command("stats", stats, true));
             lastUpdate = 0;
+            lastStats = stats;
         }
         for (Platform P : Platforms) 
         {

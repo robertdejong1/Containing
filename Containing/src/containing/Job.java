@@ -16,6 +16,13 @@ public class Job implements Serializable
     private ExternVehicle targetVehicle;
     private String companyName;
     
+    /**
+     * Creates a job instance
+     * @param date date of job  
+     * @param departureTime departure time of job
+     * @param vehicleType type of vehicle for job
+     * @param companyName  company name of job
+     */
     public Job(Date date, float departureTime, Container.TransportType vehicleType, String companyName) 
     {
         this.date = date;
@@ -25,6 +32,9 @@ public class Job implements Serializable
         this.companyName = companyName;
     }
     
+    /*
+     * adds container to job
+     */
     public void addContainer(Container container)
     {
         Containers.add(container);
@@ -60,6 +70,10 @@ public class Job implements Serializable
         this.targetVehicle = TargetVehicle;
     }
     
+    /**
+     * Changes container departuretime
+     * @param departureTime 
+     */
     public void changeContainerDepartureTime(float departureTime)
     {
         this.departureTime = departureTime;
@@ -76,7 +90,11 @@ public class Job implements Serializable
     }
     
     
-    
+    /**
+     * Sorts jobs
+     * @param Jobs list of unsorted jobs
+     * @return stack with sorted jobs
+     */
     public static Stack<Job> sortOutGoingJobs(List<Job> Jobs)
     {   
         Stack JobStack = new Stack<>();

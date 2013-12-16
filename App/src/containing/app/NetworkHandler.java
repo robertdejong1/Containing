@@ -58,6 +58,8 @@ public class NetworkHandler implements Runnable {
         System.out.println("Connected to " +ip +":" +port);
         MainActivity.setIsConnected(true);
         
+        writer.println("IDENTIFY:APP");
+        
         while(true){
         	if(sendPing()){
         		System.out.println("Sending: PING");

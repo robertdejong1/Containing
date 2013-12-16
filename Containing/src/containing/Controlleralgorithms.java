@@ -27,6 +27,10 @@ class Controlleralgorithms
     private static Stack<Job> jobQeueSorted;
     private static List<ExternVehicle> scheduledArrivingVehicles;
     
+    /**
+     * sorts xml file into vehicles with containers
+     * @param ContainersFromXML xml from file
+     */
     public static void sortInCommingContainers(List<Container> ContainersFromXML)
     {
         scheduledArrivingVehicles = new ArrayList<>();
@@ -109,11 +113,13 @@ class Controlleralgorithms
         
     }
     
-    /*
+    /**
      * Search if job exists with same timestamp
      * true? add container to job
      * false? create new job
      * Sort List of jobs
+     * 
+     * @param UnloadedContainer Container to sort
      */
     public static void sortOutgoingContainer(Container UnloadedContainer)
     {
@@ -158,12 +164,17 @@ class Controlleralgorithms
         jobQeueSorted = Job.sortOutGoingJobs(jobQeueUnsorted);
     }
     
-   /*
-    *Removes job from the JobQeue
-    *Checks if there is already a docked vehicle waiting
-    *if not create a new vehicle
-    *return job
-    */ 
+    /**
+     * Removes job from the JobQeue
+     * Checks if there is already a docked vehicle waiting
+     * if not create a new vehicle
+     * return job
+     * 
+     * @param platform platform that requests the job
+     * @param timeStamp current time
+     * @return
+     * @throws NoJobException 
+     */
     public static Job getNextJob(Platform platform, Timestamp timeStamp) throws NoJobException
     {
         Job job = null;
@@ -230,7 +241,15 @@ class Controlleralgorithms
         
     }
     
-    //Creates vehicle based on type
+    /**
+     * Creates vehicle based on time
+     * 
+     * @param typeofVehicle
+     * @param date
+     * @param time
+     * @param companyName
+     * @return returns a vehicle
+     */
     private static ExternVehicle createNewVehicle(Container.TransportType typeofVehicle, Date date, float time, String companyName)
     {
         ExternVehicle vehicleToReturn = null;
@@ -254,7 +273,10 @@ class Controlleralgorithms
         return vehicleToReturn;
     }
     
-    //Check list for matching vehicles
+    /**
+     * checks list of vehicles for incomming vehicles matching timestamp
+     * @param timeStamp 
+     */
     public static void checkIncomingVehicles(Timestamp timeStamp)
     {
         //System.out.println(timeStamp);
@@ -284,6 +306,11 @@ class Controlleralgorithms
         }
     }
     
+    /**
+     * matches transport type with a platform in port
+     * @param transportType
+     * @return 
+     */
     private static Platform matchTransportTypeWithPlatform(Container.TransportType transportType)
     {
         Platform platform = null;
@@ -299,6 +326,11 @@ class Controlleralgorithms
         return platform;
     }
     
+    /**
+     * gets first date from containers in xml
+     * @param ContainersFromXML
+     * @return 
+     */
     public static long getFirstDate(List<Container> ContainersFromXML)
     {
         if (ContainersFromXML.size() > 0)
@@ -348,6 +380,9 @@ class Controlleralgorithms
         return jobQeueUnsorted;
     }
     
+    /**
+     * clears lists for unitests (static)
+     */
     public static void ClearLists()
     {
         jobQeueUnsorted.clear();

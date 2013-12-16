@@ -117,11 +117,10 @@ public class MainActivity extends Activity {
     	stats = new GraphViewSeries(new GraphViewData[] {
     	      new GraphViewData(1, data.get("train")),
     	      new GraphViewData(2, data.get("truck")),
-    	      new GraphViewData(3, data.get("seaShip")),
+    	      new GraphViewData(3, data.get("seaship")),
     	      new GraphViewData(4, data.get("barge")),
     	      new GraphViewData(5, data.get("storage")),
     	      new GraphViewData(6, data.get("agv")),
-    	      new GraphViewData(7, data.get("other"))
     	});
     	 
     	GraphView graphView = new BarGraphView(
@@ -133,7 +132,7 @@ public class MainActivity extends Activity {
     	graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
     	graphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
     	graphView.getGraphViewStyle().setNumHorizontalLabels(7);
-    	graphView.setHorizontalLabels(new String[] {"Train" , "Truck", "Seaship", "Barge", "Storage", "AGV", "Other"});
+    	graphView.setHorizontalLabels(new String[] {"Train" , "Truck", "Seaship", "Barge", "Storage", "AGV"});
     	graphView.getGraphViewStyle().setVerticalLabelsWidth(50);
 
     	final GraphView view = graphView;
@@ -154,11 +153,10 @@ public class MainActivity extends Activity {
             	stats.resetData(new GraphViewData[] {
                 	      new GraphViewData(1, data.get("train")),
                 	      new GraphViewData(2, data.get("truck")),
-                	      new GraphViewData(3, data.get("seaShip")),
+                	      new GraphViewData(3, data.get("seaship")),
                 	      new GraphViewData(4, data.get("barge")),
                 	      new GraphViewData(5, data.get("storage")),
                 	      new GraphViewData(6, data.get("agv")),
-                	      new GraphViewData(7, data.get("other"))
                 	});
         	}
         });

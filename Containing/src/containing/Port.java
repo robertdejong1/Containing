@@ -8,6 +8,7 @@ import containing.Platform.StorageStrip;
 import containing.Platform.TrainPlatform;
 import containing.Platform.TruckPlatform;
 import containing.Road.Road;
+import containing.Vehicle.AGV;
 import containing.Vehicle.ExternVehicle;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,14 +20,10 @@ public class Port implements Serializable
     private int ID = 0;
     private List<Platform> Platforms;
     private Road Mainroad;
-
-    public Road getMainroad() {
-        return Mainroad;
-    }
-    //private List<AGV> aGVs;
     private StoragePlatform storagePlatform;
-    
 
+    private int lastUpdate = 0;
+    
     public Port() 
     {
         this.Platforms = new ArrayList<>();
@@ -47,8 +44,10 @@ public class Port implements Serializable
         storagePlatform = new StoragePlatform(new Vector3f(110f*Settings.METER , 5.5f, 19f*Settings.METER));
         //aGVs = storagePlatform.getAllCreatedAgvs();
         Platforms.add(storagePlatform);
-        
-        
+    }
+    
+    public Road getMainroad() {
+        return Mainroad;
     }
 
     public HashMap<String, Double> getStats(){
@@ -76,7 +75,12 @@ public class Port implements Serializable
             }
         }
         
-        double agvCount = storagePlatform.getAgvs().size();
+        
+         List<AGV> agvs = storagePlatform.getAgvs();
+         double agvCount = 0;
+         for(AGV agv : agvs){
+             agvCount += agv.getCargo().size();
+         }
         stats.put("agv", agvCount);
         
         double stripCount = 0;
@@ -86,12 +90,17 @@ public class Port implements Serializable
         }
         
         stats.put("storage", stripCount);
-        
+        System.out.println(stats);
         return stats;
     }
     
     public void update() 
     {
+        lastUpdate++;
+        if(lastUpdate == 30){
+            CommandHandler.addCommand(new Command("STATS", getStats(), true));
+            lastUpdate = 0;
+        }
         for (Platform P : Platforms) 
         {
             P.update();

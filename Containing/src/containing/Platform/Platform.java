@@ -88,7 +88,7 @@ public abstract class Platform implements Serializable {
         return extVehicles;
     }
     
-    protected void setRoad() 
+    protected void setRoad()
     {
         List<Vector3f> wayshit = new ArrayList<>();
         wayshit.add(entrypoint);

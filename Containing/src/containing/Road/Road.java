@@ -82,6 +82,7 @@ public class Road implements Serializable
          vehicle.setCurrentPlatform(destination);
          vehicle.setPosition(destination.getEntrypoint());
          Route route = new Route(track, getPathLength(track));
+         route.destinationPlatform = destination;
          route.destinationParkingSpot = null;
          return route;
          

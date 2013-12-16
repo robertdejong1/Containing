@@ -81,7 +81,10 @@ public class Road implements Serializable
          track = this.setPathCorrectOrder(track, vehicle.getCurrentPlatform(), destination);
          vehicle.setCurrentPlatform(destination);
          vehicle.setPosition(destination.getEntrypoint());
-         return new Route(track, getPathLength(track));
+         Route route = new Route(track, getPathLength(track));
+         route.destinationParkingSpot = null;
+         return route;
+         
          
      }
      
@@ -182,7 +185,7 @@ public class Road implements Serializable
             
             for(Vector3f waypoint : track)
             {
-              if ((waypoint.x >= destination.getEntrypoint().x && waypoint.z >= destination.getEntrypoint().z))
+              if (((int) waypoint.x >= (int) destination.getEntrypoint().x && waypoint.z >=  destination.getEntrypoint().z))
               {
                  correctPath.add(waypoint);
               }

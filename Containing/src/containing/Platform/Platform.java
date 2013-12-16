@@ -48,7 +48,9 @@ public abstract class Platform implements Serializable {
     protected State state;
     protected DynamicAxis axis;
     private Vector3f entrypoint = null;
+    private Vector3f entrycorner = null;
     private Vector3f exitpoint = null;
+    private Vector3f exitcorner = null;
     private TransportType transportType = null;
     
     protected List<AgvSpot> agvSpots;
@@ -90,6 +92,8 @@ public abstract class Platform implements Serializable {
     {
         List<Vector3f> wayshit = new ArrayList<>();
         wayshit.add(entrypoint);
+        //wayshit.add(entrycorner);
+        //wayshit.add(exitcorner);
         wayshit.add(exitpoint);
         road = new Road(wayshit);
     }
@@ -291,6 +295,16 @@ public abstract class Platform implements Serializable {
         this.entrypoint = entrypoint;
     }
     
+    public Vector3f getEntrycorner()
+    {
+        return entrycorner;
+    }
+    
+    protected void setEntrycorner(Vector3f entrycorner)
+    {
+        this.entrycorner = entrycorner;
+    }
+    
     public Vector3f getExitpoint() {
         return exitpoint;
     }
@@ -298,6 +312,16 @@ public abstract class Platform implements Serializable {
     protected void setExitpoint(Vector3f exitpoint)
     {
         this.exitpoint = exitpoint;
+    }
+    
+    public Vector3f getExitcorner()
+    {
+        return exitcorner;
+    }
+    
+    protected void setExitcorner(Vector3f exitcorner)
+    {
+        this.exitcorner = exitcorner;
     }
     
     public TransportType getTransportType() {

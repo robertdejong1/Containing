@@ -25,6 +25,8 @@ public class Port implements Serializable
     private int lastUpdate = 0;
     private HashMap<String,Double> lastStats = null;
     
+    public List<Vector3f> waypointList;
+    
     public Port() 
     {
         this.Platforms = new ArrayList<>();
@@ -35,7 +37,7 @@ public class Port implements Serializable
         Platforms.add(new TrainPlatform(new Vector3f(0, 5.5f, 0)));
         Platforms.add(new TruckPlatform(new Vector3f(0, 0, 0)));
         
-        List<Vector3f> waypointList = new ArrayList<>();
+        waypointList = new ArrayList<>();
         waypointList.add(new Vector3f(103f*Settings.METER,5.5f,0));
         waypointList.add(new Vector3f(103f*Settings.METER,5.5f, 1562f*Settings.METER));
         waypointList.add(new Vector3f(717f*Settings.METER,5.5f, 1562f*Settings.METER));

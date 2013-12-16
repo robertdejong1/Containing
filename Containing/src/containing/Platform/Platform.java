@@ -62,7 +62,6 @@ public abstract class Platform implements Serializable {
     protected int maxAgvQueue = 1;
     
     protected List<ExternVehicle> evs;
-    protected int parkedVehicles = 0;
     
     
     protected List<Crane> busyCranes;

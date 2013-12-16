@@ -25,7 +25,7 @@ public class SeashipPlatform extends Platform {
     
     public SeashipPlatform(Vector3f position)
     {
-        super(position);
+        super(position, Positie.ONDER);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(DynamicAxis.X);
         setEntrypoint(new Vector3f(WIDTH,0,0));

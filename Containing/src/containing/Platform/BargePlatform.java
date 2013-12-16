@@ -25,7 +25,7 @@ public class BargePlatform extends Platform {
     
     public BargePlatform(Vector3f position)
     {
-        super(position);
+        super(position, Positie.RECHTS);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(DynamicAxis.Z);
         setEntrypoint(new Vector3f(0,0,0));

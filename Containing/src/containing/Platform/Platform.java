@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 public abstract class Platform implements Serializable {
     
     public enum State { FREE, LOAD, UNLOAD }
+    public enum Positie { BOVEN, RECHTS, ONDER, LINKS };
     protected enum DynamicAxis { X, Z }
     
     protected final float AGVSPOT_OFFSET = 0f;
@@ -52,6 +53,7 @@ public abstract class Platform implements Serializable {
     private Vector3f exitpoint = null;
     private Vector3f exitcorner = null;
     private TransportType transportType = null;
+    public Positie positie;
     
     protected List<AgvSpot> agvSpots;
     protected List<Crane> cranes;
@@ -68,7 +70,7 @@ public abstract class Platform implements Serializable {
     
     protected int time = 0;
     
-    public Platform(Vector3f position) 
+    public Platform(Vector3f position, Positie positie) 
     {
         id = idCounter++;
         this.position = position;
@@ -81,6 +83,7 @@ public abstract class Platform implements Serializable {
         jobs = new LinkedList<>();
         agvQueue = new LinkedList<>();
         busyCranes = new LinkedList<>();
+        this.positie = positie;
     }
     
     public List<ExternVehicle> getEvs()

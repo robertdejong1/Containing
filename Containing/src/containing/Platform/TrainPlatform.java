@@ -36,7 +36,7 @@ public class TrainPlatform extends Platform {
     
     public TrainPlatform(Vector3f position)
     {
-        super(position);
+        super(position, Platform.Positie.LINKS);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(DynamicAxis.Z);
         setEntrypoint(new Vector3f(getPosition().x + WIDTH, getPosition().y, getPosition().z));

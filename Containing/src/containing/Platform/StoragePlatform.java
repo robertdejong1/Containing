@@ -42,7 +42,7 @@ public class StoragePlatform extends Platform {
     
     public StoragePlatform(Vector3f position)
     {
-        super(position);
+        super(position, Positie.RECHTS);
         strips = new StorageStrip[getStripAmount()];
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setEntrypoints();

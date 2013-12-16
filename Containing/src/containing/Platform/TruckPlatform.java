@@ -25,7 +25,7 @@ public class TruckPlatform extends Platform {
     
     public TruckPlatform(Vector3f position)
     {
-        super(position);
+        super(position, Platform.Positie.RECHTS);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(Platform.DynamicAxis.Z);
         setEntrypoint(new Vector3f(0,0,0));

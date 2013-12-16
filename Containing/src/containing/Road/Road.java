@@ -17,7 +17,7 @@ public class Road implements Serializable
 {
     float roadWidth = AGV.width + AGV.width * 0.25f;
     
-    List<Vector3f> track = new ArrayList<>();
+    volatile List<Vector3f> track = new ArrayList<>();
         
     public Road(List<Vector3f> roadPoints){ //vaste punten voor main road = 4, voor platform road = 2
         for (Vector3f v : roadPoints){
@@ -173,11 +173,13 @@ public class Road implements Serializable
         else return new Route(outsidetrack, length_outsidetrack);
     }*/
     
-    public List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Platform source, Platform destination){
+    public synchronized List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Platform source, Platform destination){
         //path size altijd 4
         List<Vector3f> correctPath = path;
         correctPath.add(path.get(0));
         correctPath.add(path.get(1));
+        
+        List<Vector3f> _track = (ArrayList<Vector3f>)((ArrayList<Vector3f>)track).clone();
         
         boolean right = true;
         //bepalen aan hand van platform of rechts of links: nu altijd rechtsom
@@ -190,7 +192,7 @@ public class Road implements Serializable
         //rechtsom
         if (true)
         {
-            for (Vector3f waypoint : track)   
+            for (Vector3f waypoint : _track)   
             {
                 System.out.println("source.getExitpoint() " + source.getExitpoint());
               if ((waypoint.x >= source.getExitpoint().x && waypoint.z >= source.getExitpoint().z))
@@ -201,7 +203,7 @@ public class Road implements Serializable
              
             }
             
-            for(Vector3f waypoint : track)
+            for(Vector3f waypoint : _track)
             {
               if (((int) waypoint.x >= (int) destination.getEntrypoint().x && waypoint.z >=  destination.getEntrypoint().z))
               {
@@ -216,7 +218,7 @@ public class Road implements Serializable
         
         else
         {
-            for (Vector3f waypoint : track)   
+            for (Vector3f waypoint : _track)   
             {
               if ((waypoint.x <= source.getExitpoint().x && waypoint.z <= source.getExitpoint().z))
               {
@@ -226,7 +228,7 @@ public class Road implements Serializable
              
             }
             
-            for(Vector3f waypoint : track)
+            for(Vector3f waypoint : _track)
             {
               if ((waypoint.x <= destination.getEntrypoint().x && waypoint.z <= destination.getEntrypoint().z))
               {

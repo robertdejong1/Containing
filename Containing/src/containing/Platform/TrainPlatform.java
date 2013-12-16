@@ -90,81 +90,59 @@ public class TrainPlatform extends Platform {
     
     @Override
     public void unload() {
-        if(extVehicles.isEmpty()) {
-            for(int i = 0; i < extVehicleSpots.size(); i++) 
-            {
-                if(extVehicleSpots.get(i).getParkedVehicle() != null) {
-                    extVehicles.add((Train)extVehicleSpots.get(i).getParkedVehicle());
-                }
-            }
-        }
-        
+        super.unload();
         if(!extVehicles.isEmpty()) {
-            int rows = extVehicles.get(0).getGridWidth();
-            int rowsPerCrane = rows / cranes.size();
+            int currentVehicle = 1;
+            int cranesPerVehicle = cranes.size() / extVehicles.size();
+            System.out.println("cranes per vehicle: " + cranesPerVehicle);
+            for(ExternVehicle ev : extVehicles) {
+                int test = (currentVehicle * cranesPerVehicle - cranesPerVehicle);
+                
+                int rows = ev.getGridWidth();
+                int rowsPerCrane = rows / cranesPerVehicle;
 
-            List<Boolean> unloadedColumns = extVehicles.get(0).getColumns();
-            List<Integer> priorityColumns = extVehicles.get(0).getPriorityColumns();
+                List<Boolean> unloadedColumns = ev.getColumns();
+                List<Integer> priorityColumns = ev.getPriorityColumns();
 
-            int craneId = 0;
-            for(Crane c : cranes)
-            {
-                if(!busyCranes.contains(c) && c.getIsAvailable()) {
-                    int startIndex = craneId + rowsPerCrane;
-                    int rowToGive = 0;
-                    for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
-                    {
-                        if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
-                            rowToGive = i;
-                            break;
-                        } else if(!unloadedColumns.get(i)) {
-                            rowToGive = i;
-                            break;
+                int currentCrane = 0;
+                for(Crane c : cranes)
+                {
+                    System.out.println("test: " + test);
+                    if(!busyCranes.contains(c) && c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle) {
+                        System.out.println("kom ik hier???");
+                        busyCranes.add(c);
+                        int startIndex = currentCrane + rowsPerCrane;
+                        int rowToGive = 0;
+                        for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
+                        {
+                            if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
+                                rowToGive = i;
+                                break;
+                            } else if(!unloadedColumns.get(i)) {
+                                rowToGive = i;
+                                break;
+                            }
                         }
+                        int spot = 0;
+                        try {
+                            spot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
+                        } catch(NoFreeAgvException e) {/*ignore*/}
+
+                        final AgvSpot agvSpot = (AgvSpot)Settings.port.getStoragePlatform().agvSpots.get(spot);
+                        final AGV agv = (AGV)agvSpot.getParkedVehicle();
+                        
+                        System.out.println("ik ga nu die motherfucking agv een route geven bitch!");
+                        agv.followRoute(agv.getCurrentPlatform().road.getPath(agv, agvSpot, Settings.port.getPlatforms().get(2).agvSpots.get(0), Settings.port.getPlatforms().get(2)));
+                        //agv.followRoute(Settings.port.getStoragePlatform().road.getPath(agv, agvSpot, Settings.port.getStoragePlatform().getExitpoint()));
+                        //agv.followRoute(Settings.port.getMainroad().getPath(agv, Settings.port.getStoragePlatform().getExitpoint(), Settings.port.getPlatforms().get(2)));
+                        //agv.followRoute(road.getPath(agv, Settings.port.getPlatforms().get(2).agvSpots.get(_craneId)));
+                        break;
                     }
-                    int spot = 0;
-                    try {
-                        spot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
-                    } catch(NoFreeAgvException e) {/*ignore*/}
-
-                    final AgvSpot agvSpot = (AgvSpot)Settings.port.getStoragePlatform().agvSpots.get(spot);
-
-                    final int _craneId = craneId;
-                    final AGV agv = (AGV)agvSpot.getParkedVehicle();
-                    new Thread() {
-
-                        @Override
-                        public void run() {
-                            agv.followRoute(Settings.port.getStoragePlatform().road.getPath(agv, agvSpot, Settings.port.getStoragePlatform().getExitpoint()));
-                            while(agv.getStatus() == Vehicle.Status.MOVING) {
-                                try {
-                                    Thread.sleep(Settings.ClockDelay);
-                                    //System.out.println("Route 1: agv == MOVING");
-                                } catch(InterruptedException e) {/*ignore*/}
-                            }
-                            System.out.println("en hier heeft vehicleboi : " + agv.getCurrentPlatform());
-                            agv.followRoute(Settings.port.getMainroad().getPath(agv, Settings.port.getStoragePlatform().getExitpoint(), Settings.port.getPlatforms().get(2)));
-                            while(agv.getStatus() == Vehicle.Status.MOVING) {
-                                try {
-                                    Thread.sleep(Settings.ClockDelay);
-                                    agv.update();
-                                    //System.out.println("Route 2: agv == MOVING");
-                                } catch(InterruptedException e) {/*ignore*/}
-                            }
-                            agv.followRoute(road.getPath(agv, Settings.port.getPlatforms().get(2).agvSpots.get(_craneId)));
-                            while(agv.getStatus() == Vehicle.Status.MOVING) {
-                                try {
-                                    Thread.sleep(Settings.ClockDelay);
-                                    agv.update();
-                                    //System.out.println("Route 3: agv == MOVING");
-                                } catch(InterruptedException e) {/*ignore*/}
-                            }
-                        }
-
-                    }.start();
+                    currentCrane++;
                     break;
                 }
-                craneId++;
+                currentVehicle++;
+                break;
             }
         }
     }

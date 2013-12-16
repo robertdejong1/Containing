@@ -92,7 +92,7 @@ public abstract class Vehicle implements Serializable
     
     public Type getVehicleType(){return this.vehicleType;}
     
-    public void followRoute(Route route){
+    public synchronized void followRoute(Route route){
         this.route = route;
         this.status = Status.MOVING;
         //currentplatform sign out

@@ -11,15 +11,14 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.util.SkyFactory;
 import containing.Command;
 import containing.Settings;
 import java.util.HashMap;
 import java.util.List;
+import jme3tools.optimize.GeometryBatchFactory;
 
 /**
  * test
@@ -45,10 +44,10 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        //Runnable networkHandler = new NetworkHandler("141.252.236.70", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.236.98", 1337);
         //Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        //Thread t = new Thread(networkHandler);
-        //t.start();
+        Thread t = new Thread(networkHandler);
+        t.start();
     }
 
     @Override
@@ -61,7 +60,7 @@ public class PortSimulation extends SimpleApplication {
         cam.setLocation(new Vector3f(0f, 140f, 0));
         cam.lookAt(Vector3f.ZERO, Vector3f.UNIT_X);
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
-
+        
         for (int i = 0; i < 4; i++) {
             freeCranes[i] = new FreeCrane(assetManager, rootNode);
             freeCranes[i].scale(0.5f);
@@ -98,6 +97,8 @@ public class PortSimulation extends SimpleApplication {
         
         inputManager.addMapping("mousedown", new MouseButtonTrigger(MouseInput.BUTTON_MIDDLE));
         inputManager.addListener(analogListener,"mousedown");
+        
+        //GeometryBatchFactory.optimize(rootNode);
     }
     
     private AnalogListener analogListener = new AnalogListener() {

@@ -15,6 +15,10 @@ public class Controller
     private static Clock clock; 
     public static boolean started = false;
     
+    /**
+     * Entry point for program
+     * @param args 
+     */
     public static void main(String[] args) 
     {
        UserInterface = new UserInterface(); 
@@ -22,14 +26,18 @@ public class Controller
        Settings.userInterface = UserInterface;
        
        //Create new Port
-       buildPort();
+       Settings.port = new Port();
        
        Runnable networkHandler = new NetworkHandler(1337);
        Thread networkHandlerThread = new Thread(networkHandler);
        networkHandlerThread.start();
     }
    
-    public static void ReadXMLAndSortOutput(File XMLFile)
+    /**
+     * reads xml and sorts output in a list of containing.containers
+     * @param XMLFile 
+     */
+    public static void readXMLAndSortOutput(File XMLFile)
     {   
         XmlHandler xmlHandler = new XmlHandler();
         List<Container> ContainersFromXMList;
@@ -48,11 +56,10 @@ public class Controller
         started = false;
     }
     
-    private static void buildPort()
-    {
-        Settings.port = new Port();
-    }
-    
+    /**
+     * starts or stops the simulation
+     * @param Status 
+     */
     public static void setSimulationStatus(boolean Status)
     {
         if (Status)
@@ -66,6 +73,10 @@ public class Controller
         
     }
     
+    /**
+     * updates the simulation
+     * @param timestamp 
+     */
     public static void update(Timestamp timestamp)
     {
         Settings.CurrentTime = timestamp;
@@ -75,25 +86,10 @@ public class Controller
         UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
     }
     
-    public static void addCommand(Command command)
-    {
-        if (QeuedCommands == null)
-        {
-            QeuedCommands = new ArrayList<>();
-        }
-        
-        QeuedCommands.add(command);
-        Settings.messageLog.AddMessage("Server: " + command.getCommand());
-    }
-    
-    public static List<Command> getNewCommands()
-    {
-        List<Command> CommandsToReturn = QeuedCommands;
-        QeuedCommands = new ArrayList<>();
-        Settings.messageLog.AddMessage("Sending Commandqeue to NetworkHandler."); //Tijdelijk om te zien of de functie correct wordt aangeroepen door networkHandler.
-        return CommandsToReturn;
-    }
-    
+    /**
+     * adds container to outgoing containers
+     * @param container 
+     */
     public static void sortOutgoingContainer(Container container)
     {
         Controlleralgorithms.sortOutgoingContainer(container);
@@ -113,6 +109,12 @@ public class Controller
         }
     }
     
+    /**
+     * requests next job for a platform
+     * @param platform
+     * @returns job object
+     * @throws NoJobException 
+     */
     public static Job RequestNewJob(Platform platform) throws NoJobException
     {
         try
@@ -125,6 +127,9 @@ public class Controller
         }
     }
     
+    /**
+     * updates messsagelog
+     */
     public static void updateUserInterface()
     {
         try

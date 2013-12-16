@@ -64,7 +64,7 @@ public class UserInterface extends JFrame
                                File xmlFile = XMLDialog.getSelectedFile();
                                CurrentDir = XMLDialog.getCurrentDirectory();
                                
-                               Controller.ReadXMLAndSortOutput(xmlFile);
+                               Controller.readXMLAndSortOutput(xmlFile);
                            }
                            else
                            {

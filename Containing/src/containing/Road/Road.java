@@ -30,13 +30,16 @@ public class Road implements Serializable
     
 
     private Vector3f createCorrespondingWaypoint(Vector3f point){
+        return point;
+        /*
         if (track.size() == 4){
             if (point.x < track.get(0).x){ return new Vector3f(track.get(0).x, point.y, point.z);}
-            if (point.x > track.get(2).x) {return new Vector3f(track.get(2).x, point.y, point.z); }
+            if (point.y > track.get(2).x) {return new Vector3f(track.get(2).x, point.y, point.z); }
             if (point.z < track.get(1).z){return new Vector3f(point.x, point.y, track.get(1).z);}
             return new Vector3f(point.x,point.y, track.get(0).z);
         }
         return new Vector3f(track.get(0).x, point.y, point.z);
+        * */
     }
     
    
@@ -187,7 +190,7 @@ public class Road implements Serializable
         //if (typeOrInterface.isInstance(someObject);)
         
         //rechtsom
-        if (true)
+        if (right==true)
         {
             for (Vector3f waypoint : _track)   
             {

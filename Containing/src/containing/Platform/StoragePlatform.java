@@ -65,8 +65,8 @@ public class StoragePlatform extends Platform {
     protected final void setRoad() 
     {
         List<Vector3f> wayshit = new ArrayList<>();
-        wayshit.add(getEntrypoint(Side.RIGHT));
-        wayshit.add(getExitpoint(Side.RIGHT));
+        wayshit.add(new Vector3f(700f*Settings.METER, getPosition().y, getPosition().z));
+        wayshit.add(new Vector3f(700f*Settings.METER, getPosition().y, getPosition().z + LENGTH));
         road = new Road(wayshit);
     }
     

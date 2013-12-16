@@ -43,21 +43,7 @@ public class CommandHandler {
                 
 
             case "STATS":
-                HashMap<String, Double> stats = new HashMap<>();
-                for(int i = 0; i < 7; i++){
-                    Random rand = new Random();
-                    Double randomNumber = rand.nextDouble();
-                    switch(i){
-                        case 0: stats.put("train", randomNumber); break;
-                        case 1: stats.put("truck", randomNumber); break;
-                        case 2: stats.put("seaShip", randomNumber); break;
-                        case 3: stats.put("barge", randomNumber); break;
-                        case 4: stats.put("storage", randomNumber); break;
-                        case 5: stats.put("agv", randomNumber); break;
-                        case 6: stats.put("other", randomNumber); break;
-                    }
-                }
-                
+                HashMap<String, Double> stats = Settings.port.getStats();
                 return new Command("stats", stats);
                 
             default:

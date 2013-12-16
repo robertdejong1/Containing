@@ -80,6 +80,13 @@ public abstract class Platform implements Serializable {
         extVehicles = new ArrayList<>();
         jobs = new LinkedList<>();
         agvQueue = new LinkedList<>();
+        evs = new LinkedList<>();
+        busyCranes = new LinkedList<>();
+    }
+    
+    public List<ExternVehicle> getEvs()
+    {
+        return evs;
     }
     
     protected void setRoad() 

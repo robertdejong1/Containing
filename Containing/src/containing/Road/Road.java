@@ -189,12 +189,12 @@ public class Road implements Serializable
         //bepalen aan hand van platform of rechts of links: nu altijd rechtsom
         if (source instanceof StoragePlatform)
         {
-            right = false;
+            right = true;
         }
         //if (typeOrInterface.isInstance(someObject);)
         
         //rechtsom
-        if (right==true)
+        if (right)
         {
             switch(source.positie)
             {

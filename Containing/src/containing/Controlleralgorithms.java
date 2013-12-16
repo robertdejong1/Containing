@@ -69,9 +69,26 @@ class Controlleralgorithms
                         VehicleWithMatchingDateAndTime.load(ContainersFromXML.get(i));
                     }
                     catch (Exception e)
-                    {
+                    {   
+                        ExternVehicle NewVehicle = createNewVehicle(
+                            ContainersFromXML.get(i).getArrivalTransport(), 
+                            ContainersFromXML.get(i).getArrivalDate(), 
+                            ContainersFromXML.get(i).getArrivalTimeFrom(),
+                            ContainersFromXML.get(i).getArrivalTransportCompany());
+                    
+                        Settings.messageLog.AddMessage("Created new " + ContainersFromXML.get(i).getArrivalTransport()); // : " + VehicleWithMatchingDateAndTime.toString());
                         
-                        ErrorLog.logMsg(VehicleWithMatchingDateAndTime.getVehicleType() + " has no room for this container.", e);
+                        try
+                        {
+                            NewVehicle.load(ContainersFromXML.get(i));
+                        }
+                        catch (CargoOutOfBoundsException | VehicleOverflowException error)
+                        {
+                            ErrorLog.logMsg("Cant load container in vehicle :(", error);
+                        }
+                    
+                        scheduledArrivingVehicles.add(NewVehicle);
+                        //ErrorLog.logMsg(VehicleWithMatchingDateAndTime.getVehicleType() + " has no room for this container.", e);
                     }
                 }
                 else

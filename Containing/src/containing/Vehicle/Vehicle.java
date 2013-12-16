@@ -126,6 +126,7 @@ public abstract class Vehicle implements Serializable
     
     public abstract int getMaxSpeedLoaded();
     public abstract int getMaxSpeedUnloaded();
+    public List<Container> getCargo(){return this.cargo;}
     
     public int getCapicity(){return this.capicity;}
     

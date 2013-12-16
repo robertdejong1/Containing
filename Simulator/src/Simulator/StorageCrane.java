@@ -34,7 +34,7 @@ public class StorageCrane
         crane.attachChild(top);
 
         crane.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-        crane.scale(0.42f);
+        crane.scale(0.41f);
         //crane.scale(1f, 1f, 1.1f);
     }
     

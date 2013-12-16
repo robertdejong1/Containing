@@ -46,6 +46,7 @@ public class PortSimulation extends SimpleApplication {
         app.start();
 
         //Runnable networkHandler = new NetworkHandler("141.252.236.70", 1337);
+        //Runnable networkHandler = new NetworkHandler("localhost", 1337);
         //Thread t = new Thread(networkHandler);
         //t.start();
     }
@@ -79,8 +80,8 @@ public class PortSimulation extends SimpleApplication {
         
         for (int i = 0; i < 61; i++)
         {
-        storageCranes[0] = new StorageCrane(assetManager, rootNode);
-        storageCranes[0].place(14, 5.5f, 3.1f+(i*2.5f));
+            storageCranes[0] = new StorageCrane(assetManager, rootNode);
+            storageCranes[0].place(14, 5.5f, 3.15f+(i*2.5f));
         }
 
         DirectionalLight sun = new DirectionalLight();

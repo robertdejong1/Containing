@@ -48,6 +48,10 @@ public abstract class Vehicle implements Serializable
             
     }
     
+    public List<Container> getCargo()
+    {
+        return this.cargo;
+    }
     private void setID(int id ){this.id = id;}
     
     public int getID(){return this.id;}

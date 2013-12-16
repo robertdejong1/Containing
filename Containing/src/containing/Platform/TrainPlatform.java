@@ -39,8 +39,8 @@ public class TrainPlatform extends Platform {
         super(position);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(DynamicAxis.Z);
-        setEntrypoint(new Vector3f(717f*Settings.METER, getPosition().y, getPosition().z));
-        setExitpoint(new Vector3f(717f*Settings.METER, getPosition().y, getPosition().z + LENGTH));
+        setEntrypoint(new Vector3f(getPosition().x + WIDTH, getPosition().y, getPosition().z));
+        setExitpoint(new Vector3f(getPosition().x + WIDTH, getPosition().y, getPosition().z + LENGTH));
         setEntrycorner(new Vector3f(getPosition().x + WIDTH, getPosition().y, getPosition().z));
         setExitcorner(new Vector3f(getPosition().x + WIDTH, getPosition().y, getPosition().z + LENGTH));
         setRoad();

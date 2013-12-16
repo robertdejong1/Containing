@@ -12,11 +12,17 @@ import java.io.Serializable;
  *
  * @author Robert
  */
-public class Vector3f implements Comparable, Serializable {
+public class Vector3f implements Serializable {
     public float x;
     public float y;
     public float z;
 
+    /**
+     * Creates a Vector3f instance
+     * @param x x value
+     * @param y y value
+     * @param z z value
+     */
     public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
@@ -26,15 +32,5 @@ public class Vector3f implements Comparable, Serializable {
     @Override
     public String toString() {
         return "Vector3f{" + "x=" + x + ", y=" + y + ", z=" + z + '}';
-    }
-
-    @Override
-    public int compareTo(Object o) { 
-        Vector3f v2 = (Vector3f) o;
-        if (x < v2.x){return -1;}
-        if (x > v2.x) {return 1;}
-        if (z < v2.z) {return -1;}
-        if (z > v2.z) return 1;
-        return 0;
     }
 }

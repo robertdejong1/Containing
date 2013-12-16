@@ -7,6 +7,11 @@ public class Dimension2f implements Serializable {
     public float width;
     public float length;
     
+    /**
+     * Creates a Dimension2f instance
+     * @param width with value
+     * @param length length value
+     */
     public Dimension2f(float width, float length) 
     {
         this.width = width;

@@ -59,22 +59,7 @@ public class Port
         port_geo.move(817*0.05f,5f,1643*0.05f);
         port_geo.scale(0.05f);
         port_node.attachChild(port_geo);
-        
-        //storage.scale(10);
-        //storage.move(0,0.01f,-4);
-        //port_node.attachChild(storage);
-        
-        //road.scale(10);
-        //road.move(0,1f,-4);
-        //port_node.attachChild(road);
-        
-        //cranerail.setLocalTranslation(-1, 5, 81);
-        //cranerail.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-        //cranerail.scale(1, 1, 10);
-        //port_node.attachChild(cranerail.clone());
-        //cranerail.setLocalTranslation(-1, 5, 78.95f);
-        //port_node.attachChild(cranerail);
-        
+              
         trainrail.scale(2);
         for (int i = 0; i < 14*5+4; i++)
         {
@@ -83,8 +68,8 @@ public class Port
         }
         
         //Water
-        SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
-        waterProcessor.setReflectionScene(node);
+        /*SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
+        waterProcessor.setReflectionScene(port_node);
 
         Vector3f waterLocation = new Vector3f(0, 4.5f, 0);
         waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, waterLocation.dot(Vector3f.UNIT_Y)));
@@ -105,7 +90,7 @@ public class Port
 
         port_node.attachChild(water);
 
-        viewPort.addProcessor(waterProcessor);
+        viewPort.addProcessor(waterProcessor);*/
         
         node.attachChild(port_node);
     }

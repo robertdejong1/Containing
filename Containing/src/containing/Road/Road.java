@@ -54,7 +54,21 @@ public class Road implements Serializable
         else return 0;
     }
     
-     
+    //allinclusive
+    public Route getPath(Vehicle vehicle, ParkingSpot source, ParkingSpot destinationParkingSpot, Platform destinationPlatform)
+    {
+        Route deel1 = this.getPath(vehicle, source, vehicle.getCurrentPlatform().getExitpoint());
+        Route deel2 = this.getPath(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform);
+        Route deel3 = this.getPath(vehicle, destinationParkingSpot);
+        
+        List<Vector3f> track = new ArrayList<>();
+        for (Vector3f v : deel1.getWeg()) { track.add(v); }
+        for (Vector3f v : deel2.getWeg()) { track.add(v); }
+        for (Vector3f v : deel3.getWeg()) { track.add(v); }
+        
+        return new Route(track, getPathLength(track));
+    }
+   
     //van parkeerplaats op platform naar einde platform
     public Route getPath(Vehicle vehicle, ParkingSpot source, Vector3f exitwayPlatform)
     {

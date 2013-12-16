@@ -57,7 +57,7 @@ public class StoragePlatform extends Platform {
         log("Created StoragePlatform object: " + toString());
     }
     
-    public void StorageStrip[] getStrips() {
+    public StorageStrip[] getStrips() {
         return strips;
     }
     

@@ -60,7 +60,9 @@ public abstract class Platform implements Serializable {
     protected Queue<AgvSpot> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
     protected int agvCount = 0;
     protected int maxAgvQueue = 1;
+    
     protected List<ExternVehicle> evs;
+    protected int parkedVehicles = 0;
     
     
     protected List<Crane> busyCranes;

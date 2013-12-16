@@ -84,6 +84,8 @@ public class TrainPlatform extends Platform {
     /*
     @Override
     public void unload() {
+        for(ParkingSpot ps : extVehicleSpots)
+        if(evs.size() != parkedVehicles)
         for(int i = 0; i < extVehicleSpots.size(); i++)
         {
            if(!extVehicleSpots.get(i).isEmpty())

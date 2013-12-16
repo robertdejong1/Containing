@@ -81,10 +81,9 @@ public class TrainPlatform extends Platform {
             extVehicleSpots.add(new TrainSpot(spotPosition));
         }
     }
-    
+    /*
     @Override
     public void unload() {
-        /* check */
         for(int i = 0; i < extVehicleSpots.size(); i++)
         {
            if(!extVehicleSpots.get(i).isEmpty())
@@ -97,7 +96,7 @@ public class TrainPlatform extends Platform {
             }
         }
     }
-    
+    */
     @Override
     public void update()
     {

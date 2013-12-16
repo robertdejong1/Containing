@@ -55,7 +55,7 @@ public class Road implements Serializable
     }
     
     //allinclusive
-    public Route getPath(Vehicle vehicle, ParkingSpot source, ParkingSpot destinationParkingSpot, Platform destinationPlatform)
+    public Route getPathAllIn(Vehicle vehicle, ParkingSpot source, ParkingSpot destinationParkingSpot, Platform destinationPlatform)
     {
         Route deel1 = this.getPath(vehicle, source, vehicle.getCurrentPlatform().getExitpoint());
         Route deel2 = this.getPath(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform);
@@ -70,7 +70,7 @@ public class Road implements Serializable
     }
    
     //van parkeerplaats op platform naar einde platform
-    public Route getPath(Vehicle vehicle, ParkingSpot source, Vector3f exitwayPlatform)
+    public Route getPathFromParkingSpotToPlatform(Vehicle vehicle, ParkingSpot source, Vector3f exitwayPlatform)
     {
         System.out.println("hahaah hier heeft vehicle boi : " + vehicle.getCurrentPlatform().toString());
         List<Vector3f> track = new ArrayList<Vector3f>();
@@ -87,7 +87,7 @@ public class Road implements Serializable
     }
     
     //van uitgang platform naar ingang andere platform
-     public Route getPath(Vehicle vehicle, Vector3f sourcePlatformExitPoint,Platform destination)
+     public Route getPathFromExitPointPlatformToEntryPointPlatform(Vehicle vehicle, Vector3f sourcePlatformExitPoint,Platform destination)
      {
          List<Vector3f> track = this.track;
          track.add(sourcePlatformExitPoint);
@@ -107,7 +107,7 @@ public class Road implements Serializable
      }
      
      //van ingang platform naar parkeerplaats
-      public Route getPath(Vehicle vehicle, ParkingSpot ps)
+      public Route getPathFromEntryPointPlatformToParkingSpot(Vehicle vehicle, ParkingSpot ps)
       {
           List<Vector3f> track = this.track;
           track.add(vehicle.getPosition());
@@ -131,7 +131,7 @@ public class Road implements Serializable
           
       }
       
-    public Route getPath(ExternVehicle ev, ParkingSpot ps )
+    public Route getPathExternVehicleEntry(ExternVehicle ev, ParkingSpot ps )
     {
         List<Vector3f> track = new ArrayList<Vector3f>();
         track.add(ev.getPosition());

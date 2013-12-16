@@ -59,10 +59,7 @@ public abstract class Platform implements Serializable {
     protected Queue<Job> jobs = null;
     protected Queue<AgvSpot> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
     protected int agvCount = 0;
-    protected int maxAgvQueue = 1;
-    
-    protected List<ExternVehicle> evs;
-    
+    protected int maxAgvQueue = 1;    
     
     protected List<Crane> busyCranes;
     
@@ -86,7 +83,7 @@ public abstract class Platform implements Serializable {
     
     public List<ExternVehicle> getEvs()
     {
-        return evs;
+        return extVehicles;
     }
     
     protected void setRoad() 

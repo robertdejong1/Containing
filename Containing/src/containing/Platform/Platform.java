@@ -60,6 +60,10 @@ public abstract class Platform implements Serializable {
     protected Queue<AgvSpot> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
     protected int agvCount = 0;
     protected int maxAgvQueue = 1;
+    protected List<ExternVehicle> evs;
+    
+    
+    protected List<Crane> busyCranes;
     
     protected int time = 0;
     
@@ -202,13 +206,6 @@ public abstract class Platform implements Serializable {
                         {
                             AGV agv = (AGV)agvSpot.getParkedVehicle();
                             // geef AGV route naar exit van StoragePlatform
-                            agv.followRoute(Settings.port.getMainroad().getPath());
-                            while(agv.getStatus() == Status.MOVING) {
-                                try {
-                                    Thread.sleep(Settings.ClockDelay);
-                                    //System.out.println("Route 1: agv == MOVING");
-                                } catch(InterruptedException e) {/*ignore*/}
-                            }
                             agv.followRoute(Settings.port.getStoragePlatform().road.getPath(agv, agvSpot, Settings.port.getStoragePlatform().getExitpoint()));
                             while(agv.getStatus() == Status.MOVING) {
                                 try {

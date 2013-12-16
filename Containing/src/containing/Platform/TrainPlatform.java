@@ -6,6 +6,8 @@ import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.TrainSpot;
 import containing.Settings;
 import containing.Vector3f;
+import containing.Vehicle.Crane;
+import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.TrainCrane;
 
 /**
@@ -77,6 +79,22 @@ public class TrainPlatform extends Platform {
         {
             Vector3f spotPosition = new Vector3f(getPosition().x + VEHICLE_OFFSET, getPosition().y, (getPosition().z + LENGTH) - space*i);
             extVehicleSpots.add(new TrainSpot(spotPosition));
+        }
+    }
+    
+    @Override
+    public void unload() {
+        /* check */
+        for(int i = 0; i < extVehicleSpots.size(); i++)
+        {
+           if(!extVehicleSpots.get(i).isEmpty())
+               evs.add((ExternVehicle)extVehicleSpots.get(i).getParkedVehicle());
+        }
+        for(Crane c : cranes)
+        {
+            if(!busyCranes.contains(c) && c.getIsAvailable()) {
+                //int startIndex
+            }
         }
     }
     

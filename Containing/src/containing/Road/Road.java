@@ -39,10 +39,7 @@ public class Road implements Serializable
         return new Vector3f(track.get(0).x, point.y, point.z);
     }
     
-    public Route getPath()
-    {
-       return new Route(this.track,getPathLength(track) );
-    }
+   
     
     
      public static float getPathLength(List<Vector3f> weg){
@@ -57,30 +54,30 @@ public class Road implements Serializable
     //allinclusive
     public Route getPathAllIn(Vehicle vehicle, ParkingSpot source, ParkingSpot destinationParkingSpot, Platform destinationPlatform)
     {
-        Route deel1 = this.getPath(vehicle, source, vehicle.getCurrentPlatform().getExitpoint());
-        Route deel2 = this.getPath(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform);
-        Route deel3 = this.getPath(vehicle, destinationParkingSpot);
+        Route deel1 = this.getPathFromParkingSpotToPlatform(vehicle, source, vehicle.getCurrentPlatform().getExitpoint());
+        Route deel2 = this.getPathFromExitPointPlatformToEntryPointPlatform(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform);
+        Route deel3 = this.getPathFromEntryPointPlatformToParkingSpot(vehicle, destinationParkingSpot);
         
-        List<Vector3f> track = new ArrayList<>();
-        for (Vector3f v : deel1.getWeg()) { track.add(v); }
-        for (Vector3f v : deel2.getWeg()) { track.add(v); }
-        for (Vector3f v : deel3.getWeg()) { track.add(v); }
+        List<Vector3f> track2 = new ArrayList<>();
+        for (Vector3f v : deel1.getWeg()) { track2.add(v); }
+        for (Vector3f v : deel2.getWeg()) { track2.add(v); }
+        for (Vector3f v : deel3.getWeg()) { track2.add(v); }
         
-        return new Route(track, getPathLength(track));
+        return new Route(track2, getPathLength(track2));
     }
    
     //van parkeerplaats op platform naar einde platform
     public Route getPathFromParkingSpotToPlatform(Vehicle vehicle, ParkingSpot source, Vector3f exitwayPlatform)
     {
         System.out.println("hahaah hier heeft vehicle boi : " + vehicle.getCurrentPlatform().toString());
-        List<Vector3f> track = new ArrayList<Vector3f>();
-        track.add(vehicle.getPosition());
-        track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
-        track.add(this.createCorrespondingWaypoint(exitwayPlatform));
-        track.add(exitwayPlatform);
+        List<Vector3f> track2 = new ArrayList<Vector3f>();
+        track2.add(vehicle.getPosition());
+        track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
+        track2.add(this.createCorrespondingWaypoint(exitwayPlatform));
+        track2.add(exitwayPlatform);
         source.UnparkVehicle(); //moet straks bij followroute
         vehicle.setPosition(exitwayPlatform);
-        Route route = new Route(track, getPathLength(track));
+        Route route = new Route(track2, getPathLength(track2));
         route.destinationParkingSpot = null;
         route.destinationPlatform = null;
         return route;
@@ -89,16 +86,16 @@ public class Road implements Serializable
     //van uitgang platform naar ingang andere platform
      public Route getPathFromExitPointPlatformToEntryPointPlatform(Vehicle vehicle, Vector3f sourcePlatformExitPoint,Platform destination)
      {
-         List<Vector3f> track = this.track;
-         track.add(sourcePlatformExitPoint);
-         track.add(this.createCorrespondingWaypoint(sourcePlatformExitPoint));
-         track.add(this.createCorrespondingWaypoint(destination.getEntrypoint()));
-         track.add(destination.getEntrypoint());
+         List<Vector3f> track2 = new ArrayList<Vector3f>();//this.track
+         track2.add(sourcePlatformExitPoint);
+         track2.add(this.createCorrespondingWaypoint(sourcePlatformExitPoint));
+         track2.add(this.createCorrespondingWaypoint(destination.getEntrypoint()));
+         track2.add(destination.getEntrypoint());
        
-         track = this.setPathCorrectOrder(track, vehicle.getCurrentPlatform(), destination);
+         track2 = this.setPathCorrectOrder(track2, vehicle.getCurrentPlatform(), destination);
          vehicle.setCurrentPlatform(destination);
          vehicle.setPosition(destination.getEntrypoint());
-         Route route = new Route(track, getPathLength(track));
+         Route route = new Route(track2, getPathLength(track2));
          route.destinationPlatform = destination;
          route.destinationParkingSpot = null;
          return route;
@@ -109,11 +106,11 @@ public class Road implements Serializable
      //van ingang platform naar parkeerplaats
       public Route getPathFromEntryPointPlatformToParkingSpot(Vehicle vehicle, ParkingSpot ps)
       {
-          List<Vector3f> track = this.track;
-          track.add(vehicle.getPosition());
-          track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
-          track.add(this.createCorrespondingWaypoint(this.createCorrespondingWaypoint(ps.getPosition())));
-          track.add(ps.getPosition());
+          List<Vector3f> track2 = new ArrayList<Vector3f>();//this.track
+          track2.add(vehicle.getPosition());
+          track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
+          track2.add(this.createCorrespondingWaypoint(this.createCorrespondingWaypoint(ps.getPosition())));
+          track2.add(ps.getPosition());
           try
           {
           ps.ParkVehicle(vehicle);
@@ -123,7 +120,7 @@ public class Road implements Serializable
               Settings.messageLog.AddMessage(e.getMessage());
           }
           
-          return new Route(track, getPathLength(track));
+          return new Route(track2, getPathLength(track2));
           
           
           
@@ -133,11 +130,11 @@ public class Road implements Serializable
       
     public Route getPathExternVehicleEntry(ExternVehicle ev, ParkingSpot ps )
     {
-        List<Vector3f> track = new ArrayList<Vector3f>();
-        track.add(ev.getPosition());
-        track.add(ps.getPosition());
-        float length = this.getPathLength(track);
-        Route route = new Route(track, length);
+        List<Vector3f> track2 = new ArrayList<Vector3f>();
+        track2.add(ev.getPosition());
+        track2.add(ps.getPosition());
+        float length = this.getPathLength(track2);
+        Route route = new Route(track2, length);
         route.destinationPlatform = null;
         route.destinationParkingSpot = ps;
         return route;

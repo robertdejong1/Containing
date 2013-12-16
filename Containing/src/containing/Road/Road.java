@@ -66,7 +66,10 @@ public class Road implements Serializable
         track.add(exitwayPlatform);
         source.UnparkVehicle(); //moet straks bij followroute
         vehicle.setPosition(exitwayPlatform);
-        return new Route(track, getPathLength(track));
+        Route route = new Route(track, getPathLength(track));
+        route.destinationParkingSpot = null;
+        route.destinationPlatform = null;
+        return route;
     }
     
     //van uitgang platform naar ingang andere platform

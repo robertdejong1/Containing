@@ -54,12 +54,14 @@ public class Route implements Serializable {
             Settings.messageLog.AddMessage("Reached end of path");
             
             vehicle.stopDriving();
-            if (destinationParkingSpot == null){
+            if (destinationPlatform == null && destinationParkingSpot == null){}
+            else if (destinationParkingSpot == null){
                 //motionpath from waypoint to platform
                 //platform sign in
                 vehicle.setCurrentPlatform(destinationPlatform);
             } //meldt aan voor platform nieuwe route
             else {
+                
                 //motionpath from waypoint to parkingspot
                 if (destinationPlatform == null)
                 {
@@ -77,7 +79,7 @@ public class Route implements Serializable {
                 }
                 
                 //hier kraan geparkeerd ... ga unload
-            } //park vehicle
+             //park vehicle
 
         }
         

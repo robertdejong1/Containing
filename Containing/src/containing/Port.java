@@ -91,7 +91,6 @@ public class Port implements Serializable
         }
         
         stats.put("storage", stripCount);
-        System.out.println(stats);
         return stats;
     }
     

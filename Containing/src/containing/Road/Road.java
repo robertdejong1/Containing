@@ -170,6 +170,8 @@ public class Road implements Serializable
         {
             for (Vector3f waypoint : track)   
             {
+                System.out.println("waypoint.x : " + waypoint.x + " waypoint.z : " + waypoint.z);
+                System.out.println("source.getExitpoint() " + source.getExitpoint());
               if ((waypoint.x >= source.getExitpoint().x && waypoint.z >= source.getExitpoint().z))
               {
                   

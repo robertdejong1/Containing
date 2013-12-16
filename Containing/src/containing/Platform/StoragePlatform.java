@@ -57,6 +57,10 @@ public class StoragePlatform extends Platform {
         log("Created StoragePlatform object: " + toString());
     }
     
+    public void StorageStrip[] getStrips() {
+        return strips;
+    }
+    
     @Override
     protected final void setRoad() 
     {

@@ -54,11 +54,11 @@ public class Road implements Serializable
     }
     
     //allinclusive
-    public Route getPathAllIn(Vehicle vehicle, ParkingSpot source, ParkingSpot destinationParkingSpot, Platform destinationPlatform)
+    public Route getPathAllIn(Vehicle vehicle, ParkingSpot source, ParkingSpot destinationParkingSpot, Platform destinationPlatform, Road mainroad)
     {
         Route deel1 = this.getPathFromParkingSpotToPlatform(vehicle, source, vehicle.getCurrentPlatform().getExitpoint());
-        Route deel2 = this.getPathFromExitPointPlatformToEntryPointPlatform(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform);
-        Route deel3 = this.getPathFromEntryPointPlatformToParkingSpot(vehicle, destinationParkingSpot);
+        Route deel2 = mainroad.getPathFromExitPointPlatformToEntryPointPlatform(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform);
+        Route deel3 = destinationPlatform.getRoad().getPathFromEntryPointPlatformToParkingSpot(vehicle, destinationParkingSpot);
         
         List<Vector3f> track2 = new ArrayList<>();
         for (Vector3f v : deel1.getWeg()) { track2.add(v); }

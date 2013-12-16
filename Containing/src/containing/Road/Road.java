@@ -10,21 +10,19 @@ import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.Vehicle;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Road implements Serializable 
 {
     float roadWidth = AGV.width + AGV.width * 0.25f;
     
-    ConcurrentHashMap<String, List<Vector3f>> trackHashMap = new ConcurrentHashMap<String, List<Vector3f>>();
+    List<Vector3f> track = new ArrayList<>();
         
     public Road(List<Vector3f> roadPoints){ //vaste punten voor main road = 4, voor platform road = 2
-        List<Vector3f> track = new ArrayList<>();
         for (Vector3f v : roadPoints){
             track.add(v);
         }
-        trackHashMap.put("track", track);
         //Collections.sort(track); //links onder links boven rechts boven rechtsonder
         //for (Vector3f v : entryPoints){this.createCorrespondingWaypoint(v);}
     } 
@@ -32,18 +30,18 @@ public class Road implements Serializable
     
 
     private Vector3f createCorrespondingWaypoint(Vector3f point){
-        if (trackHashMap.get("track").size() == 4){
-            if (point.x < trackHashMap.get("track").get(0).x){ return new Vector3f(trackHashMap.get("track").get(0).x, point.y, point.z);}
-            if (point.x > trackHashMap.get("track").get(2).x) {return new Vector3f(trackHashMap.get("track").get(2).x, point.y, point.z); }
-            if (point.z < trackHashMap.get("track").get(1).z){return new Vector3f(point.x, point.y, trackHashMap.get("track").get(1).z);}
-            return new Vector3f(point.x,point.y, trackHashMap.get("track").get(0).z);
+        if (track.size() == 4){
+            if (point.x < track.get(0).x){ return new Vector3f(track.get(0).x, point.y, point.z);}
+            if (point.x > track.get(2).x) {return new Vector3f(track.get(2).x, point.y, point.z); }
+            if (point.z < track.get(1).z){return new Vector3f(point.x, point.y, track.get(1).z);}
+            return new Vector3f(point.x,point.y, track.get(0).z);
         }
-        return new Vector3f(trackHashMap.get("track").get(0).x, point.y, point.z);
+        return new Vector3f(track.get(0).x, point.y, point.z);
     }
     
     public Route getPath()
     {
-       return new Route(this.trackHashMap.get("track"),getPathLength(trackHashMap.get("track")) );
+       return new Route(this.track,getPathLength(track) );
     }
     
     
@@ -61,17 +59,14 @@ public class Road implements Serializable
     public Route getPath(Vehicle vehicle, ParkingSpot source, Vector3f exitwayPlatform)
     {
         System.out.println("hahaah hier heeft vehicle boi : " + vehicle.getCurrentPlatform().toString());
-        ConcurrentHashMap<String, List<Vector3f>> trackHashMap = new ConcurrentHashMap<String, List<Vector3f>>();
         List<Vector3f> track = new ArrayList<Vector3f>();
         track.add(vehicle.getPosition());
         track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
         track.add(this.createCorrespondingWaypoint(exitwayPlatform));
         track.add(exitwayPlatform);
-   
-        trackHashMap.put("track", track);
         source.UnparkVehicle(); //moet straks bij followroute
         vehicle.setPosition(exitwayPlatform);
-        Route route = new Route(track, getPathLength(trackHashMap.get("track")));
+        Route route = new Route(track, getPathLength(track));
         route.destinationParkingSpot = null;
         route.destinationPlatform = null;
         return route;
@@ -80,7 +75,7 @@ public class Road implements Serializable
     //van uitgang platform naar ingang andere platform
      public Route getPath(Vehicle vehicle, Vector3f sourcePlatformExitPoint,Platform destination)
      {
-         List<Vector3f> track = this.trackHashMap.get("track");
+         List<Vector3f> track = this.track;
          track.add(sourcePlatformExitPoint);
          track.add(this.createCorrespondingWaypoint(sourcePlatformExitPoint));
          track.add(this.createCorrespondingWaypoint(destination.getEntrypoint()));
@@ -100,7 +95,7 @@ public class Road implements Serializable
      //van ingang platform naar parkeerplaats
       public Route getPath(Vehicle vehicle, ParkingSpot ps)
       {
-          List<Vector3f> track = this.trackHashMap.get("track");
+          List<Vector3f> track = this.track;
           track.add(vehicle.getPosition());
           track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
           track.add(this.createCorrespondingWaypoint(this.createCorrespondingWaypoint(ps.getPosition())));
@@ -181,7 +176,7 @@ public class Road implements Serializable
         //rechtsom
         if (true)
         {
-            for (Vector3f waypoint : trackHashMap.get("track"))   
+            for (Vector3f waypoint : track)   
             {
                 System.out.println("source.getExitpoint() " + source.getExitpoint());
               if ((waypoint.x >= source.getExitpoint().x && waypoint.z >= source.getExitpoint().z))
@@ -192,7 +187,7 @@ public class Road implements Serializable
              
             }
             
-            for(Vector3f waypoint : trackHashMap.get("track"))
+            for(Vector3f waypoint : track)
             {
               if (((int) waypoint.x >= (int) destination.getEntrypoint().x && waypoint.z >=  destination.getEntrypoint().z))
               {
@@ -207,7 +202,7 @@ public class Road implements Serializable
         
         else
         {
-            for (Vector3f waypoint : trackHashMap.get("track"))   
+            for (Vector3f waypoint : track)   
             {
               if ((waypoint.x <= source.getExitpoint().x && waypoint.z <= source.getExitpoint().z))
               {
@@ -217,7 +212,7 @@ public class Road implements Serializable
              
             }
             
-            for(Vector3f waypoint : trackHashMap.get("track"))
+            for(Vector3f waypoint : track)
             {
               if ((waypoint.x <= destination.getEntrypoint().x && waypoint.z <= destination.getEntrypoint().z))
               {

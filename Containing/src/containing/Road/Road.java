@@ -172,15 +172,20 @@ public class Road implements Serializable
         else return new Route(outsidetrack, length_outsidetrack);
     }*/
     
-    public synchronized List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Platform source, Platform destination){
+    public synchronized List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Platform source, Platform destination, Road mainroad){
         //path size altijd 4
         List<Vector3f> correctPath = new ArrayList<>();
         correctPath.add(path.get(0));
         correctPath.add(path.get(1));
         
-        List<Vector3f> _track = (ArrayList<Vector3f>)((ArrayList<Vector3f>)track).clone();
+
+        
+     
+        //if (destination.positie == Platform.Positie.)
         
         boolean right = true;
+        
+        
         //bepalen aan hand van platform of rechts of links: nu altijd rechtsom
         if (source instanceof StoragePlatform)
         {
@@ -191,23 +196,52 @@ public class Road implements Serializable
         //rechtsom
         if (right==true)
         {
-            for (Vector3f waypoint : _track)   
+            switch(source.positie)
             {
-               
-              if ((waypoint.x >= source.getExitpoint().x && waypoint.z >= source.getExitpoint().z))
-              {
-                  
-                correctPath.add(waypoint);
-              }  
-             
-            }
-            
-            for(Vector3f waypoint : _track)
-            {
-              if (((int) waypoint.x >= (int) destination.getEntrypoint().x && waypoint.z >=  destination.getEntrypoint().z))
-              {
-                 correctPath.add(waypoint);
-              }
+                case RECHTS:
+                    
+                    if (destination.positie == Platform.Positie.LINKS) 
+                    {
+                        correctPath.add(mainroad.track.get(3));
+                        correctPath.add(mainroad.track.get(0));
+                        break;
+                    }
+                    if (destination.positie == Platform.Positie.ONDER)
+                    {
+                        correctPath.add(mainroad.track.get(3));
+                        correctPath.add(mainroad.track.get(0));
+                        correctPath.add(mainroad.track.get(1));
+                    }
+                    break;
+                    
+                case LINKS:
+                    
+                    if (destination.positie == Platform.Positie.RECHTS)
+                    {
+                        correctPath.add(mainroad.track.get(1));
+                        correctPath.add(mainroad.track.get(2));
+                    }
+                    if (destination.positie == Platform.Positie.ONDER)
+                    {
+                        correctPath.add(mainroad.track.get(1));
+                    }
+                    break;
+                    
+                case ONDER:
+                    if (destination.positie == Platform.Positie.RECHTS)
+                    {
+                        correctPath.add(mainroad.track.get(2));
+                    }
+                    if (destination.positie == Platform.Positie.LINKS)
+                    {
+                        correctPath.add(mainroad.track.get(2));
+                        correctPath.add(mainroad.track.get(3));
+                        correctPath.add(mainroad.track.get(0));
+                    }
+                    break;
+                    
+                
+                    
             }
             
     
@@ -217,23 +251,7 @@ public class Road implements Serializable
         
         else
         {
-            for (Vector3f waypoint : _track)   
-            {
-              if ((waypoint.x <= source.getExitpoint().x && waypoint.z <= source.getExitpoint().z))
-              {
-                  
-                correctPath.add(waypoint);
-              }  
-             
-            }
-            
-            for(Vector3f waypoint : _track)
-            {
-              if ((waypoint.x <= destination.getEntrypoint().x && waypoint.z <= destination.getEntrypoint().z))
-              {
-                 correctPath.add(waypoint);
-              }
-            }
+        
             
         }
         

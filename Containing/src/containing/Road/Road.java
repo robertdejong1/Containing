@@ -189,7 +189,7 @@ public class Road implements Serializable
         //bepalen aan hand van platform of rechts of links: nu altijd rechtsom
         if (source instanceof StoragePlatform)
         {
-            right = true;
+            right = true; //
         }
         //if (typeOrInterface.isInstance(someObject);)
         

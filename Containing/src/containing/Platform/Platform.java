@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class Platform implements Serializable {
     
@@ -85,6 +83,9 @@ public abstract class Platform implements Serializable {
         agvQueue = new LinkedList<>();
         busyCranes = new ArrayList<>();
         craneAgvs = new ArrayList<>();
+        for(int i = 0; i < cranes.size(); i++) {
+            craneAgvs.add(null);
+        }
         this.positie = positie;
     }
     

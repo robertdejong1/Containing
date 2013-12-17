@@ -20,7 +20,7 @@ import containing.Vector3f;
 public class AGV extends InternVehicle {
 
     public static float width = 2.5f; //????????
-    public static float length = 3.5f; //??????????
+    public static float length = 5f; //??????????
     private static int capicityAGV = 1;
 
     public AGV(Platform currentPlatform, Vector3f startPosition)

@@ -13,6 +13,7 @@ import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.TrainCrane;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -90,10 +91,11 @@ public class TrainPlatform extends Platform {
     
     private void createAgvQueuePositions() {
         agvQueuePositions = new ArrayList<>();
-        Vector3f base = new Vector3f(10.3f, 5.5f, 1.5f);
+        Vector3f base = new Vector3f(3.5f, 5.5f, 2f);
         for(int i = 0; i < maxAgvQueue; i++) {
-            agvQueuePositions.add(new Vector3f(base.x - AGV.length*Settings.METER*i - 0.1f, base.y, base.z));
+            agvQueuePositions.add(new Vector3f(base.x, base.y, base.z + (AGV.length * Settings.METER) * i + 0.5f));
         }
+        Collections.reverse(agvQueuePositions);
     }
     
     @Override

@@ -37,7 +37,7 @@ public abstract class Platform implements Serializable {
     
     public enum State { FREE, LOAD, UNLOAD }
     public enum Positie { BOVEN, RECHTS, ONDER, LINKS };
-    protected enum DynamicAxis { X, Z }
+    public enum DynamicAxis { X, Z }
     
     protected final float AGVSPOT_OFFSET = 0f;
     
@@ -67,6 +67,7 @@ public abstract class Platform implements Serializable {
     protected int maxAgvQueue = 1;    
     
     protected List<Crane> busyCranes;
+    protected List<AGV> craneAgvs;
     
     protected int time = 0;
     
@@ -82,7 +83,8 @@ public abstract class Platform implements Serializable {
         extVehicles = new ArrayList<>();
         jobs = new LinkedList<>();
         agvQueue = new LinkedList<>();
-        busyCranes = new LinkedList<>();
+        busyCranes = new ArrayList<>();
+        craneAgvs = new ArrayList<>();
         this.positie = positie;
     }
     

@@ -12,6 +12,8 @@ import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.TrainCrane;
+import containing.Vehicle.Vehicle;
+import containing.Vehicle.Vehicle.Status;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -104,14 +106,15 @@ public class TrainPlatform extends Platform {
          * Als er een trein is geparkeerd:
          * 
          * 1 Vraag iets van 12 AGV's op en zet die op de road
-         * 2 Zet de kranen op de juiste positie
-         * 3 Als er minimaal 1 AGV in de queue staat (en de kraan waar hij heen gaat staat op de juiste positie) 
-         *   stuur een AGV naar de kraan
+         * 2 Zet de kranen op de juiste positie en ls er minimaal 1 AGV in de queue staat 
+         *   (en de kraan waar hij heen gaat staat op de juiste positie) stuur een AGV naar de kraan
          * 4 Check telkens of er een AGV parkeerd staat bij de kraan, doe dan unload
          */
         
         super.unload();
         if(!extVehicles.isEmpty()) {
+            int currentVehicle = 1;
+            int cranesPerVehicle = cranes.size() / extVehicles.size();
             for(ExternVehicle ev : extVehicles) {
                 // stap 1
                 if(agvQueue.isEmpty() || agvQueue.size() < maxAgvQueue) {
@@ -133,8 +136,48 @@ public class TrainPlatform extends Platform {
                         }
                     }
                 }
+                // stap 2
+                if(!agvQueue.isEmpty()) {
+                    int test = (currentVehicle * cranesPerVehicle - cranesPerVehicle);
+                    int rows = ev.getGridWidth();
+                    int rowsPerCrane = rows / cranesPerVehicle;
+                    List<Boolean> unloadedColumns = ev.getColumns();
+                    List<Integer> priorityColumns = ev.getPriorityColumns();
+                    int currentCrane = 0;
+                    
+                    for(Crane c : cranes) {
+                        if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle) {
+                            int startIndex = currentCrane + rowsPerCrane;
+                            int rowToGive = 0;
+                            for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
+                            {
+                                if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
+                                    rowToGive = i;
+                                    break;
+                                } else if(!unloadedColumns.get(i)) {
+                                    rowToGive = i;
+                                    break;
+                                }
+                            }
+                            if(!busyCranes.contains(c) && craneAgvs.get(currentCrane) == null) {
+                                // move to right position of row
+                                c.move(rowToGive);
+                                busyCranes.add(c);
+                            } else if(busyCranes.contains(c) && c.getStatus() != Status.MOVING && craneAgvs.get(currentCrane) == null) {
+                                // adjust parkingspot
+                                Vector3f cp = c.getPosition();
+                                agvSpots.set(currentCrane, new AgvSpot(new Vector3f(cp.x + TrainCrane.length*Settings.METER, cp.y, cp.z)));
+                                // send AGV from queue
+                                AGV agv = agvQueue.poll();
+                                agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
+                            } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null) {
+                                // unload;
+                            }
+                            currentCrane++;
+                        }
+                    }
+                }
             }
-            // stap 2
         }
     }
     

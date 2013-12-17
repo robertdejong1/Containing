@@ -147,6 +147,22 @@ public class Road implements Serializable
           
       }
       
+      public Route getPathToParkingsSpot(Vehicle vehicle, ParkingSpot ps)
+      {
+          List<Vector3f> track2 = new ArrayList<Vector3f>();
+          track.add(vehicle.getPosition());
+          track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
+          track.add(this.createCorrespondingWaypoint(ps.getPosition()));
+          track.add(ps.getPosition());
+          try
+          {
+            ps.ParkVehicle(vehicle);
+            vehicle.setPosition(ps.getPosition());
+          }
+          catch(Exception e){}
+          
+      }
+      
        public Route getPathFromEntryPointPlatformToVector(Vehicle vehicle, Vector3f destinationVector)
       {
           List<Vector3f> track2 = new ArrayList<Vector3f>();//this.track
@@ -264,9 +280,8 @@ public class Road implements Serializable
                     }
                     if (destination.positie == Platform.Positie.LINKS)
                     {
-                        correctPath.add(mainroad.track.get(2));
-                        correctPath.add(mainroad.track.get(3));
-                        correctPath.add(mainroad.track.get(0));
+                        correctPath.add(mainroad.track.get(1));
+                     
                     }
                     break;
                     
@@ -293,9 +308,8 @@ public class Road implements Serializable
                     }
                     if (destination.positie == Platform.Positie.ONDER)
                     {
-                        correctPath.add(mainroad.track.get(3));
-                        correctPath.add(mainroad.track.get(0));
-                        correctPath.add(mainroad.track.get(1));
+                        correctPath.add(mainroad.track.get(2));
+                        break;
                     }
                     break;
                     
@@ -303,19 +317,23 @@ public class Road implements Serializable
                     
                     if (destination.positie == Platform.Positie.RECHTS)
                     {
-                        correctPath.add(mainroad.track.get(1));
-                        correctPath.add(mainroad.track.get(2));
+                        correctPath.add(mainroad.track.get(0));
+                        correctPath.add(mainroad.track.get(3));
                     }
                     if (destination.positie == Platform.Positie.ONDER)
                     {
-                        correctPath.add(mainroad.track.get(1));
+                        correctPath.add(mainroad.track.get(0));
+                        correctPath.add(mainroad.track.get(3));
+                        correctPath.add(mainroad.track.get(2));
                     }
                     break;
                     
                 case ONDER:
                     if (destination.positie == Platform.Positie.RECHTS)
                     {
-                        correctPath.add(mainroad.track.get(2));
+                        correctPath.add(mainroad.track.get(1));
+                        correctPath.add(mainroad.track.get(0));
+                        correctPath.add(mainroad.track.get(3));
                     }
                     if (destination.positie == Platform.Positie.LINKS)
                     {

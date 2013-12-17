@@ -83,9 +83,6 @@ public abstract class Platform implements Serializable {
         agvQueue = new LinkedList<>();
         busyCranes = new ArrayList<>();
         craneAgvs = new ArrayList<>();
-        for(int i = 0; i < cranes.size(); i++) {
-            craneAgvs.add(null);
-        }
         this.positie = positie;
     }
     

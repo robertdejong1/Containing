@@ -51,6 +51,9 @@ public class TrainPlatform extends Platform {
         createCranes();
         createAgvSpots();
         createAgvQueuePositions();
+        for(int i = 0; i < cranes.size(); i++) {
+            craneAgvs.add(null);
+        }
         log("Created TrainPlatform object: " + toString());
     }
     
@@ -140,6 +143,7 @@ public class TrainPlatform extends Platform {
                 if(!agvQueue.isEmpty()) {
                     int test = (currentVehicle * cranesPerVehicle - cranesPerVehicle);
                     int rows = ev.getGridWidth();
+                    System.out.println("gridWidth == " + rows);
                     int rowsPerCrane = rows / cranesPerVehicle;
                     List<Boolean> unloadedColumns = ev.getColumns();
                     List<Integer> priorityColumns = ev.getPriorityColumns();
@@ -149,6 +153,7 @@ public class TrainPlatform extends Platform {
                         if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle) {
                             int startIndex = currentCrane * rowsPerCrane;
                             int rowToGive = 0;
+                            System.out.println("startIndex = " + startIndex);
                             for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
                             {
                                 if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
@@ -161,16 +166,22 @@ public class TrainPlatform extends Platform {
                             }
                             if(!busyCranes.contains(c) && craneAgvs.get(currentCrane) == null) {
                                 // move to right position of row
-                                c.moveToContainer(ev, rowToGive);
-                                busyCranes.add(c);
+                                System.out.println("rowToGive: " + rowToGive);
+                                if(ev.getGrid()[rowToGive][0][0] != null) {
+                                    c.moveToContainer(ev, rowToGive);
+                                    busyCranes.add(c);
+                                }
                             } else if(busyCranes.contains(c) && c.getStatus() != Status.MOVING && craneAgvs.get(currentCrane) == null) {
                                 // adjust parkingspot
                                 Vector3f cp = c.getPosition();
                                 agvSpots.set(currentCrane, new AgvSpot(new Vector3f(cp.x + TrainCrane.length*Settings.METER, cp.y, cp.z)));
                                 // send AGV from queue
-                                AGV agv = agvQueue.poll();
-                                agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
-                                craneAgvs.set(currentCrane, agv);
+                                AGV agv = agvQueue.peek();
+                                if(agv.getStatus() != Status.MOVING) {
+                                    agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
+                                    craneAgvs.set(currentCrane, agv);
+                                    agvQueue.poll();
+                                }
                             } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null) {
                                 // unload;
                             }

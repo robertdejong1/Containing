@@ -14,6 +14,7 @@ import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Road.Road;
+import static containing.Road.Road.getPathLength;
 import containing.Road.Route;
 import containing.Settings;
 import containing.Vector3f;
@@ -72,6 +73,15 @@ public abstract class Crane extends InternVehicle {
         //platform moet agv volgende route geven
     }
     
+      public float getPathLength(List<Vector3f> weg){
+         
+        if (weg.size() > 1){
+            if (weg.get(0).x != weg.get(1).x){ return Math.abs(weg.get(1).x - weg.get(0).x) + getPathLength(weg.subList(1, weg.size()));}
+            return Math.abs(weg.get(1).z - weg.get(0).z) + getPathLength(weg.subList(1, weg.size()));
+        }   
+        else return 0;
+    }
+    
     public void moveToContainer(ExternVehicle ev, int column)
     {
          List<Vector3f> route = new ArrayList<>();
@@ -91,15 +101,18 @@ public abstract class Crane extends InternVehicle {
          }
          
         this.currentSpeed = (this.isLoaded) ? this.maxSpeedLoaded : this.maxSpeedUnloaded;
+        float duration = (this.getPathLength(route)*10)/(float)((float)this.getCurrentSpeed()*1000f/3600f);
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", this.getID());
         map.put("vehicleType", this.getVehicleType());
         map.put("motionPath", route); 
+        map.put("duration", duration);
         map.put("speed", currentSpeed);
         
         this.route = new Route(route,Road.getPathLength(route));
             
         CommandHandler.addCommand(new Command("moveCrane", map));
+        
         this.status = Status.MOVING;
          
     }

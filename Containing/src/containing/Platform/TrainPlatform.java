@@ -94,7 +94,7 @@ public class TrainPlatform extends Platform {
         agvQueuePositions = new ArrayList<>();
         Vector3f base = new Vector3f(10.3f, 5.5f, 1.5f);
         for(int i = 0; i < maxAgvQueue; i++) {
-            agvQueuePositions.add(new Vector3f(base.x + AGV.length*i + 0.1f, base.y, base.z));
+            agvQueuePositions.add(new Vector3f(base.x - AGV.length*i - 0.1f, base.y, base.z));
         }
     }
     

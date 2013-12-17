@@ -90,10 +90,10 @@ public abstract class Crane extends InternVehicle {
         
          switch (this.getCurrentPlatform().getAxis())
          {
-             case Z:
+             case X:
                  route.add(new Vector3f(container.x, container.y, this.getPosition().z)); //??
                  break;
-             case X:
+             case Z:
                  route.add(new Vector3f(this.getPosition().x, container.y, container.z)); //??
                  break;
              //caseY?  

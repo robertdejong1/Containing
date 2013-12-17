@@ -147,7 +147,7 @@ public class TrainPlatform extends Platform {
                     
                     for(Crane c : cranes) {
                         if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle) {
-                            int startIndex = currentCrane + rowsPerCrane;
+                            int startIndex = currentCrane * rowsPerCrane;
                             int rowToGive = 0;
                             for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
                             {
@@ -161,7 +161,7 @@ public class TrainPlatform extends Platform {
                             }
                             if(!busyCranes.contains(c) && craneAgvs.get(currentCrane) == null) {
                                 // move to right position of row
-                                c.move(rowToGive);
+                                c.moveToContainer(ev, rowToGive);
                                 busyCranes.add(c);
                             } else if(busyCranes.contains(c) && c.getStatus() != Status.MOVING && craneAgvs.get(currentCrane) == null) {
                                 // adjust parkingspot
@@ -170,6 +170,7 @@ public class TrainPlatform extends Platform {
                                 // send AGV from queue
                                 AGV agv = agvQueue.poll();
                                 agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
+                                craneAgvs.set(currentCrane, agv);
                             } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null) {
                                 // unload;
                             }

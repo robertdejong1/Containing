@@ -83,7 +83,7 @@ public class Controller
         Settings.port.update();
         Controlleralgorithms.checkIncomingVehicles(timestamp);
         UserInterface.setTitle("Containing 2013 - " + timestamp.toString());
-        UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
+        UserInterface.MessageLogTextArea.setText(Settings.messageLog.GetLastMessages());
     }
     
     /**
@@ -134,7 +134,7 @@ public class Controller
     {
         try
         {
-            UserInterface.MessageLogLabel.setText(Settings.messageLog.GetLastMessagesAsHTMLString());
+            UserInterface.MessageLogTextArea.setText(Settings.messageLog.GetLastMessages());
         }
         catch (NullPointerException e)
         {

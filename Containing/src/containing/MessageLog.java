@@ -28,7 +28,7 @@ public class MessageLog
         }
     }
     
-    public String GetLastMessagesAsHTMLString()
+    public String GetLastMessages()
     {
         int MessageCounter = 0;
         
@@ -41,14 +41,14 @@ public class MessageLog
             MessageCounter = Messages.size();
         }
         
-        String StringToReturn = "<html><div>";
+        String StringToReturn = "";
         
         for (int i = MessageCounter - 1; i > -1; i--)
         {
-            StringToReturn = StringToReturn + Messages.get(i) + "<br />";
+            StringToReturn = "\b " + StringToReturn + Messages.get(i) + "\n";
         }
         
-        StringToReturn += "</html></div>";
+        StringToReturn += "";
         return StringToReturn;
         
     }

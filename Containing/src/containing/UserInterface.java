@@ -1,7 +1,6 @@
 package containing;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -9,8 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class UserInterface extends JFrame
@@ -18,7 +16,7 @@ public class UserInterface extends JFrame
     private File CurrentDir = null;   
     public JButton StartSimulationButton;
     public JButton StopSimulationButton;
-    public JLabel MessageLogLabel;
+    public JTextArea MessageLogTextArea;
     
     public UserInterface()
     {
@@ -119,11 +117,9 @@ public class UserInterface extends JFrame
     
     private void AddLabels()
     {
-        MessageLogLabel = new JLabel("");
-        MessageLogLabel.setBounds(5, 35, 785, 430);
-        MessageLogLabel.setVerticalAlignment(1);
-        
-        MessageLogLabel.setBorder(BorderFactory.createLineBorder(Color.black));
-        this.add(MessageLogLabel);
+        MessageLogTextArea = new JTextArea("");
+        MessageLogTextArea.setBounds(5, 35, 785, 430);
+        MessageLogTextArea.setBorder(BorderFactory.createLineBorder(Color.black));
+        this.add(MessageLogTextArea);
     }
 }

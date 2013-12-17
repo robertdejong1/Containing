@@ -120,6 +120,7 @@ public class UserInterface extends JFrame
         MessageLogTextArea = new JTextArea("");
         MessageLogTextArea.setBounds(5, 35, 785, 430);
         MessageLogTextArea.setBorder(BorderFactory.createLineBorder(Color.black));
+        MessageLogTextArea.setEditable(false);
         this.add(MessageLogTextArea);
     }
 }

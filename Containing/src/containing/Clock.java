@@ -75,7 +75,7 @@ public class Clock
     {
         try 
         {
-            if (!timer.isRunning()) 
+            if (timer.isRunning()) 
             {
                 timer.stop();
                 return true;

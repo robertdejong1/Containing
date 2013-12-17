@@ -22,10 +22,7 @@ public class MessageLog
         String formattedDate = sdf.format(date);
         
         Messages.add("[" + formattedDate + "]: " + Message);
-        if (!Controller.started)
-        {
-            Controller.updateUserInterface();
-        }
+        Settings.userInterface.MessageLogTextArea.setText(GetLastMessages());
     }
     
     public String GetLastMessages()
@@ -45,7 +42,7 @@ public class MessageLog
         
         for (int i = MessageCounter - 1; i > -1; i--)
         {
-            StringToReturn = "\b " + StringToReturn + Messages.get(i) + "\n";
+            StringToReturn = StringToReturn + Messages.get(i) + "\n";
         }
         
         StringToReturn += "";
@@ -57,6 +54,7 @@ public class MessageLog
     {
         Messages = new ArrayList();
         Messages.add("Controller Version: " + Settings.version);
+        GetLastMessages();
     }
     
     public void WriteMessagesToFile()

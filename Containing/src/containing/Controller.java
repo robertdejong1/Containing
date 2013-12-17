@@ -5,15 +5,12 @@ import containing.Exceptions.ParseErrorException;
 import containing.Platform.Platform;
 import java.io.File;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Controller 
 {
     private static UserInterface UserInterface;
-    private static List<Command> QeuedCommands;
     private static Clock clock; 
-    public static boolean started = false;
     
     /**
      * Entry point for program
@@ -52,8 +49,6 @@ public class Controller
         {
                Settings.messageLog.AddMessage("Could not parse xml!");
         }
-        
-        started = false;
     }
     
     /**
@@ -83,7 +78,6 @@ public class Controller
         Settings.port.update();
         Controlleralgorithms.checkIncomingVehicles(timestamp);
         UserInterface.setTitle("Containing 2013 - " + timestamp.toString());
-        UserInterface.MessageLogTextArea.setText(Settings.messageLog.GetLastMessages());
     }
     
     /**

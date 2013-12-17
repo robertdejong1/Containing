@@ -9,6 +9,7 @@ import containing.Platform.StoragePlatform;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
+import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.Vehicle;
 import java.io.Serializable;
@@ -186,6 +187,39 @@ public class Road implements Serializable
         Route route = new Route(track2, length);
         route.destinationPlatform = null;
         route.destinationParkingSpot = ps;
+        return route;
+    }
+    
+    public Route getPathMoveContainer(ExternVehicle ev, int column, Crane crane) {
+        List<Vector3f> track2 = new ArrayList<Vector3f>();
+        track2.add(crane.getPosition());
+        //track2.add(ev.getPosition());
+        System.out.println("column : " + column);
+         
+        Vector3f container = ev.getGrid()[column][0][0].getArrivalPosition();
+
+        System.out.println("ev.getPosition = " + ev.getPosition().toString());
+
+        switch (crane.getCurrentPlatform().getAxis())
+        {
+            case X:
+                Vector3f haha = new Vector3f(ev.getPosition().x - column*1.5f, crane.getPosition().y, crane.getPosition().z);
+                track2.add(haha); //??
+                System.out.println("route x: " + haha.toString());
+                break;
+            case Z:
+                // hardcoded voor de trein nu ;( wagon is 1.5f en trein zelf ook
+                Vector3f hihi = new Vector3f(crane.getPosition().x, crane.getPosition().y, ev.getPosition().z - column*1.5f - 1.5f);
+                track2.add(hihi); //??
+                System.out.println("route z: " + hihi.toString());
+                break;
+            //caseY?  
+
+        }
+        float length = this.getPathLength(track2);
+        Route route = new Route(track2, length);
+        route.destinationPlatform = null;
+        route.destinationParkingSpot = null;
         return route;
     }
      

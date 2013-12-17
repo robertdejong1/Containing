@@ -99,14 +99,15 @@ public abstract class Crane extends InternVehicle {
                  System.out.println("route x: " + haha.toString());
                  break;
              case Z:
-                 Vector3f hihi = new Vector3f(this.getPosition().x, this.getPosition().y, ev.getPosition().z - column*1.5f);
+                 // hardcoded voor de trein nu ;( wagon is 1.5f en trein zelf ook
+                 Vector3f hihi = new Vector3f(this.getPosition().x, this.getPosition().y, ev.getPosition().z - column*1.5f - 1.5f);
                  route.add(hihi); //??
                  System.out.println("route z: " + hihi.toString());
                  break;
              //caseY?  
                  
          }
-         
+         /*
         this.currentSpeed = (this.isLoaded) ? this.maxSpeedLoaded : this.maxSpeedUnloaded;
         float duration = (this.getPathLength(route)*10)/(float)((float)this.getCurrentSpeed()*1000f/3600f);
         HashMap<String, Object> map = new HashMap<>();
@@ -115,10 +116,12 @@ public abstract class Crane extends InternVehicle {
         map.put("motionPath", route); 
         map.put("duration", duration);
         map.put("speed", currentSpeed);
-        
+        */
         this.route = new Route(route,Road.getPathLength(route));
+        
+        followRoute(this.route);
             
-        CommandHandler.addCommand(new Command("moveCrane", map));
+        //CommandHandler.addCommand(new Command("moveCrane", map));
         
         this.status = Status.MOVING;
          

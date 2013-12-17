@@ -6,6 +6,7 @@ import containing.Exceptions.AgvSpotOutOfBounds;
 import containing.Exceptions.NoFreeAgvException;
 import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.TrainSpot;
+import containing.Road.Road;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
@@ -36,6 +37,8 @@ public class TrainPlatform extends Platform {
     
     private List<Vector3f> agvQueuePositions;
     
+    private Road craneRoad;
+    
     public TrainPlatform(Vector3f position)
     {
         super(position, Platform.Positie.LINKS);
@@ -54,6 +57,10 @@ public class TrainPlatform extends Platform {
         for(int i = 0; i < cranes.size(); i++) {
             craneAgvs.add(null);
         }
+        List waypoints = new ArrayList();
+        waypoints.add(new Vector3f(2.6f, 5.5f, 0.5f));
+        waypoints.add(new Vector3f(2.6f, 5.5f, 152.3f));
+        craneRoad = new Road(waypoints);
         log("Created TrainPlatform object: " + toString());
     }
     
@@ -144,13 +151,13 @@ public class TrainPlatform extends Platform {
                 if(!agvQueue.isEmpty()) {
                     int test = (currentVehicle * cranesPerVehicle - cranesPerVehicle);
                     int rows = ev.getGridWidth();
-                    System.out.println("gridWidth == " + rows);
                     int rowsPerCrane = rows / cranesPerVehicle;
                     List<Boolean> unloadedColumns = ev.getColumns();
                     List<Integer> priorityColumns = ev.getPriorityColumns();
                     int currentCrane = 0;
                     
                     for(Crane c : cranes) {
+                        System.out.println("c.Status() == " + c.getStatus());
                         if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle) {
                             int startIndex = currentCrane * rowsPerCrane;
                             int rowToGive = 0;
@@ -170,6 +177,7 @@ public class TrainPlatform extends Platform {
                                     if(ev.getGrid()[rowToGive][0][0] != null) {
                                         System.out.println("rowToGive: " + rowToGive);
                                         c.moveToContainer(ev, rowToGive);
+                                        c.followRoute(craneRoad.getPathMoveContainer(ev, rowToGive, c));
                                         busyCranes.add(c);
                                     }
                                 }
@@ -185,7 +193,7 @@ public class TrainPlatform extends Platform {
                                     agvQueue.poll();
                                 }
                             } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null) {
-                                // unload;
+                                // unload
                             }
                             currentCrane++;
                         }

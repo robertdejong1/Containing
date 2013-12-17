@@ -2,6 +2,9 @@ package containing.Road;
 
 import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
+import static containing.Platform.Platform.Positie.LINKS;
+import static containing.Platform.Platform.Positie.ONDER;
+import static containing.Platform.Platform.Positie.RECHTS;
 import containing.Platform.StoragePlatform;
 import containing.Settings;
 import containing.Vector3f;
@@ -59,6 +62,20 @@ public class Road implements Serializable
         Route deel1 = vehicle.getCurrentPlatform().getRoad().getPathFromParkingSpotToPlatform(vehicle, source, vehicle.getCurrentPlatform().getExitpoint());
         Route deel2 = mainroad.getPathFromExitPointPlatformToEntryPointPlatform(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform, mainroad);
         Route deel3 = destinationPlatform.getRoad().getPathFromEntryPointPlatformToParkingSpot(vehicle, destinationParkingSpot);
+        
+        List<Vector3f> track2 = new ArrayList<>();
+        for (Vector3f v : deel1.getWeg()) { track2.add(v); }
+        for (Vector3f v : deel2.getWeg()) { track2.add(v); }
+        for (Vector3f v : deel3.getWeg()) { track2.add(v); }
+        
+        return new Route(track2, getPathLength(track2));
+    }
+    
+      public Route getPathAllInVector(Vehicle vehicle, ParkingSpot source, Vector3f destinationVector, Platform destinationPlatform, Road mainroad)
+    {
+        Route deel1 = vehicle.getCurrentPlatform().getRoad().getPathFromParkingSpotToPlatform(vehicle, source, vehicle.getCurrentPlatform().getExitpoint());
+        Route deel2 = mainroad.getPathFromExitPointPlatformToEntryPointPlatform(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform, mainroad);
+        Route deel3 = destinationPlatform.getRoad().getPathFromEntryPointPlatformToVector(vehicle, destinationVector);
         
         List<Vector3f> track2 = new ArrayList<>();
         for (Vector3f v : deel1.getWeg()) { track2.add(v); }
@@ -127,6 +144,19 @@ public class Road implements Serializable
           
           
           
+          
+      }
+      
+       public Route getPathFromEntryPointPlatformToVector(Vehicle vehicle, Vector3f destinationVector)
+      {
+          List<Vector3f> track2 = new ArrayList<Vector3f>();//this.track
+          track2.add(vehicle.getPosition());
+          track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
+          track2.add(this.createCorrespondingWaypoint(this.createCorrespondingWaypoint(destinationVector)));
+          track2.add(destinationVector);
+          vehicle.setPosition(destinationVector);
+        
+          return new Route(track2, getPathLength(track2));
           
       }
       
@@ -202,6 +232,61 @@ public class Road implements Serializable
                     
                     if (destination.positie == Platform.Positie.LINKS) 
                     {
+                        correctPath.add(mainroad.track.get(2));
+                        correctPath.add(mainroad.track.get(1));
+                        break;
+                    }
+                    if (destination.positie == Platform.Positie.ONDER)
+                    {
+                        correctPath.add(mainroad.track.get(2));
+                    }
+                    break;
+                    
+                case LINKS:
+                    
+                    if (destination.positie == Platform.Positie.RECHTS)
+                    {
+                        correctPath.add(mainroad.track.get(0));
+                        correctPath.add(mainroad.track.get(2));
+                    }
+                    if (destination.positie == Platform.Positie.ONDER)
+                    {
+                        correctPath.add(mainroad.track.get(1));
+                        correctPath.add(mainroad.track.get(1));
+                        correctPath.add(mainroad.track.get(1));
+                    }
+                    break;
+                    
+                case ONDER:
+                    if (destination.positie == Platform.Positie.RECHTS)
+                    {
+                        correctPath.add(mainroad.track.get(2));
+                    }
+                    if (destination.positie == Platform.Positie.LINKS)
+                    {
+                        correctPath.add(mainroad.track.get(2));
+                        correctPath.add(mainroad.track.get(3));
+                        correctPath.add(mainroad.track.get(0));
+                    }
+                    break;
+                    
+                
+                    
+            }
+            
+    
+        }
+        
+        //linksom <= 
+        
+        else
+        {//moet nog
+            switch(source.positie)
+            {
+                case RECHTS:
+                    
+                    if (destination.positie == Platform.Positie.LINKS) 
+                    {
                         correctPath.add(mainroad.track.get(3));
                         correctPath.add(mainroad.track.get(0));
                         break;
@@ -243,15 +328,6 @@ public class Road implements Serializable
                 
                     
             }
-            
-    
-        }
-        
-        //linksom <= 
-        
-        else
-        {
-        
             
         }
         

@@ -62,7 +62,7 @@ public abstract class Platform implements Serializable {
     protected Road road = null;
     
     protected Queue<Job> jobs = null;
-    protected Queue<AgvSpot> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
+    protected Queue<AGV> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
     protected int agvCount = 0;
     protected int maxAgvQueue = 1;    
     
@@ -177,6 +177,7 @@ public abstract class Platform implements Serializable {
     
     public void unload()
     {   
+        time++;
         if(extVehicles.isEmpty()) {
             for(int i = 0; i < extVehicleSpots.size(); i++) 
             {
@@ -189,8 +190,7 @@ public abstract class Platform implements Serializable {
     
     public AgvSpot getAGV() {
         try {
-            int spot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
-            AgvSpot agvSpot = Settings.port.getStoragePlatform().agvSpots.get(spot);
+            AgvSpot agvSpot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
             return agvSpot;
         } catch(NoFreeAgvException e) {
             System.out.println("er is geen vrije agv beschikbaar");
@@ -217,19 +217,19 @@ public abstract class Platform implements Serializable {
         catch(NoJobException e){/* ignore */}
     }
     
-    private void agvToQueue(AgvSpot spot) throws AgvQueueSpaceOutOfBounds
+    private void agvToQueue(AGV agv) throws AgvQueueSpaceOutOfBounds
     {
         if(agvQueue.size() < maxAgvQueue)
-            agvQueue.add(spot);
+            agvQueue.add(agv);
         else
             throw new AgvQueueSpaceOutOfBounds("No space available for AGV in agvQueue");
     }
     
-    protected void addAgvToQueue(AgvSpot spot)
+    protected void addAgvToQueue(AGV agv)
     {
         try
         {
-            agvToQueue(spot);
+            agvToQueue(agv);
         }
         catch(AgvQueueSpaceOutOfBounds e){/* ignore */}
     }

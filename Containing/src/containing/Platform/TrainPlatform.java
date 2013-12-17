@@ -11,9 +11,8 @@ import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
-import containing.Vehicle.Train;
 import containing.Vehicle.TrainCrane;
-import containing.Vehicle.Vehicle;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +33,8 @@ public class TrainPlatform extends Platform {
     private final float CRANE_OFFSET   = 1.5f;   // ???
     private final float VEHICLE_OFFSET = 1.4f;
     
+    private List<Vector3f> agvQueuePositions;
+    
     public TrainPlatform(Vector3f position)
     {
         super(position, Platform.Positie.LINKS);
@@ -43,11 +44,12 @@ public class TrainPlatform extends Platform {
         setExitpoint(new Vector3f(3.7f, getPosition().y, getPosition().z + LENGTH));
         setRoad();
         setTransportType(TransportType.Train);
-        setMaxAgvQueue(CRANES);
+        setMaxAgvQueue(CRANES*3);
         //createAgvSpots(new Vector3f(CRANE_OFFSET + TrainCrane.length + AGV_OFFSET, 0, 0));
         createExtVehicleSpots();
         createCranes();
         createAgvSpots();
+        createAgvQueuePositions();
         log("Created TrainPlatform object: " + toString());
     }
     
@@ -88,62 +90,44 @@ public class TrainPlatform extends Platform {
         }
     }
     
+    private void createAgvQueuePositions() {
+        agvQueuePositions = new ArrayList<>();
+        Vector3f base = new Vector3f(10.3f, 5.5f, 1.5f);
+        for(int i = 0; i < maxAgvQueue; i++) {
+            agvQueuePositions.add(new Vector3f(base.x + AGV.length*i + 0.1f, base.y, base.z));
+        }
+    }
+    
     @Override
     public void unload() {
+        /**
+         * Als er een trein is geparkeerd:
+         * 
+         * 1 Vraag iets van 12 AGV's op en zet die op de road
+         * 2 Zet de kranen op de juiste positie
+         * 3 Als er minimaal 1 AGV in de queue staat (en de kraan waar hij heen gaat staat op de juiste positie) 
+         *   stuur een AGV naar de kraan
+         * 4 Check telkens of er een AGV parkeerd staat bij de kraan, doe dan unload
+         */
+        
         super.unload();
         if(!extVehicles.isEmpty()) {
-            int currentVehicle = 1;
-            int cranesPerVehicle = cranes.size() / extVehicles.size();
-            System.out.println("cranes per vehicle: " + cranesPerVehicle);
-            for(ExternVehicle ev : extVehicles) {
-                int test = (currentVehicle * cranesPerVehicle - cranesPerVehicle);
-                
-                int rows = ev.getGridWidth();
-                int rowsPerCrane = rows / cranesPerVehicle;
-
-                List<Boolean> unloadedColumns = ev.getColumns();
-                List<Integer> priorityColumns = ev.getPriorityColumns();
-
-                int currentCrane = 0;
-                for(Crane c : cranes)
-                {
-                    System.out.println("test: " + test);
-                    if(!busyCranes.contains(c) && c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle) {
-                        System.out.println("kom ik hier???");
-                        busyCranes.add(c);
-                        int startIndex = currentCrane + rowsPerCrane;
-                        int rowToGive = 0;
-                        for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
-                        {
-                            if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
-                                rowToGive = i;
-                                break;
-                            } else if(!unloadedColumns.get(i)) {
-                                rowToGive = i;
-                                break;
-                            }
-                        }
-                        int spot = 0;
-                        try {
-                            spot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
-                        } catch(NoFreeAgvException e) {/*ignore*/}
-
-                        final AgvSpot agvSpot = (AgvSpot)Settings.port.getStoragePlatform().agvSpots.get(spot);
-                        final AGV agv = (AGV)agvSpot.getParkedVehicle();
-                        
-                        System.out.println("ik ga nu die motherfucking agv een route geven bitch!");
-                        agv.followRoute(road.getPathAllIn(agv, agvSpot, Settings.port.getPlatforms().get(2).agvSpots.get(0), Settings.port.getPlatforms().get(2), Settings.port.getMainroad()));
-                        //agv.followRoute(Settings.port.getStoragePlatform().road.getPath(agv, agvSpot, Settings.port.getStoragePlatform().getExitpoint()));
-                        //agv.followRoute(Settings.port.getMainroad().getPath(agv, Settings.port.getStoragePlatform().getExitpoint(), Settings.port.getPlatforms().get(2)));
-                        //agv.followRoute(road.getPath(agv, Settings.port.getPlatforms().get(2).agvSpots.get(_craneId)));
-                        break;
+            // stap 1
+            if(agvQueue.isEmpty() || agvQueue.size() < maxAgvQueue) {
+                for(int i = (agvQueue.isEmpty() ? 0 : agvQueue.size()); i < (extVehicles.size() < maxAgvQueue ? extVehicles.size() : maxAgvQueue); i++) {
+                    try {
+                        AgvSpot agvSpot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
+                        AGV agv = (AGV)agvSpot.getParkedVehicle();
+                        // follow route, give end position from agvQueuePositions
+                        //agv.followRoute(road.getPathAllIn(agv, agvSpot, Settings.port.getPlatforms().get(2).agvSpots.get(0), Settings.port.getPlatforms().get(2), Settings.port.getMainroad()));
+                        agv.followRoute(road.getPathAllInVector(agv, agvSpot, agvQueuePositions.get(i), this, Settings.port.getMainroad()));
+                        addAgvToQueue(agv);
+                    } catch(NoFreeAgvException e) {
+                        System.out.println("No Free AGV available ;(");
                     }
-                    currentCrane++;
-                    break;
                 }
-                currentVehicle++;
-                break;
             }
+            // stap 2
         }
     }
     

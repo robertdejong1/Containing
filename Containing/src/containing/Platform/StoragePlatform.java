@@ -129,7 +129,7 @@ public class StoragePlatform extends Platform {
         return agvs;
     }
     
-    public int requestFreeAgv(TransportType tt) throws NoFreeAgvException
+    public AgvSpot requestFreeAgv(TransportType tt) throws NoFreeAgvException
     {
         switch(tt)
         {
@@ -141,7 +141,7 @@ public class StoragePlatform extends Platform {
                     if(agv != null && agv.getIsAvailable())
                     {
                         //agv.followRoute(route);
-                        return i;
+                        return agvSpots.get(i);
                     }
                 }
                 break;
@@ -153,7 +153,7 @@ public class StoragePlatform extends Platform {
                     if(agv != null && agv.getIsAvailable())
                     {
                         //agv.followRoute(route);
-                        return i;
+                        return agvSpots.get(i);
                     }
                 }
                 break;

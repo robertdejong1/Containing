@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package containing;
 
 import containing.Exceptions.ParseErrorException;
@@ -50,7 +45,7 @@ public class XmlHandlerTest {
         XmlHandler instance = new XmlHandler();
 
         try {
-            List<Container> containers = instance.openXml(new File("C:\\Users\\Speedy\\Desktop\\Github\\xml7.xml"));
+            List<Container> containers = instance.openXml(new File("C:\\Users\\Robert\\Desktop\\Containing\\xmlfiles\\xml7.xml"));
             int amountContainers = containers.size();
             //51669 id
             System.out.println(amountContainers);

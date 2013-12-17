@@ -1,15 +1,19 @@
 package containing.Platform;
 
+import containing.Container;
 import containing.Exceptions.AgvSpotOutOfBounds;
 import containing.Exceptions.NoFreeAgvException;
 import containing.MessageLog;
 import containing.ParkingSpot.AgvSpot;
 import containing.Port;
 import containing.Settings;
+import containing.UserInterface;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -22,6 +26,7 @@ public class PlatformTest {
     Platform instance = null;
     
     public PlatformTest() {
+        Settings.userInterface = new UserInterface();
         Settings.messageLog = new MessageLog();
         Settings.port = new Port();
         instance = new BargePlatform(new Vector3f(0,0,0));
@@ -102,7 +107,8 @@ public class PlatformTest {
         int result = 0;
         try
         {
-            result = Settings.port.getStoragePlatform().requestFreeAgv(instance.getTransportType()).getID();
+            Queue agvQueue = new LinkedList<>();
+            result = Settings.port.getStoragePlatform().requestFreeAgv(Container.TransportType.Barge, agvQueue).getParkedVehicle().getID();
         } catch(NoFreeAgvException e) { 
             System.out.println(e.getMessage());
             fail("kon geen vrije AGV vinden");
@@ -188,7 +194,7 @@ public class PlatformTest {
     public class PlatformImpl extends Platform {
 
         public PlatformImpl() {
-            super(null);
+            super(null, null);
         }
 
         public void createCranes() {

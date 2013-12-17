@@ -21,6 +21,10 @@ public class CommandHandler {
 
     private static volatile List<String> queuedCommands = new ArrayList<String>();
 
+    /**
+     * Handles commands sent by server
+     * @param input Command sent by server
+     */
     static void handle(String input) {
         //Handle de command
         Command cmd = (Command) decode(input);
@@ -38,6 +42,11 @@ public class CommandHandler {
         }
     }
 
+    /**
+     * Decodes base64 encoded serialized value into original object
+     * @param encoded Base64 encode serialized value
+     * @return Original object
+     */
     private static Object decode(String encoded) {
         byte[] bytes;
         bytes = Base64.decode(encoded, Base64.DEFAULT);

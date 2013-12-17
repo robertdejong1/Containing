@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package containing.app;
 
 import java.io.BufferedReader;
@@ -23,86 +19,94 @@ public class NetworkHandler implements Runnable {
     private int port;
     private Socket client;
     private long lastPing;
-    
-    private PrintWriter writer;
-    private BufferedReader reader;
+    private long lastPong;
 
+    /**
+     * Creates a NetworkHandler instance
+     * @param ip IP address to connect to
+     * @param port Network port to connect to
+     */
     public NetworkHandler(String ip, int port) {
         this.ip = ip;
         this.port = port;
-        Date date = new Date();
-        this.lastPing = (date.getTime() / 1000);
     }
 
     @Override
     public void run() {
-    	try{
-    		client = new Socket(ip, port);
-    		client.setSoTimeout(1000);
-    	}
-    	catch(Exception e){
-    		MainActivity.showDialog("Error while connecting to server", e);
-    		MainActivity.setIsConnected(false);
-    		return;
-    	}
-        try{
-            writer = new PrintWriter(client.getOutputStream(), true);
-            reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        }
-        catch(IOException e){
-    		MainActivity.showDialog("Error while connecting to server", e);
-    		MainActivity.setIsConnected(false);
-    		return;
-        }
-        
-        System.out.println("Connected to " +ip +":" +port);
-        MainActivity.setIsConnected(true);
-        
-        writer.println("IDENTIFY:APP");
-        
-        while(true){
-        	if(sendPing()){
-        		System.out.println("Sending: PING");
-                writer.println("PING");
-            }
-        	try{
-                if(!reader.ready()){
-                	if(CommandHandler.newCommandsAvailable()){  
-                		List<String> commands = CommandHandler.getCommands();
+        try {
+            client = new Socket(ip, port);
+            Date date = new Date();
+            this.lastPing = (date.getTime() / 1000);
+            this.lastPong = (date.getTime() / 1000);
+            client.setSoTimeout(1000);
+            System.out.println("Connected to " + ip + ":" + port);
+            PrintWriter writer = new PrintWriter(client.getOutputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-                		for(String cmd : commands){
-                        	System.out.println("Sending: " +cmd);
+            CommandHandler.addCommand("IDENTIFY:APP");
+            MainActivity.setIsConnected(true);
+
+            while (true) {
+                if (!isAlive()) {
+                    client.close();
+                    break;
+                }
+                if (sendPing()) {
+                    System.out.println("Sending: PING");
+                    writer.println("PING");
+                    writer.flush();
+                }
+                if (!reader.ready()) {
+                    if (CommandHandler.newCommandsAvailable()) {
+                        List<String> commands = CommandHandler.getCommands();
+                        for (String cmd : commands) {
+                            System.out.println("Sending: " + cmd);
                             writer.println(cmd);
+                            writer.flush();
                         }
-                		CommandHandler.clearCommands();
-                	}
-                    
+                        CommandHandler.clearCommands();
+                    }
+                } else {
+                    try {
+                        String inputLine = reader.readLine();
+                        System.out.println("Received: " + inputLine);
+                        if (inputLine.equals("PONG")) {
+                            Date d = new Date();
+                            this.lastPong = (d.getTime() / 1000);
+                        } else {
+                            CommandHandler.handle(inputLine);
+                        }
+                    } catch (SocketTimeoutException e) {
+                        System.out.println("Socket blocked for 1 second. Continueing.");
+                    }
                 }
-                else{
-                	try{
-                		String inputLine = reader.readLine();
-                		System.out.println("Received: " +inputLine);
-                		CommandHandler.handle(inputLine);
-                	}
-                	catch(SocketTimeoutException e){
-                		System.out.println("Socket blocked for 1 second. Continuing.");
-                	}
-                    
-                }
-        	}
-        	catch(IOException e){
-        		MainActivity.showDialog("Error while getting information from server", e);
-        		MainActivity.setIsConnected(false);
-        		return;
-        	}
+            }
+            System.out.println("Connection lost. Trying to reconnect....");
+            run();
+        } catch (IOException e) {
+            System.out.println("Connection lost. Trying to reconnect...");
+            run();
         }
     }
-    
-    
-    private boolean sendPing(){
+
+    /**
+     * Checks if the connection is still alive 
+     * @return true is the connection is still alive, false otherwise
+     */
+    private boolean isAlive() {
         Date date = new Date();
         long currentTime = (date.getTime() / 1000);
-        if(currentTime - this.lastPing > 60){
+        return !(currentTime - this.lastPong > 90);
+    }
+
+    /**
+     * Checks if it's time to send ping to the server
+     * @return true if it's time to send ping to the server, false otherwise
+     */
+    private boolean sendPing() {
+        Date date = new Date();
+        long currentTime = (date.getTime() / 1000);
+        if (currentTime - this.lastPing > 60) {
             this.lastPing = currentTime;
             return true;
         }

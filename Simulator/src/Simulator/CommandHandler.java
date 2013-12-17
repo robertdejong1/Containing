@@ -26,12 +26,21 @@ public class CommandHandler {
     private static volatile List<String> queuedCommands = new ArrayList<String>();
     private static volatile List<Command> stackedCommands = new ArrayList<Command>();
 
+     /**
+     * Handles commands sent by server, adds it to stackedCommands
+     * @param input Command sent by server
+     */
     static void handle(String input) {
         //Handle de command
         Command cmd = (Command) decode(input);
         stackedCommands.add(cmd);
     }
-
+    
+    /**
+     * Decodes base64 encoded serialized value into original object
+     * @param encoded Base64 encode serialized value
+     * @return Original object
+     */
     private static Object decode(String encoded) {
         byte[] bytes;
         try {
@@ -71,6 +80,10 @@ public class CommandHandler {
         return stackedCommands.size() > 0;
     }
 
+    /**
+     * Gets latest command from stacked commands
+     * @return latest command
+     */
     public static Command getStackedCommand() {
         if (stackedCommands.size() > 0) {
             Command cmd = stackedCommands.get(0);

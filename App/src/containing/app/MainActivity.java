@@ -1,7 +1,6 @@
 package containing.app;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
@@ -59,6 +58,11 @@ public class MainActivity extends Activity {
 
     }
     
+    /**
+     * Connects to given IP and port
+     * @param ip IP address to connect to
+     * @param port Network port to connect to
+     */
     private void connect(String ip, int port){
     	Runnable networkHandler = new NetworkHandler(ip, port);
         thread = new Thread(networkHandler);
@@ -76,6 +80,11 @@ public class MainActivity extends Activity {
     public static boolean getIsConnected(){
     	return isConnected;
     }
+    
+    /**
+     * Sets isConnected value and changes view according to value
+     * @param value isConnected value
+     */
     public static void setIsConnected(final boolean value){
     	activity.runOnUiThread(new Runnable(){
         	@Override
@@ -98,9 +107,19 @@ public class MainActivity extends Activity {
         });
     }
     
+    /**
+     * Shows dialog
+     * @param text Text to be shown
+     * @param e Exception to be shown
+     */
     public static void showDialog(final String text, final Exception e){
         showDialog(text +"\n\n" +e.getMessage());
     }
+    
+    /**
+     * Shows dialog
+     * @param text Text to be shown
+     */
     public static void showDialog(final String text){
         activity.runOnUiThread(new Runnable(){
         	@Override
@@ -113,6 +132,10 @@ public class MainActivity extends Activity {
         });
     }
     
+    /**
+     * Shows graph
+     * @param data Data to be shown
+     */
     public static void showGraphView(HashMap<String, Double> data){
     	stats = new GraphViewSeries(new GraphViewData[] {
     	      new GraphViewData(1, data.get("train")),
@@ -146,6 +169,10 @@ public class MainActivity extends Activity {
         });
     }
     
+    /**
+     * Updates graph given new data
+     * @param data New graph data to be updated
+     */
     public static void updateStats(final HashMap<String, Double> data){
     	activity.runOnUiThread(new Runnable(){
         	@Override

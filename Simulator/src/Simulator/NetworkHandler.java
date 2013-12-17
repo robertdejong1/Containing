@@ -25,15 +25,14 @@ public class NetworkHandler implements Runnable {
     private long lastPing;
     private long lastPong;
 
+    /**
+     * Creates a NetworkHandler instance
+     * @param ip IP address to connect to
+     * @param port Network port to connect to
+     */
     public NetworkHandler(String ip, int port) {
         this.ip = ip;
         this.port = port;
-    }
-
-    public static void main(String[] args) {
-        Runnable r = new NetworkHandler("localhost", 1337);
-        Thread t = new Thread(r);
-        t.start();
     }
 
     @Override
@@ -95,12 +94,20 @@ public class NetworkHandler implements Runnable {
         }
     }
 
+     /**
+     * Checks if the connection is still alive 
+     * @return true is the connection is still alive, false otherwise
+     */
     private boolean isAlive() {
         Date date = new Date();
         long currentTime = (date.getTime() / 1000);
         return !(currentTime - this.lastPong > 90);
     }
 
+    /**
+     * Checks if it's time to send ping to the server
+     * @return true if it's time to send ping to the server, false otherwise
+     */
     private boolean sendPing() {
         Date date = new Date();
         long currentTime = (date.getTime() / 1000);

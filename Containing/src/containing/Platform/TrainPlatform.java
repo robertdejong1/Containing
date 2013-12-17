@@ -112,18 +112,21 @@ public class TrainPlatform extends Platform {
         
         super.unload();
         if(!extVehicles.isEmpty()) {
-            // stap 1
-            if(agvQueue.isEmpty() || agvQueue.size() < maxAgvQueue) {
-                for(int i = (agvQueue.isEmpty() ? 0 : agvQueue.size()); i < (extVehicles.size() < maxAgvQueue ? extVehicles.size() : maxAgvQueue); i++) {
-                    try {
-                        AgvSpot agvSpot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
-                        AGV agv = (AGV)agvSpot.getParkedVehicle();
-                        // follow route, give end position from agvQueuePositions
-                        //agv.followRoute(road.getPathAllIn(agv, agvSpot, Settings.port.getPlatforms().get(2).agvSpots.get(0), Settings.port.getPlatforms().get(2), Settings.port.getMainroad()));
-                        agv.followRoute(road.getPathAllInVector(agv, agvSpot, agvQueuePositions.get(i), this, Settings.port.getMainroad()));
-                        addAgvToQueue(agv);
-                    } catch(NoFreeAgvException e) {
-                        System.out.println("No Free AGV available ;(");
+            for(ExternVehicle ev : extVehicles) {
+                // stap 1
+                if(agvQueue.isEmpty() || agvQueue.size() < maxAgvQueue) {
+                    for(int i = agvQueue.size(); i < (ev.getCargo().size() < maxAgvQueue ? ev.getCargo().size() : maxAgvQueue); i++) {
+                        try {
+                            AgvSpot agvSpot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType(), agvQueue);
+                            AGV agv = (AGV)agvSpot.getParkedVehicle();
+                            System.out.println("AGV haha: " + agv.getID());
+                            // follow route, give end position from agvQueuePositions
+                            //agv.followRoute(road.getPathAllIn(agv, agvSpot, Settings.port.getPlatforms().get(2).agvSpots.get(0), Settings.port.getPlatforms().get(2), Settings.port.getMainroad()));
+                            agv.followRoute(road.getPathAllInVector(agv, agvSpot, agvQueuePositions.get(i), this, Settings.port.getMainroad()));
+                            addAgvToQueue(agv);
+                        } catch(NoFreeAgvException e) {
+                            System.out.println("No Free AGV available ;(");
+                        }
                     }
                 }
             }
@@ -151,9 +154,10 @@ public class TrainPlatform extends Platform {
         /* UNLOAD EXTERNAL VEHICLE */
         if(state.equals(State.UNLOAD))
         {
-            if(doItOnce) {
+            if(time >= 10) {
+                System.out.println("going to unload");
                 unload();
-                doItOnce = false;
+                time = 0;
             }
         }
         

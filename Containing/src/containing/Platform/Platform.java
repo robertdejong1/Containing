@@ -177,7 +177,6 @@ public abstract class Platform implements Serializable {
     
     public void unload()
     {   
-        time++;
         if(extVehicles.isEmpty()) {
             for(int i = 0; i < extVehicleSpots.size(); i++) 
             {
@@ -186,16 +185,6 @@ public abstract class Platform implements Serializable {
                 }
             }
         }
-    }
-    
-    public AgvSpot getAGV() {
-        try {
-            AgvSpot agvSpot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType());
-            return agvSpot;
-        } catch(NoFreeAgvException e) {
-            System.out.println("er is geen vrije agv beschikbaar");
-        }
-        return null;
     }
     
     protected void unloadAGV(Container container)
@@ -357,7 +346,7 @@ public abstract class Platform implements Serializable {
     
     public void update()
     {
-        time += Settings.ClockDelay;
+        time++;
         for(Crane c : cranes)
             c.update();
         for(ExternVehicle ev : extVehicles)

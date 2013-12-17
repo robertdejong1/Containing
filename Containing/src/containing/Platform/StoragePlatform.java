@@ -14,6 +14,7 @@ import containing.Vector3f;
 import containing.Vehicle.AGV;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * SeashipPlatform.java
@@ -129,7 +130,7 @@ public class StoragePlatform extends Platform {
         return agvs;
     }
     
-    public AgvSpot requestFreeAgv(TransportType tt) throws NoFreeAgvException
+    public AgvSpot requestFreeAgv(TransportType tt, Queue<AGV> agvQueue) throws NoFreeAgvException
     {
         switch(tt)
         {
@@ -138,7 +139,7 @@ public class StoragePlatform extends Platform {
                 for(int i = agvSpots.size() - 1; i >= 0; i--)
                 {
                     AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();
-                    if(agv != null && agv.getIsAvailable())
+                    if(agv != null && agv.getIsAvailable() && !agvQueue.contains(agv))
                     {
                         //agv.followRoute(route);
                         return agvSpots.get(i);
@@ -150,7 +151,7 @@ public class StoragePlatform extends Platform {
                 for(int i = 0; i < agvSpots.size(); i++)
                 {
                     AGV agv = (AGV)agvSpots.get(i).getParkedVehicle();
-                    if(agv != null && agv.getIsAvailable())
+                    if(agv != null && agv.getIsAvailable() && !agvQueue.contains(agv))
                     {
                         //agv.followRoute(route);
                         return agvSpots.get(i);

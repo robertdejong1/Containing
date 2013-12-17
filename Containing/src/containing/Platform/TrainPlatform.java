@@ -167,9 +167,11 @@ public class TrainPlatform extends Platform {
                             if(!busyCranes.contains(c) && craneAgvs.get(currentCrane) == null) {
                                 // move to right position of row
                                 System.out.println("rowToGive: " + rowToGive);
-                                if(ev.getGrid()[rowToGive][0][0] != null) {
-                                    c.moveToContainer(ev, rowToGive);
-                                    busyCranes.add(c);
+                                if(c.getStatus() != Status.MOVING) {
+                                    if(ev.getGrid()[rowToGive][0][0] != null) {
+                                        c.moveToContainer(ev, rowToGive);
+                                        busyCranes.add(c);
+                                    }
                                 }
                             } else if(busyCranes.contains(c) && c.getStatus() != Status.MOVING && craneAgvs.get(currentCrane) == null) {
                                 // adjust parkingspot

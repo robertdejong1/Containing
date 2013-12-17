@@ -13,12 +13,11 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.util.SkyFactory;
 import containing.Command;
-import containing.Settings;
 import java.util.HashMap;
 import java.util.List;
-import jme3tools.optimize.GeometryBatchFactory;
 
 /**
  * test
@@ -44,7 +43,7 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.236.98", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.236.138", 1337);
         //Runnable networkHandler = new NetworkHandler("localhost", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
@@ -53,12 +52,18 @@ public class PortSimulation extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         train = new Train(assetManager, rootNode);
-        flyCam.setEnabled(true);
-        flyCam.setMoveSpeed(50f);       
+        flyCam.setEnabled(false);     
         chaseCam = new ChaseCamera(cam, inputManager);
+        chaseCam.setSmoothMotion(true);
+        chaseCam.setInvertVerticalAxis(true);
+        chaseCam.setMaxDistance(1000);
+        chaseCam.setMinVerticalRotation(0.32259342f);
+        chaseCam.setMaxVerticalRotation(0.32259343f);
+        chaseCam.setDragToRotate(false);
+        chaseCam.setDefaultVerticalRotation(0.32259343f);
         
-        cam.setLocation(new Vector3f(0f, 140f, 0));
-        cam.lookAt(Vector3f.ZERO, Vector3f.UNIT_X);
+        cam.setLocation(new Vector3f(817f/20, 140f, 1643f/20));
+        cam.lookAt(new Vector3f(817f/20, 0f, 1643f/20), Vector3f.UNIT_X);
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
         
         for (int i = 0; i < 4; i++) {
@@ -82,6 +87,7 @@ public class PortSimulation extends SimpleApplication {
             storageCranes[0] = new StorageCrane(assetManager, rootNode);
             storageCranes[0].place(14, 5.5f, 3.15f+(i*2.5f));
         }
+        chaseCam.setSpatial(storageCranes[2].crane);
 
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
@@ -112,26 +118,12 @@ public class PortSimulation extends SimpleApplication {
                 rootNode.collideWith(ray, results);
                 if (results.size() > 0) 
                 {
-                    //Geometry closest = results.getClosestCollision().getGeometry();
-                    //if (!closest.getName().equals("port"))
-                    //{
-                        //chaseCam.setSpatial(closest);
-                    //}
-                    agv[0] = new AGV(assetManager, rootNode, 1);
-                    agv[0].rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-                    agv[0].place(103f*Settings.METER,5.5f,0);
-                    
-                    MotionPath path = new MotionPath();
-                    path.addWayPoint(new Vector3f(103f*Settings.METER,5.5f,0));
-                    path.addWayPoint(new Vector3f(103f*Settings.METER,5.5f, 1562f*Settings.METER));
-                    path.addWayPoint(new Vector3f(717f*Settings.METER,5.5f, 1562f*Settings.METER));
-                    path.addWayPoint(new Vector3f(717f*Settings.METER, 5.5f, 0));
-                    path.setCurveTension(0.0f);
-                    
-                    MotionEvent motev = new MotionEvent(agv[0].model, path, 10);
-                    motev.setSpeed(1f);
-                    motev.setDirectionType(MotionEvent.Direction.Path);
-                    motev.play();
+                    Geometry closest = results.getClosestCollision().getGeometry();
+                    if (!closest.getName().equals("port"))
+                    {
+                        
+                    }
+                    chaseCam.setSpatial(storageCranes[0].crane);
                 }
             }
         }
@@ -150,6 +142,7 @@ public class PortSimulation extends SimpleApplication {
         //    container[i].move(0, 0, tpf*2);
         //}
         //railCrane.update(tpf);
+        chaseCam.setDefaultHorizontalRotation(chaseCam.getHorizontalRotation()+0.0002f);
         
         if(!CommandHandler.newStackedCommandsAvailable()){
             return;
@@ -172,7 +165,7 @@ public class PortSimulation extends SimpleApplication {
             for (int i = 0; i < aantal_traincranes; i++)
             {
                 containing.Vehicle.TrainCrane crane = (containing.Vehicle.TrainCrane) trainPlatform.getCranes().get(i);
-                railCrane[i] = new RailCrane(assetManager, rootNode);
+                railCrane[i] = new RailCrane(assetManager, rootNode, crane.getID());
                 railCrane[i].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().z);
             }
             
@@ -304,6 +297,43 @@ public class PortSimulation extends SimpleApplication {
                             motev.setDirectionType(MotionEvent.Direction.Path);
                             motev.play();
                         }
+                    }
+                    break;
+            }
+        } else if (cmd.getCommand().equals("moveCrane")) 
+        {
+            System.out.println(cmd.getCommand());
+            
+            HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
+            int id = Integer.parseInt(map.get("id").toString());
+            System.out.println("" + id);
+
+            Type type = Type.valueOf(map.get("vehicleType").toString());
+            System.out.println("" + type.toString());
+            
+            MotionPath path = new MotionPath();
+            containing.Road.Route route = (containing.Road.Route)map.get("motionPath");
+            //containing.Road.Route route = containing.Settings.port.getMainroad().getPath();
+            List<containing.Vector3f> motion = route.getWeg();
+            for (containing.Vector3f v : motion)
+            {
+                path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
+            }
+            path.setCurveTension(0.0f);
+            float duration = Float.parseFloat(map.get("duration").toString());
+            
+            MotionEvent motev;
+            switch (type)
+            {
+                case TRAINCRANE:
+                    for (RailCrane r : railCrane)
+                    {
+                        if (r.id == id)
+                        {
+                            motev = new MotionEvent(r.crane, path, duration);
+                            motev.setSpeed(1f);
+                            motev.play();
+                        }  
                     }
                     break;
             }

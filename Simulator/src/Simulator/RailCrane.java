@@ -13,7 +13,7 @@ import com.jme3.scene.Spatial;
 
 public class RailCrane
 {
-    Container[] containers;
+    public int id;
     
     Node crane;
     Node node;
@@ -27,9 +27,10 @@ public class RailCrane
     Spatial grab;
     Spatial top;
     
-    public RailCrane(AssetManager assetManager, Node node)
+    public RailCrane(AssetManager assetManager, Node node, int id)
     {
         this.node = node;
+        this.id = id;
         crane = new Node();
         
         frame = assetManager.loadModel("Models/railcrane/frame.j3o");
@@ -86,10 +87,10 @@ public class RailCrane
         crane.getChild(6).move(0, 0, x);
         crane.getChild(7).move(0, 0, x);
         
-        if (occupied)
-        {
-            containers[con_index].move(x/3.01f, 0, 0);
-        }
+        //if (occupied)
+        //{
+           // containers[con_index].move(x/3.01f, 0, 0);
+        //}
     }
     
     private void moveGrab(float y)
@@ -101,15 +102,15 @@ public class RailCrane
         crane.getChild(6).move(0, y/4, 0);
         crane.getChild(7).move(0, (y/4)*3f, 0);
         
-        if (occupied)
-        {
-            containers[con_index].move(0, y/3f, 0);
-        }
+        //if (occupied)
+        //{
+            //containers[con_index].move(0, y/3f, 0);
+        //}
     }
     
     public void attachContainer(Container[] con)
     {
-        this.containers = con;
+        //this.containers = con;
     }
     
     private int grabstate = 1;
@@ -203,7 +204,7 @@ public class RailCrane
                 {
                     moveCrane(-tpf);
                 } else {
-                    if (con_index >= containers.length-1)
+                    /*if (con_index >= containers.length-1)
                     {
                         grabstate = 10;
                     }
@@ -211,7 +212,7 @@ public class RailCrane
                     {
                         con_index++;
                         grabstate = 1;
-                    }
+                    }*/
                 }
                 break;
                 

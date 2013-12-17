@@ -100,7 +100,7 @@ public abstract class Crane extends InternVehicle {
         this.route = new Route(route,Road.getPathLength(route));
             
         CommandHandler.addCommand(new Command("moveCrane", map));
-     
+        this.status = Status.MOVING;
          
     }
     

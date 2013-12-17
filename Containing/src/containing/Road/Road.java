@@ -160,6 +160,7 @@ public class Road implements Serializable
             vehicle.setPosition(ps.getPosition());
           }
           catch(Exception e){}
+          return new Route(track2, getPathLength(track2) )
           
       }
       

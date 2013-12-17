@@ -15,6 +15,7 @@ import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Road.Road;
 import containing.Road.Route;
+import containing.Settings;
 import containing.Vector3f;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,8 +38,7 @@ public abstract class Crane extends InternVehicle {
     private final float dropTimeMin = 0 * 60;
     private final float dropTimeMax = 3.5f * 60;
     private final float moveContainerSpeed = 5; //meter per seconde
-    protected final int maxSpeedUnloaded = 4;
-    protected final int maxSpeedLoaded = 5;
+ 
     
     private float loadTime;
     private float unloadTime;
@@ -59,6 +59,7 @@ public abstract class Crane extends InternVehicle {
         super(CAPICITY, startPosition, platform, type);
         this.width = width;
         this.length = length;
+        
 
     }
     
@@ -71,9 +72,42 @@ public abstract class Crane extends InternVehicle {
         //platform moet agv volgende route geven
     }
     
+    public void moveToContainer(ExternVehicle ev, int column)
+    {
+         List<Vector3f> route = new ArrayList<>();
+         route.add(this.position);
+         Vector3f container = ev.getGrid()[column][0][0].getArrivalPosition();
+        
+         switch (this.getCurrentPlatform().getAxis())
+         {
+             case Z:
+                 route.add(new Vector3f(container.x, container.y, this.getPosition().z)); //??
+                 break;
+             case X:
+                 route.add(new Vector3f(this.getPosition().x, container.y, container.z)); //??
+                 break;
+             //caseY?  
+                 
+         }
+         
+        this.currentSpeed = (this.isLoaded) ? this.maxSpeedLoaded : this.maxSpeedUnloaded;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", this.getID());
+        map.put("vehicleType", this.getVehicleType());
+        map.put("motionPath", route); 
+        map.put("speed", currentSpeed);
+        
+        this.route = new Route(route,Road.getPathLength(route));
+            
+        CommandHandler.addCommand(new Command("moveCrane", map));
+     
+         
+    }
+    
 
     public void load(ExternVehicle ev, int column) throws Exception
     {
+        
         for (Integer row : ev.getUnloadOrderY(column))
         {
                 for (Container container : ev.getGrid()[column][row])
@@ -147,9 +181,10 @@ public abstract class Crane extends InternVehicle {
         //override this method for truckcrane
         List<Vector3f> route = new ArrayList<>();
         route.add(this.position);
+        
         if (direction == -1)
-        {
-            route.add(new Vector3f(this.position.x - Container.depth, this.position.y, this.position.z));
+        { //trein z anders x
+            route.add(new Vector3f(this.position.x + Container.depth, this.position.y, this.position.z));
         }
         
         else 

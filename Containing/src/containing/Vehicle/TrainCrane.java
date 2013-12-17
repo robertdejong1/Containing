@@ -24,7 +24,8 @@ public class TrainCrane extends Crane {
    
     public TrainCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
         super(startPosition, platform, Type.TRAINCRANE, width, length);
-
+        this.maxSpeedLoaded = 50;
+        this.maxSpeedUnloaded = 40;
 
     }
     

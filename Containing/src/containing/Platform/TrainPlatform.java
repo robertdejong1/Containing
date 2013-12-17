@@ -153,7 +153,6 @@ public class TrainPlatform extends Platform {
                         if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle) {
                             int startIndex = currentCrane * rowsPerCrane;
                             int rowToGive = 0;
-                            System.out.println("startIndex = " + startIndex);
                             for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
                             {
                                 if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
@@ -166,9 +165,9 @@ public class TrainPlatform extends Platform {
                             }
                             if(!busyCranes.contains(c) && craneAgvs.get(currentCrane) == null) {
                                 // move to right position of row
-                                System.out.println("rowToGive: " + rowToGive);
                                 if(c.getStatus() != Status.MOVING) {
                                     if(ev.getGrid()[rowToGive][0][0] != null) {
+                                        System.out.println("rowToGive: " + rowToGive);
                                         c.moveToContainer(ev, rowToGive);
                                         busyCranes.add(c);
                                     }

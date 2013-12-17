@@ -87,14 +87,20 @@ public abstract class Crane extends InternVehicle {
          List<Vector3f> route = new ArrayList<>();
          route.add(this.position);
          Vector3f container = ev.getGrid()[column][0][0].getArrivalPosition();
+         
+         System.out.println("ev.getPosition = " + ev.getPosition().toString());
         
          switch (this.getCurrentPlatform().getAxis())
          {
              case X:
-                 route.add(new Vector3f(container.x, container.y, this.getPosition().z)); //??
+                 Vector3f haha = new Vector3f(ev.getPosition().x - column*Container.width*Settings.METER, this.getPosition().y, this.getPosition().z);
+                 route.add(haha); //??
+                 System.out.println("route x: " + haha.toString());
                  break;
              case Z:
-                 route.add(new Vector3f(this.getPosition().x, container.y, container.z)); //??
+                 Vector3f hihi = new Vector3f(this.getPosition().x, this.getPosition().y, ev.getPosition().z - column*Container.width*Settings.METER);
+                 route.add(hihi); //??
+                 System.out.println("route z: " + hihi.toString());
                  break;
              //caseY?  
                  

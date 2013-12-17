@@ -68,6 +68,7 @@ public class Route implements Serializable {
                     try
                     {
                         this.destinationParkingSpot.ParkVehicle(vehicle);
+                        vehicle.setPosition(this.destinationParkingSpot.getPosition());
                         Settings.messageLog.AddMessage("Park vehicle");
                     }
                     catch(Exception e)

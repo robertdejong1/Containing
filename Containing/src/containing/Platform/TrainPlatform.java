@@ -22,8 +22,6 @@ import java.util.List;
  */
 public class TrainPlatform extends Platform {
     
-    private boolean doItOnce = true;
-    
     private final float WIDTH          = 103f*Settings.METER;  // ???
     private final float LENGTH         = 1523f*Settings.METER; // ???
     public final int MAX_VEHICLES      = 3;
@@ -40,7 +38,7 @@ public class TrainPlatform extends Platform {
         super(position, Platform.Positie.LINKS);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(DynamicAxis.Z);
-        setEntrypoint(new Vector3f(3.7f, getPosition().y, getPosition().z));
+        setEntrypoint(new Vector3f(3.7f, getPosition().y, getPosition().z + 1.5f));
         setExitpoint(new Vector3f(3.7f, getPosition().y, getPosition().z + LENGTH));
         setRoad();
         setTransportType(TransportType.Train);
@@ -94,7 +92,7 @@ public class TrainPlatform extends Platform {
         agvQueuePositions = new ArrayList<>();
         Vector3f base = new Vector3f(10.3f, 5.5f, 1.5f);
         for(int i = 0; i < maxAgvQueue; i++) {
-            agvQueuePositions.add(new Vector3f(base.x - AGV.length*i - 0.1f, base.y, base.z));
+            agvQueuePositions.add(new Vector3f(base.x - AGV.length*Settings.METER*i - 0.1f, base.y, base.z));
         }
     }
     
@@ -127,6 +125,10 @@ public class TrainPlatform extends Platform {
                         } catch(NoFreeAgvException e) {
                             System.out.println("No Free AGV available ;(");
                         }
+                        if(time >= 10) {
+                            time = 0;
+                            break;
+                        }
                     }
                 }
             }
@@ -157,7 +159,6 @@ public class TrainPlatform extends Platform {
             if(time >= 10) {
                 System.out.println("going to unload");
                 unload();
-                time = 0;
             }
         }
         

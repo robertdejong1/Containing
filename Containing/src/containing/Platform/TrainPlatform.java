@@ -80,6 +80,7 @@ public class TrainPlatform extends Platform {
             Vector3f cranePosition = new Vector3f(getPosition().x + CRANE_OFFSET, getPosition().y, getPosition().z + (space*i + offset));
             cranes.add(new TrainCrane(cranePosition, this));
         }
+        Collections.reverse(cranes);
     }
     
     @Override

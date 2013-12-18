@@ -22,5 +22,5 @@ function drawChart(stats) {
     var chart = new google.visualization.BarChart(document.getElementById('stats'));
     
     chart.draw(data, options);
-    $("#stats div").removeAttr("style");
+    $("#stats div").css("position", "static");
 }

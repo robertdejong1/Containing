@@ -228,6 +228,7 @@ public class TrainPlatform extends Platform {
         /* UNLOAD EXTERNAL VEHICLE */
         if(state.equals(State.UNLOAD))
         {
+            time++;
             if(time >= 15) {
                 unload();
             }

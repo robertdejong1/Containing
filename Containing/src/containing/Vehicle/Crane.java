@@ -146,7 +146,7 @@ public abstract class Crane extends InternVehicle {
         {
                 for (Container container : ev.getGrid()[column][row])
                 {
-                    while (readyForNextContainer)
+                    while (readyForNextContainer == false){}
                     try
                     {
                         if (container != null)
@@ -179,6 +179,7 @@ public abstract class Crane extends InternVehicle {
                     {
                         throw e;
                     }
+                    
                     
                 }
             

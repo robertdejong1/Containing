@@ -205,6 +205,8 @@ public abstract class ExternVehicle extends Vehicle {
         
     }
     
+    
+    
  
     
      public Container unload(Container container) throws ContainerNotFoundException
@@ -239,7 +241,7 @@ public abstract class ExternVehicle extends Vehicle {
     
     public void updateColumn(int i, boolean bool) 
     {
-       //unloadedColumn.
+       this.unloadedColumn.set(i, bool);
     }
     
     public void leave()

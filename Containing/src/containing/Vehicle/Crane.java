@@ -161,9 +161,10 @@ public abstract class Crane extends InternVehicle {
                             this.unloadTime = (this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) + this.SECURETIME) * 100;
                             HashMap<String, Object> map = new HashMap<>();
 
-                            map.put("id", this.getID());
+                            map.put("craneid", this.getID());
                             map.put("vehicleType", this.getVehicleType());
-                            map.put("duration", loadTime);
+                            map.put("clientid", ev.getID());
+                            map.put("duration", 2000);
                             map.put("container", cargo.get(0)); 
 
                             CommandHandler.addCommand(new Command("loadCrane", map));

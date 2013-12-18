@@ -47,12 +47,7 @@ public abstract class InternVehicle extends Vehicle{
             super.load(container);
             if (isAvailable) isAvailable = false;
             
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("id", this.getID());
-            map.put("vehicleType", this.getVehicleType());
-            map.put("container", container);
-            
-            CommandHandler.addCommand(new Command("loadInternVehicle",map));
+ 
         }
         
         catch (Exception e){ throw e; }
@@ -74,15 +69,18 @@ public abstract class InternVehicle extends Vehicle{
             this.cargo = null;
             
             this.isLoaded = false;
-            
-            HashMap<String, Object> map = new HashMap<>();
-            
-            map.put("id", this.getID());
-            map.put("vehicleType", this.getVehicleType());
-            map.put("container", cargo.get(0)); 
-            
-            CommandHandler.addCommand(new Command("unloadInternVehicle", this));
-            
+            /*
+            if (this.getVehicleType() ==  Type.AGV){
+                
+                HashMap<String, Object> map = new HashMap<>();
+
+                map.put("id", this.getID());
+                map.put("vehicleType", this.getVehicleType());
+                map.put("container", cargo.get(0)); 
+
+                CommandHandler.addCommand(new Command("unloadVehicle", this));
+            }*/
+           
             return container;
             
         }

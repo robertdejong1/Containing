@@ -154,12 +154,13 @@ public abstract class ExternVehicle extends Vehicle {
                     super.load(container);
                     if (this.getStatus() != Status.INIT)
                     {
+                        /*
                         HashMap<String, Object> map = new HashMap<>();
                         map.put("id", this.getID());
                         map.put("vehicleType", this.getVehicleType());
                         map.put("container", container);
                     
-                        CommandHandler.addCommand(new Command("loadVehicle",map));
+                        CommandHandler.addCommand(new Command("loadVehicle",map));*/
                     }
                    
                 
@@ -189,6 +190,9 @@ public abstract class ExternVehicle extends Vehicle {
             
                 this.getGrid()[(int)container.getArrivalPosition().x][(int)container.getArrivalPosition().y][(int)container.getArrivalPosition().z] = null;
             
+             
+
+                 
                 return container;
             }
             

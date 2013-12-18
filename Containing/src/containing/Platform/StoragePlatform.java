@@ -32,7 +32,7 @@ public class StoragePlatform extends Platform {
     public final float STRIP_LENGTH = WIDTH;
     
     private final int AGVS          = 100;
-    private final float AGV_OFFSET  = 1.8f;
+    private final float AGV_OFFSET  = 1.9f;
     private final float ROAD_OFFSET = 1.65f;
     
     private final StorageStrip[] strips;
@@ -89,11 +89,11 @@ public class StoragePlatform extends Platform {
             Vector3f agvSpotPosition;
             if(i % 2 == 0)
             {
-                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET, getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.05f + (AGV.width/2f));
+                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET + AGV.length/2f, getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.05f);
             }
             else
             {
-                agvSpotPosition = new Vector3f(getPosition().x + WIDTH - AGV_OFFSET + (AGV.width / 4f), getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.05f + (AGV.width/2f));
+                agvSpotPosition = new Vector3f(getPosition().x + WIDTH - AGV_OFFSET - AGV.length/2f, getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.05f);
                 subcount++;
             }
             agvSpots.add(new AgvSpot(agvSpotPosition));

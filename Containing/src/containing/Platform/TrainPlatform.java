@@ -40,6 +40,7 @@ public class TrainPlatform extends Platform {
     private Road craneRoad;
     
     private int craneTiming = 0;
+    private int omEnOm = 1;
     
     public TrainPlatform(Vector3f position)
     {
@@ -130,7 +131,7 @@ public class TrainPlatform extends Platform {
             int cranesPerVehicle = cranes.size() / extVehicles.size();
             for(ExternVehicle ev : extVehicles) {
                 // stap 1
-                if(agvQueue.isEmpty() || agvQueue.size() < maxAgvQueue) {
+                if(agvQueue.isEmpty() || agvQueue.size() < maxAgvQueue && omEnOm % 2 == 0) {
                     for(int i = agvQueue.size(); i < (ev.getCargo().size() < maxAgvQueue ? ev.getCargo().size() : maxAgvQueue); i++) {
                         try {
                             AgvSpot agvSpot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType(), agvQueue);
@@ -149,7 +150,7 @@ public class TrainPlatform extends Platform {
                     }
                 }
                 // stap 2
-                if(!agvQueue.isEmpty()) {
+                if(!agvQueue.isEmpty() && omEnOm % 2 == 1) {
                     int test = (currentVehicle * cranesPerVehicle - cranesPerVehicle);
                     int rows = ev.getGridWidth();
                     int rowsPerCrane = rows / cranesPerVehicle;
@@ -158,8 +159,8 @@ public class TrainPlatform extends Platform {
                     int currentCrane = 0;
                     
                     for(Crane c : cranes) {
-                        System.out.println("c.Status() == " + c.getStatus());
                         if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle && currentCrane*rowsPerCrane < unloadedColumns.size() && currentCrane == craneTiming) {
+                            System.out.println("crane " + currentCrane + " == " + c.getStatus());
                             int startIndex = currentCrane * rowsPerCrane;
                             int rowToGive = 0;
                             for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
@@ -193,6 +194,7 @@ public class TrainPlatform extends Platform {
                                     System.out.println("de positie van dat kutding: " + agv.getPosition());
                                     System.out.println("waar ie heen wil: " + agvSpots.get(currentCrane).getPosition());
                                     System.out.println("gaat naar kraan: " + currentCrane);
+                                    System.out.println("de positie van die kutkraan: " + c.getPosition());
                                     agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
                                     craneAgvs.set(currentCrane, agv);
                                 }

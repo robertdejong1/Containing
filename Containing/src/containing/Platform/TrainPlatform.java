@@ -121,7 +121,6 @@ public class TrainPlatform extends Platform {
          *   (en de kraan waar hij heen gaat staat op de juiste positie) stuur een AGV naar de kraan
          * 4 Check telkens of er een AGV parkeerd staat bij de kraan, doe dan unload
          */
-        
         super.unload();
         if(!extVehicles.isEmpty()) {
             int currentVehicle = 1;
@@ -228,6 +227,7 @@ public class TrainPlatform extends Platform {
         /* UNLOAD EXTERNAL VEHICLE */
         if(state.equals(State.UNLOAD))
         {
+            time++;
             if(time >= 15) {
                 unload();
             }

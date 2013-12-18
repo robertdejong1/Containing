@@ -21,7 +21,7 @@ public class CommandHandler {
      * Adds a command to the command queue
      * @param cmd The command to be added
      */
-    public static void addCommand(Command cmd){
+    public synchronized static void addCommand(Command cmd){
         queuedCommands.put(getNewId(), cmd);
         Settings.messageLog.AddMessage(cmd.getCommand());
     }
@@ -31,7 +31,7 @@ public class CommandHandler {
      * @param input The string to be handled
      * @return A reply Command
      */
-    public static Command handle(String input) {
+    public synchronized static Command handle(String input) {
         String[] command = input.split(":", 2);
         String prefix = command[0];
         if(command.length == 2){
@@ -58,7 +58,7 @@ public class CommandHandler {
      * @param app Boolean to only check for commands to the app
      * @return List of new commands
      */
-    public static List<Command> getNewCommands(int id, boolean app){
+    public synchronized static List<Command> getNewCommands(int id, boolean app){
         List<Command> commands = new ArrayList<>();
         
         if(idLastID.get(id) != null){
@@ -81,15 +81,15 @@ public class CommandHandler {
      * Adds the last Command id to a client connection id
      * @param id The client connection id
      */
-    public static void addidTime(int id){
+    public synchronized static void addidTime(int id){
         idLastID.put(id, getLastID());
     }
     
-    public static int getNewId(){
+    public synchronized static int getNewId(){
         return ++counter;
     }
     
-    public static int getLastID(){
+    public synchronized static int getLastID(){
         int id = 0;
         for(Entry<Integer, Command> entry : queuedCommands.entrySet()){
             if(entry.getKey() > id){

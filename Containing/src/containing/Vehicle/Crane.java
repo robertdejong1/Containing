@@ -72,7 +72,7 @@ public abstract class Crane extends InternVehicle {
 
             map.put("id", this.getID());
             map.put("vehicleType", this.getVehicleType());
-            map.put("loadtime", unloadTime);
+            map.put("duration", unloadTime);
             map.put("container", cargo.get(0)); 
             CommandHandler.addCommand(new Command("loadCrane", map));
         }
@@ -151,11 +151,11 @@ public abstract class Crane extends InternVehicle {
                             //ask agv!
                             super.load(ev.unload(container));
                             
-                            this.loadTime = (Math.abs(this.position.y-container.getArrivalPosition().y) / this.moveContainerSpeed //move gripper to position of container
+                            this.loadTime = ((Math.abs(this.position.y-container.getArrivalPosition().y) / (this.moveContainerSpeed *1000f/3600f)/100f))//move gripper to position of container
                             //+ this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) //droptime depended on z position of container //???
                             + this.SECURETIME
                             + this.liftTimeMin + (this.liftTimeMax - this.liftTimeMin) / ((int)container.getArrivalPosition().z + 1) //lifttime depended on z position of container
-                            + Math.abs(this.position.y-container.getArrivalPosition().y) / this.moveContainerSpeed) * 100;
+                            + Math.abs((this.position.y-container.getArrivalPosition().y) / ((this.moveContainerSpeed *1000f/3600f)/100f));
                             this.status = Status.LOADING;
                             
                             this.unloadTime = (this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) + this.SECURETIME) * 100;
@@ -163,7 +163,7 @@ public abstract class Crane extends InternVehicle {
 
                             map.put("id", this.getID());
                             map.put("vehicleType", this.getVehicleType());
-                            map.put("loadtime", loadTime);
+                            map.put("duration", loadTime);
                             map.put("container", cargo.get(0)); 
 
                             CommandHandler.addCommand(new Command("loadCrane", map));
@@ -203,7 +203,7 @@ public abstract class Crane extends InternVehicle {
 
             map.put("id", this.getID());
             map.put("vehicleType", this.getVehicleType());
-            map.put("loadtime", loadTime);
+            map.put("duration", loadTime);
             map.put("container", container); 
         }
         catch(Exception e)

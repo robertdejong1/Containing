@@ -346,7 +346,6 @@ public abstract class Platform implements Serializable {
     
     public void update()
     {
-        time++;
         for(Crane c : cranes)
             c.update();
         for(ExternVehicle ev : extVehicles)

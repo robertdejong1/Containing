@@ -103,6 +103,35 @@ public class Road implements Serializable
         return route;
     }
     
+     public Route moveToContainer(ExternVehicle ev, int column, Crane crane)
+    {
+         System.out.println("column : " + column);
+         List<Vector3f> route = new ArrayList<>();
+         route.add(crane.getPosition());
+         Vector3f container = ev.getGrid()[column][0][0].getArrivalPosition();
+         
+         System.out.println("ev.getPosition = " + ev.getPosition().toString());
+        
+         switch (ev.getCurrentPlatform().getAxis())
+         {
+             case X:
+                 Vector3f haha = new Vector3f(ev.getPosition().x - column*1.5f, crane.getPosition().y, crane.getPosition().z);
+                 route.add(haha); //??
+                 System.out.println("route x: " + haha.toString());
+                 break;
+             case Z:
+                 // hardcoded voor de trein nu ;( wagon is 1.5f en trein zelf ook
+                 Vector3f hihi = new Vector3f(crane.getPosition().x, crane.getPosition().y, ev.getPosition().z - column*1.5f - 1.5f);
+                 route.add(hihi); //??
+                 System.out.println("route z: " + hihi.toString());
+                 break;
+             //caseY?  
+             
+                 
+         }
+         return new Route(route, getPathLength(route));
+    }
+    
     //van uitgang platform naar ingang andere platform
      public Route getPathFromExitPointPlatformToEntryPointPlatform(Vehicle vehicle, Vector3f sourcePlatformExitPoint,Platform destination, Road mainroad)
      {
@@ -147,6 +176,8 @@ public class Road implements Serializable
           
           
       }
+      
+      
       
       public Route getPathToParkingsSpot(Vehicle vehicle, ParkingSpot ps)
       {

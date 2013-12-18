@@ -3,7 +3,10 @@ package containing.Platform;
 import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.Exceptions.AgvSpotOutOfBounds;
+import containing.Exceptions.CargoOutOfBoundsException;
+import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.NoFreeAgvException;
+import containing.Exceptions.VehicleOverflowException;
 import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.TrainSpot;
 import containing.Road.Road;
@@ -18,6 +21,8 @@ import containing.Vehicle.Vehicle.Status;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * TrainPlatform.java
@@ -186,17 +191,27 @@ public class TrainPlatform extends Platform {
                                 AGV agv = agvQueue.peek();
                                 if(agv.getStatus() != Status.MOVING) {
                                     agv = agvQueue.poll();
-                                    System.out.println("ik ga AGV naar KRAAN STUREN ;(");
-                                    System.out.println("de positie van dat kutding: " + agv.getPosition());
-                                    System.out.println("waar ie heen wil: " + agvSpots.get(currentCrane).getPosition());
-                                    System.out.println("gaat naar kraan: " + currentCrane);
-                                    System.out.println("de positie van die kutkraan: " + c.getPosition());
                                     agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
                                     craneAgvs.set(currentCrane, agv);
                                 }
                             } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {
                                 // unload
                                 System.out.println("deze agv staat er en er kan unload worden");
+                                try {
+                                    c.load(ev, rowToGive);
+                                    busyCranes.remove(c);
+                                } catch (Exception e) {
+                                    System.out.println("c.load(ev, rowToGive) werkt niet ;(");
+                                }
+                            } else {
+                                try {
+                                    c.unload(craneAgvs.get(currentCrane));
+                                    AGV agv = craneAgvs.remove(currentCrane);
+                                    // send agv to storageplatform
+                                    //agv.get(currentCrane).followRoute(null);
+                                } catch (Exception e) {
+                                    System.out.println("c.unload(craneAgvs.get(currentCrane)) werkt niet ;(");
+                                }
                             }
                         }
                         currentCrane++;

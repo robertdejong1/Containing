@@ -16,6 +16,7 @@ public class UserInterface extends JFrame
     private File CurrentDir = null;   
     public JButton StartSimulationButton;
     public JButton StopSimulationButton;
+    public JButton QuickXml2Button;
     public JTextArea MessageLogTextArea;
     
     public UserInterface()
@@ -113,6 +114,24 @@ public class UserInterface extends JFrame
                         }
                     }
                 );
+        
+        //Quick Load xml 2 button
+        QuickXml2Button = new JButton("Quick load xml2");
+        QuickXml2Button.setBounds(470, 5, 150, 25);
+        this.add(QuickXml2Button);
+        QuickXml2Button.addActionListener
+        (
+            new ActionListener() 
+            {
+                @Override
+                public void actionPerformed(ActionEvent e) 
+                {
+                    File xmlFile = new File("xmlfiles\\xml2.xml");
+                    Controller.readXMLAndSortOutput(xmlFile);
+                }
+            }
+        );
+        
     }
     
     private void AddLabels()

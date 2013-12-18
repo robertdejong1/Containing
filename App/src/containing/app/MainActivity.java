@@ -46,10 +46,19 @@ public class MainActivity extends Activity {
             	EditText text = (EditText) findViewById(R.id.editText1);
             	String connectString = text.getText().toString();
 
-            	String[] split = connectString.split(":", 2);
-                String ip = split[0];
-                int port = Integer.parseInt(split[1]);
-                connect(ip, port);
+            	String ip = "";
+            	int port = 0;
+            	try{
+            		String[] split = connectString.split(":", 2);
+            		ip = split[0];
+            		port = Integer.parseInt(split[1]);
+            	}
+            	catch(Exception e){
+            		showDialog("Please enter ip:port", e);
+            	}
+            		
+            	connect(ip, port);
+            	
             }
         });
         

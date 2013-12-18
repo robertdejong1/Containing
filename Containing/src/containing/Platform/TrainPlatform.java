@@ -192,6 +192,7 @@ public class TrainPlatform extends Platform {
                                     System.out.println("ik ga AGV naar KRAAN STUREN ;(");
                                     System.out.println("de positie van dat kutding: " + agv.getPosition());
                                     System.out.println("waar ie heen wil: " + agvSpots.get(currentCrane).getPosition());
+                                    System.out.println("gaat naar kraan: " + currentCrane);
                                     agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
                                     craneAgvs.set(currentCrane, agv);
                                 }
@@ -210,6 +211,7 @@ public class TrainPlatform extends Platform {
                 }
             }
         }
+        time = 0;
     }
     
     @Override

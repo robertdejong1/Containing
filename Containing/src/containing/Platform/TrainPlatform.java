@@ -39,6 +39,8 @@ public class TrainPlatform extends Platform {
     
     private Road craneRoad;
     
+    private int craneTiming = 0;
+    
     public TrainPlatform(Vector3f position)
     {
         super(position, Platform.Positie.LINKS);
@@ -156,11 +158,8 @@ public class TrainPlatform extends Platform {
                     int currentCrane = 0;
                     
                     for(Crane c : cranes) {
-                        try {
-                            Thread.sleep(5);
-                        } catch(InterruptedException e) {/*ignore*/}
                         System.out.println("c.Status() == " + c.getStatus());
-                        if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle && currentCrane*rowsPerCrane < unloadedColumns.size()) {
+                        if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle && currentCrane*rowsPerCrane < unloadedColumns.size() && currentCrane == craneTiming) {
                             int startIndex = currentCrane * rowsPerCrane;
                             int rowToGive = 0;
                             for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
@@ -200,9 +199,14 @@ public class TrainPlatform extends Platform {
                                 // unload
                                 System.out.println("deze agv staat er en er kan unload worden");
                             }
-                            currentCrane++;
                         }
+                        currentCrane++;
                     }
+                }
+                if(craneTiming >= 3) {
+                    craneTiming = 0;
+                } else {
+                    craneTiming++;
                 }
             }
         }

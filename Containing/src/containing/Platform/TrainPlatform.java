@@ -158,7 +158,7 @@ public class TrainPlatform extends Platform {
                     
                     for(Crane c : cranes) {
                         System.out.println("c.Status() == " + c.getStatus());
-                        if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle) {
+                        if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle && currentCrane*rowsPerCrane < unloadedColumns.size()) {
                             int startIndex = currentCrane * rowsPerCrane;
                             int rowToGive = 0;
                             for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 

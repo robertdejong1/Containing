@@ -151,6 +151,12 @@ public abstract class ExternVehicle extends Vehicle {
                     grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z] = container; 
 
                     super.load(container);
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("id", this.getID());
+                    map.put("vehicleType", this.getVehicleType());
+                    map.put("container", container);
+            
+                    CommandHandler.addCommand(new Command("loadVehicle",map));
                 
                 //if status not waiting
                 //CommandHandler.addCommand(new Command("loadVehicle", this));

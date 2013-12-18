@@ -64,6 +64,12 @@ public abstract class Vehicle implements Serializable
         if (cargo.size() < capicity) 
         {
             cargo.add(container);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("id", this.getID());
+            map.put("vehicleType", this.getVehicleType());
+            map.put("container", container);
+            
+            CommandHandler.addCommand(new Command("loadVehicle",map));
             
         }
         

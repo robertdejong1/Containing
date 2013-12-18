@@ -10,6 +10,7 @@ import containing.Vector3f;
 import containing.XmlHandler;
 import java.io.File;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,13 +23,26 @@ import static org.junit.Assert.*;
 public class Unload {
     
     XmlHandler xml = new XmlHandler();
-    List<Container> ContainersFromXML = xml.openXml(new File("C:\\Users\\Miriam\\Desktop\\xml2.xml")); 
-    
-    Container bc = ContainersFromXML.get(0);
-    Container container0 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,1,1), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
-    Container container1 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,1,1), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
+    List<Container> containers = new ArrayList<>();
     Barge barge = new Barge(null,0,null,null);
+   
+
     
+    
+    public Unload()
+    {
+       try{
+        List<Container> ContainersFromXML = xml.openXml(new File("C:\\Users\\Miriam\\Desktop\\xml2.xml")); 
+        Container bc = ContainersFromXML.get(0);
+        Container container0 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,1,1), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
+        Container container1 = new Container(bc.getContainerId(),bc.getArrivalDate(), bc.getArrivalTimeFrom(), bc.getArrivalTimeFrom(), bc.getArrivalTransport(),bc.getOwner(), new Vector3f(1,1,1), bc.getArrivalTransportCompany(), bc.getDepartureDate(), bc.getDepartureTimeFrom(),bc.getDepartureTimeTill(), bc.getDepartureTransport());
+        
+        containers.add(container0);
+        containers.add(container1);
+        containers.add(bc);
+       }
+       catch(Exception e){}
+    }
     @Test
     public void testUnload()
     {
@@ -50,7 +64,7 @@ public class Unload {
         //load vehicle and unload same container
         try
         {
-            barge.load(container0);
+            barge.load(containers.get(0));
            
             barge.unload();
             
@@ -66,8 +80,8 @@ public class Unload {
        //load vehicle and unload same container
         try
         {
-            barge.load(container0);
-            barge.unload(container0);
+            barge.load(containers.get(0));
+            barge.unload(containers.get(0));
             assertEquals(0, barge.getCargo().size());
             assertEquals(null,barge.getGrid()[1][1][1]);
         }
@@ -79,8 +93,8 @@ public class Unload {
         //load vehicle with container0 and unload container1 (has same position on grid)
         try
         {
-            barge.load(container0);
-            barge.unload(container1);
+            barge.load(containers.get(0));
+            barge.unload(containers.get(1));
             fail("Should fail unloading container1");
           
         }
@@ -88,7 +102,7 @@ public class Unload {
         {
             assertEquals(ContainerNotFoundException.class, e.getClass());
             assertEquals(1, barge.getCargo().size());
-            assertEquals(container0,barge.getGrid()[1][1][1]);
+            assertEquals(containers.get(0),barge.getGrid()[1][1][1]);
         }
       
     }
@@ -112,7 +126,7 @@ public class Unload {
         //Date date = new Date(2004,11,12);
         try
         {
-            barge.load(container0);
+            barge.load(containers.get(0));
         }
         catch(Exception e)
         {
@@ -127,7 +141,7 @@ public class Unload {
 
         //this.ContainersFromXML.get(0).getDepartureDate().setYear(date.getYear());
 
-        System.out.println(date.compareTo(this.ContainersFromXML.get(0).getDepartureDate()));
+       
         //System.out.println("Priority: " + barge.getContainerWithHighestPriority().size());
         //System.out.println("Priority: " + this.ContainersFromXML.get(3).getArrivalDate());
     }

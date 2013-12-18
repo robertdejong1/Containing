@@ -68,6 +68,13 @@ public abstract class Crane extends InternVehicle {
         try
         {
             agv.load(super.unload());
+            HashMap<String, Object> map = new HashMap<>();
+
+            map.put("id", this.getID());
+            map.put("vehicleType", this.getVehicleType());
+            map.put("loadtime", unloadTime);
+            map.put("container", cargo.get(0)); 
+            CommandHandler.addCommand(new Command("loadCrane", map));
         }
         catch(Exception e){ throw e; }
         //platform moet agv volgende route geven
@@ -152,7 +159,14 @@ public abstract class Crane extends InternVehicle {
                             this.status = Status.LOADING;
                             
                             this.unloadTime = (this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) + this.SECURETIME) * 100;
-                            
+                            HashMap<String, Object> map = new HashMap<>();
+
+                            map.put("id", this.getID());
+                            map.put("vehicleType", this.getVehicleType());
+                            map.put("loadtime", loadTime);
+                            map.put("container", cargo.get(0)); 
+
+                            CommandHandler.addCommand(new Command("loadCrane", map));
                              
                         }
                     }
@@ -185,6 +199,12 @@ public abstract class Crane extends InternVehicle {
             this.status = Status.LOADING;
             
             this.unloadTime = (this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) + this.SECURETIME) * 100;
+            HashMap<String, Object> map = new HashMap<>();
+
+            map.put("id", this.getID());
+            map.put("vehicleType", this.getVehicleType());
+            map.put("loadtime", loadTime);
+            map.put("container", container); 
         }
         catch(Exception e)
         {

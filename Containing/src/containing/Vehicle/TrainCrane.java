@@ -28,13 +28,7 @@ public class TrainCrane extends Crane {
         this.maxSpeedUnloaded = 40;
 
     }
-    
-    @Override
-    public void update()
-    {
-       
-    }
-    
+
   
     
   

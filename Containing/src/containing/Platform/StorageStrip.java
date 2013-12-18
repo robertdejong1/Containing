@@ -140,8 +140,9 @@ public class StorageStrip implements Serializable {
     
     private void createCrane()
     {
-        Vector3f cranePosition = new Vector3f(0,0,0);
+        Vector3f cranePosition = new Vector3f(getPosition().x,getPosition().y,getPosition().z);
         crane = new StorageCrane(cranePosition, platform);
+        platform.cranes.add(crane);
     }
     
     public List<AgvSpot> getAgvSpots()

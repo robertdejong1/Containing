@@ -121,7 +121,6 @@ public class TrainPlatform extends Platform {
          *   (en de kraan waar hij heen gaat staat op de juiste positie) stuur een AGV naar de kraan
          * 4 Check telkens of er een AGV parkeerd staat bij de kraan, doe dan unload
          */
-        
         super.unload();
         if(!extVehicles.isEmpty()) {
             int currentVehicle = 1;

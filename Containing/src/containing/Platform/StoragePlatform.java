@@ -173,7 +173,7 @@ public class StoragePlatform extends Platform {
         Vector3f stripPosition;
         for(int i = 0; i < getStripAmount(); i++)
         {
-            stripPosition = new Vector3f(0,0,STRIP_WIDTH*i);
+            stripPosition = new Vector3f(13.4f, getPosition().y, 3.15f + (i * 2.5f));
             strips[i] = new StorageStrip(this, stripPosition);
         }
     }

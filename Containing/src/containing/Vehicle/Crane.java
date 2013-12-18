@@ -184,7 +184,7 @@ public abstract class Crane extends InternVehicle {
             
        
         }
-        
+        ev.updateColumn(column, true);
         this.isAvailable = true;
     }
     

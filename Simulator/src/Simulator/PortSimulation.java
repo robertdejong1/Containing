@@ -14,8 +14,10 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 import com.jme3.util.SkyFactory;
 import containing.Command;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,33 +39,26 @@ public class PortSimulation extends SimpleApplication {
     
     Train train; 
     
-    ChaseCamera chaseCam;
-
+    //ChaseCamera chaseCam;
+    
     public static void main(String[] args) {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.236.138", 1337);
+        //Runnable networkHandler = new NetworkHandler("141.252.222.150", 1337);
         //Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        Thread t = new Thread(networkHandler);
-        t.start();
+        //Thread t = new Thread(networkHandler);
+        //t.start();
     }
 
     @Override
     public void simpleInitApp() {
         train = new Train(assetManager, rootNode);
         flyCam.setEnabled(false);     
-        chaseCam = new ChaseCamera(cam, inputManager);
-        chaseCam.setSmoothMotion(true);
-        chaseCam.setInvertVerticalAxis(true);
-        chaseCam.setMaxDistance(1000);
-        chaseCam.setMinVerticalRotation(0.32259342f);
-        chaseCam.setMaxVerticalRotation(0.32259343f);
-        chaseCam.setDragToRotate(false);
-        chaseCam.setDefaultVerticalRotation(0.32259343f);
-        
+
         cam.setLocation(new Vector3f(817f/20, 140f, 1643f/20));
-        cam.lookAt(new Vector3f(817f/20, 0f, 1643f/20), Vector3f.UNIT_X);
+        cam.lookAt(new Vector3f(817f/20, 0f, 1643f/20), Vector3f.UNIT_X);     
+        //chaseCam = new ChaseCamera(cam, inputManager);
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
         
         for (int i = 0; i < 4; i++) {
@@ -87,7 +82,6 @@ public class PortSimulation extends SimpleApplication {
             storageCranes[0] = new StorageCrane(assetManager, rootNode);
             storageCranes[0].place(14, 5.5f, 3.15f+(i*2.5f));
         }
-        chaseCam.setSpatial(storageCranes[2].crane);
 
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
@@ -103,7 +97,9 @@ public class PortSimulation extends SimpleApplication {
         
         inputManager.addMapping("mousedown", new MouseButtonTrigger(MouseInput.BUTTON_MIDDLE));
         inputManager.addListener(analogListener,"mousedown");
-        
+
+        chaseCamSetTarget(port.port_node);
+        //chaseCamSetTarget(storageCranes[0].node);
         //GeometryBatchFactory.optimize(rootNode);
     }
     
@@ -119,11 +115,7 @@ public class PortSimulation extends SimpleApplication {
                 if (results.size() > 0) 
                 {
                     Geometry closest = results.getClosestCollision().getGeometry();
-                    if (!closest.getName().equals("port"))
-                    {
-                        
-                    }
-                    chaseCam.setSpatial(storageCranes[0].crane);
+
                 }
             }
         }
@@ -142,7 +134,7 @@ public class PortSimulation extends SimpleApplication {
         //    container[i].move(0, 0, tpf*2);
         //}
         //railCrane.update(tpf);
-        chaseCam.setDefaultHorizontalRotation(chaseCam.getHorizontalRotation()+0.0002f);
+        //chaseCam.setDefaultHorizontalRotation(chaseCam.getHorizontalRotation()+0.0005f);
         
         if(!CommandHandler.newStackedCommandsAvailable()){
             return;
@@ -280,11 +272,13 @@ public class PortSimulation extends SimpleApplication {
             MotionEvent motev;
             switch (type)
             {
-                case TRAIN:
+                case TRAIN:                  
                     train.place(-41.5f, 5.5f, 0f);
                     motev = new MotionEvent(train.train, path, duration);
                     motev.setSpeed(1f);
                     motev.play();
+                    chaseCamSetTarget(train.train);
+                   
                     break;
                     
                 case AGV:
@@ -296,6 +290,7 @@ public class PortSimulation extends SimpleApplication {
                             motev.setSpeed(1f);
                             motev.setDirectionType(MotionEvent.Direction.Path);
                             motev.play();
+                            chaseCamSetTarget(a.model);
                         }
                     }
                     break;
@@ -312,10 +307,9 @@ public class PortSimulation extends SimpleApplication {
             System.out.println("" + type.toString());
             
             MotionPath path = new MotionPath();
-            containing.Road.Route route = (containing.Road.Route)map.get("motionPath");
+            List<containing.Vector3f> route = (ArrayList<containing.Vector3f>)map.get("motionPath");
             //containing.Road.Route route = containing.Settings.port.getMainroad().getPath();
-            List<containing.Vector3f> motion = route.getWeg();
-            for (containing.Vector3f v : motion)
+            for (containing.Vector3f v : route)
             {
                 path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
             }
@@ -339,5 +333,25 @@ public class PortSimulation extends SimpleApplication {
             }
         }
 
+    }
+    
+    public void chaseCamSetTarget(Spatial target)
+    {
+        cam.setLocation(new Vector3f(0f, 0f, 10f));
+        cam.lookAt(new Vector3f(0f, 0f, 0f), Vector3f.UNIT_Y);
+        
+        /*chaseCam.setSpatial(target);
+        chaseCam.setSmoothMotion(true);
+        chaseCam.setInvertVerticalAxis(true);
+        chaseCam.setMaxDistance(1000);
+        chaseCam.setMinVerticalRotation(0.32259342f);
+        chaseCam.setMaxVerticalRotation(0.32259343f);
+        chaseCam.setDragToRotate(false);
+        chaseCam.setDefaultVerticalRotation(0.32259343f);*/
+        
+        flyCam.setEnabled(false);
+        // Enable a chase cam for this target (typically the player).
+        ChaseCamera chaseCam = new ChaseCamera(cam, target, inputManager);
+        chaseCam.setSmoothMotion(true);
     }
 }

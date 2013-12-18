@@ -130,7 +130,7 @@ public class TrainPlatform extends Platform {
         if(!extVehicles.isEmpty()) {
             int currentVehicle = 1;
             int cranesPerVehicle = cranes.size() / extVehicles.size();
-            for(ExternVehicle ev : extVehicles) {
+            for(final ExternVehicle ev : extVehicles) {
                 // stap 1
                 if(agvQueue.isEmpty() || agvQueue.size() < maxAgvQueue) {
                     for(int i = agvQueue.size(); i < (ev.getCargo().size() < maxAgvQueue ? ev.getCargo().size() : maxAgvQueue); i++) {
@@ -159,11 +159,12 @@ public class TrainPlatform extends Platform {
                     List<Integer> priorityColumns = ev.getPriorityColumns();
                     int currentCrane = 0;
                     
-                    for(Crane c : cranes) {
-                        if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle && currentCrane*rowsPerCrane < unloadedColumns.size() && currentCrane <= agvQueue.size()-1) {
+                    for(final Crane c : cranes) {
+                        System.out.println("currentCrane " + currentCrane + " == " + c.getIsAvailable());
+                        if(currentCrane >= test && currentCrane < test + cranesPerVehicle && currentCrane*rowsPerCrane < unloadedColumns.size() && currentCrane <= agvQueue.size()-1) {
                             System.out.println("crane " + currentCrane + " == " + c.getStatus());
                             int startIndex = currentCrane * rowsPerCrane;
-                            int rowToGive = -1;
+                            int rowToGive = 0;
                             for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
                             {
                                 if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
@@ -174,8 +175,6 @@ public class TrainPlatform extends Platform {
                                     break;
                                 }
                             }
-                            if(rowToGive == -1)
-                                break;
                             if(!busyCranes.contains(c) && craneAgvs.get(currentCrane) == null) {
                                 // move to right position of row
                                 if(c.getStatus() == Status.WAITING) {
@@ -198,7 +197,18 @@ public class TrainPlatform extends Platform {
                                     craneAgvs.set(currentCrane, agv);
                                 }
                                 try {
-                                    c.load(ev, rowToGive);
+                                    final int rowToGive2 = rowToGive;
+                                    new Thread() {
+                                        
+                                        public void run() {
+                                            try {
+                                                c.load(ev, rowToGive2);
+                                            } catch (Exception ex) {
+                                                Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                            }
+                                        }
+                                        
+                                    }.start();
                                 } catch (Exception e) {
                                     System.out.println("c.load(ev, rowToGive) werkt niet ;(");
                                 }

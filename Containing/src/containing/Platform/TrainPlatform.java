@@ -142,7 +142,6 @@ public class TrainPlatform extends Platform {
                             System.out.println("No Free AGV available ;(");
                         }
                         if(time >= 20) {
-                            time = 0;
                             break;
                         }
                     }
@@ -157,6 +156,9 @@ public class TrainPlatform extends Platform {
                     int currentCrane = 0;
                     
                     for(Crane c : cranes) {
+                        try {
+                            Thread.sleep(5);
+                        } catch(InterruptedException e) {/*ignore*/}
                         System.out.println("c.Status() == " + c.getStatus());
                         if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle && currentCrane*rowsPerCrane < unloadedColumns.size()) {
                             int startIndex = currentCrane * rowsPerCrane;
@@ -226,7 +228,7 @@ public class TrainPlatform extends Platform {
         /* UNLOAD EXTERNAL VEHICLE */
         if(state.equals(State.UNLOAD))
         {
-            if(time >= 20) {
+            if(time >= 25) {
                 unload();
             }
         }

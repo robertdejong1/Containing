@@ -11,9 +11,9 @@ import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
 import containing.Settings;
 import containing.Vector3f;
-import containing.Vehicle.Crane;
 import containing.Vehicle.Vehicle;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**

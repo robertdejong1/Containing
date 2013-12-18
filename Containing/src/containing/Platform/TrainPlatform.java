@@ -49,8 +49,8 @@ public class TrainPlatform extends Platform {
         super(position, Platform.Positie.LINKS);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(DynamicAxis.Z);
-        setEntrypoint(new Vector3f(3.7f, getPosition().y, getPosition().z + 1.5f));
-        setExitpoint(new Vector3f(3.7f, getPosition().y, getPosition().z + LENGTH));
+        setEntrypoint(new Vector3f(3.7f - (AGV.width*Settings.METER) / 2f, getPosition().y, getPosition().z + 1.5f));
+        setExitpoint(new Vector3f(3.7f - (AGV.width*Settings.METER) / 2f, getPosition().y, getPosition().z + LENGTH));
         setRoad();
         setTransportType(TransportType.Train);
         setMaxAgvQueue(CRANES*3);
@@ -163,7 +163,7 @@ public class TrainPlatform extends Platform {
                         if(c.getIsAvailable() && currentCrane >= test && currentCrane < test + cranesPerVehicle && currentCrane*rowsPerCrane < unloadedColumns.size() && currentCrane <= agvQueue.size()-1) {
                             System.out.println("crane " + currentCrane + " == " + c.getStatus());
                             int startIndex = currentCrane * rowsPerCrane;
-                            int rowToGive = 0;
+                            int rowToGive = -1;
                             for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
                             {
                                 if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
@@ -174,9 +174,12 @@ public class TrainPlatform extends Platform {
                                     break;
                                 }
                             }
+                            if(rowToGive == -1)
+                                break;
                             if(!busyCranes.contains(c) && craneAgvs.get(currentCrane) == null) {
                                 // move to right position of row
-                                if(c.getStatus() != Status.MOVING) {
+                                if(c.getStatus() == Status.WAITING) {
+                                    System.out.println("ga nu weer kraan verplaatsen: " + rowToGive);
                                     if(ev.getGrid()[rowToGive][0][0] != null) {
                                         System.out.println("rowToGive: " + rowToGive);
                                         c.followRoute(craneRoad.moveToContainer(ev, rowToGive, c));
@@ -201,8 +204,9 @@ public class TrainPlatform extends Platform {
                                 }
                             } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {
                                 if(c.getStatus() == Status.UNLOADING && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {
-                                    AGV agv = craneAgvs.remove(currentCrane);
                                     try {
+                                        AGV agv = craneAgvs.get(currentCrane);
+                                        craneAgvs.set(currentCrane, null);
                                         c.unload(agv);
                                         busyCranes.remove(c);
                                     } catch (VehicleOverflowException ex) {

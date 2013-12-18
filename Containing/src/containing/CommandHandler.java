@@ -23,6 +23,7 @@ public class CommandHandler {
      */
     public static void addCommand(Command cmd){
         queuedCommands.put(getNewId(), cmd);
+        Settings.messageLog.AddMessage(cmd.getCommand());
     }
     
     /**

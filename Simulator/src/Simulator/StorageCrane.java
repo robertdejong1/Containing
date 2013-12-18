@@ -13,6 +13,7 @@ import com.jme3.scene.Spatial;
 
 public class StorageCrane
 {
+    int id;
     Node crane;
     Node node;
     
@@ -20,11 +21,12 @@ public class StorageCrane
     Spatial grab;
     Spatial top;
     
-    public StorageCrane(AssetManager assetManager, Node node)
+    public StorageCrane(AssetManager assetManager, Node node, int id)
     {
         this.node = node;
         crane = new Node();
         crane.setName("StorageCrane");
+        this.id = id;
         
         frame = assetManager.loadModel("Models/storagecrane/frame.j3o");
         grab = assetManager.loadModel("Models/storagecrane/grab.j3o");

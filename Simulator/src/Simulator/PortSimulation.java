@@ -36,7 +36,7 @@ public class PortSimulation extends SimpleApplication {
     AGV[] agv = new AGV[100];
     //Container[] container = new Container[19];
     FreeCrane[] freeCranes = new FreeCrane[4];
-    StorageCrane[] storageCranes = new StorageCrane[61];
+    StorageCrane[] storageCranes;
     RailCrane[] railCrane;
     Port port;
     //private StorageCrane storageCrane = new StorageCrane(assetManager, rootNode);
@@ -47,7 +47,8 @@ public class PortSimulation extends SimpleApplication {
     int camstate = 1;
     String currentChaseTarget;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         PortSimulation app = new PortSimulation();
         app.start();
 
@@ -62,7 +63,7 @@ public class PortSimulation extends SimpleApplication {
         train = new Train(assetManager, rootNode);
         this.setDisplayStatView(false);
         flyCam.setEnabled(false);
-        
+        rootNode.setName("rootnode");
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
         
         for (int i = 0; i < 4; i++) {
@@ -80,11 +81,6 @@ public class PortSimulation extends SimpleApplication {
         //truck[i].scale(0.15f);
         //truck[i].place(40.32f, 5f, i);
         //}
-
-        for (int i = 0; i < 61; i++) {
-            storageCranes[0] = new StorageCrane(assetManager, rootNode);
-            storageCranes[0].place(14, 5.5f, 3.15f + (i * 2.5f));
-        }
 
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
@@ -204,6 +200,17 @@ public class PortSimulation extends SimpleApplication {
                 containing.Vehicle.TrainCrane crane = (containing.Vehicle.TrainCrane) trainPlatform.getCranes().get(i);
                 railCrane[i] = new RailCrane(assetManager, rootNode, crane.getID());
                 railCrane[i].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().z);
+            }
+            
+            containing.Platform.StoragePlatform storagePlatform = ((containing.Platform.StoragePlatform) _port.getStoragePlatform());
+            int aantal_storagecranes = storagePlatform.getStripAmount();
+            storageCranes = new StorageCrane[aantal_storagecranes];
+            
+            for (int i = 0; i <  aantal_storagecranes; i++)
+            {
+                containing.Vehicle.StorageCrane crane = (containing.Vehicle.StorageCrane) storagePlatform.getCranes().get(i);
+                storageCranes[i] = new StorageCrane(assetManager, rootNode, crane.getID());
+                storageCranes[i].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().x);
             }
 
             for (int i = 0; i < 100; i++) {

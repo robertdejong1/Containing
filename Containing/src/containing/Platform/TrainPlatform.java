@@ -176,8 +176,7 @@ public class TrainPlatform extends Platform {
                                 if(c.getStatus() != Status.MOVING) {
                                     if(ev.getGrid()[rowToGive][0][0] != null) {
                                         System.out.println("rowToGive: " + rowToGive);
-                                        c.moveToContainer(ev, rowToGive);
-                                        c.followRoute(craneRoad.getPathMoveContainer(ev, rowToGive, c));
+                                        c.followRoute(craneRoad.moveToContainer(ev, rowToGive, c));
                                         busyCranes.add(c);
                                     }
                                 }

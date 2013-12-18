@@ -69,6 +69,7 @@ public abstract class ExternVehicle extends Vehicle {
             unloadedColumn.add(false);     
         }
         
+        this.status = Status.INIT;
         
         
         getContainerWithHighestPriority();
@@ -151,12 +152,16 @@ public abstract class ExternVehicle extends Vehicle {
                     grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z] = container; 
 
                     super.load(container);
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put("id", this.getID());
-                    map.put("vehicleType", this.getVehicleType());
-                    map.put("container", container);
-            
-                    CommandHandler.addCommand(new Command("loadVehicle",map));
+                    if (this.getStatus() != Status.INIT)
+                    {
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("id", this.getID());
+                        map.put("vehicleType", this.getVehicleType());
+                        map.put("container", container);
+                    
+                        CommandHandler.addCommand(new Command("loadVehicle",map));
+                    }
+                   
                 
                 //if status not waiting
                 //CommandHandler.addCommand(new Command("loadVehicle", this));
@@ -257,6 +262,7 @@ public abstract class ExternVehicle extends Vehicle {
         map.put("vehicleType", this.getVehicleType());
         map.put("cargo", this.getGrid()); 
         map.put("numberContainers", this.getCargo().size());
+        
         
         CommandHandler.addCommand(new Command("enterExternVehicle",map));
         Settings.messageLog.AddMessage("AddCommand enterExternVehicle");

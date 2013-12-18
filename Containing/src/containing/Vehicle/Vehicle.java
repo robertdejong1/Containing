@@ -24,7 +24,7 @@ public abstract class Vehicle implements Serializable
     protected int maxSpeedLoaded;
     protected int maxSpeedUnloaded;
     protected int currentSpeed;
-    public enum Status{ UNLOADING, LOADING, WAITING, MOVING };
+    public enum Status{ UNLOADING, LOADING, WAITING, MOVING, INIT };
     protected enum Type{ TRUCK, AGV, BARGE, BARGECRANE, SEASHIP, SEASHIPCRANE, TRAIN, TRAINCRANE, TRUCKCRANE, STORAGECRANE};
     private Type vehicleType;
     protected Status status;
@@ -64,12 +64,16 @@ public abstract class Vehicle implements Serializable
         if (cargo.size() < capicity) 
         {
             cargo.add(container);
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("id", this.getID());
-            map.put("vehicleType", this.getVehicleType());
-            map.put("container", container);
+            if (this.getStatus() != Status.INIT)
+            {
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("id", this.getID());
+                map.put("vehicleType", this.getVehicleType());
+                map.put("container", container);
+
+                CommandHandler.addCommand(new Command("loadVehicle",map));
+            }
             
-            CommandHandler.addCommand(new Command("loadVehicle",map));
             
         }
         

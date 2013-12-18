@@ -206,9 +206,9 @@ public class TrainPlatform extends Platform {
                         currentCrane++;
                     }
                 }
-                if(craneTiming >= 3) {
+                if(craneTiming >= 3 && omEnOm % 2 == 1) {
                     craneTiming = 0;
-                } else {
+                } else if(omEnOm % 2 == 1) {
                     craneTiming++;
                 }
                 omEnOm++;

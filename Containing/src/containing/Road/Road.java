@@ -121,7 +121,7 @@ public class Road implements Serializable
                  break;
              case Z:
                  // hardcoded voor de trein nu ;( wagon is 1.5f en trein zelf ook
-                 Vector3f hihi = new Vector3f(crane.getPosition().x, crane.getPosition().y, ev.getPosition().z - column*1.5f - 1.5f);
+                 Vector3f hihi = new Vector3f(crane.getPosition().x, crane.getPosition().y, ev.getPosition().z - column*1.5f - 1.5f + 0.75f);
                  route.add(hihi); //??
                  System.out.println("route z: " + hihi.toString());
                  break;

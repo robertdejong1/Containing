@@ -141,7 +141,7 @@ public class TrainPlatform extends Platform {
                         } catch(NoFreeAgvException e) {
                             System.out.println("No Free AGV available ;(");
                         }
-                        if(time >= 10) {
+                        if(time >= 20) {
                             time = 0;
                             break;
                         }
@@ -187,12 +187,16 @@ public class TrainPlatform extends Platform {
                                 // send AGV from queue
                                 AGV agv = agvQueue.peek();
                                 if(agv.getStatus() != Status.MOVING) {
+                                    agv = agvQueue.poll();
+                                    System.out.println("ik ga AGV naar KRAAN STUREN ;(");
+                                    System.out.println("de positie van dat kutding: " + agv.getPosition());
+                                    System.out.println("waar ie heen wil: " + agvSpots.get(currentCrane).getPosition());
                                     agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
                                     craneAgvs.set(currentCrane, agv);
-                                    agvQueue.poll();
                                 }
-                            } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null) {
+                            } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {
                                 // unload
+                                System.out.println("deze agv staat er en er kan unload worden");
                             }
                             currentCrane++;
                         }
@@ -222,8 +226,7 @@ public class TrainPlatform extends Platform {
         /* UNLOAD EXTERNAL VEHICLE */
         if(state.equals(State.UNLOAD))
         {
-            if(time >= 10) {
-                System.out.println("going to unload");
+            if(time >= 20) {
                 unload();
             }
         }

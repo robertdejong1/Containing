@@ -182,10 +182,10 @@ public class Road implements Serializable
       public Route getPathToParkingsSpot(Vehicle vehicle, ParkingSpot ps)
       {
           List<Vector3f> track2 = new ArrayList<Vector3f>();
-          track.add(vehicle.getPosition());
-          track.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
-          track.add(this.createCorrespondingWaypoint(ps.getPosition()));
-          track.add(ps.getPosition());
+          track2.add(vehicle.getPosition());
+          track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
+          track2.add(this.createCorrespondingWaypoint(ps.getPosition()));
+          track2.add(ps.getPosition());
           try
           {
             ps.ParkVehicle(vehicle);

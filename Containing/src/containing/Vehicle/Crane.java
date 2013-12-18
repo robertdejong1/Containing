@@ -67,7 +67,9 @@ public abstract class Crane extends InternVehicle {
     public void unload(AGV agv) throws VehicleOverflowException, ContainerNotFoundException, CargoOutOfBoundsException{
         try
         {
+            this.agvToUnload = agv;
             agv.load(super.unload());
+            
             HashMap<String, Object> map = new HashMap<>();
 
             map.put("craneid", this.getID());
@@ -76,6 +78,7 @@ public abstract class Crane extends InternVehicle {
             map.put("duration", 2000);
             //map.put("container", cargo.get(0)); 
             CommandHandler.addCommand(new Command("unloadCrane", map));
+            
         }
         catch(Exception e){ throw e; }
         //platform moet agv volgende route geven

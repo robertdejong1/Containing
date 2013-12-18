@@ -185,7 +185,7 @@ public class Road implements Serializable
           track2.add(vehicle.getPosition());
           track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
           track2.add(this.createCorrespondingWaypoint(ps.getPosition()));
-          track2.add(ps.getPosition());
+          //track2.add(ps.getPosition());
           try
           {
             ps.ParkVehicle(vehicle);

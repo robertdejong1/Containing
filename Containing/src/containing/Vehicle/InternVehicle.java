@@ -30,6 +30,7 @@ public abstract class InternVehicle extends Vehicle{
         super(capicity, platform, type);
 
         this.startPosition = startPosition;
+        this.setPosition(startPosition);
         this.position = startPosition;
         this.isAvailable = true;
     }

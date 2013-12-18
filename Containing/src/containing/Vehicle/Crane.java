@@ -70,11 +70,12 @@ public abstract class Crane extends InternVehicle {
             agv.load(super.unload());
             HashMap<String, Object> map = new HashMap<>();
 
-            map.put("id", this.getID());
+            map.put("craneid", this.getID());
             map.put("vehicleType", this.getVehicleType());
-            map.put("duration", unloadTime);
-            map.put("container", cargo.get(0)); 
-            CommandHandler.addCommand(new Command("loadCrane", map));
+            map.put("AGVID", agv.getID());
+            map.put("duration", 2000);
+            //map.put("container", cargo.get(0)); 
+            CommandHandler.addCommand(new Command("unloadCrane", map));
         }
         catch(Exception e){ throw e; }
         //platform moet agv volgende route geven

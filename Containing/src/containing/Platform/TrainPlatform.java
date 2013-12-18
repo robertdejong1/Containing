@@ -144,7 +144,7 @@ public class TrainPlatform extends Platform {
                         } catch(NoFreeAgvException e) {
                             System.out.println("No Free AGV available ;(");
                         }
-                        if(time >= 20) {
+                        if(time >= 15) {
                             break;
                         }
                     }
@@ -211,6 +211,7 @@ public class TrainPlatform extends Platform {
                 } else {
                     craneTiming++;
                 }
+                omEnOm++;
             }
         }
         time = 0;
@@ -236,7 +237,7 @@ public class TrainPlatform extends Platform {
         /* UNLOAD EXTERNAL VEHICLE */
         if(state.equals(State.UNLOAD))
         {
-            if(time >= 25) {
+            if(time >= 15) {
                 unload();
             }
         }

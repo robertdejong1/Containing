@@ -41,7 +41,7 @@ public abstract class Crane extends InternVehicle {
     private final float moveContainerSpeed = 5; //meter per seconde
  
     
-    private float loadTime;
+    private float loadTime; //11*100
     private float unloadTime;
     private float resetTime;
     
@@ -158,14 +158,14 @@ public abstract class Crane extends InternVehicle {
                             + this.liftTimeMin + (this.liftTimeMax - this.liftTimeMin) / ((int)container.getArrivalPosition().z + 1) //lifttime depended on z position of container
                             + Math.abs((this.position.y-container.getArrivalPosition().y) / ((this.moveContainerSpeed *1000f/3600f)/100f));
                             this.status = Status.LOADING;
-                            
+                            this.loadTime = 11*100;
                             this.unloadTime = (this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) + this.SECURETIME) * 100;
                             HashMap<String, Object> map = new HashMap<>();
-
+                            this.unloadTime = 5*100;
                             map.put("craneid", this.getID());
                             map.put("vehicleType", this.getVehicleType());
                             map.put("clientid", ev.getID());
-                            map.put("duration", 2000);
+                            map.put("duration", this.loadTime);
                             map.put("container", cargo.get(0)); 
 
                             CommandHandler.addCommand(new Command("loadCrane", map));

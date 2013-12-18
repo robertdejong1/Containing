@@ -21,7 +21,7 @@ import java.util.List;
  * @author Robert
  */
 public class Route implements Serializable {
-    private List<Vector3f> weg;
+    private List<Vector3f> weg = new ArrayList<Vector3f>();
     float distance;
     Platform destinationPlatform;
     ParkingSpot destinationParkingSpot;
@@ -29,7 +29,7 @@ public class Route implements Serializable {
     public Route(List<Vector3f> weg, float distanceInMeters){
         
         for (Vector3f v : weg){
-            weg.add(v);
+            this.weg.add(v);
         }
         this.distance = distanceInMeters;
         System.out.println("------------");

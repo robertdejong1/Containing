@@ -28,7 +28,9 @@ public class Route implements Serializable {
     
     public Route(List<Vector3f> weg, float distanceInMeters){
         
-        this.weg = weg;
+        for (Vector3f v : weg){
+            weg.add(v);
+        }
         this.distance = distanceInMeters;
         System.out.println("------------");
         for (Vector3f v : weg){
@@ -50,9 +52,9 @@ public class Route implements Serializable {
         
         System.out.println("Distance to drive: " + distance);
         if (distance <= 0){
-         
+            
             Settings.messageLog.AddMessage("Reached end of path");
-            vehicle.setPosition(weg.get(weg.size()-1));
+            vehicle.setPosition(weg.get(weg.lastIndexOf(weg)));
             vehicle.stopDriving();
             if (destinationPlatform == null && destinationParkingSpot == null){}
             else if (destinationParkingSpot == null){

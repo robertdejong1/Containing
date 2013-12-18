@@ -34,6 +34,12 @@ public class NetworkHandler implements Runnable {
         this.ip = ip;
         this.port = port;
     }
+    
+    public static void main(String[] args){
+        Runnable r = new NetworkHandler("141.252.222.150", 1337);
+        Thread t = new Thread(r);
+        t.start();
+    }
 
     @Override
     public void run() {

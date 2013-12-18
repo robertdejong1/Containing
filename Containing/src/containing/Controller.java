@@ -128,7 +128,8 @@ public class Controller
     {
         try
         {
-            UserInterface.MessageLogTextArea.setText(Settings.messageLog.GetLastMessages());
+            UserInterface.MessageLogTextArea.setText(Settings.messageLog.GetLastMessages() +UserInterface.MessageLogTextArea.getText());
+            Settings.messageLog.ClearMessages();
         }
         catch (NullPointerException e)
         {

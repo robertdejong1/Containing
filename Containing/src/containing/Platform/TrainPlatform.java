@@ -194,23 +194,25 @@ public class TrainPlatform extends Platform {
                                     agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
                                     craneAgvs.set(currentCrane, agv);
                                 }
-                            } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {
-                                // unload
-                                System.out.println("deze agv staat er en er kan unload worden");
                                 try {
                                     c.load(ev, rowToGive);
-                                    busyCranes.remove(c);
                                 } catch (Exception e) {
                                     System.out.println("c.load(ev, rowToGive) werkt niet ;(");
                                 }
-                            } else {
-                                try {
-                                    c.unload(craneAgvs.get(currentCrane));
+                            } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {
+                                if(c.getStatus() == Status.UNLOADING && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {
                                     AGV agv = craneAgvs.remove(currentCrane);
-                                    // send agv to storageplatform
-                                    //agv.get(currentCrane).followRoute(null);
-                                } catch (Exception e) {
-                                    System.out.println("c.unload(craneAgvs.get(currentCrane)) werkt niet ;(");
+                                    try {
+                                        c.unload(agv);
+                                        busyCranes.remove(c);
+                                    } catch (VehicleOverflowException ex) {
+                                        Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                    } catch (ContainerNotFoundException ex) {
+                                        Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                    } catch (CargoOutOfBoundsException ex) {
+                                        Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    System.out.println("deze agv staat er en er kan unload worden");
                                 }
                             }
                         }

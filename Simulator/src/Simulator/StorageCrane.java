@@ -24,6 +24,7 @@ public class StorageCrane
     {
         this.node = node;
         crane = new Node();
+        crane.setName("StorageCrane");
         
         frame = assetManager.loadModel("Models/storagecrane/frame.j3o");
         grab = assetManager.loadModel("Models/storagecrane/grab.j3o");

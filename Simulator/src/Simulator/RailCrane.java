@@ -32,6 +32,7 @@ public class RailCrane
         this.node = node;
         this.id = id;
         crane = new Node();
+        crane.setName("RailCrane " + id);
         
         frame = assetManager.loadModel("Models/railcrane/frame.j3o");
         cable = assetManager.loadModel("Models/railcrane/cable.j3o");

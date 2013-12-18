@@ -1,12 +1,17 @@
 package Simulator;
 
+import static Simulator.Type.TRAINCRANE;
 import com.jme3.app.SimpleApplication;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.collision.CollisionResults;
+import com.jme3.font.BitmapText;
 import com.jme3.input.ChaseCamera;
+import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
+import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
@@ -36,29 +41,28 @@ public class PortSimulation extends SimpleApplication {
     Port port;
     //private StorageCrane storageCrane = new StorageCrane(assetManager, rootNode);
     //Truck[] truck = new Truck[20];
-    
-    Train train; 
-    
-    //ChaseCamera chaseCam;
-    
+    Train train;
+    BitmapText hudText;
+    ChaseCamera chaseCam;
+    int camstate = 1;
+    String currentChaseTarget;
+
     public static void main(String[] args) {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        //Runnable networkHandler = new NetworkHandler("141.252.222.150", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.236.86", 1337);
         //Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        //Thread t = new Thread(networkHandler);
-        //t.start();
+        Thread t = new Thread(networkHandler);
+        t.start();
     }
 
     @Override
     public void simpleInitApp() {
         train = new Train(assetManager, rootNode);
-        flyCam.setEnabled(false);     
-
-        cam.setLocation(new Vector3f(817f/20, 140f, 1643f/20));
-        cam.lookAt(new Vector3f(817f/20, 0f, 1643f/20), Vector3f.UNIT_X);     
-        //chaseCam = new ChaseCamera(cam, inputManager);
+        this.setDisplayStatView(false);
+        flyCam.setEnabled(false);
+        
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
         
         for (int i = 0; i < 4; i++) {
@@ -71,16 +75,15 @@ public class PortSimulation extends SimpleApplication {
         //port.place();
 
         //for (int i = 0; i < 20; i++) {
-            //truck[i] = new Truck(assetManager, rootNode);
-            //truck[i].rotate(0, -90 * FastMath.DEG_TO_RAD, 0);
-            //truck[i].scale(0.15f);
-            //truck[i].place(40.32f, 5f, i);
+        //truck[i] = new Truck(assetManager, rootNode);
+        //truck[i].rotate(0, -90 * FastMath.DEG_TO_RAD, 0);
+        //truck[i].scale(0.15f);
+        //truck[i].place(40.32f, 5f, i);
         //}
-        
-        for (int i = 0; i < 61; i++)
-        {
+
+        for (int i = 0; i < 61; i++) {
             storageCranes[0] = new StorageCrane(assetManager, rootNode);
-            storageCranes[0].place(14, 5.5f, 3.15f+(i*2.5f));
+            storageCranes[0].place(14, 5.5f, 3.15f + (i * 2.5f));
         }
 
         DirectionalLight sun = new DirectionalLight();
@@ -94,37 +97,60 @@ public class PortSimulation extends SimpleApplication {
         sun2.setDirection(lightDir2);
         sun2.setColor(ColorRGBA.White.clone().multLocal(2));
         rootNode.addLight(sun2);
-        
-        inputManager.addMapping("mousedown", new MouseButtonTrigger(MouseInput.BUTTON_MIDDLE));
-        inputManager.addListener(analogListener,"mousedown");
 
-        chaseCamSetTarget(port.port_node);
-        //chaseCamSetTarget(storageCranes[0].node);
-        //GeometryBatchFactory.optimize(rootNode);
+        inputManager.clearMappings();
+        inputManager.addMapping("mousedown", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputManager.addListener(analogListener, "mousedown");
+        inputManager.addMapping("escape", new KeyTrigger(KeyInput.KEY_ESCAPE));
+        inputManager.addListener(actionListener, "escape");
+
+        // font color
+        hudText = new BitmapText(guiFont, false);
+        hudText.setSize(guiFont.getCharSet().getRenderedSize());      // font size
+        hudText.setColor(ColorRGBA.White);
+        guiNode.attachChild(hudText);
     }
     
-    private AnalogListener analogListener = new AnalogListener() {
-        public void onAnalog(String name, float intensity, float tpf) 
-        {
-            if (name.equals("mousedown"))
-            {
-                CollisionResults results = new CollisionResults();
-                Ray ray = new Ray(cam.getLocation(), cam.getDirection());
-                
-                rootNode.collideWith(ray, results);
-                if (results.size() > 0) 
-                {
-                    Geometry closest = results.getClosestCollision().getGeometry();
-
-                }
+    private ActionListener actionListener = new ActionListener() {
+        public void onAction(String name, boolean keyPressed, float tpf) {
+            if (name.equals("escape") && !keyPressed) {
+                camstate = 1;
             }
         }
     };
     
+    private AnalogListener analogListener = new AnalogListener() {
+        public void onAnalog(String name, float intensity, float tpf) {
+            if (name.equals("mousedown")) {
+                Vector3f origin = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0.0f);
+                Vector3f direction = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0.3f);
+                direction.subtractLocal(origin).normalizeLocal();
 
+                Ray ray = new Ray(origin, direction);
+                CollisionResults results = new CollisionResults();
+
+                rootNode.collideWith(ray, results);
+                if (results.size() > 0) {
+                    Geometry closest = results.getClosestCollision().getGeometry();
+                    if (!closest.getName().equals("port")) {
+                        if (!closest.getParent().getName().contains("-objnode"))
+                        {
+                            chaseCamSetTarget(closest, closest.getParent().getName());
+                        }
+                        else
+                        {
+                            chaseCamSetTarget(closest, closest.getParent().getParent().getName());
+                    
+                        }
+                        camstate = 2;
+                    }
+                }
+            }
+        }
+    };
 
     @Override
-    public void simpleUpdate(float tpf) { 
+    public void simpleUpdate(float tpf) {
         //freeCranes[0].move(tpf/2, 0, 0);
         //train.move(0,0,tpf*2);
         //train.model.rotate(tpf, tpf, tpf)
@@ -134,45 +160,62 @@ public class PortSimulation extends SimpleApplication {
         //    container[i].move(0, 0, tpf*2);
         //}
         //railCrane.update(tpf);
-        //chaseCam.setDefaultHorizontalRotation(chaseCam.getHorizontalRotation()+0.0005f);
-        
-        if(!CommandHandler.newStackedCommandsAvailable()){
+
+        switch (camstate) {
+            case 1:
+                if (chaseCam!=null)
+                {
+                    chaseCam.setEnabled(false);
+                    inputManager.setCursorVisible(true);
+                }
+                
+                cam.setLocation(new Vector3f(817f / 20, 140f, 1643f / 20));
+                cam.lookAt(new Vector3f(817f / 20, 0f, 1643f / 20), Vector3f.UNIT_X);
+
+                hudText.setText("Top view");             // the text
+                hudText.setLocalTranslation(settings.getWidth() / 2 - hudText.getLineWidth() / 2, settings.getHeight() - hudText.getLineHeight() / 2, 0); // position
+                break;
+
+            case 2:
+                hudText.setText("Chasing: " + currentChaseTarget);             // the text
+                hudText.setLocalTranslation(settings.getWidth() / 2 - hudText.getLineWidth() / 2, settings.getHeight() - hudText.getLineHeight() / 2, 0); // position
+                
+                break;
+        }
+
+        if (!CommandHandler.newStackedCommandsAvailable()) {
             return;
         }
         Command cmd = CommandHandler.getStackedCommand();
-        if(cmd == null){
+        if (cmd == null) {
             return;
         }
-        
-        if (cmd.getCommand().equals("INIT")) 
-        {
+
+        if (cmd.getCommand().equals("INIT")) {
             System.out.println(cmd.getCommand());
-            
-            containing.Port _port = (containing.Port)cmd.getObject();
-            
-            containing.Platform.TrainPlatform trainPlatform = ((containing.Platform.TrainPlatform)_port.getPlatforms().get(2));
+
+            containing.Port _port = (containing.Port) cmd.getObject();
+
+            containing.Platform.TrainPlatform trainPlatform = ((containing.Platform.TrainPlatform) _port.getPlatforms().get(2));
             int aantal_traincranes = trainPlatform.CRANES;
             railCrane = new RailCrane[aantal_traincranes];
-            
-            for (int i = 0; i < aantal_traincranes; i++)
-            {
+
+            for (int i = 0; i < aantal_traincranes; i++) {
                 containing.Vehicle.TrainCrane crane = (containing.Vehicle.TrainCrane) trainPlatform.getCranes().get(i);
                 railCrane[i] = new RailCrane(assetManager, rootNode, crane.getID());
                 railCrane[i].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().z);
             }
-            
-            for (int i = 0; i < 100; i++)
-            {
+
+            for (int i = 0; i < 100; i++) {
                 containing.Vehicle.AGV _agv = _port.getStoragePlatform().getAgvs().get(i);
                 agv[i] = new AGV(assetManager, rootNode, _agv.getID());
-                agv[i].rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+                agv[i].rotate(0, 90 * FastMath.DEG_TO_RAD, 0);
                 agv[i].place(_agv.getPosition().x, _agv.getPosition().y, _agv.getPosition().z);
             }
-            
-        } else if (cmd.getCommand().equals("enterExternVehicle")) 
-        {
+
+        } else if (cmd.getCommand().equals("enterExternVehicle")) {
             System.out.println(cmd.getCommand());
-            
+
             HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
             int id = Integer.parseInt(map.get("id").toString());
             System.out.println("" + id);
@@ -180,7 +223,7 @@ public class PortSimulation extends SimpleApplication {
             Type type = Type.valueOf(map.get("vehicleType").toString());
             System.out.println("" + type.toString());
             Object[][][] containers = (Object[][][]) map.get("cargo");
-            
+
             switch (type) {
                 case TRAIN:
                     for (int i = 0; i < containers.length; i++) {
@@ -190,11 +233,11 @@ public class PortSimulation extends SimpleApplication {
                             cont.setData(c.getContainerId(), c.getArrivalDate(), c.getArrivalTimeFrom(), c.getArrivalTimeTill(), c.getArrivalTransport(), c.getArrivalTransportCompany(), c.getArrivalPosition(), c.getOwner(), c.getDepartureDate(), c.getDepartureTimeFrom(), c.getDepartureTimeTill(), c.getDepartureTransport());
                             train.addWagon(cont);
                             //System.out.println(cont);
-                            
+
                         }
                     }
                     break;
-                    
+
                 case BARGE:
                     Barge barge = new Barge(assetManager, rootNode);
                     for (int i = 0; i < containing.Vehicle.Barge.nrContainersWidth; i++) {
@@ -210,10 +253,10 @@ public class PortSimulation extends SimpleApplication {
                             }
                         }
                     }
-                    
+
                     barge.place(44, 4.5f, 70);
                     break;
-                    
+
                 case SEASHIP:
                     Freighter freighter = new Freighter(assetManager, rootNode);
                     for (int i = 0; i < containing.Vehicle.Seaship.nrContainersWidth; i++) {
@@ -232,126 +275,86 @@ public class PortSimulation extends SimpleApplication {
                     freighter.place(0, 4f, 85);
 
                     break;
-                    
+
                 default:
                     break;
             }
-        } else if (cmd.getCommand().equals("loadInternVehicle")) 
-        {
+        } else if (cmd.getCommand().equals("loadInternVehicle")) {
             System.out.println(cmd.getCommand());
-            
+
             HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
             int id = Integer.parseInt(map.get("id").toString());
             System.out.println("" + id);
 
             Type type = Type.valueOf(map.get("vehicleType").toString());
             System.out.println("" + type.toString());
-           
-        } else if (cmd.getCommand().equals("followPath")) 
-        {
+
+        } else if (cmd.getCommand().equals("followPath")) {
             System.out.println(cmd.getCommand());
-            
+
             HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
             int id = Integer.parseInt(map.get("id").toString());
             System.out.println("" + id);
 
             Type type = Type.valueOf(map.get("vehicleType").toString());
             System.out.println("" + type.toString());
-            
+
             MotionPath path = new MotionPath();
-            containing.Road.Route route = (containing.Road.Route)map.get("motionPath");
+            containing.Road.Route route = (containing.Road.Route) map.get("motionPath");
             //containing.Road.Route route = containing.Settings.port.getMainroad().getPath();
             List<containing.Vector3f> motion = route.getWeg();
-            for (containing.Vector3f v : motion)
-            {
+            for (containing.Vector3f v : motion) {
                 path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
             }
             path.setCurveTension(0.0f);
             float duration = Float.parseFloat(map.get("duration").toString());
-            
+
             MotionEvent motev;
-            switch (type)
-            {
-                case TRAIN:                  
+            switch (type) {
+                case TRAIN:
                     train.place(-41.5f, 5.5f, 0f);
                     motev = new MotionEvent(train.train, path, duration);
                     motev.setSpeed(1f);
                     motev.play();
-                    chaseCamSetTarget(train.train);
-                   
+
                     break;
-                    
+
                 case AGV:
-                    for (AGV a : agv)
-                    {
-                        if (a.id == id)
-                        {
+                    for (AGV a : agv) {
+                        if (a.id == id) {
                             motev = new MotionEvent(a.model, path, duration);
                             motev.setSpeed(1f);
                             motev.setDirectionType(MotionEvent.Direction.Path);
                             motev.play();
-                            chaseCamSetTarget(a.model);
+                        }
+                    }
+                    break;
+                
+                case TRAINCRANE:
+                    for (RailCrane r : railCrane) {
+                        if (r.id == id) {
+                            motev = new MotionEvent(r.crane, path, duration);
+                            motev.setSpeed(1f);
+                            motev.play();
                         }
                     }
                     break;
             }
-        } else if (cmd.getCommand().equals("moveCrane")) 
-        {
-            System.out.println(cmd.getCommand());
-            
-            HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
-            int id = Integer.parseInt(map.get("id").toString());
-            System.out.println("" + id);
-
-            Type type = Type.valueOf(map.get("vehicleType").toString());
-            System.out.println("" + type.toString());
-            
-            MotionPath path = new MotionPath();
-            List<containing.Vector3f> route = (ArrayList<containing.Vector3f>)map.get("motionPath");
-            //containing.Road.Route route = containing.Settings.port.getMainroad().getPath();
-            for (containing.Vector3f v : route)
-            {
-                path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
-            }
-            path.setCurveTension(0.0f);
-            float duration = Float.parseFloat(map.get("duration").toString());
-            
-            MotionEvent motev;
-            switch (type)
-            {
-                case TRAINCRANE:
-                    for (RailCrane r : railCrane)
-                    {
-                        if (r.id == id)
-                        {
-                            motev = new MotionEvent(r.crane, path, duration);
-                            motev.setSpeed(1f);
-                            motev.play();
-                        }  
-                    }
-                    break;
-            }
         }
-
     }
-    
-    public void chaseCamSetTarget(Spatial target)
-    {
+
+    public void chaseCamSetTarget(Spatial target, String name) {
         cam.setLocation(new Vector3f(0f, 0f, 10f));
         cam.lookAt(new Vector3f(0f, 0f, 0f), Vector3f.UNIT_Y);
-        
-        /*chaseCam.setSpatial(target);
+
+        chaseCam = new ChaseCamera(cam, target, inputManager);
         chaseCam.setSmoothMotion(true);
         chaseCam.setInvertVerticalAxis(true);
         chaseCam.setMaxDistance(1000);
         chaseCam.setMinVerticalRotation(0.32259342f);
         chaseCam.setMaxVerticalRotation(0.32259343f);
         chaseCam.setDragToRotate(false);
-        chaseCam.setDefaultVerticalRotation(0.32259343f);*/
-        
-        flyCam.setEnabled(false);
-        // Enable a chase cam for this target (typically the player).
-        ChaseCamera chaseCam = new ChaseCamera(cam, target, inputManager);
-        chaseCam.setSmoothMotion(true);
+        chaseCam.setDefaultVerticalRotation(0.32259343f);
+        currentChaseTarget = name;
     }
 }

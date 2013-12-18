@@ -25,6 +25,7 @@ public class Train
     {
         containers = new ArrayList<Container>();
         train = new Node();
+        train.setName("Train");
         this.node = node;
         
         Spatial loco = assetManager.loadModel("Models/locomotive.j3o");

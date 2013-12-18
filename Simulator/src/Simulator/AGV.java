@@ -26,6 +26,7 @@ public class AGV extends Model
     public AGV(AssetManager assetManager, Node node, int id)
     {
         super(assetManager, "Models/agv.j3o", node);
+        super.model.setName("AGV " + id);
         //this.model.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         //this.model.scale(0.2f);
         //this.model.scale(1.2f, 1.2f, 0.8f);

@@ -24,6 +24,10 @@ public class StoragePlatformOrientation {
         this.exitpoint = exitpoint;
     }
     
+    public Positie getPositie() {
+        return positie;
+    }
+    
     public Road getRoad() {
         return road;
     }

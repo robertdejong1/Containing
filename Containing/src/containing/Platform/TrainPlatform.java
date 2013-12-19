@@ -21,6 +21,7 @@ import containing.Vehicle.Vehicle;
 import containing.Vehicle.Vehicle.Status;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +49,8 @@ public class TrainPlatform extends Platform {
     private final Road craneRoad;
     
     private boolean unloadOnce = false;
+    
+    private List<Integer> sendAwayEvTiming = new ArrayList<>();
     
     public TrainPlatform(Vector3f position)
     {
@@ -126,16 +129,15 @@ public class TrainPlatform extends Platform {
     private void sendAgvs(int cargoSize, List<Vector3f> positions) {
         if(agvQueue.isEmpty() || agvQueue.size() < maxAgvQueue) {
             for(int i = agvQueue.size(); i < (cargoSize < maxAgvQueue ? cargoSize : maxAgvQueue); i++) {
-                try {
-                    AgvSpot agvSpot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType(), agvQueue);
-                    AGV agv = (AGV)agvSpot.getParkedVehicle();
-                    agv.followRoute(road.getPathAllInVector(agv, agvSpot, positions.get(i), this, Settings.port.getMainroad()));
-                    addAgvToQueue(agv);
-                } catch(NoFreeAgvException e) {
-                    System.out.println("No Free AGV available ;(");
-                }
-                // send AGV every 3 second
                 if(time >= 30) {
+                    try {
+                        AgvSpot agvSpot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType(), agvQueue);
+                        AGV agv = (AGV)agvSpot.getParkedVehicle();
+                        agv.followRoute(road.getPathAllInVector(agv, agvSpot, positions.get(i), this, Settings.port.getMainroad()));
+                        addAgvToQueue(agv);
+                    } catch(NoFreeAgvException e) {
+                        System.out.println("No Free AGV available ;(");
+                    }
                     time = 0;
                     break;
                 }
@@ -278,19 +280,33 @@ public class TrainPlatform extends Platform {
     @Override
     public void unload() 
     {
-        super.unload(); 
+        super.unload();
+       
         if(!extVehicles.isEmpty()) 
         {
             int currentVehicle = 0;
             int cranesPerVehicle = CRANES / extVehicles.size();
             
-            for(ExternVehicle ev : extVehicles) 
+            Iterator<ExternVehicle> it = extVehicles.iterator();
+            while(it.hasNext())
             {
+                ExternVehicle ev = it.next();
+                
                 // if cargo is unloaded, send vehicle away
-                if(ev.getCargo().isEmpty()) {
-                    ev.followRoute(road.getPathExternVehicleExit(extVehicleSpots.get(currentVehicle), new Vector3f(ev.getPosition().x, 5.5f, ev.getPosition().z + 1000f)));
-                    //extVehicles.remove(ev);
-                    //continue;
+                if(ev.getCargo().isEmpty() && sendAwayEvTiming.get(currentVehicle) == null) {
+                    sendAwayEvTiming.set(currentVehicle, 300);
+                }
+                if(sendAwayEvTiming.get(currentVehicle) != null)
+                {
+                    if(sendAwayEvTiming.get(currentVehicle) > 0)
+                    {
+                        sendAwayEvTiming.set(currentVehicle, sendAwayEvTiming.get(currentVehicle) - 10);
+                    }
+                    else
+                    {
+                        it.remove();
+                        sendAwayEvTiming.set(currentVehicle, null);
+                    }
                 }
                 
                 // send new AGV's
@@ -311,20 +327,24 @@ public class TrainPlatform extends Platform {
                         int column = getColumn(currentCrane, rowsPerCrane, ev);
                         Container container = getContainer(column, ev);
                         Phase phase = getPhase(currentCrane, column, ev);
-                        if(phase != null && container != null)
+                        if(phase != null)
                         {
                             switch(phase)
                             {
                                 case MOVE:
+                                    System.out.println("MOVE");
                                     phaseMove(currentCrane, column, ev);
                                     break;
                                 case LOAD:
+                                    System.out.println("LOAD");
                                     phaseLoad(currentCrane, container, ev);
                                     break;
                                 case UNLOAD:
+                                    System.out.println("UNLOAD");
                                     phaseUnload(currentCrane);
                                     break;
                                 case SENDTOSTORAGE:
+                                    System.out.println("SENDTOSTORAGE");
                                     phaseSendToStorage(currentCrane);
                                     break;
                             }
@@ -344,6 +364,7 @@ public class TrainPlatform extends Platform {
     public void update()
     {
         super.update();
+        time++;
         
         /* if platform is free, request next job */
         if(state.equals(State.FREE))
@@ -361,6 +382,7 @@ public class TrainPlatform extends Platform {
         if(state.equals(State.UNLOAD))
         {
             if(time >= 10) {
+                System.out.println("unloading...");
                 unload();
             }
         }

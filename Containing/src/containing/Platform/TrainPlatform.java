@@ -134,6 +134,11 @@ public class TrainPlatform extends Platform {
             int currentVehicle = 1;
             int cranesPerVehicle = cranes.size() / extVehicles.size();
             for(final ExternVehicle ev : extVehicles) {
+                if(ev.getCargo().isEmpty()) {
+                    ev.followRoute(road.getPathExternVehicleExit(extVehicleSpots.get(currentVehicle-1), new Vector3f(ev.getPosition().x + 100f, 25f, ev.getPosition().z)));
+                    extVehicles.remove(ev);
+                    continue;
+                }
                 for(int i = 0; i < ev.getColumns().size(); i++) {
                     for(Container containerboi : ev.getGrid()[i][0]) {
                         if(containerboi != null)
@@ -277,6 +282,8 @@ public class TrainPlatform extends Platform {
                     }
                 }
             }
+        } else {
+            state = State.FREE;
         }
         time = 0;
     }

@@ -15,6 +15,7 @@ import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
 import containing.Settings;
 import containing.Vector3f;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -61,6 +62,8 @@ public abstract class InternVehicle extends Vehicle{
     
     public Container unload() throws ContainerNotFoundException
     { 
+        if(cargo == null)
+            cargo = new ArrayList<>();
         if (!cargo.isEmpty())
         {
             Container container = cargo.get(0);

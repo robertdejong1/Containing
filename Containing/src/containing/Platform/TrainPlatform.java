@@ -45,6 +45,8 @@ public class TrainPlatform extends Platform {
     
     private final Road craneRoad;
     
+    private boolean unloadOnce = false;
+    
     public TrainPlatform(Vector3f position)
     {
         super(position, Platform.Positie.LINKS);
@@ -244,19 +246,29 @@ public class TrainPlatform extends Platform {
                                 }
                                 
                             } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {
-                                try {
-                                    AGV agv = craneAgvs.get(currentCrane);
-                                    c.unload(agv);
-                                    busyCranes.remove(c);
-                                    craneAgvs.set(currentCrane, null);
-                                    agvSpots.get(currentCrane).UnparkVehicle();
-                                    agv.followRoute(road.getPathAllIn(agv, agvSpots.get(currentCrane), Settings.port.getStoragePlatform().agvSpots.get(2*currentCrane), Settings.port.getStoragePlatform(), Settings.port.getMainroad()));
-                                } catch (VehicleOverflowException ex) {
-                                    Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (ContainerNotFoundException ex) {
-                                    Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (CargoOutOfBoundsException ex) {
-                                    Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                if(c.getStatus() == Status.UNLOADING) {
+                                    if(!unloadOnce) {
+                                        try {
+                                            AGV agv = craneAgvs.get(currentCrane);
+                                            c.unload(agv);
+                                            unloadOnce = true;
+                                        } catch (VehicleOverflowException ex) {
+                                            Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                        } catch (ContainerNotFoundException ex) {
+                                            Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                        } catch (CargoOutOfBoundsException ex) {
+                                            Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                    }
+                                } else if(c.getStatus() == Status.WAITING) {
+                                        AGV agv = craneAgvs.get(currentCrane);
+                                        busyCranes.remove(c);
+                                        unloadOnce = false;
+                                        craneAgvs.set(currentCrane, null);
+                                        agvSpots.get(currentCrane).UnparkVehicle();
+                                        // check where container needs to go
+                                        TransportType tt = agv.getCargo().get(0).getDepartureTransport();
+                                        agv.followRoute(road.getPathAllIn(agv, agvSpots.get(currentCrane), Settings.port.getStoragePlatform().agvSpots.get(2*currentCrane), Settings.port.getStoragePlatform(), Settings.port.getMainroad()));
                                 }
                                 System.out.println("deze agv staat er en er kan unload worden");
                             }

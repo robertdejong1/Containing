@@ -162,7 +162,7 @@ public class StorageStrip implements Serializable {
     }
     
     public void update() {
-        // do strip update shit here-o
+        // do strip update shit here
     }
     
 }

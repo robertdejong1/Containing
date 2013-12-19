@@ -41,6 +41,8 @@ public class StoragePlatform extends Platform {
     
     protected List<AGV> agvs;
     
+    protected Road road2 = null;
+    
     public StoragePlatform(Vector3f position)
     {
         super(position, Positie.RECHTS);
@@ -66,9 +68,13 @@ public class StoragePlatform extends Platform {
     protected final void setRoad() 
     {
         List<Vector3f> wayshit = new ArrayList<>();
-        wayshit.add(new Vector3f(700f*Settings.METER, getPosition().y, getPosition().z));
         wayshit.add(new Vector3f(700f*Settings.METER, getPosition().y, getPosition().z + LENGTH));
+        wayshit.add(new Vector3f(700f*Settings.METER, getPosition().y, getPosition().z));
         road = new Road(wayshit);
+        wayshit.clear();
+        wayshit.add(new Vector3f(125f*Settings.METER, getPosition().y, getPosition().z));
+        wayshit.add(new Vector3f(125f*Settings.METER, getPosition().y, getPosition().z + LENGTH));
+        road2 = new Road(wayshit);
     }
     
     public void loadContainerInAgv(Container container, Platform platformToGo)

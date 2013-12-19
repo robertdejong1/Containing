@@ -69,6 +69,7 @@ public class StoragePlatform extends Platform {
     @Override
     protected final void setRoad() 
     {
+        orientation = new ArrayList<>();
         List<Vector3f> wayshit = new ArrayList<>();
         wayshit.add(new Vector3f(700f*Settings.METER, getPosition().y, getPosition().z + LENGTH));
         wayshit.add(new Vector3f(700f*Settings.METER, getPosition().y, getPosition().z));

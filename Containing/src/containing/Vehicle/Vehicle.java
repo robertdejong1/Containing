@@ -59,6 +59,8 @@ public abstract class Vehicle implements Serializable
     public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException
     {
         
+        if(cargo == null)
+            cargo = new ArrayList<>();
         if (cargo.isEmpty()) isLoaded = true;
         
         if (cargo.size() < capicity) 

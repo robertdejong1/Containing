@@ -44,6 +44,7 @@ public abstract class InternVehicle extends Vehicle{
        this.isAvailable = isAvailable;
    }
     
+   @Override
     public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException {
         try
         {

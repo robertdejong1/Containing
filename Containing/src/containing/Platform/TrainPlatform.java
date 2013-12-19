@@ -168,7 +168,7 @@ public class TrainPlatform extends Platform {
                     
                     for(final Crane c : cranes) {
                         System.out.println("currentCrane " + currentCrane + " == " + c.getIsAvailable());
-                        if(c.getStatus() != Status.LOADING && c.getStatus() != Status.UNLOADING)
+                        if(c.getStatus() != Status.LOADING && c.getStatus() != Status.UNLOADING && c.getStatus() != Status.MOVING)
                             c.setIsAvailable(true);
                         if(currentCrane >= test && currentCrane < test + cranesPerVehicle && currentCrane*rowsPerCrane < unloadedColumns.size() && currentCrane <= agvQueue.size()-1) {
                             System.out.println("crane " + currentCrane + " == " + c.getStatus());
@@ -186,6 +186,7 @@ public class TrainPlatform extends Platform {
                                 }
                                 if(goFurther) {
                                     List<Integer> unloadOrder = ev.getUnloadOrderY(i);
+                                    System.out.println("unloadOrder == " +  unloadOrder.size());
                                     Collections.reverse(unloadOrder);
                                     for(Integer row : unloadOrder) {
                                         for(Container container : ev.getGrid()[i][row]) {
@@ -221,7 +222,7 @@ public class TrainPlatform extends Platform {
                                         busyCranes.add(c);
                                     }
                                 }
-                            } else if(busyCranes.contains(c) && c.getStatus() != Status.MOVING && craneAgvs.get(currentCrane) == null) {
+                            } else if(busyCranes.contains(c) && c.getStatus() == Status.WAITING && craneAgvs.get(currentCrane) == null && containerToGive != null) {
                                 // adjust parkingspot
                                 Vector3f cp = c.getPosition();
                                 agvSpots.set(currentCrane, new AgvSpot(new Vector3f(cp.x + TrainCrane.length*Settings.METER, cp.y, cp.z)));
@@ -231,21 +232,25 @@ public class TrainPlatform extends Platform {
                                     agv = agvQueue.poll();
                                     agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
                                     craneAgvs.set(currentCrane, agv);
-                                }
-                                if(c.getStatus() == Status.WAITING && containerToGive != null) {
-                                    try {
-                                        c.load(containerToGive, ev);
-                                    } catch (Exception ex) {
-                                        Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                    if(c.getStatus() == Status.WAITING) {
+                                        try {
+                                            c.load(containerToGive, ev);
+                                        } catch (CargoOutOfBoundsException ex) {
+                                            Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                        } catch (Exception ex) {
+                                            Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
                                     }
                                 }
+                                
                             } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {
                                 if(c.getStatus() == Status.UNLOADING && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {
                                     try {
                                         AGV agv = craneAgvs.get(currentCrane);
-                                        craneAgvs.set(currentCrane, null);
                                         c.unload(agv);
                                         busyCranes.remove(c);
+                                        craneAgvs.set(currentCrane, null);
+                                        agvSpots.get(currentCrane).UnparkVehicle();
                                     } catch (VehicleOverflowException ex) {
                                         Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
                                     } catch (ContainerNotFoundException ex) {

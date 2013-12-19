@@ -205,9 +205,11 @@ public abstract class Crane extends InternVehicle {
             + this.liftTimeMin + (this.liftTimeMax - this.liftTimeMin) / ((int)container.getArrivalPosition().z + 1) //lifttime depended on z position of container
             + Math.abs((this.position.y-container.getArrivalPosition().y) / ((this.moveContainerSpeed *1000f/3600f)/100f));
             this.status = Status.LOADING;
-            this.loadTime = 12*10;
+            
             this.unloadTime = (this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) + this.SECURETIME) * 100;
-                            
+            this.loadTime = 12*10;  
+            this.unloadTime = 6*10;
+            
             HashMap<String, Object> map = new HashMap<>();
 
              map.put("craneid", this.getID());

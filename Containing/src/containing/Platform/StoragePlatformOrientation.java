@@ -9,8 +9,9 @@ package containing.Platform;
 import containing.Platform.Platform.Positie;
 import containing.Road.Road;
 import containing.Vector3f;
+import java.io.Serializable;
 
-public class StoragePlatformOrientation {
+public class StoragePlatformOrientation implements Serializable {
     
     private final Positie positie;
     private final Road road;

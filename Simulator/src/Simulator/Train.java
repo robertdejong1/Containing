@@ -50,6 +50,19 @@ public class Train
         wagons++;
     }
     
+    public Container detachContainer(int id)
+    {
+        for (Container c : containers)
+        {
+            if (c.containerId == id)
+            {
+                train.detachChild(c.model);
+                return containers.remove(containers.indexOf(c));
+            }
+        }
+        return null;
+    }
+    
     private void place(Vector3f loc)
     {
         train.setLocalTranslation(loc);

@@ -33,6 +33,7 @@ public class Container extends Model
     public Container(AssetManager assetManager, Node node, ColorRGBA color)
     {
         super(assetManager, "Models/container.j3o", node, color);
+        super.model.setName("Container " + this.containerId);
     }
     
     public void setData(int containerId, Date arrivalDate, float arrivalTimeFrom, float arrivalTimeTill, TransportType arrivalTransport, String arrivalTransportCompany, containing.Vector3f arrivalPosition, String owner, Date departureDate, float departureTimeFrom, float departureTimeTill, TransportType departureTransport) 

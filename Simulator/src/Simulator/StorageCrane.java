@@ -25,7 +25,7 @@ public class StorageCrane
     {
         this.node = node;
         crane = new Node();
-        crane.setName("StorageCrane");
+        crane.setName("StorageCrane " + id);
         this.id = id;
         
         frame = assetManager.loadModel("Models/storagecrane/frame.j3o");

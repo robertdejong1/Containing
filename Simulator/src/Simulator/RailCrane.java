@@ -13,6 +13,7 @@ import com.jme3.scene.Spatial;
 
 public class RailCrane
 {
+    private Container con;
     public int id;
     
     Node crane;
@@ -60,6 +61,8 @@ public class RailCrane
         crane.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         crane.scale(0.33f);
         crane.scale(1f, 1f, 1.1f);
+        
+        con = null;
     }
     
     private void place(Vector3f loc)
@@ -76,6 +79,7 @@ public class RailCrane
     private void moveCrane(float z)
     {
         crane.move(0, 0, z);
+        con.move(0, 0, z);
     }
     
     private void moveTop(float x)
@@ -87,11 +91,11 @@ public class RailCrane
         crane.getChild(5).move(0, 0, x);
         crane.getChild(6).move(0, 0, x);
         crane.getChild(7).move(0, 0, x);
-        
-        //if (occupied)
-        //{
-           // containers[con_index].move(x/3.01f, 0, 0);
-        //}
+   
+        if (occupied)
+        {
+            con.move((x*1.1f)*0.33f,0,0);
+        }
     }
     
     private void moveGrab(float y)
@@ -102,19 +106,28 @@ public class RailCrane
         crane.getChild(5).move(0, y/2, 0);
         crane.getChild(6).move(0, y/4, 0);
         crane.getChild(7).move(0, (y/4)*3f, 0);
-        
-        //if (occupied)
-        //{
-            //containers[con_index].move(0, y/3f, 0);
-        //}
+
+        if (occupied)
+        {
+            con.move(0, y/3, 0);
+        }
     }
     
-    public void attachContainer(Container[] con)
+    
+    public void loadCrane(Container con)
     {
-        //this.containers = con;
+        this.con = con;
+        grabstate = 1;
+        node.attachChild(con.model);
     }
     
-    private int grabstate = 1;
+    public Container unloadCrane()
+    {
+        grabstate = 5;
+        return this.con;
+    }
+    
+    private int grabstate = 0;
     private boolean occupied = false;
     private int con_index = 0;
     
@@ -127,6 +140,9 @@ public class RailCrane
         
         switch (grabstate)
         {
+            case 0:
+                //RUST
+                break;
             //grab down
             case 1:
                 if (y > -2.5f)
@@ -155,11 +171,11 @@ public class RailCrane
                 
             //move top to side
             case 4:
-                if (x < 4.5f)
+                if (x < 5.1f)
                 {
                     moveTop(tpf);
                 } else {
-                    grabstate = 5;
+                    grabstate = 0;
                 }
                 break;
             
@@ -176,6 +192,7 @@ public class RailCrane
             //dettach container    
             case 6:
                 grabstate = 7;
+                this.con = null;
                 occupied = false;
                 break;   
              
@@ -191,11 +208,11 @@ public class RailCrane
            
             //return top to default location
             case 8:
-                if (x > -0.5f)
+                if (x > -0.55f)
                 {
                     moveTop(-tpf);
                 } else {
-                    grabstate = 9;
+                    grabstate = 0;
                 }
                 break; 
                 

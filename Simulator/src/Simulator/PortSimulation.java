@@ -26,11 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * test
- *
- * @author normenhansen
- */
 public class PortSimulation extends SimpleApplication {
 
     AGV[] agv = new AGV[100];
@@ -46,13 +41,13 @@ public class PortSimulation extends SimpleApplication {
     ChaseCamera chaseCam;
     int camstate = 1;
     String currentChaseTarget;
+    Vector3f flyCamPos;
 
-    public static void main(String[] args) 
-    {
+    public static void main(String[] args) {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.236.86", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.236.105", 1337);
         //Runnable networkHandler = new NetworkHandler("localhost", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
@@ -65,6 +60,8 @@ public class PortSimulation extends SimpleApplication {
         flyCam.setEnabled(false);
         rootNode.setName("rootnode");
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
+        flyCamPos = new Vector3f(817f / 20, 80f, 1643f / 20);
+        this.setPauseOnLostFocus(false);
         
         for (int i = 0; i < 4; i++) {
             freeCranes[i] = new FreeCrane(assetManager, rootNode);
@@ -99,6 +96,8 @@ public class PortSimulation extends SimpleApplication {
         inputManager.addListener(analogListener, "mousedown");
         inputManager.addMapping("escape", new KeyTrigger(KeyInput.KEY_ESCAPE));
         inputManager.addListener(actionListener, "escape");
+        inputManager.addMapping("flycam", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addListener(actionListener, "flycam");
 
         // font color
         hudText = new BitmapText(guiFont, false);
@@ -110,7 +109,18 @@ public class PortSimulation extends SimpleApplication {
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("escape") && !keyPressed) {
+                if (camstate == 3)
+                {
+                    flyCamPos = cam.getLocation();
+                }
                 camstate = 1;
+            }
+            else if (name.equals("flycam") && !keyPressed) {
+                camstate = 3;
+                if (camstate != 3)
+                {
+                    cam.setLocation(flyCamPos);
+                }
             }
         }
     };
@@ -129,7 +139,11 @@ public class PortSimulation extends SimpleApplication {
                 if (results.size() > 0) {
                     Geometry closest = results.getClosestCollision().getGeometry();
                     if (!closest.getName().equals("port")) {
-                        if (!closest.getParent().getName().contains("-objnode"))
+                        if (closest.getName().contains("Container"))
+                        {
+                            chaseCamSetTarget(closest, closest.getName());
+                        }       
+                        else if(!closest.getParent().getName().contains("-objnode"))
                         {
                             chaseCamSetTarget(closest, closest.getParent().getName());
                         }
@@ -155,16 +169,22 @@ public class PortSimulation extends SimpleApplication {
         //{
         //    container[i].move(0, 0, tpf*2);
         //}
-        //railCrane.update(tpf);
+        if (railCrane != null)
+        {
+            for (RailCrane c : railCrane)
+            {
+                c.update(tpf);
+            }
+        }
 
         switch (camstate) {
             case 1:
                 if (chaseCam!=null)
                 {
                     chaseCam.setEnabled(false);
-                    inputManager.setCursorVisible(true);
+                    chaseCam = null;
                 }
-                
+                inputManager.setCursorVisible(true);
                 cam.setLocation(new Vector3f(817f / 20, 140f, 1643f / 20));
                 cam.lookAt(new Vector3f(817f / 20, 0f, 1643f / 20), Vector3f.UNIT_X);
 
@@ -174,6 +194,20 @@ public class PortSimulation extends SimpleApplication {
 
             case 2:
                 hudText.setText("Chasing: " + currentChaseTarget);             // the text
+                hudText.setLocalTranslation(settings.getWidth() / 2 - hudText.getLineWidth() / 2, settings.getHeight() - hudText.getLineHeight() / 2, 0); // position
+                
+                break;
+                
+            case 3:
+                if (chaseCam!=null)
+                {
+                    chaseCam.setEnabled(false);
+                    chaseCam = null;
+                }
+                flyCam.setEnabled(true);
+                flyCam.setMoveSpeed(10f);
+                inputManager.setCursorVisible(false);
+                hudText.setText("FlyCam");             // the text
                 hudText.setLocalTranslation(settings.getWidth() / 2 - hudText.getLineWidth() / 2, settings.getHeight() - hudText.getLineHeight() / 2, 0); // position
                 
                 break;
@@ -210,7 +244,7 @@ public class PortSimulation extends SimpleApplication {
             {
                 containing.Vehicle.StorageCrane crane = (containing.Vehicle.StorageCrane) storagePlatform.getCranes().get(i);
                 storageCranes[i] = new StorageCrane(assetManager, rootNode, crane.getID());
-                storageCranes[i].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().x);
+                storageCranes[i].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().z);
             }
 
             for (int i = 0; i < 100; i++) {
@@ -347,21 +381,85 @@ public class PortSimulation extends SimpleApplication {
                     }
                     break;
             }
+        } else if (cmd.getCommand().equals("loadCrane")) {
+            System.out.println(cmd.getCommand());
+
+            HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
+            int vehicle_id = Integer.parseInt(map.get("clientid").toString());
+            System.out.println("Vehicle id:" + vehicle_id);
+            int crane_id = Integer.parseInt(map.get("craneid").toString());
+            System.out.println("Crane id:" + crane_id);
+            
+            Type type = Type.valueOf(map.get("vehicleType").toString());
+            System.out.println("" + type.toString());
+            
+            containing.Container con = (containing.Container) map.get("container");
+            
+            switch (type)
+            {
+                case TRAINCRANE:
+                    Container c = train.detachContainer(con.getContainerId());
+                    for (RailCrane crane : railCrane)
+                    {
+                        if (crane.id == crane_id)
+                        {
+                            c.move(train.train.getLocalTranslation());
+                            crane.loadCrane(c);
+                        }
+                    }
+                    break;
+            }
+            
+         } else if (cmd.getCommand().equals("unloadCrane")) {
+            System.out.println(cmd.getCommand());
+
+            HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
+            int agv_id = Integer.parseInt(map.get("AGVID").toString());
+            System.out.println("AGV id:" + agv_id);
+            int crane_id = Integer.parseInt(map.get("craneid").toString());
+            System.out.println("Crane id:" + crane_id);
+            
+            Type type = Type.valueOf(map.get("vehicleType").toString());
+            System.out.println("" + type.toString());
+            
+            switch (type)
+            {
+                case TRAINCRANE:
+                    for (RailCrane crane : railCrane)
+                    {
+                        if (crane.id == crane_id)
+                        {
+                            Container c = crane.unloadCrane();
+                            for (AGV a : agv)
+                            {
+                                if (a.id == agv_id)
+                                {
+                                    a.attachContainer(c);
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+            
         }
     }
 
     public void chaseCamSetTarget(Spatial target, String name) {
-        cam.setLocation(new Vector3f(0f, 0f, 10f));
-        cam.lookAt(new Vector3f(0f, 0f, 0f), Vector3f.UNIT_Y);
+        if (chaseCam == null)
+        {
+            cam.setLocation(new Vector3f(0f, 0f, 10f));
+            cam.lookAt(new Vector3f(0f, 0f, 0f), Vector3f.UNIT_Y);
 
-        chaseCam = new ChaseCamera(cam, target, inputManager);
-        chaseCam.setSmoothMotion(true);
-        chaseCam.setInvertVerticalAxis(true);
-        chaseCam.setMaxDistance(1000);
-        chaseCam.setMinVerticalRotation(0.32259342f);
-        chaseCam.setMaxVerticalRotation(0.32259343f);
-        chaseCam.setDragToRotate(false);
-        chaseCam.setDefaultVerticalRotation(0.32259343f);
-        currentChaseTarget = name;
+            chaseCam = new ChaseCamera(cam, target, inputManager);
+            chaseCam.setSmoothMotion(true);
+            chaseCam.setInvertVerticalAxis(true);
+            chaseCam.setMaxDistance(1000);
+            chaseCam.setMinVerticalRotation(0.32259342f);
+            chaseCam.setMaxVerticalRotation(0.32259343f);
+            chaseCam.setDragToRotate(false);
+            chaseCam.setDefaultVerticalRotation(0.32259343f);
+            currentChaseTarget = name;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package containing.Platform;
 
+import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.Exceptions.AgvSpotOutOfBounds;
@@ -164,24 +165,53 @@ public class TrainPlatform extends Platform {
                         if(currentCrane >= test && currentCrane < test + cranesPerVehicle && currentCrane*rowsPerCrane < unloadedColumns.size() && currentCrane <= agvQueue.size()-1) {
                             System.out.println("crane " + currentCrane + " == " + c.getStatus());
                             int startIndex = currentCrane * rowsPerCrane;
-                            int rowToGive = 0;
+                            int colToGive = -1;
+                            int rowUnloaded = 0;
+                            Container containerToGive = null;
                             for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
                             {
+                                System.out.println("currencrane(" + currentCrane + ") rowToGive == " + i);
+                                boolean goFurther = false;
                                 if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
-                                    rowToGive = i;
-                                    break;
+                                    goFurther = true;
                                 } else if(!unloadedColumns.get(i)) {
-                                    rowToGive = i;
-                                    break;
+                                    goFurther = true;
+                                }
+                                if(goFurther) {
+                                    List<Integer> unloadOrder = ev.getUnloadOrderY(i);
+                                    Collections.reverse(unloadOrder);
+                                    for(Integer row : unloadOrder) {
+                                        for(Container container : ev.getGrid()[i][row]) {
+                                            if(!goFurther)
+                                                break;
+                                            if(container != null) {
+                                                colToGive = i;
+                                                containerToGive = container;
+                                                goFurther = false;
+                                            } else {
+                                                rowUnloaded++;
+                                            }
+                                        }
+                                        if(!goFurther)
+                                                break;
+                                    }
+                                    if(!goFurther)
+                                                break;
+                                    if(rowUnloaded == unloadOrder.size()-1) {
+                                        unloadedColumns.set(i, true);
+                                    } else {
+                                        break;
+                                    }
                                 }
                             }
-                            if(!busyCranes.contains(c) && craneAgvs.get(currentCrane) == null) {
+                            System.out.println("colToGive == " + colToGive + " < " + ev.getColumns().size());
+                            if(!busyCranes.contains(c) && craneAgvs.get(currentCrane) == null && colToGive != -1) {
                                 // move to right position of row
                                 if(c.getStatus() == Status.WAITING) {
-                                    System.out.println("ga nu weer kraan verplaatsen: " + rowToGive);
-                                    if(ev.getGrid()[rowToGive][0][0] != null) {
-                                        System.out.println("rowToGive: " + rowToGive);
-                                        c.followRoute(craneRoad.moveToContainer(ev, rowToGive, c));
+                                    System.out.println("ga nu weer kraan verplaatsen: " + colToGive);
+                                    if(ev.getGrid()[colToGive][0][0] != null) {
+                                        System.out.println("rowToGive: " + colToGive);
+                                        c.followRoute(craneRoad.moveToContainer(ev, colToGive, c));
                                         busyCranes.add(c);
                                     }
                                 }
@@ -196,21 +226,12 @@ public class TrainPlatform extends Platform {
                                     agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
                                     craneAgvs.set(currentCrane, agv);
                                 }
-                                try {
-                                    final int rowToGive2 = rowToGive;
-                                    new Thread() {
-                                        
-                                        public void run() {
-                                            try {
-                                                c.load(ev, rowToGive2);
-                                            } catch (Exception ex) {
-                                                Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-                                            }
-                                        }
-                                        
-                                    }.start();
-                                } catch (Exception e) {
-                                    System.out.println("c.load(ev, rowToGive) werkt niet ;(");
+                                if(c.getStatus() != Status.LOADING && containerToGive != null) {
+                                    try {
+                                        c.load(containerToGive, ev);
+                                    } catch (Exception ex) {
+                                        Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 }
                             } else if(busyCranes.contains(c) && craneAgvs.get(currentCrane) != null && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {
                                 if(c.getStatus() == Status.UNLOADING && craneAgvs.get(currentCrane).getStatus() != Status.MOVING) {

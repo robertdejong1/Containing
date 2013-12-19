@@ -8,23 +8,18 @@ import containing.Exceptions.AgvQueueSpaceOutOfBounds;
 import containing.Exceptions.AgvSpotOutOfBounds;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
-import containing.Exceptions.InvalidVehicleException;
-import containing.Exceptions.NoFreeAgvException;
 import containing.Exceptions.NoJobException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Job;
 import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.ParkingSpot;
-import containing.ParkingSpot.TrainSpot;
 import containing.Road.Road;
-import containing.Road.Route;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.Train;
-import containing.Vehicle.Vehicle.Status;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -113,7 +108,8 @@ public abstract class Platform implements Serializable {
         ev.followRoute(road.getPathExternVehicleEntry(ev, extVehicleSpots.get(0)));
     }
     
-    public List<Crane> getCranes() {
+    public List<Crane> getCranes() 
+    {
         return cranes;
     }
     

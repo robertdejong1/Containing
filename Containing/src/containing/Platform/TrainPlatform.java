@@ -132,6 +132,12 @@ public class TrainPlatform extends Platform {
             int currentVehicle = 1;
             int cranesPerVehicle = cranes.size() / extVehicles.size();
             for(final ExternVehicle ev : extVehicles) {
+                for(int i = 0; i < ev.getColumns().size(); i++) {
+                    for(Container containerboi : ev.getGrid()[i][0]) {
+                        if(containerboi != null)
+                            System.out.println("row: " + i + " is een unloaded container");
+                    }
+                }
                 // stap 1
                 if(agvQueue.isEmpty() || agvQueue.size() < maxAgvQueue) {
                     for(int i = agvQueue.size(); i < (ev.getCargo().size() < maxAgvQueue ? ev.getCargo().size() : maxAgvQueue); i++) {
@@ -162,6 +168,8 @@ public class TrainPlatform extends Platform {
                     
                     for(final Crane c : cranes) {
                         System.out.println("currentCrane " + currentCrane + " == " + c.getIsAvailable());
+                        if(c.getStatus() != Status.LOADING && c.getStatus() != Status.UNLOADING)
+                            c.setIsAvailable(true);
                         if(currentCrane >= test && currentCrane < test + cranesPerVehicle && currentCrane*rowsPerCrane < unloadedColumns.size() && currentCrane <= agvQueue.size()-1) {
                             System.out.println("crane " + currentCrane + " == " + c.getStatus());
                             int startIndex = currentCrane * rowsPerCrane;
@@ -170,7 +178,6 @@ public class TrainPlatform extends Platform {
                             Container containerToGive = null;
                             for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
                             {
-                                System.out.println("currencrane(" + currentCrane + ") rowToGive == " + i);
                                 boolean goFurther = false;
                                 if(priorityColumns.contains(i) && !unloadedColumns.get(i)) {
                                     goFurther = true;
@@ -190,6 +197,10 @@ public class TrainPlatform extends Platform {
                                                 goFurther = false;
                                             } else {
                                                 rowUnloaded++;
+                                                if(rowUnloaded == unloadOrder.size()) {
+                                                    unloadedColumns.set(i, true);
+                                                    ev.updateColumn(i, true);
+                                                }
                                             }
                                         }
                                         if(!goFurther)
@@ -197,11 +208,6 @@ public class TrainPlatform extends Platform {
                                     }
                                     if(!goFurther)
                                                 break;
-                                    if(rowUnloaded == unloadOrder.size()-1) {
-                                        unloadedColumns.set(i, true);
-                                    } else {
-                                        break;
-                                    }
                                 }
                             }
                             System.out.println("colToGive == " + colToGive + " < " + ev.getColumns().size());
@@ -226,7 +232,7 @@ public class TrainPlatform extends Platform {
                                     agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
                                     craneAgvs.set(currentCrane, agv);
                                 }
-                                if(c.getStatus() != Status.LOADING && containerToGive != null) {
+                                if(c.getStatus() == Status.WAITING && containerToGive != null) {
                                     try {
                                         c.load(containerToGive, ev);
                                     } catch (Exception ex) {

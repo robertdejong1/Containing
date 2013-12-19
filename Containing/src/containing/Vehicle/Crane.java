@@ -151,10 +151,12 @@ public abstract class Crane extends InternVehicle {
                     {
                         if (container != null)
                         {
-                            readyForNextContainer = false;
-                            //ask agv!
-                            super.load(ev.unload(container));
                             
+                            readyForNextContainer = false;
+                            
+                            //ask agv!
+                            
+                            super.load(ev.unload(container));
                             this.loadTime = ((Math.abs(this.position.y-container.getArrivalPosition().y) / (this.moveContainerSpeed *1000f/3600f)/100f))//move gripper to position of container
                             //+ this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) //droptime depended on z position of container //???
                             + this.SECURETIME
@@ -195,6 +197,7 @@ public abstract class Crane extends InternVehicle {
     public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException{ //container from extern verhicle
         try
         {
+            
             super.load(container);
             this.loadTime = (Math.abs(this.position.y-container.getArrivalPosition().y) / this.moveContainerSpeed //move gripper to position of container
                             //+ this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) //droptime depended on z position of container
@@ -214,6 +217,8 @@ public abstract class Crane extends InternVehicle {
             map.put("vehicleType", this.getVehicleType());
             map.put("duration", loadTime);
             map.put("container", container); 
+            CommandHandler.addCommand(new Command("loadCrane", map));
+            
         }
         catch(Exception e)
         {

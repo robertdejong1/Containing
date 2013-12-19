@@ -5,17 +5,22 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 /**
  * This class contains the Automatic Guided Vehicle
  * @author Benjamin
  */
-public class AGV extends Model
+public class AGV
 {
-    Container container;
-    boolean occupied;
+    Container con;
+    boolean occupied = false;
     public int id;
+    
+    Node node;
+    Node agv;
     
     /**
      * Creates AGV instance
@@ -25,13 +30,17 @@ public class AGV extends Model
      */
     public AGV(AssetManager assetManager, Node node, int id)
     {
-        super(assetManager, "Models/agv.j3o", node);
-        super.model.setName("AGV " + id);
-        //this.model.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-        //this.model.scale(0.2f);
-        this.model.scale(0.8f, 1.4f, 1.4f);
+        this.node = node;
+        agv = new Node();
+        agv.setName("AGV " + id);
         this.id = id;
-        this.occupied = false;
+
+        Spatial model = assetManager.loadModel("Models/agv.j3o");
+        model.scale(0.8f, 1.4f, 1.4f);
+        
+        agv.attachChild(model);
+        
+        this.con = null;
     }
       
     /**
@@ -39,15 +48,10 @@ public class AGV extends Model
      * @param con the container to attach
      * @return false if AGV's already occupied, true on succes
      */
-    public boolean attachContainer(Container con)
+    public void attachContainer(Container con)
     {
-        if (!occupied)
-        {
-            this.container = con;
-            this.occupied = true;
-            return true;
-        }
-        return false;
+        this.con = con;
+        this.occupied = true;
     }
     
     /**
@@ -58,28 +62,23 @@ public class AGV extends Model
     {
         if (occupied)
         {
-            Container temp = this.container;
-            this.container = null;
+            Container temp = this.con;
+            this.con = null;
             occupied = false;
             return temp;
         }
         return null;
     }
     
-    /**
-     * Move the AGV in specified direction
-     * @param x x value to move
-     * @param y y value to move
-     * @param z z value to move
-     */
-    @Override
-    public void move(float x, float y, float z)
+    private void place(Vector3f loc)
     {
-        super.move(x, y, z);
-        if (this.container != null)
-        {
-            this.container.move(x, y, z);
-        }    
+        agv.setLocalTranslation(loc);
+        node.attachChild(agv);
+    }
+    
+    public void place(float x, float y, float z)
+    {
+        place(new Vector3f(x,y,z));
     }
     
 }

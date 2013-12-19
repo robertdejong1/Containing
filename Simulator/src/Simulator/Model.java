@@ -29,7 +29,6 @@ public abstract class Model
     public Model(AssetManager assetManager, String path, Node node)
     {
         this.node = node;
-        
         model = assetManager.loadModel(path);
     }
     

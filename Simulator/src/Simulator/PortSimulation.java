@@ -250,7 +250,7 @@ public class PortSimulation extends SimpleApplication {
             for (int i = 0; i < 100; i++) {
                 containing.Vehicle.AGV _agv = _port.getStoragePlatform().getAgvs().get(i);
                 agv[i] = new AGV(assetManager, rootNode, _agv.getID());
-                agv[i].rotate(0, 90 * FastMath.DEG_TO_RAD, 0);
+                agv[i].agv.rotate(0, 90 * FastMath.DEG_TO_RAD, 0);
                 agv[i].place(_agv.getPosition().x, _agv.getPosition().y, _agv.getPosition().z);
             }
 
@@ -357,13 +357,12 @@ public class PortSimulation extends SimpleApplication {
                     motev = new MotionEvent(train.train, path, duration);
                     motev.setSpeed(1f);
                     motev.play();
-
                     break;
 
                 case AGV:
                     for (AGV a : agv) {
                         if (a.id == id) {
-                            motev = new MotionEvent(a.model, path, duration);
+                            motev = new MotionEvent(a.agv, path, duration);
                             motev.setSpeed(1f);
                             motev.setDirectionType(MotionEvent.Direction.Path);
                             motev.play();

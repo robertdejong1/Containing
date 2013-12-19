@@ -193,31 +193,30 @@ public abstract class Crane extends InternVehicle {
     
     
 
-    @Override
-    public void load(Container container) throws VehicleOverflowException, CargoOutOfBoundsException{ //container from extern verhicle
+
+    public void load(Container container, ExternVehicle ev) throws VehicleOverflowException, CargoOutOfBoundsException, Exception{ //container from extern verhicle
         try
         {
             
-            super.load(container);
-            this.loadTime = (Math.abs(this.position.y-container.getArrivalPosition().y) / this.moveContainerSpeed //move gripper to position of container
-                            //+ this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) //droptime depended on z position of container
-                            + this.SECURETIME
-                            + this.liftTimeMin + (this.liftTimeMax - this.liftTimeMin) / ((int)container.getArrivalPosition().z + 1) //lifttime depended on z position of container
-                            + Math.abs(this.position.y-container.getArrivalPosition().y) / this.moveContainerSpeed) * 100;
-            
+            super.load(ev.unload(container));
+            this.loadTime = ((Math.abs(this.position.y-container.getArrivalPosition().y) / (this.moveContainerSpeed *1000f/3600f)/100f))//move gripper to position of container
+                            //+ this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) //droptime depended on z position of container //???
+            + this.SECURETIME
+            + this.liftTimeMin + (this.liftTimeMax - this.liftTimeMin) / ((int)container.getArrivalPosition().z + 1) //lifttime depended on z position of container
+            + Math.abs((this.position.y-container.getArrivalPosition().y) / ((this.moveContainerSpeed *1000f/3600f)/100f));
             this.status = Status.LOADING;
-
-            this.unloadTime = (this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) + this.SECURETIME) * 100;
             this.loadTime = 12*10;
-            this.unloadTime = 6*10;
-            
+            this.unloadTime = (this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) + this.SECURETIME) * 100;
+                            
             HashMap<String, Object> map = new HashMap<>();
 
-            map.put("id", this.getID());
-            map.put("vehicleType", this.getVehicleType());
-            map.put("duration", loadTime);
-            map.put("container", container); 
-            CommandHandler.addCommand(new Command("loadCrane", map));
+             map.put("craneid", this.getID());
+             map.put("vehicleType", this.getVehicleType());
+             map.put("clientid", ev.getID());
+             map.put("duration", this.loadTime);
+             map.put("container", cargo.get(0)); 
+
+             CommandHandler.addCommand(new Command("loadCrane", map));
             
         }
         catch(Exception e)

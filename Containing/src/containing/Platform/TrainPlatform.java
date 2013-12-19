@@ -50,7 +50,7 @@ public class TrainPlatform extends Platform {
     
     private boolean unloadOnce = false;
     
-    private List<Integer> sendAwayEvTiming = new ArrayList<>();
+    private int[] sendAwayEvTiming;
     
     public TrainPlatform(Vector3f position)
     {
@@ -74,6 +74,9 @@ public class TrainPlatform extends Platform {
         waypoints.add(new Vector3f(2.6f, 5.5f, 0.5f));
         waypoints.add(new Vector3f(2.6f, 5.5f, 152.3f));
         craneRoad = new Road(waypoints);
+        sendAwayEvTiming = new int[MAX_VEHICLES];
+        for(int i = 0; i < sendAwayEvTiming.length; i++)
+            sendAwayEvTiming[i] = -1;
         log("Created TrainPlatform object: " + toString());
     }
     
@@ -281,7 +284,7 @@ public class TrainPlatform extends Platform {
     public void unload() 
     {
         super.unload();
-       
+        
         if(!extVehicles.isEmpty()) 
         {
             int currentVehicle = 0;
@@ -293,19 +296,20 @@ public class TrainPlatform extends Platform {
                 ExternVehicle ev = it.next();
                 
                 // if cargo is unloaded, send vehicle away
-                if(ev.getCargo().isEmpty() && sendAwayEvTiming.get(currentVehicle) == null) {
-                    sendAwayEvTiming.set(currentVehicle, 300);
+                if(ev.getCargo().isEmpty() && sendAwayEvTiming[currentVehicle] == -1) {
+                    sendAwayEvTiming[currentVehicle] = 300;
                 }
-                if(sendAwayEvTiming.get(currentVehicle) != null)
+                if(sendAwayEvTiming[currentVehicle] != -1)
                 {
-                    if(sendAwayEvTiming.get(currentVehicle) > 0)
+                    if(sendAwayEvTiming[currentVehicle] > 0)
                     {
-                        sendAwayEvTiming.set(currentVehicle, sendAwayEvTiming.get(currentVehicle) - 10);
+                        sendAwayEvTiming[currentVehicle] -= 10;
                     }
                     else
                     {
                         it.remove();
-                        sendAwayEvTiming.set(currentVehicle, null);
+                        sendAwayEvTiming[currentVehicle] = -1;
+                        ev.followRoute(road.getPathExternVehicleExit(extVehicleSpots.get(currentVehicle), new Vector3f(ev.getPosition().x, 5.5f, ev.getPosition().z + 1000f)));
                     }
                 }
                 

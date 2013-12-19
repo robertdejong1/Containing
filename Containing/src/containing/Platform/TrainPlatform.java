@@ -288,9 +288,9 @@ public class TrainPlatform extends Platform {
             {
                 // if cargo is unloaded, send vehicle away
                 if(ev.getCargo().isEmpty()) {
-                    ev.followRoute(road.getPathExternVehicleExit(extVehicleSpots.get(currentVehicle), new Vector3f(ev.getPosition().x + 100f, 25f, ev.getPosition().z)));
-                    extVehicles.remove(ev);
-                    continue;
+                    ev.followRoute(road.getPathExternVehicleExit(extVehicleSpots.get(currentVehicle), new Vector3f(ev.getPosition().x, 5.5f, ev.getPosition().z + 1000f)));
+                    //extVehicles.remove(ev);
+                    //continue;
                 }
                 
                 // send new AGV's

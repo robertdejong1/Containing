@@ -52,7 +52,7 @@ public abstract class Platform implements Serializable {
     protected List<AgvSpot> agvSpots;
     protected List<Crane> cranes;
     protected List<ParkingSpot> extVehicleSpots;
-    volatile protected List<ExternVehicle> extVehicles;
+    protected List<ExternVehicle> extVehicles;
     protected Road road = null;
     
     protected Queue<Job> jobs = null;

@@ -209,6 +209,19 @@ public class Road implements Serializable
           
       }
       
+       public Route getPathExternVehicleExit(ParkingSpot ps, Vector3f v )
+       {
+           List<Vector3f> track2 = new ArrayList<Vector3f>();
+           track2.add(ps.getPosition());
+           track2.add(v);
+           float length = this.getPathLength(track2);
+           Route route = new Route(track2, length);
+           route.destinationPlatform = null;
+           route.destinationParkingSpot = null;
+           ps.UnparkVehicle();
+           return route;
+           
+       }
     public Route getPathExternVehicleEntry(ExternVehicle ev, ParkingSpot ps )
     {
         List<Vector3f> track2 = new ArrayList<Vector3f>();
@@ -314,8 +327,8 @@ public class Road implements Serializable
                     
                     if (destination.positie == Platform.Positie.LINKS) 
                     {
-                        correctPath.add(mainroad.track.get(2));
-                        correctPath.add(mainroad.track.get(1));
+                        correctPath.add(mainroad.track.get(2)); //rechtsboven
+                        correctPath.add(mainroad.track.get(1)); //linksboven
                         break;
                     }
                     if (destination.positie == Platform.Positie.ONDER)
@@ -333,7 +346,7 @@ public class Road implements Serializable
                     }
                     if (destination.positie == Platform.Positie.ONDER)
                     {
-                        correctPath.add(mainroad.track.get(1));
+                        correctPath.add(mainroad.track.get(2)); //rechtsboven
                         correctPath.add(mainroad.track.get(1));
                         correctPath.add(mainroad.track.get(1));
                     }

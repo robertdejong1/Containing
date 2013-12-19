@@ -273,6 +273,8 @@ public class StoragePlatform extends Platform {
         time += Settings.ClockDelay;
         for(AGV agv : agvs)
             agv.update();
+        for(int i = 0; i < strips.length; i++)
+            strips[i].update();
     }
     
 }

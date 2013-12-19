@@ -161,4 +161,8 @@ public class StorageStrip implements Serializable {
         return dimension;
     }
     
+    public void update() {
+        // do strip update shit here-o
+    }
+    
 }

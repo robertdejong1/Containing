@@ -8,6 +8,7 @@ import containing.Exceptions.AgvQueueSpaceOutOfBounds;
 import containing.Exceptions.AgvSpotOutOfBounds;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
+import containing.Exceptions.NoFreeAgvException;
 import containing.Exceptions.NoJobException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Job;
@@ -51,7 +52,7 @@ public abstract class Platform implements Serializable {
     protected List<AgvSpot> agvSpots;
     protected List<Crane> cranes;
     protected List<ParkingSpot> extVehicleSpots;
-    protected List<ExternVehicle> extVehicles;
+    volatile protected List<ExternVehicle> extVehicles;
     protected Road road = null;
     
     protected Queue<Job> jobs = null;
@@ -342,6 +343,7 @@ public abstract class Platform implements Serializable {
     
     public void update()
     {
+        time++;
         for(Crane c : cranes)
             c.update();
         for(ExternVehicle ev : extVehicles)

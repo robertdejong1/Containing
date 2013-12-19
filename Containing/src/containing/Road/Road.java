@@ -326,14 +326,15 @@ public class Road implements Serializable
                 case RECHTS:
                     
                     if (destination.positie == Platform.Positie.LINKS) 
-                    {
-                        correctPath.add(mainroad.track.get(2)); //rechtsboven
-                        correctPath.add(mainroad.track.get(1)); //linksboven
+                    { //rechtsboven rechtsonder linksonder
+                        correctPath.add(mainroad.track.get(3));
+                        correctPath.add(mainroad.track.get(2)); 
+                        correctPath.add(mainroad.track.get(1)); 
                         break;
                     }
                     if (destination.positie == Platform.Positie.ONDER)
                     {
-                        correctPath.add(mainroad.track.get(2));
+                        correctPath.add(mainroad.track.get(2)); //rechtsonder
                     }
                     break;
                     
@@ -341,25 +342,30 @@ public class Road implements Serializable
                     
                     if (destination.positie == Platform.Positie.RECHTS)
                     {
-                        correctPath.add(mainroad.track.get(0));
-                        correctPath.add(mainroad.track.get(2));
+                        correctPath.add(mainroad.track.get(0)); //linksboven
+                        correctPath.add(mainroad.track.get(2)); //rechtsboven
                     }
                     if (destination.positie == Platform.Positie.ONDER)
                     {
-                        correctPath.add(mainroad.track.get(2)); //rechtsboven
-                        correctPath.add(mainroad.track.get(1));
-                        correctPath.add(mainroad.track.get(1));
+                        correctPath.add(mainroad.track.get(0)); //linksboven
+                        correctPath.add(mainroad.track.get(3)); //rechtsboven
+                        correctPath.add(mainroad.track.get(2)); //rechtsonder
                     }
                     break;
                     
                 case ONDER:
                     if (destination.positie == Platform.Positie.RECHTS)
                     {
-                        correctPath.add(mainroad.track.get(2));
+                        //linksonder
+                        //linksboven
+                        //rechtsboven
+                        correctPath.add(mainroad.track.get(1));
+                        correctPath.add(mainroad.track.get(0));
+                        correctPath.add(mainroad.track.get(3));
                     }
                     if (destination.positie == Platform.Positie.LINKS)
                     {
-                        correctPath.add(mainroad.track.get(1));
+                        correctPath.add(mainroad.track.get(1)); //linksonder
                      
                     }
                     break;
@@ -373,21 +379,24 @@ public class Road implements Serializable
         
         //linksom <= 
         
-        else
+        else //linksom
         {//moet nog
             switch(source.positie)
             {
                 case RECHTS:
                     
                     if (destination.positie == Platform.Positie.LINKS) 
-                    {
+                    { //rechtsboven
+                        //linksboven
                         correctPath.add(mainroad.track.get(3));
                         correctPath.add(mainroad.track.get(0));
                         break;
                     }
                     if (destination.positie == Platform.Positie.ONDER)
                     {
-                        correctPath.add(mainroad.track.get(2));
+                        correctPath.add(mainroad.track.get(3)); //rechtsboven
+                        correctPath.add(mainroad.track.get(0)); //linksboven
+                        correctPath.add(mainroad.track.get(1)); //linksonder
                         break;
                     }
                     break;
@@ -396,29 +405,29 @@ public class Road implements Serializable
                     
                     if (destination.positie == Platform.Positie.RECHTS)
                     {
-                        correctPath.add(mainroad.track.get(0));
-                        correctPath.add(mainroad.track.get(3));
+                        //linksonder
+                        //rechtsonder
+                        correctPath.add(mainroad.track.get(1)); 
+                        correctPath.add(mainroad.track.get(2)); 
                     }
                     if (destination.positie == Platform.Positie.ONDER)
                     {
-                        correctPath.add(mainroad.track.get(0));
-                        correctPath.add(mainroad.track.get(3));
-                        correctPath.add(mainroad.track.get(2));
+                        correctPath.add(mainroad.track.get(1)); 
+                      
                     }
                     break;
                     
                 case ONDER:
                     if (destination.positie == Platform.Positie.RECHTS)
                     {
-                        correctPath.add(mainroad.track.get(1));
-                        correctPath.add(mainroad.track.get(0));
-                        correctPath.add(mainroad.track.get(3));
+                        correctPath.add(mainroad.track.get(2)); //rechtsonder
+           
                     }
                     if (destination.positie == Platform.Positie.LINKS)
                     {
-                        correctPath.add(mainroad.track.get(2));
-                        correctPath.add(mainroad.track.get(3));
-                        correctPath.add(mainroad.track.get(0));
+                        correctPath.add(mainroad.track.get(2)); //rechtsonder
+                        correctPath.add(mainroad.track.get(3)); //rechtsboven
+                        correctPath.add(mainroad.track.get(0)); //linksboven
                     }
                     break;
                     

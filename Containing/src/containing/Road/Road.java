@@ -295,13 +295,13 @@ public class Road implements Serializable
      
         //if (destination.positie == Platform.Positie.)
         
-        boolean right = true;
+        boolean right = false;
         
         
         //bepalen aan hand van platform of rechts of links: nu altijd rechtsom
         if (source instanceof StoragePlatform)
         {
-            right = true; //
+            right = false; //
         }
         //if (typeOrInterface.isInstance(someObject);)
         

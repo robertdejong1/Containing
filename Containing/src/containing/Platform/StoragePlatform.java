@@ -41,7 +41,9 @@ public class StoragePlatform extends Platform {
     
     protected List<AGV> agvs;
     
-    protected Road road2 = null;
+    protected List<StoragePlatformOrientation> orientation;
+    
+    protected Road road2;
     
     public StoragePlatform(Vector3f position)
     {
@@ -70,10 +72,12 @@ public class StoragePlatform extends Platform {
         List<Vector3f> wayshit = new ArrayList<>();
         wayshit.add(new Vector3f(700f*Settings.METER, getPosition().y, getPosition().z + LENGTH));
         wayshit.add(new Vector3f(700f*Settings.METER, getPosition().y, getPosition().z));
+        orientation.add(new StoragePlatformOrientation(positie.RECHTS, new Road(wayshit), getEntrypoint(Side.RIGHT), getExitpoint(Side.RIGHT)));
         road = new Road(wayshit);
         wayshit.clear();
         wayshit.add(new Vector3f(125f*Settings.METER, getPosition().y, getPosition().z));
         wayshit.add(new Vector3f(125f*Settings.METER, getPosition().y, getPosition().z + LENGTH));
+        orientation.add(new StoragePlatformOrientation(positie.LINKS, new Road(wayshit), getEntrypoint(Side.LEFT), getExitpoint(Side.LEFT)));
         road2 = new Road(wayshit);
     }
     
@@ -246,6 +250,14 @@ public class StoragePlatform extends Platform {
         exitpoints[0] = new Vector3f(getPosition().x, getPosition().y, getPosition().z);
         exitpoints[1] = new Vector3f(717f*Settings.METER, getPosition().y, getPosition().z);
         
+    }
+    
+    public StoragePlatformOrientation getLeft() {
+        return orientation.get(1);
+    }
+    
+    public StoragePlatformOrientation getRight() {
+        return orientation.get(0);
     }
     
     @Override

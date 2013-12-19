@@ -297,13 +297,14 @@ public class TrainPlatform extends Platform {
                 
                 // if cargo is unloaded, send vehicle away
                 if(ev.getCargo().isEmpty() && sendAwayEvTiming[currentVehicle] == -1) {
-                    sendAwayEvTiming[currentVehicle] = 300;
+                    sendAwayEvTiming[currentVehicle] = 1000;
                 }
                 if(sendAwayEvTiming[currentVehicle] != -1)
                 {
                     if(sendAwayEvTiming[currentVehicle] > 0)
                     {
-                        sendAwayEvTiming[currentVehicle] -= 10;
+                        System.out.println("nog seconden: " + sendAwayEvTiming[currentVehicle]);
+                        sendAwayEvTiming[currentVehicle] = sendAwayEvTiming[currentVehicle] - 1;
                     }
                     else
                     {

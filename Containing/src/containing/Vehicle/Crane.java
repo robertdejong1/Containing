@@ -208,7 +208,7 @@ public abstract class Crane extends InternVehicle {
             
             this.unloadTime = (this.dropTimeMin + (this.dropTimeMax - this.dropTimeMin) / ((int)container.getArrivalPosition().z + 1) + this.SECURETIME) * 100;
             this.loadTime = 12*10;  
-            this.unloadTime = 6*10;
+            this.unloadTime = 10*10;
             
             HashMap<String, Object> map = new HashMap<>();
 

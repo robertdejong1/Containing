@@ -131,7 +131,7 @@ public abstract class Platform implements Serializable {
             if(c.getIsAvailable())
                 craneTemp = c;
         }
-        
+        /*
         final Crane crane = craneTemp;
         new Thread() {
             
@@ -169,7 +169,7 @@ public abstract class Platform implements Serializable {
             }
      
         }.start();
-        
+        */
     }
     
     public void unload()

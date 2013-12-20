@@ -273,6 +273,20 @@ public class Road implements Serializable
         route.destinationParkingSpot = null;
         return route;
     }
+    
+    public Route moveToContainer(Crane crane, Vector3f v)
+    {
+        List<Vector3f> path = new ArrayList<>();
+        path.add(crane.getPosition());
+        path.add(v);
+        
+        Route route = new Route(path, Road.getPathLength(path));
+        route.setDestinationParkingSpot(null);
+        route.setDestinationPlatform(null);
+        return route;
+        
+        
+    }
      
     
     

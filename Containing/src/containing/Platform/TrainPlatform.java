@@ -281,16 +281,14 @@ public class TrainPlatform extends Platform {
         TransportType tt = craneAgv.getCargo().get(0).getDepartureTransport();
         int stripNr = Settings.port.getStoragePlatform().getNearbyStrip(getTransportType());
         AgvSpot agvSpot = null;
-        for(int i = stripNr; i < 20; i++)
+        for(int i = stripNr; i < Settings.port.getStoragePlatform().getStripAmount(); i++)
         {
             if(Settings.port.getStoragePlatform().getStrip(i).getStorageState() != StorageStrip.StorageState.FULL)
             {
-                try {
-                    Queue dummy = new LinkedList<>();
-                    agvSpot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType(), dummy);
-                    break;
-                } catch(NoFreeAgvException e) {/*ignore*/}
+                agvSpot = Settings.port.getStoragePlatform().getStrip(i).getFreeAgvSpotLoad();
             }
+            if(agvSpot != null)
+                break;
         }
         craneAgv.followRoute(road.getPathAllIn(craneAgv, agvSpots.get(currentCrane), agvSpot, Settings.port.getStoragePlatform().getLeft(), Settings.port.getMainroad()));
     }
@@ -312,7 +310,7 @@ public class TrainPlatform extends Platform {
                 
                 // if cargo is unloaded, send vehicle away
                 if(ev.getCargo().isEmpty() && sendAwayEvTiming[currentVehicle] == -1) {
-                    sendAwayEvTiming[currentVehicle] = 30;
+                    sendAwayEvTiming[currentVehicle] = 120;
                 }
                 if(sendAwayEvTiming[currentVehicle] != -1)
                 {

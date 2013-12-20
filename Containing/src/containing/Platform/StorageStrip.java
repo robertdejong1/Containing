@@ -63,6 +63,8 @@ public class StorageStrip implements Serializable {
     
     private Road craneRoad;
     
+    private boolean unloading = false;
+    
     private final StoragePlatform platform;
     
     public StorageStrip(StoragePlatform platform, Vector3f position, int id) 
@@ -166,6 +168,20 @@ public class StorageStrip implements Serializable {
         return dimension;
     }
     
+    public AgvSpot getFreeAgvSpotLoad()
+    {
+        int startIndex = id * MAX_AGV_SPOTS;
+        for(int i = startIndex; i < startIndex + MAX_AGV_SPOTS; i += 2)
+        {
+            AgvSpot agvSpot = platform.agvSpots.get(i);
+            if(agvSpot.isEmpty())
+            {
+                return agvSpot;
+            }
+        }
+        return null;
+    }
+    
     public void checkParkedVehiclesLeft()
     {
         int startIndex = id * MAX_AGV_SPOTS;
@@ -204,9 +220,22 @@ public class StorageStrip implements Serializable {
     
     private Phase getPhase()
     {
-        if(!craneBusy && crane.getStatus() != Status.MOVING)
+        if(!craneBusy && crane.getStatus() == Status.WAITING)
         {
             return Phase.MOVETOAGV;
+        }
+        else if(craneBusy && crane.getStatus() == Status.WAITING && crane.getCargo().isEmpty())
+        {
+            return Phase.LOAD;
+        }
+        else if(craneBusy && crane.getStatus() != Status.MOVING && !crane.getCargo().isEmpty() && !unloading)
+        {
+            unloading = true;
+            return Phase.MOVETOFREEPOSITION;
+        }
+        else if(craneBusy && crane.getStatus() != Status.MOVING && !crane.getCargo().isEmpty() && unloading)
+        {
+            return Phase.UNLOAD;
         }
         return null;
     }
@@ -277,7 +306,7 @@ public class StorageStrip implements Serializable {
                     break;
                 case SENDTOPARKINGSPOT:
                     System.out.println("SENDTOPARKINGSPOT");
-                    //phaseSendToParkingSpot();
+                    phaseSendToParkingSpot();
                     break;
             }
         }

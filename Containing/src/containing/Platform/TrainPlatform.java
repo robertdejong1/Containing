@@ -22,7 +22,9 @@ import containing.Vehicle.Vehicle.Status;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -277,7 +279,20 @@ public class TrainPlatform extends Platform {
         agvSpots.get(currentCrane).UnparkVehicle();
         // check where container needs to go
         TransportType tt = craneAgv.getCargo().get(0).getDepartureTransport();
-        craneAgv.followRoute(road.getPathAllIn(craneAgv, agvSpots.get(currentCrane), Settings.port.getStoragePlatform().agvSpots.get(2*currentCrane), Settings.port.getStoragePlatform(), Settings.port.getMainroad()));
+        int stripNr = Settings.port.getStoragePlatform().getNearbyStrip(getTransportType());
+        AgvSpot agvSpot = null;
+        for(int i = stripNr; i < 20; i++)
+        {
+            if(Settings.port.getStoragePlatform().getStrip(i).getStorageState() != StorageStrip.StorageState.FULL)
+            {
+                try {
+                    Queue dummy = new LinkedList<>();
+                    agvSpot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType(), dummy);
+                    break;
+                } catch(NoFreeAgvException e) {/*ignore*/}
+            }
+        }
+        craneAgv.followRoute(road.getPathAllIn(craneAgv, agvSpots.get(currentCrane), agvSpot, Settings.port.getStoragePlatform().getLeft(), Settings.port.getMainroad()));
     }
     
     @Override
@@ -297,7 +312,7 @@ public class TrainPlatform extends Platform {
                 
                 // if cargo is unloaded, send vehicle away
                 if(ev.getCargo().isEmpty() && sendAwayEvTiming[currentVehicle] == -1) {
-                    sendAwayEvTiming[currentVehicle] = 1000;
+                    sendAwayEvTiming[currentVehicle] = 30;
                 }
                 if(sendAwayEvTiming[currentVehicle] != -1)
                 {
@@ -363,6 +378,8 @@ public class TrainPlatform extends Platform {
         {
             state = State.FREE;
         }
+        if(agvQueue.isEmpty())
+            time = 0;
     }
     
     @Override

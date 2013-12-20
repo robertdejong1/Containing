@@ -62,8 +62,14 @@ public class StoragePlatform extends Platform {
         log("Created StoragePlatform object: " + toString());
     }
     
-    public StorageStrip[] getStrips() {
+    public StorageStrip[] getStrips() 
+    {
         return strips;
+    }
+    
+    public StorageStrip getStrip(int nr)
+    {
+        return strips[nr];
     }
     
     @Override
@@ -185,7 +191,7 @@ public class StoragePlatform extends Platform {
         for(int i = 0; i < getStripAmount(); i++)
         {
             stripPosition = new Vector3f(13.4f, getPosition().y, 3.15f + (i * 2.5f));
-            strips[i] = new StorageStrip(this, stripPosition);
+            strips[i] = new StorageStrip(this, stripPosition, i);
         }
     }
     
@@ -204,7 +210,7 @@ public class StoragePlatform extends Platform {
         return (int)((float)LENGTH / STRIP_WIDTH);
     }
     
-    private int getNearbyStrip(TransportType tt)
+    public int getNearbyStrip(TransportType tt)
     {
         switch(tt)
         {
@@ -283,11 +289,12 @@ public class StoragePlatform extends Platform {
     @Override
     public void update()
     {
-        time += Settings.ClockDelay;
+        time++;
         for(AGV agv : agvs)
             agv.update();
-        for(int i = 0; i < strips.length; i++)
-            strips[i].update();
+        for (StorageStrip strip : strips) {
+            strip.update();
+        }
     }
     
 }

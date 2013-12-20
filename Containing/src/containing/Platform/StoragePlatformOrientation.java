@@ -8,10 +8,11 @@ package containing.Platform;
 
 import containing.Platform.Platform.Positie;
 import containing.Road.Road;
+import containing.Settings;
 import containing.Vector3f;
 import java.io.Serializable;
 
-public class StoragePlatformOrientation implements Serializable {
+public class StoragePlatformOrientation extends Platform implements Serializable {
     
     private final Positie positie;
     private final Road road;
@@ -19,6 +20,7 @@ public class StoragePlatformOrientation implements Serializable {
     private final Vector3f exitpoint;
     
     public StoragePlatformOrientation(Positie positie, Road road, Vector3f entrypoint, Vector3f exitpoint) {
+        super(new Vector3f(110f*Settings.METER , 5.5f, 19f*Settings.METER), positie);
         this.positie = positie;
         this.road = road;
         this.entrypoint = entrypoint;
@@ -39,6 +41,16 @@ public class StoragePlatformOrientation implements Serializable {
     
     public Vector3f getExitpoint() {
         return exitpoint;
+    }
+
+    @Override
+    protected void createCranes() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected void createExtVehicleSpots() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

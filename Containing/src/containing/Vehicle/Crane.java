@@ -41,8 +41,8 @@ public abstract class Crane extends InternVehicle {
     private final float moveContainerSpeed = 5; //meter per seconde
  
     
-    private float loadTime; //11*100
-    private float unloadTime;
+    protected float loadTime; //11*100
+    protected float unloadTime;
     private float resetTime;
     
     private AGV agvToUnload = null;
@@ -212,8 +212,10 @@ public abstract class Crane extends InternVehicle {
             this.loadTime = 12*10;  
             this.unloadTime = 10*10;
             
+            
+            if (this.getVehicleType() != Type.STORAGECRANE){
             HashMap<String, Object> map = new HashMap<>();
-
+            
              map.put("craneid", this.getID());
              map.put("vehicleType", this.getVehicleType());
              map.put("clientid", ev.getID());
@@ -221,6 +223,7 @@ public abstract class Crane extends InternVehicle {
              map.put("container", cargo.get(0)); 
 
              CommandHandler.addCommand(new Command("loadCrane", map));
+            }
             
         }
         catch(Exception e)

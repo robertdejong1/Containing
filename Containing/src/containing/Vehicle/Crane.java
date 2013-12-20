@@ -64,12 +64,29 @@ public abstract class Crane extends InternVehicle {
 
     }
     
+    @Override
+    public Container unload() 
+    {
+        Container container = null;
+        try
+        {
+            container = super.unload();
+        }
+        catch (Exception e)
+        {
+            
+        }
+        return container;
+    }
+    
+    
     public void unload(AGV agv) throws VehicleOverflowException, ContainerNotFoundException, CargoOutOfBoundsException{
         try
         {
             this.agvToUnload = agv;
             agv.load(super.unload());
             
+            if (this.getVehicleType() != Type.STORAGECRANE){
             HashMap<String, Object> map = new HashMap<>();
 
             map.put("craneid", this.getID());
@@ -77,7 +94,7 @@ public abstract class Crane extends InternVehicle {
             map.put("AGVID", agv.getID());
             map.put("duration", 2000);
             //map.put("container", cargo.get(0)); 
-            CommandHandler.addCommand(new Command("unloadCrane", map));
+            CommandHandler.addCommand(new Command("unloadCrane", map));}
             
         }
         catch(Exception e){ throw e; }

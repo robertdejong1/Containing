@@ -50,7 +50,7 @@ public class StorageCrane extends Crane {
             path.add(this.position);
             path.add(v);
             path.add(this.position);
-            
+       
             HashMap<String, Object> map = new HashMap<>();
             
              map.put("craneid", this.getID());
@@ -72,6 +72,43 @@ public class StorageCrane extends Crane {
         //this.timeCountDown = (int) liftTimeMax;
         //update: while (this.timeCounter < starttime + liftTimeMax + moveContainerSpeed * 2){} //aan het laden
         //roep evt nieuwe agv aan (op zelfde parkeerplaats of op parkeerplaats opzij [moet platform doen]
+    }
+    
+     @Override
+    public void update()
+    {
+       super.update();
+       if (this.status == Status.LOADING )
+       {
+           this.loadTime--;
+           if (this.loadTime <= 0)
+           { 
+               this.status = Status.UNLOADING;
+        
+               
+               //command simulator
+           }
+           
+       }
+       
+       if (this.status == Status.UNLOADING)
+       {
+           this.unloadTime--;
+           if (this.unloadTime <= 0)
+           {
+               try
+               {
+                this.unload();
+               }
+               catch(Exception e){ System.out.println(e.getMessage()); }
+               
+               //this.currentPlatform.getAGV(this.getPosition());
+               this.status = Status.WAITING;
+               readyForNextContainer = true;
+               //new load
+           }
+       }
+       
     }
     
 

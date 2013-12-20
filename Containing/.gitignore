@@ -2,3 +2,4 @@
 *.mf
 *.txt
 .jacocoverage/
+ErrorLog.txt

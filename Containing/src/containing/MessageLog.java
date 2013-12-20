@@ -27,16 +27,7 @@ public class MessageLog
     
     public String GetLastMessages()
     {
-        int MessageCounter = 0;
-        
-        if (Messages.size() > 25)
-        {
-            MessageCounter = 25;
-        }
-        else
-        {
-            MessageCounter = Messages.size();
-        }
+        int MessageCounter = Messages.size();
         
         String StringToReturn = "";
         

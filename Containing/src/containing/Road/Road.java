@@ -37,12 +37,18 @@ public class Road implements Serializable
         
         
         if (track.size() == 4){
-            if (point.x < track.get(0).x){ return new Vector3f(track.get(0).x, point.y, point.z);}
-            if (point.x > track.get(2).x) {return new Vector3f(track.get(2).x, point.y, point.z); }
-            if (point.z < track.get(1).z){return new Vector3f(point.x, point.y, track.get(1).z);}
+            //linksboven
+            if (point.x < track.get(0).x){ return new Vector3f(track.get(0).x, point.y, point.z); }
+            //rechtsonder
+            if (point.x > track.get(2).x) { return new Vector3f(track.get(2).x, point.y, point.z); }
+            //linksonder
+            if (point.z < track.get(1).z){ return new Vector3f(point.x, point.y, track.get(1).z); }
+            
             return new Vector3f(point.x,point.y, track.get(0).z);
+        
         }
         return new Vector3f(track.get(0).x, point.y, point.z);
+    
     }
     
    
@@ -138,6 +144,7 @@ public class Road implements Serializable
          List<Vector3f> track2 = new ArrayList<Vector3f>();//this.track
          track2.add(sourcePlatformExitPoint);
          track2.add(this.createCorrespondingWaypoint(sourcePlatformExitPoint));
+         System.out.println("ExitPoint");
          track2.add(this.createCorrespondingWaypoint(destination.getEntrypoint()));
          track2.add(destination.getEntrypoint());
        
@@ -308,13 +315,13 @@ public class Road implements Serializable
      
         //if (destination.positie == Platform.Positie.)
         
-        boolean right = false;
+        boolean right = true;
         
         
         //bepalen aan hand van platform of rechts of links: nu altijd rechtsom
         if (source instanceof StoragePlatform)
         {
-            right = false; //
+            right = true; //
         }
         //if (typeOrInterface.isInstance(someObject);)
         
@@ -439,7 +446,11 @@ public class Road implements Serializable
         
         correctPath.add(path.get(2));
         correctPath.add(path.get(3));
-
+        for (Vector3f v : path)
+        {
+          System.out.println("VectorPath: " + v);  
+        }
+        
         return correctPath;
     }
     

@@ -42,13 +42,14 @@ public class PortSimulation extends SimpleApplication {
     int camstate = 1;
     String currentChaseTarget;
     Vector3f flyCamPos;
+    //StorageCrane cr;
 
     public static void main(String[] args) {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("141.252.236.105", 1337);
         //Runnable networkHandler = new NetworkHandler("localhost", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.236.46", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -62,6 +63,9 @@ public class PortSimulation extends SimpleApplication {
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
         flyCamPos = new Vector3f(817f / 20, 80f, 1643f / 20);
         this.setPauseOnLostFocus(false);
+        
+        //cr = new StorageCrane(assetManager, rootNode, 1);
+        //cr.place(13.4f, 5.5f, 3.15f);
         
         for (int i = 0; i < 4; i++) {
             freeCranes[i] = new FreeCrane(assetManager, rootNode);
@@ -78,7 +82,14 @@ public class PortSimulation extends SimpleApplication {
         //truck[i].scale(0.15f);
         //truck[i].place(40.32f, 5f, i);
         //}
-
+        
+        //AGV test = new AGV(assetManager, rootNode, 1);
+        //test.place(0f, 5.5f, 0f);
+        //Container c = new Container(assetManager, rootNode, ColorRGBA.Blue);
+        //test.attachContainer(c);
+        //chaseCamSetTarget(test.agv, "test");
+        //camstate = 2;
+ 
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
         sun.setDirection(lightDir);
@@ -169,9 +180,22 @@ public class PortSimulation extends SimpleApplication {
         //{
         //    container[i].move(0, 0, tpf*2);
         //}
+        if (agv[0] != null)
+        {
+            System.out.println(agv[0].agv.getLocalTranslation());
+            if (agv[0].con != null)
+                System.out.println(agv[0].con.model.getLocalTranslation());
+        }
         if (railCrane != null)
         {
             for (RailCrane c : railCrane)
+            {
+                c.update(tpf);
+            }
+        }
+        if (storageCranes != null)
+        {
+            for (StorageCrane c : storageCranes)
             {
                 c.update(tpf);
             }
@@ -366,7 +390,26 @@ public class PortSimulation extends SimpleApplication {
                             motev.setSpeed(1f);
                             motev.setDirectionType(MotionEvent.Direction.Path);
                             motev.play();
+                            
+                            if (a.occupied)
+                            {
+                                MotionPath path2 = new MotionPath();
+                                for (int i = 0; i < path.getNbWayPoints(); i++)
+                                {
+                                    Vector3f waypoint = path.getWayPoint(i).clone();
+                                    waypoint.setX(waypoint.x - 0.07f);
+                                    waypoint.setY(waypoint.y + 0.35f);
+                                    waypoint.setZ(waypoint.z - 0.33f);
+                                    path2.addWayPoint(waypoint);
+                                }
+                                path2.setCurveTension(0.0f);
+                                MotionEvent agv_motion = new MotionEvent(a.con.model, path, duration);
+                                agv_motion.setSpeed(1f);
+                                agv_motion.setDirectionType(MotionEvent.Direction.Path);
+                                agv_motion.play();
+                            }
                         }
+
                     }
                     break;
                 
@@ -434,13 +477,50 @@ public class PortSimulation extends SimpleApplication {
                                 if (a.id == agv_id)
                                 {
                                     a.attachContainer(c);
+                                    c.move(a.agv.getLocalTranslation());
                                 }
                             }
                         }
                     }
                     break;
-            }
+            } 
             
+        } else if (cmd.getCommand().equals("pickAndDropStorageCrane")) 
+        {
+              System.out.println(cmd.getCommand());
+
+            HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
+            int vehicle_id = Integer.parseInt(map.get("clientid").toString());
+            System.out.println("Vehicle id:" + vehicle_id);
+            int crane_id = Integer.parseInt(map.get("craneid").toString());
+            System.out.println("Crane id:" + crane_id);
+            
+            Type type = Type.valueOf(map.get("vehicleType").toString());
+            System.out.println("" + type.toString());
+            
+            int index_nr = Integer.parseInt(map.get("indexnr").toString());
+            System.out.println("" + index_nr);
+            
+            MotionPath path = new MotionPath();
+            List<containing.Vector3f> motion = (List<containing.Vector3f>) map.get("path");
+            //containing.Road.Route route = containing.Settings.port.getMainroad().getPath();
+            for (containing.Vector3f v : motion) {
+                path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
+            }
+            path.setCurveTension(0.0f);
+            
+            containing.Container con = (containing.Container) map.get("container");
+            
+            //Container c = train.detachContainer(con.getContainerId());
+            for (StorageCrane crane : storageCranes)
+            {
+                if (crane.id == crane_id)
+                {
+                    //c.move(train.train.getLocalTranslation());
+                    crane.loadCrane(null, index_nr, null);
+                }
+            }
+
         }
     }
 

@@ -5,6 +5,7 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -16,6 +17,7 @@ public class StorageCrane
     int id;
     Node crane;
     Node node;
+    Container con;
     
     Spatial frame;
     Spatial grab;
@@ -52,10 +54,96 @@ public class StorageCrane
         place(new Vector3f(x,y,z));
     }
     
-    public void moveCrane(float x)
+    public void moveCrane(float z)
     {
-        crane.move(x, 0, 0);
+        crane.move(0, 0, z);
+        
+        if (occupied)
+        {
+            con.model.move(0, 0, z);
+        }
     }
     
+    public void moveTop(float x)
+    {
+        crane.getChild(1).move(x, 0, 0);
+        crane.getChild(2).move(x, 0, 0);
+    }
     
+    public void moveGrab(float y)
+    {
+        crane.getChild(1).move(0, y, 0);
+        
+        if (occupied)
+        {
+            con.model.move(0, y, 0);
+        }
+    }
+    
+    private boolean occupied = false;
+    private int cranestate = 1;
+    private int con_index = 0;
+    private MotionEvent motev;
+    
+    public void loadCrane(Container con, int con_index, MotionEvent motev)
+    {
+        this.con = con;
+        this.con_index = con_index;
+        cranestate = 1;
+        this.motev = motev;
+        //node.attachChild(con.model);
+    }
+    
+    public void update(float tpf)
+    {
+        float top_x = crane.getChild(2).getLocalTranslation().x;
+        float grab_y = crane.getChild(1).getLocalTranslation().y;
+        
+        switch (cranestate)
+        {
+            case 0:
+                //Default state
+                break;
+                
+            case 1:
+                //Move top to parkingspot
+                float goto_top = 2.4f - con_index;
+                if (goto_top < 0)
+                {
+                    if (top_x > goto_top)
+                        moveTop(-tpf);
+                    else
+                        cranestate = 2;
+                    break;
+                } else {
+                    if (top_x < goto_top)
+                        moveTop(tpf);
+                    else
+                        cranestate = 2;
+                    break;
+                }
+                
+            case 2:
+                //Move grab down
+                if (grab_y > -3.5f)
+                    moveGrab(-tpf);
+                else
+                    cranestate = 3;          
+                break;
+            
+            case 3:
+                //Move grab up
+                //occupied = true;
+                
+                if (grab_y < 0)
+                    moveGrab(tpf);
+                else
+                    cranestate = 4;          
+                break;
+                
+            case 4:
+                //motev.play();
+                break;
+        }
+    }
 }

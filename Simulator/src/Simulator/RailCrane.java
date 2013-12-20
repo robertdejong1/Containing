@@ -133,7 +133,6 @@ public class RailCrane
     
     public void update(float tpf)
     {
-        
         float x = crane.getChild(3).getLocalTranslation().z;
         float y = crane.getChild(2).getLocalTranslation().y;
         float z = crane.getLocalTranslation().z;

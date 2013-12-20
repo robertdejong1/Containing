@@ -20,6 +20,7 @@ public class AGV
     public int id;
     
     Node node;
+    Node agv_model;
     Node agv;
     
     /**
@@ -34,12 +35,14 @@ public class AGV
         agv = new Node();
         agv.setName("AGV " + id);
         this.id = id;
+        agv_model = new Node();
 
         Spatial model = assetManager.loadModel("Models/agv.j3o");
         model.scale(0.8f, 1.4f, 1.4f);
         
-        agv.attachChild(model);
-        
+        agv_model.attachChild(model);
+        agv.attachChild(agv_model);
+
         this.con = null;
     }
       
@@ -52,6 +55,8 @@ public class AGV
     {
         this.con = con;
         this.occupied = true;
+        //agv.attachChild(con.model);
+        //con.model.move(agv.getLocalTranslation().x-0.07f,agv.getLocalTranslation().y+0.35f,agv.getLocalTranslation().z-0.33f);
     }
     
     /**
@@ -80,5 +85,4 @@ public class AGV
     {
         place(new Vector3f(x,y,z));
     }
-    
 }

@@ -119,4 +119,9 @@ public class Container implements Serializable
     public String toString() {
         return "Container{" + "containerId=" + containerId + ", arrivalDate=" + arrivalDate + ", arrivalTimeFrom=" + arrivalTimeFrom + ", arrivalTimeTill=" + arrivalTimeTill + ", arrivalTransport=" + arrivalTransport + ", arrivalTransportCompany=" + arrivalTransportCompany + ", arrivalPosition=" + arrivalPosition + ", owner=" + owner + ", departureDate=" + departureDate + ", departureTimeFrom=" + departureTimeFrom + ", departureTimeTill=" + departureTimeTill + ", departureTransport=" + departureTransport + '}';
     }
+
+    public void setArrivalPosition(Vector3f arrivalPosition) {
+        this.arrivalPosition = arrivalPosition;
+    }
+
 }

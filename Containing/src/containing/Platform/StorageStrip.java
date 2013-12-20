@@ -41,7 +41,6 @@ public class StorageStrip implements Serializable {
     private State state = State.FREE;
     
     private StorageState storageState;
-    private StorageJobState storageJobState;
     
     public final static int MAX_AGV_SPOTS = 12;
     
@@ -49,14 +48,11 @@ public class StorageStrip implements Serializable {
     private final int MAX_Y = 6;
     private final int MAX_Z = 6;
     
-    private final int MAX_JOBS = 12;
-    
     private final Vector3f position;
     private final Dimension2f dimension;
     
     private HashMap<Point3D, Container> containers;
     private PriorityQueue<Point3D> freePositions;
-    private Queue<StorageJob> jobs;
     
     private final List<AgvSpot> agvSpots;
     private Crane crane;
@@ -77,7 +73,6 @@ public class StorageStrip implements Serializable {
         containers = new HashMap<>();
         freePositions = new PriorityQueue<>();
         storageState = StorageState.FREE;
-        storageJobState = StorageJobState.FREE;
         dimension = new Dimension2f(platform.STRIP_WIDTH, platform.STRIP_LENGTH);
         agvSpots = new ArrayList<>();
         agvQueueLoad = new LinkedList<>();
@@ -98,24 +93,6 @@ public class StorageStrip implements Serializable {
         return containers;
     }
     
-    public void createJob(int stripId, Container c)
-    {
-        if(jobs.size() < MAX_JOBS)
-        {
-            Point3D pos = getFreeContainerPosition(c.getDepartureDate(), c.getDepartureTimeFrom(), c.getDepartureTimeTill(), Side.LEFT);
-            jobs.add(new StorageJob(stripId, pos, c));
-            if(jobs.size() == MAX_JOBS)
-                storageJobState = StorageJobState.FULL;
-        }
-    }
-    
-    public StorageJob getJob()
-    {
-        if(jobs.size() == MAX_JOBS)
-            storageJobState = StorageJobState.FREE;
-        return jobs.poll();
-    }
-    
     public boolean hasContainer(Container container)
     {
         return containers.containsValue(container);
@@ -132,10 +109,12 @@ public class StorageStrip implements Serializable {
     }
     
     // todo till, container kan eerder weg moeten, prioriteit is dan hoger
-    private Point3D getFreeContainerPosition(Date date, float from, float till, Side side)
+    private Point3D getFreeContainerPosition(Container container)
     {
+        Date date = container.getDepartureDate();
+        float from = container.getDepartureTimeFrom();
         int x, y, z;
-        for(x = 0; (side.equals(Side.LEFT) ? x < MAX_X : MAX_X > x);)
+        for(x = 0; x < MAX_X; x++)
         {
             for(y = 0; y < MAX_Y; y++) 
             {
@@ -151,10 +130,11 @@ public class StorageStrip implements Serializable {
                         {
                             return cur;
                         }
+                    } else {
+                        return cur;
                     }
                 }
             }
-            x = (side.equals(Side.LEFT) ? ++x : --x);
         }
         return null;
     }
@@ -162,11 +142,6 @@ public class StorageStrip implements Serializable {
     public StorageState getStorageState()
     {
         return storageState;
-    }
-    
-    public StorageJobState getStorageJobState()
-    {
-        return storageJobState;
     }
     
     private void createCrane()
@@ -217,6 +192,16 @@ public class StorageStrip implements Serializable {
         }
     }
     
+    private Vector3f getRealContainerPosition(Container container)
+    {
+        Point3D containerPosition = getFreeContainerPosition(container);
+        float x = containerPosition.x*Container.depth;
+        float y = containerPosition.y*Container.height;
+        float z = containerPosition.z*Container.width;
+        Vector3f realPosition = new Vector3f(x, y, z);
+        return realPosition;
+    }
+    
     private Phase getPhase()
     {
         if(!craneBusy && crane.getStatus() != Status.MOVING)
@@ -228,8 +213,10 @@ public class StorageStrip implements Serializable {
     
     private void phaseMoveToAgv(AGV agv)
     {
+        Vector3f agvPosition = agv.getPosition();
+        
         if(!agv.getCargo().isEmpty()) {
-            //crane.followRoute(craneRoad.);
+            crane.followRoute(craneRoad.moveToContainer(crane, new Vector3f(agvPosition.x, getPosition().y, getPosition().z)));
             craneBusy = true;
         }
     }
@@ -245,7 +232,23 @@ public class StorageStrip implements Serializable {
     
     private void phaseMoveToFreePosition()
     {
-        
+        Container container = crane.getCargo().get(0);
+        Vector3f pos = getRealContainerPosition(container);
+        crane.followRoute(craneRoad.moveToContainer(crane, pos));
+    }
+    
+    private void phaseUnload()
+    {
+        try {
+            crane.unload();
+        } catch (ContainerNotFoundException ex) {
+            Logger.getLogger(StorageStrip.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void phaseSendToParkingSpot()
+    {
+        // haha laterrrrrrr
     }
     
     public void load()
@@ -270,7 +273,7 @@ public class StorageStrip implements Serializable {
                     break;
                 case UNLOAD:
                     System.out.println("UNLOAD");
-                    //phaseUnload();
+                    phaseUnload();
                     break;
                 case SENDTOPARKINGSPOT:
                     System.out.println("SENDTOPARKINGSPOT");

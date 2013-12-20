@@ -35,7 +35,7 @@ public class StorageStrip implements Serializable {
     public enum StorageState { FREE, FULL }
     public enum StorageJobState { FREE, FULL }
     
-    private enum Phase { MOVETOAGV, LOAD, MOVETOFREEPOSITION, UNLOAD, SENDTOPARKINGSPOT }
+    private enum Phase { LOAD, SENDTOPARKINGSPOT }
     
     private final int id;
     private State state = State.FREE;
@@ -98,11 +98,6 @@ public class StorageStrip implements Serializable {
     public boolean hasContainer(Container container)
     {
         return containers.containsValue(container);
-    }
-    
-    public void loadContainer(StorageJob job)
-    {
-        // geef job aan kraan met container en positie
     }
     
     public Container unloadContainer(Point3D position)
@@ -182,6 +177,40 @@ public class StorageStrip implements Serializable {
         return null;
     }
     
+    public AgvSpot getParkingSpotFromVehicleLoad(AGV agv)
+    {
+        int startIndex = id * MAX_AGV_SPOTS;
+        for(int i = startIndex; i < startIndex + MAX_AGV_SPOTS; i += 2)
+        {
+            AgvSpot agvSpot = platform.agvSpots.get(i);
+            if(!agvSpot.isEmpty())
+            {
+                if(agvSpot.getParkedVehicle().getID() == agv.getID())
+                {
+                    return agvSpot;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public int getParkingSpotIndexFromVehicleLoad(AGV agv)
+    {
+        int startIndex = id * MAX_AGV_SPOTS;
+        for(int i = startIndex; i < startIndex + MAX_AGV_SPOTS; i += 2)
+        {
+            AgvSpot agvSpot = platform.agvSpots.get(i);
+            if(!agvSpot.isEmpty())
+            {
+                if(agvSpot.getParkedVehicle().getID() == agv.getID())
+                {
+                    return i;
+                }
+            }
+        }
+        return 0;
+    }
+    
     public void checkParkedVehiclesLeft()
     {
         int startIndex = id * MAX_AGV_SPOTS;
@@ -203,7 +232,7 @@ public class StorageStrip implements Serializable {
             AgvSpot agvSpot = platform.agvSpots.get(i);
             if(!agvSpot.isEmpty())
             {
-                agvQueueUnload.add((AGV)agvSpot.getParkedVehicle());
+                platform.agvSpotQueue[i] = false;
             }
         }
     }
@@ -218,29 +247,21 @@ public class StorageStrip implements Serializable {
         return realPosition;
     }
     
-    private Phase getPhase()
+    private Phase load_getPhase(AGV agv)
     {
-        if(!craneBusy && crane.getStatus() == Status.WAITING)
-        {
-            return Phase.MOVETOAGV;
-        }
-        else if(craneBusy && crane.getStatus() == Status.WAITING && crane.getCargo().isEmpty())
+        if(!craneBusy && crane.getStatus() == Status.WAITING &&crane.getCargo().isEmpty())
         {
             return Phase.LOAD;
         }
-        else if(craneBusy && crane.getStatus() != Status.MOVING && !crane.getCargo().isEmpty() && !unloading)
+        else if(craneBusy && agv.getCargo().isEmpty())
         {
-            unloading = true;
-            return Phase.MOVETOFREEPOSITION;
-        }
-        else if(craneBusy && crane.getStatus() != Status.MOVING && !crane.getCargo().isEmpty() && unloading)
-        {
-            return Phase.UNLOAD;
+            return Phase.SENDTOPARKINGSPOT;
         }
         return null;
     }
     
-    private void phaseMoveToAgv(AGV agv)
+    /*
+    private void load_phaseMoveToAgv(AGV agv)
     {
         Vector3f agvPosition = agv.getPosition();
         
@@ -249,64 +270,63 @@ public class StorageStrip implements Serializable {
             craneBusy = true;
         }
     }
+    */
     
-    private void phaseLoad(AGV agv)
+    private void load_phaseLoad(AGV agv)
     {
         try {
-            crane.load(agv.unload());
+            craneBusy = true;
+            Vector3f pos = getRealContainerPosition(agv.getCargo().get(0));
+            int psId = getParkingSpotIndexFromVehicleLoad(agv);
+            while(psId > 12)
+            {
+                psId = psId - 12;
+
+            }
+            if(psId == 0) {}
+            else if(psId < 12)
+            {
+                psId = psId / 2;
+            }
+            ((StorageCrane)crane).load(agv, pos, psId);
         } catch (Exception ex) {
             Logger.getLogger(StorageStrip.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    private void phaseMoveToFreePosition()
-    {
-        Container container = crane.getCargo().get(0);
-        Vector3f pos = getRealContainerPosition(container);
-        crane.followRoute(craneRoad.moveToContainer(crane, pos));
-    }
-    
-    private void phaseUnload()
+    /*
+    private void load_phaseUnload()
     {
         try {
-            crane.unload();
+            Container container = crane.unload();
+            containers.put(getFreeContainerPosition(container), container);
         } catch (ContainerNotFoundException ex) {
             Logger.getLogger(StorageStrip.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    */
     
-    private void phaseSendToParkingSpot()
+    private void load_phaseSendToParkingSpot()
     {
-        // haha laterrrrrrr
+        AGV agv = agvQueueLoad.poll();
+        agv.followRoute(platform.getLeft().getRoad().getPathAllIn(agv, getParkingSpotFromVehicleLoad(agv), platform.getFreeParkingSpotUnloaded(), platform, Settings.port.getMainroad()));
     }
     
     public void load()
     {
         AGV craneAgv = agvQueueLoad.peek();
-        Phase phase = getPhase();
+        Phase phase = load_getPhase(craneAgv);
         if(phase != null)
         {
             switch(phase)
             {
-                case MOVETOAGV:
-                    System.out.println("MOVETOAGV");
-                    phaseMoveToAgv(craneAgv);
-                    break;
                 case LOAD:
                     System.out.println("LOAD");
-                    phaseLoad(craneAgv);
-                    break;
-                case MOVETOFREEPOSITION:
-                    System.out.println("MOVETOFREEPOSITION");
-                    phaseMoveToFreePosition();
-                    break;
-                case UNLOAD:
-                    System.out.println("UNLOAD");
-                    phaseUnload();
+                    load_phaseLoad(craneAgv);
                     break;
                 case SENDTOPARKINGSPOT:
                     System.out.println("SENDTOPARKINGSPOT");
-                    phaseSendToParkingSpot();
+                    load_phaseSendToParkingSpot();
                     break;
             }
         }
@@ -342,6 +362,7 @@ public class StorageStrip implements Serializable {
         if(platform.time >= 10)
         {
             checkParkedVehiclesLeft();
+            checkParkedVehiclesRight();
             platform.time = 0;
         }
     }

@@ -8,11 +8,11 @@ import containing.Exceptions.NoFreeAgvException;
 import containing.ParkingSpot.AgvSpot;
 import containing.Platform.StorageStrip.StorageState;
 import containing.Road.Road;
-import containing.Road.Route;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 
@@ -45,6 +45,8 @@ public class StoragePlatform extends Platform {
     
     protected Road road2;
     
+    protected boolean[] agvSpotQueue;
+    
     public StoragePlatform(Vector3f position)
     {
         super(position, Positie.RECHTS);
@@ -57,6 +59,8 @@ public class StoragePlatform extends Platform {
         createAgvSpots();
         createAllAgvs();
         setRoad();
+        agvSpotQueue = new boolean[agvSpots.size() / 2];
+        Arrays.fill(agvSpotQueue, false);
         /* no vehicles on this platform */
         extVehicleSpots = null;
         log("Created StoragePlatform object: " + toString());
@@ -70,6 +74,18 @@ public class StoragePlatform extends Platform {
     public StorageStrip getStrip(int nr)
     {
         return strips[nr];
+    }
+    
+    public AgvSpot getFreeParkingSpotUnloaded()
+    {
+        for(int i = 1; i < agvSpots.size(); i += 2)
+        {
+            if(agvSpotQueue[i] == false) {
+                agvSpotQueue[i] = true;
+                return agvSpots.get(i);
+            }
+        }
+        return agvSpots.get(0);
     }
     
     @Override

@@ -3,7 +3,6 @@ package containing.Platform;
 import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
-import containing.Exceptions.AgvSpotOutOfBounds;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.NoFreeAgvException;
@@ -17,14 +16,11 @@ import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.TrainCrane;
-import containing.Vehicle.Vehicle;
 import containing.Vehicle.Vehicle.Status;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,7 +48,7 @@ public class TrainPlatform extends Platform {
     
     private boolean unloadOnce = false;
     
-    private int[] sendAwayEvTiming;
+    private final int[] sendAwayEvTiming;
     
     public TrainPlatform(Vector3f position)
     {
@@ -195,7 +191,7 @@ public class TrainPlatform extends Platform {
         return null;
     }
     
-    private Phase getPhase(int currentCrane, int moveToColumn, ExternVehicle ev) 
+    private Phase unload_getPhase(int currentCrane, int moveToColumn, ExternVehicle ev) 
     {
         Crane c = cranes.get(currentCrane);
         AGV craneAgv = craneAgvs.get(currentCrane);
@@ -218,7 +214,7 @@ public class TrainPlatform extends Platform {
         return null;
     }
     
-    private void phaseMove(int currentCrane, int column, ExternVehicle ev) 
+    private void unload_phaseMove(int currentCrane, int column, ExternVehicle ev) 
     {
         Crane c = cranes.get(currentCrane);
         if(ev.getGrid()[column][0][0] != null) {
@@ -227,7 +223,7 @@ public class TrainPlatform extends Platform {
         }
     }
     
-    private void phaseLoad(int currentCrane, Container container, ExternVehicle ev) 
+    private void unload_phaseLoad(int currentCrane, Container container, ExternVehicle ev) 
     {
         Crane c = cranes.get(currentCrane);
         // adjust parkingspot
@@ -251,7 +247,7 @@ public class TrainPlatform extends Platform {
         }
     }
     
-    private void phaseUnload(int currentCrane) 
+    private void unload_phaseUnload(int currentCrane) 
     {
         Crane c = cranes.get(currentCrane);
         AGV craneAgv = craneAgvs.get(currentCrane);
@@ -269,7 +265,7 @@ public class TrainPlatform extends Platform {
         }
     }
     
-    private void phaseSendToStorage(int currentCrane) 
+    private void unload_phaseSendToStorage(int currentCrane) 
     {
         Crane c = cranes.get(currentCrane);
         AGV craneAgv = craneAgvs.get(currentCrane);
@@ -344,26 +340,26 @@ public class TrainPlatform extends Platform {
                     if(currentCrane >= allowedCranes && currentCrane < allowedCranes + cranesPerVehicle && currentCrane*rowsPerCrane < ev.getColumns().size()) {
                         int column = getColumn(currentCrane, rowsPerCrane, ev);
                         Container container = getContainer(column, ev);
-                        Phase phase = getPhase(currentCrane, column, ev);
+                        Phase phase = unload_getPhase(currentCrane, column, ev);
                         if(phase != null)
                         {
                             switch(phase)
                             {
                                 case MOVE:
                                     System.out.println("MOVE");
-                                    phaseMove(currentCrane, column, ev);
+                                    unload_phaseMove(currentCrane, column, ev);
                                     break;
                                 case LOAD:
                                     System.out.println("LOAD");
-                                    phaseLoad(currentCrane, container, ev);
+                                    unload_phaseLoad(currentCrane, container, ev);
                                     break;
                                 case UNLOAD:
                                     System.out.println("UNLOAD");
-                                    phaseUnload(currentCrane);
+                                    unload_phaseUnload(currentCrane);
                                     break;
                                 case SENDTOSTORAGE:
                                     System.out.println("SENDTOSTORAGE");
-                                    phaseSendToStorage(currentCrane);
+                                    unload_phaseSendToStorage(currentCrane);
                                     break;
                             }
                         }

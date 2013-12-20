@@ -134,45 +134,48 @@ public abstract class ExternVehicle extends Vehicle {
     
             if (grid!=null)
             {
-                try
-                {
                 if (coordinates.x  > this.nrContainersWidth || coordinates.z > this.nrContainersDepth || (int) coordinates.x < 0 ||(int) coordinates.y < 0 || (int) coordinates.z < 0 || coordinates.y > this.nrContainersHeight )
                 {
                     //Settings.messageLog.AddMessage("Cargo: " + container.getArrivalPosition());
                     throw new CargoOutOfBoundsException("CargoOutOfBoundsException");
             
                 }
-                
-                if (grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]!=null)
+                try
                 {
-                    Settings.messageLog.AddMessage("Vehicle: " + this.getID() +  " has already container on position: " + coordinates);
-                    throw new VehicleOverflowException("VehicleOverflowException");
-                }//dubbel
-        
-                    grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z] = container; 
-
-                    super.load(container);
-                    if (this.getStatus() != Status.INIT)
+                    if (grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z]!=null)
                     {
-                        /*
-                        HashMap<String, Object> map = new HashMap<>();
-                        map.put("id", this.getID());
-                        map.put("vehicleType", this.getVehicleType());
-                        map.put("container", container);
+                        Settings.messageLog.AddMessage("Vehicle: " + this.getID() +  " has already container on position: " + coordinates);
+                        throw new VehicleOverflowException("VehicleOverflowException");
+                    }//dubbel
+                
+                        grid[(int)coordinates.x][(int)coordinates.y][(int)coordinates.z] = container; 
+
+                        super.load(container);
+                        if (this.getStatus() != Status.INIT)
+                        {
+                            /*
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put("id", this.getID());
+                            map.put("vehicleType", this.getVehicleType());
+                            map.put("container", container);
                     
-                        CommandHandler.addCommand(new Command("loadVehicle",map));*/
-                    }
+                            CommandHandler.addCommand(new Command("loadVehicle",map));*/
+                        }
                    
                 
-                //if status not waiting
-                //CommandHandler.addCommand(new Command("loadVehicle", this));
+                    //if status not waiting
+                    //CommandHandler.addCommand(new Command("loadVehicle", this));
                 
-                }
-            
-                catch(Exception e)
-                {
-                    throw e;
-                }
+                    }
+                    catch (ArrayIndexOutOfBoundsException e)
+                    {
+                        System.out.println("Container out of bounds: "  + this.getVehicleType() + " @ " + coordinates);
+                        throw e;
+                    }
+                    catch(Exception e)
+                    {
+                        throw e;
+                    }
             }
         
        //status waiting ..... anders load op vrije plaats

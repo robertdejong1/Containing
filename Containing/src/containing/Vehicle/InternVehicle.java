@@ -74,7 +74,7 @@ public abstract class InternVehicle extends Vehicle{
             }
            
             
-            this.cargo = null;
+            this.cargo = new ArrayList<>();
             
             this.isLoaded = false;
             /*

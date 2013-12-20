@@ -92,6 +92,20 @@ public abstract class Crane extends InternVehicle {
         }   
         else return 0;
     }
+      
+    public Route moveToContainer(Crane crane, Vector3f v)
+    {
+        List<Vector3f> path = new ArrayList<>();
+        path.add(this.position);
+        path.add(v);
+        
+        Route route = new Route(path, Road.getPathLength(path));
+        route.setDestinationParkingSpot(null);
+        route.setDestinationPlatform(null);
+        return route;
+        
+        
+    }
     
     public void moveToContainer(ExternVehicle ev, int column)
     {

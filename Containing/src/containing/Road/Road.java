@@ -229,6 +229,7 @@ public class Road implements Serializable
            return route;
            
        }
+       
     public Route getPathExternVehicleEntry(ExternVehicle ev, ParkingSpot ps )
     {
         List<Vector3f> track2 = new ArrayList<Vector3f>();
@@ -309,15 +310,15 @@ public class Road implements Serializable
     public synchronized List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Platform source, Platform destination, Road mainroad){
         //path size altijd 4
         List<Vector3f> correctPath = new ArrayList<>();
-        correctPath.add(path.get(0));
-        correctPath.add(path.get(1));
+        //correctPath.add(path.get(0));
+        //correctPath.add(path.get(1));
         
 
         
      
         //if (destination.positie == Platform.Positie.)
         
-        boolean right = true;
+        boolean right = false;
         
         
         //bepalen aan hand van platform of rechts of links: nu altijd rechtsom
@@ -329,10 +330,14 @@ public class Road implements Serializable
         
         //rechtsom
         if (right)
-        {
+        {   
+            correctPath.add(path.get(0));
+            correctPath.add(path.get(1));
+            
             switch(source.positie)
             {
                 case RECHTS:
+               
                     
                     if (destination.positie == Platform.Positie.LINKS) 
                     { //rechtsboven rechtsonder linksonder
@@ -390,6 +395,8 @@ public class Road implements Serializable
         
         else //linksom
         {//moet nog
+            correctPath.add(path.get(3));
+            correctPath.add(path.get(2));
             switch(source.positie)
             {
                 case RECHTS:

@@ -29,12 +29,13 @@ public class Route implements Serializable {
     public Route(List<Vector3f> weg, float distanceInMeters){
         
         for (Vector3f v : weg){
+            System.out.println("INITROUTE: " + v);
             this.weg.add(v);
         }
         this.distance = distanceInMeters;
         System.out.println("------------");
-        for (Vector3f v : weg){
-            System.out.println("V: " + v);
+        for (Vector3f v : this.weg){
+            System.out.println("ROUTE: " + v);
         }
         
       
@@ -45,7 +46,7 @@ public class Route implements Serializable {
     
     public void setDestinationParkingSpot(ParkingSpot destination){this.destinationParkingSpot = destination;}
     
-    public void follow(Vehicle vehicle){
+    public synchronized void  follow(Vehicle vehicle){
         //if destinationParkingSpot == null ga vanaf exitpoint naar midden weg en start volg route
         
         distance = distance - (float)((float)vehicle.getCurrentSpeed()*1000f/3600f)/100f;

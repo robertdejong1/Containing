@@ -33,7 +33,7 @@ public class Road implements Serializable
     
     
 
-    private Vector3f createCorrespondingWaypoint(Vector3f point){
+    private synchronized Vector3f createCorrespondingWaypoint(Vector3f point){
         
         
         if (track.size() == 4){
@@ -84,10 +84,12 @@ public class Road implements Serializable
         Route deel2 = mainroad.getPathFromExitPointPlatformToEntryPointPlatform(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform, mainroad);
         Route deel3 = destinationPlatform.getRoad().getPathFromEntryPointPlatformToVector(vehicle, destinationVector);
         
+      
+        
         List<Vector3f> track2 = new ArrayList<>();
         for (Vector3f v : deel1.getWeg()) { track2.add(v); }
         for (Vector3f v : deel2.getWeg()) { track2.add(v); }
-        for (Vector3f v : deel3.getWeg()) { track2.add(v); }
+        for (Vector3f v : deel3.getWeg()) { track2.add(v);  }
         
         return new Route(track2, getPathLength(track2));
     }
@@ -143,12 +145,18 @@ public class Road implements Serializable
      {
          List<Vector3f> track2 = new ArrayList<Vector3f>();//this.track
          track2.add(sourcePlatformExitPoint);
+         System.out.println("sourcePlatformExitPoint: " + sourcePlatformExitPoint);
          track2.add(this.createCorrespondingWaypoint(sourcePlatformExitPoint));
-         System.out.println("ExitPoint");
+         System.out.println("sourcePlatformExitPointCW: " + this.createCorrespondingWaypoint(sourcePlatformExitPoint));
          track2.add(this.createCorrespondingWaypoint(destination.getEntrypoint()));
+         System.out.println("destinationEntryPointCW: " + this.createCorrespondingWaypoint(destination.getEntrypoint()));
          track2.add(destination.getEntrypoint());
-       
+         System.out.println("destinationEntryPoint: " + destination.getEntrypoint());
+         for (Vector3f v : track2){
+             System.out.println("BEFORE: " + v);}
          track2 = this.setPathCorrectOrder(track2, vehicle.getCurrentPlatform(), destination, mainroad);
+         for (Vector3f v : track2){
+             System.out.println("AFTER: " + v);}
          vehicle.setCurrentPlatform(destination);
          vehicle.setPosition(destination.getEntrypoint());
          Route route = new Route(track2, getPathLength(track2));
@@ -314,7 +322,8 @@ public class Road implements Serializable
         correctPath.add(path.get(1));
         
 
-        
+        System.out.println("POSITIE: " + source.positie); //=rechts
+        System.out.println("POSITIE: " + destination.positie); //=links
      
         //if (destination.positie == Platform.Positie.)
         
@@ -322,6 +331,7 @@ public class Road implements Serializable
         
         
         //bepalen aan hand van platform of rechts of links: nu altijd rechtsom
+        
         if (source instanceof StoragePlatform)
         {
             System.out.println("RIGHT IS THE GOOD SIDE");
@@ -341,7 +351,8 @@ public class Road implements Serializable
                     
                     if (destination.positie == Platform.Positie.LINKS) 
                     { //rechtsboven rechtsonder linksonder
-                        correctPath.add(mainroad.track.get(3));
+                       
+                        //correctPath.add(mainroad.track.get(3));
                         correctPath.add(mainroad.track.get(2)); 
                         correctPath.add(mainroad.track.get(1)); 
                         break;

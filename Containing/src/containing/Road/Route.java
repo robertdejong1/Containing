@@ -37,7 +37,7 @@ public class Route implements Serializable {
             System.out.println("V: " + v);
         }
         
-        System.out.println("Distance way: " + distance);
+      
         System.out.println("------------");
     }
     
@@ -50,7 +50,7 @@ public class Route implements Serializable {
         
         distance = distance - (float)((float)vehicle.getCurrentSpeed()*1000f/3600f)/100f;
         
-        System.out.println("Distance to drive: " + distance);
+        //System.out.println("Distance to drive: " + distance);
         if (distance <= 0){
             
             Settings.messageLog.AddMessage("Reached end of path");

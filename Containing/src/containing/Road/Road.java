@@ -310,8 +310,8 @@ public class Road implements Serializable
     public synchronized List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Platform source, Platform destination, Road mainroad){
         //path size altijd 4
         List<Vector3f> correctPath = new ArrayList<>();
-        //correctPath.add(path.get(0));
-        //correctPath.add(path.get(1));
+        correctPath.add(path.get(0));
+        correctPath.add(path.get(1));
         
 
         
@@ -332,8 +332,7 @@ public class Road implements Serializable
         //rechtsom
         if (right)
         {   
-            //correctPath.add(path.get(0));
-            //correctPath.add(path.get(1));
+
             
             switch(source.positie)
             {

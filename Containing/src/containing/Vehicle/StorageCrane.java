@@ -36,7 +36,7 @@ public class StorageCrane extends Crane {
     }
     
    
-    public void load(AGV agv, Vector3f v, int i) throws VehicleOverflowException, CargoOutOfBoundsException, Exception{ //container from extern verhicle
+    public void load(AGV agv, Vector3f containerStoragePosition, int i) throws VehicleOverflowException, CargoOutOfBoundsException, Exception{ //container from extern verhicle
     try
         {
             List<Vector3f> path = new ArrayList<Vector3f>();
@@ -48,7 +48,7 @@ public class StorageCrane extends Crane {
             this.unloadTime = 12*10;
             
             path.add(this.position);
-            path.add(v);
+            path.add(containerStoragePosition);
             path.add(this.position);
        
             HashMap<String, Object> map = new HashMap<>();

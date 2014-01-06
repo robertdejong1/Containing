@@ -95,13 +95,13 @@ public class Road implements Serializable
     //van parkeerplaats op platform naar einde platform
     public Route getPathFromParkingSpotToPlatform(Vehicle vehicle, ParkingSpot source, Vector3f exitwayPlatform)
     {
-        System.out.println("hahaah hier heeft vehicle boi : " + vehicle.getCurrentPlatform().toString());
+  
         List<Vector3f> track2 = new ArrayList<Vector3f>();
         track2.add(vehicle.getPosition());
         track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
         track2.add(this.createCorrespondingWaypoint(exitwayPlatform));
         track2.add(exitwayPlatform);
-        source.UnparkVehicle(); //moet straks bij followroute
+        //source.UnparkVehicle(); //moet straks bij followroute - minardus : plekken worden opnieuw aangemaakt nadat de agv weg gaat, dus geen unparkvehicle() nodig
         vehicle.setPosition(exitwayPlatform);
         Route route = new Route(track2, getPathLength(track2));
         route.destinationParkingSpot = null;
@@ -229,6 +229,7 @@ public class Road implements Serializable
            return route;
            
        }
+       
     public Route getPathExternVehicleEntry(ExternVehicle ev, ParkingSpot ps )
     {
         List<Vector3f> track2 = new ArrayList<Vector3f>();
@@ -309,30 +310,35 @@ public class Road implements Serializable
     public synchronized List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Platform source, Platform destination, Road mainroad){
         //path size altijd 4
         List<Vector3f> correctPath = new ArrayList<>();
-        correctPath.add(path.get(0));
-        correctPath.add(path.get(1));
+        //correctPath.add(path.get(0));
+        //correctPath.add(path.get(1));
         
 
         
      
         //if (destination.positie == Platform.Positie.)
         
-        boolean right = true;
+        boolean right = false;
         
         
         //bepalen aan hand van platform of rechts of links: nu altijd rechtsom
         if (source instanceof StoragePlatform)
         {
+            System.out.println("RIGHT IS THE GOOD SIDE");
             right = true; //
         }
         //if (typeOrInterface.isInstance(someObject);)
         
         //rechtsom
         if (right)
-        {
+        {   
+            //correctPath.add(path.get(0));
+            //correctPath.add(path.get(1));
+            
             switch(source.positie)
             {
                 case RECHTS:
+               
                     
                     if (destination.positie == Platform.Positie.LINKS) 
                     { //rechtsboven rechtsonder linksonder
@@ -390,6 +396,8 @@ public class Road implements Serializable
         
         else //linksom
         {//moet nog
+            //correctPath.add(path.get(3));
+            //correctPath.add(path.get(2));
             switch(source.positie)
             {
                 case RECHTS:

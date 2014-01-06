@@ -95,7 +95,7 @@ public class Road implements Serializable
     //van parkeerplaats op platform naar einde platform
     public Route getPathFromParkingSpotToPlatform(Vehicle vehicle, ParkingSpot source, Vector3f exitwayPlatform)
     {
-        System.out.println("hahaah hier heeft vehicle boi : " + vehicle.getCurrentPlatform().toString());
+  
         List<Vector3f> track2 = new ArrayList<Vector3f>();
         track2.add(vehicle.getPosition());
         track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));

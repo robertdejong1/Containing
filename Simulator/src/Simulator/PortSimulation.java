@@ -42,14 +42,13 @@ public class PortSimulation extends SimpleApplication {
     int camstate = 1;
     String currentChaseTarget;
     Vector3f flyCamPos;
-    //StorageCrane cr;
-
+    
     public static void main(String[] args) {
         PortSimulation app = new PortSimulation();
         app.start();
 
         //Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        Runnable networkHandler = new NetworkHandler("141.252.236.46", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.236.78", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -63,9 +62,6 @@ public class PortSimulation extends SimpleApplication {
         rootNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
         flyCamPos = new Vector3f(817f / 20, 80f, 1643f / 20);
         this.setPauseOnLostFocus(false);
-        
-        //cr = new StorageCrane(assetManager, rootNode, 1);
-        //cr.place(13.4f, 5.5f, 3.15f);
         
         for (int i = 0; i < 4; i++) {
             freeCranes[i] = new FreeCrane(assetManager, rootNode);
@@ -82,13 +78,6 @@ public class PortSimulation extends SimpleApplication {
         //truck[i].scale(0.15f);
         //truck[i].place(40.32f, 5f, i);
         //}
-        
-        //AGV test = new AGV(assetManager, rootNode, 1);
-        //test.place(0f, 5.5f, 0f);
-        //Container c = new Container(assetManager, rootNode, ColorRGBA.Blue);
-        //test.attachContainer(c);
-        //chaseCamSetTarget(test.agv, "test");
-        //camstate = 2;
  
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
@@ -180,12 +169,6 @@ public class PortSimulation extends SimpleApplication {
         //{
         //    container[i].move(0, 0, tpf*2);
         //}
-        if (agv[0] != null)
-        {
-            System.out.println(agv[0].agv.getLocalTranslation());
-            if (agv[0].con != null)
-                System.out.println(agv[0].con.model.getLocalTranslation());
-        }
         if (railCrane != null)
         {
             for (RailCrane c : railCrane)
@@ -199,6 +182,11 @@ public class PortSimulation extends SimpleApplication {
             {
                 c.update(tpf);
             }
+        }
+        for (AGV c : agv)
+        {
+            if (c != null)
+                c.update();
         }
 
         switch (camstate) {
@@ -487,7 +475,7 @@ public class PortSimulation extends SimpleApplication {
             
         } else if (cmd.getCommand().equals("pickAndDropStorageCrane")) 
         {
-              System.out.println(cmd.getCommand());
+            System.out.println(cmd.getCommand());
 
             HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
             int vehicle_id = Integer.parseInt(map.get("clientid").toString());

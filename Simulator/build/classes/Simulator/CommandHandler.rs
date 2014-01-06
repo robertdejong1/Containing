@@ -1,2 +1,0 @@
-Simulator.CommandHandler
-Simulator.Type

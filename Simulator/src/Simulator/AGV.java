@@ -20,7 +20,7 @@ public class AGV
     public int id;
     
     Node node;
-    Node agv_model;
+    private Node agv_model;
     Node agv;
     
     /**
@@ -32,7 +32,7 @@ public class AGV
     public AGV(AssetManager assetManager, Node node, int id)
     {
         this.node = node;
-        agv = new Node();
+        this.agv = new Node();
         agv.setName("AGV " + id);
         this.id = id;
         agv_model = new Node();
@@ -55,8 +55,7 @@ public class AGV
     {
         this.con = con;
         this.occupied = true;
-        //agv.attachChild(con.model);
-        //con.model.move(agv.getLocalTranslation().x-0.07f,agv.getLocalTranslation().y+0.35f,agv.getLocalTranslation().z-0.33f);
+        node.attachChild(con.model);
     }
     
     /**
@@ -84,5 +83,16 @@ public class AGV
     public void place(float x, float y, float z)
     {
         place(new Vector3f(x,y,z));
+    }
+    
+    public void update()
+    {
+        if (occupied)
+        {
+            con.model.move(
+                    agv.getLocalTranslation().x-Container.width/20,
+                    agv.getLocalTranslation().y+0.31f,
+                    agv.getLocalTranslation().z-Container.depth/20);
+        }
     }
 }

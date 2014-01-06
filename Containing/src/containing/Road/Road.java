@@ -324,6 +324,7 @@ public class Road implements Serializable
         //bepalen aan hand van platform of rechts of links: nu altijd rechtsom
         if (source instanceof StoragePlatform)
         {
+            System.out.println("RIGHT IS THE GOOD SIDE");
             right = true; //
         }
         //if (typeOrInterface.isInstance(someObject);)
@@ -331,8 +332,8 @@ public class Road implements Serializable
         //rechtsom
         if (right)
         {   
-            correctPath.add(path.get(0));
-            correctPath.add(path.get(1));
+            //correctPath.add(path.get(0));
+            //correctPath.add(path.get(1));
             
             switch(source.positie)
             {
@@ -395,8 +396,8 @@ public class Road implements Serializable
         
         else //linksom
         {//moet nog
-            correctPath.add(path.get(3));
-            correctPath.add(path.get(2));
+            //correctPath.add(path.get(3));
+            //correctPath.add(path.get(2));
             switch(source.positie)
             {
                 case RECHTS:

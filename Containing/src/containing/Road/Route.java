@@ -25,7 +25,7 @@ public class Route implements Serializable {
     float distance;
     Platform destinationPlatform;
     ParkingSpot destinationParkingSpot;
-    
+     
     public Route(List<Vector3f> weg, float distanceInMeters){
         
         for (Vector3f v : weg){

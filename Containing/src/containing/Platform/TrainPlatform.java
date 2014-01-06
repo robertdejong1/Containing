@@ -59,7 +59,7 @@ public class TrainPlatform extends Platform {
         setExitpoint(new Vector3f(3.7f - (AGV.width*Settings.METER) / 2f, getPosition().y, getPosition().z + LENGTH));
         setRoad();
         setTransportType(TransportType.Train);
-        setMaxAgvQueue(CRANES*3);
+        setMaxAgvQueue(CRANES * 3);
         //createAgvSpots(new Vector3f(CRANE_OFFSET + TrainCrane.length + AGV_OFFSET, 0, 0));
         createExtVehicleSpots();
         createCranes();
@@ -165,7 +165,7 @@ public class TrainPlatform extends Platform {
         List<Integer> unloadOrder = ev.getUnloadOrderY(column);
         if(unloadOrder != null)
         {
-            System.out.println("unloadOrder == " +  unloadOrder.size());
+            //System.out.println("unloadOrder == " +  unloadOrder.size());
             Collections.reverse(unloadOrder);
             int rowUnloaded = 0;
             for(Integer row : unloadOrder) 
@@ -253,13 +253,10 @@ public class TrainPlatform extends Platform {
         AGV craneAgv = craneAgvs.get(currentCrane);
         if(!unloadOnce) {
             try {
+                System.out.println("crane cargo == " + c.getCargo().size());
                 c.unload(craneAgv);
                 unloadOnce = true;
-            } catch (VehicleOverflowException ex) {
-                Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ContainerNotFoundException ex) {
-                Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (CargoOutOfBoundsException ex) {
+            } catch (VehicleOverflowException | ContainerNotFoundException | CargoOutOfBoundsException ex) {
                 Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -346,19 +343,19 @@ public class TrainPlatform extends Platform {
                             switch(phase)
                             {
                                 case MOVE:
-                                    System.out.println("MOVE");
+                                    //System.out.println("MOVE");
                                     unload_phaseMove(currentCrane, column, ev);
                                     break;
                                 case LOAD:
-                                    System.out.println("LOAD");
+                                    //System.out.println("LOAD");
                                     unload_phaseLoad(currentCrane, container, ev);
                                     break;
                                 case UNLOAD:
-                                    System.out.println("UNLOAD");
+                                    //System.out.println("UNLOAD");
                                     unload_phaseUnload(currentCrane);
                                     break;
                                 case SENDTOSTORAGE:
-                                    System.out.println("SENDTOSTORAGE");
+                                    //System.out.println("SENDTOSTORAGE");
                                     unload_phaseSendToStorage(currentCrane);
                                     break;
                             }
@@ -398,7 +395,7 @@ public class TrainPlatform extends Platform {
         if(state.equals(State.UNLOAD))
         {
             if(time >= 10) {
-                System.out.println("unloading...");
+                //System.out.println("unloading...");
                 unload();
             }
         }

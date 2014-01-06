@@ -274,7 +274,9 @@ public class StorageStrip implements Serializable {
     
     private void load_phaseLoad(AGV agv)
     {
+        System.out.println("StorageStrip loading...");
         try {
+            System.out.println("StorageStrip loading... IK BEN IN DE TRY BOIII");
             craneBusy = true;
             Vector3f pos = getRealContainerPosition(agv.getCargo().get(0));
             int psId = getParkingSpotIndexFromVehicleLoad(agv);
@@ -353,7 +355,7 @@ public class StorageStrip implements Serializable {
         if(state.equals(State.LOAD))
         {
             if(platform.time >= 10) {
-                System.out.println("loading...");
+                //System.out.println("loading...");
                 load();
             }
         }

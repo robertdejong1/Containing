@@ -5,6 +5,7 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -39,6 +40,7 @@ public class AGV
 
         Spatial model = assetManager.loadModel("Models/agv.j3o");
         model.scale(0.8f, 1.4f, 1.4f);
+        model.setName(agv.getName());
         
         agv_model.attachChild(model);
         agv.attachChild(agv_model);
@@ -89,10 +91,11 @@ public class AGV
     {
         if (occupied)
         {
-            con.model.move(
+            /*con.model.setLocalTranslation(
                     agv.getLocalTranslation().x-Container.width/20,
                     agv.getLocalTranslation().y+0.31f,
-                    agv.getLocalTranslation().z-Container.depth/20);
+                    agv.getLocalTranslation().z-Container.depth/20);*/
+           
         }
     }
 }

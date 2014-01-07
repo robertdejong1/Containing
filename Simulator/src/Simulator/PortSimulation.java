@@ -1,6 +1,7 @@
 package Simulator;
 
 import static Simulator.Type.TRAINCRANE;
+import com.jme3.animation.LoopMode;
 import com.jme3.app.SimpleApplication;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.events.MotionEvent;
@@ -48,7 +49,7 @@ public class PortSimulation extends SimpleApplication {
         app.start();
 
         //Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        Runnable networkHandler = new NetworkHandler("141.252.236.78", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.236.132", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -78,7 +79,31 @@ public class PortSimulation extends SimpleApplication {
         //truck[i].scale(0.15f);
         //truck[i].place(40.32f, 5f, i);
         //}
- 
+        
+        /*
+        MotionPath mp = new MotionPath();
+        mp.addWayPoint(new Vector3f());
+        
+        mp.addWayPoint(new Vector3f(71.700005f, 5.5f, 1.9f));
+        mp.addWayPoint(new Vector3f(71.700005f, 5.5f, 156.2f));
+        mp.addWayPoint(new Vector3f(71.700005f, 5.5f, 0.0f));
+        mp.addWayPoint(new Vector3f(10.3f, 5.5f, 0.0f));
+        mp.addWayPoint(new Vector3f(10.3f, 5.5f, 1.5f));
+        mp.addWayPoint(new Vector3f(3.575f, 5.5f, 1.5f));
+        mp.setCurveTension(0.0f);
+        
+        agv[0] = new AGV(assetManager, rootNode, 1);
+        agv[0].place(71.700005f, 5.5f, 156.2f);
+        chaseCamSetTarget(agv[0].agv, agv[0].agv.getName());
+        camstate = 2;
+        
+        MotionEvent motev = new MotionEvent(agv[0].agv, mp, LoopMode.Loop);
+        motev.setDirectionType(MotionEvent.Direction.Path);
+        motev.setSpeed(1f);
+        //motev.play();
+        */
+        
+        
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
         sun.setDirection(lightDir);
@@ -142,7 +167,11 @@ public class PortSimulation extends SimpleApplication {
                         if (closest.getName().contains("Container"))
                         {
                             chaseCamSetTarget(closest, closest.getName());
-                        }       
+                        }
+                        else if (closest.getName().contains("AGV"))
+                        {
+                            chaseCamSetTarget(closest, closest.getName());
+                        } 
                         else if(!closest.getParent().getName().contains("-objnode"))
                         {
                             chaseCamSetTarget(closest, closest.getParent().getName());
@@ -381,20 +410,20 @@ public class PortSimulation extends SimpleApplication {
                             
                             if (a.occupied)
                             {
-                                MotionPath path2 = new MotionPath();
+                                MotionPath conpath = new MotionPath();
                                 for (int i = 0; i < path.getNbWayPoints(); i++)
                                 {
                                     Vector3f waypoint = path.getWayPoint(i).clone();
-                                    waypoint.setX(waypoint.x - 0.07f);
-                                    waypoint.setY(waypoint.y + 0.35f);
-                                    waypoint.setZ(waypoint.z - 0.33f);
-                                    path2.addWayPoint(waypoint);
+                                    waypoint.setY(waypoint.getY()+0.31f);
+                                    System.out.println("YOLO: " + waypoint.getY());
+                                    conpath.addWayPoint(waypoint);
                                 }
-                                path2.setCurveTension(0.0f);
-                                MotionEvent agv_motion = new MotionEvent(a.con.model, path, duration);
-                                agv_motion.setSpeed(1f);
-                                agv_motion.setDirectionType(MotionEvent.Direction.Path);
-                                agv_motion.play();
+                                conpath.setCurveTension(0.0f);
+                                
+                                MotionEvent conmotion = new MotionEvent(a.con.model, path, duration);
+                                conmotion.setSpeed(1f);
+                                conmotion.setDirectionType(MotionEvent.Direction.Path);
+                                conmotion.play();
                             }
                         }
 

@@ -203,11 +203,11 @@ public class TrainPlatform extends Platform {
         {
             return Phase.LOAD;
         }
-        else if(busyCranes.contains(c) && craneAgv != null && craneAgv.getStatus() != Status.MOVING && c.getStatus() == Status.UNLOADING) 
+        else if(busyCranes.contains(c) && craneAgv != null && craneAgv.getStatus() != Status.MOVING && c.getStatus() == Status.UNLOADING && !c.getCargo().isEmpty() && !agvSpots.get(currentCrane).isEmpty()) 
         {
             return Phase.UNLOAD;
         }
-        else if(busyCranes.contains(c) && craneAgv != null && craneAgv.getStatus() != Status.MOVING && c.getStatus() == Status.WAITING) 
+        else if(busyCranes.contains(c) && craneAgv != null && craneAgv.getStatus() != Status.MOVING && c.getStatus() == Status.WAITING && c.getCargo().isEmpty()) 
         {
             return Phase.SENDTOSTORAGE;
         }
@@ -233,7 +233,11 @@ public class TrainPlatform extends Platform {
         AGV agv = agvQueue.peek();
         if(agv.getStatus() != Status.MOVING) {
             agv = agvQueue.poll();
+            System.out.println("AGV == " + agv.getStatus());
             agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
+            System.out.println("AGV == " + agv.getStatus());
+            System.out.println("breakie breakie");
+            //while(true) {}
             craneAgvs.set(currentCrane, agv);
             if(c.getStatus() == Status.WAITING) {
                 try {
@@ -251,6 +255,7 @@ public class TrainPlatform extends Platform {
     {
         Crane c = cranes.get(currentCrane);
         AGV craneAgv = craneAgvs.get(currentCrane);
+        System.out.println("(UNLOAD) AGV STATUS == " + craneAgv.getStatus());
         if(!unloadOnce) {
             try {
                 System.out.println("crane cargo == " + c.getCargo().size());

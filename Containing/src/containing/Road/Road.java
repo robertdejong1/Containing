@@ -107,7 +107,8 @@ public class Road implements Serializable
         track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
         track2.add(this.createCorrespondingWaypoint(exitwayPlatform));
         track2.add(exitwayPlatform);
-        //source.UnparkVehicle(); //moet straks bij followroute - minardus : plekken worden opnieuw aangemaakt nadat de agv weg gaat, dus geen unparkvehicle() nodig
+        if(vehicle.getCurrentPlatform() instanceof StoragePlatform)
+            source.UnparkVehicle();
         vehicle.setPosition(exitwayPlatform);
         Route route = new Route(track2, getPathLength(track2));
         route.destinationParkingSpot = null;

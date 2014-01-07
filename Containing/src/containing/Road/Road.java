@@ -20,7 +20,7 @@ import java.util.List;
 public class Road implements Serializable 
 {
     float roadWidth = AGV.width + AGV.width * 0.25f;
-    
+    boolean print = true;
     volatile List<Vector3f> track = new ArrayList<>();
         
     public Road(List<Vector3f> roadPoints){ //vaste punten voor main road = 4, voor platform road = 2
@@ -36,7 +36,7 @@ public class Road implements Serializable
     private synchronized Vector3f createCorrespondingWaypoint(Vector3f point){
         
         
-        if (track.size() == 4){
+        if (track.size() == 4){ //function only relevant for mainroad/rectangle road
             //linksboven
             if (point.x < track.get(0).x){ return new Vector3f(track.get(0).x, point.y, point.z); }
             //rechtsonder
@@ -66,30 +66,41 @@ public class Road implements Serializable
     //allinclusive
     public Route getPathAllIn(Vehicle vehicle, ParkingSpot source, ParkingSpot destinationParkingSpot, Platform destinationPlatform, Road mainroad)
     {
+        System.out.println("In function getPathAllIn");
         Route deel1 = vehicle.getCurrentPlatform().getRoad().getPathFromParkingSpotToPlatform(vehicle, source, vehicle.getCurrentPlatform().getExitpoint());
         Route deel2 = mainroad.getPathFromExitPointPlatformToEntryPointPlatform(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform, mainroad);
         Route deel3 = destinationPlatform.getRoad().getPathFromEntryPointPlatformToParkingSpot(vehicle, destinationParkingSpot);
         
         List<Vector3f> track2 = new ArrayList<>();
-        for (Vector3f v : deel1.getWeg()) { track2.add(v); }
-        for (Vector3f v : deel2.getWeg()) { track2.add(v); }
-        for (Vector3f v : deel3.getWeg()) { track2.add(v); }
         
+        for (Vector3f v : deel1.getWeg()) { track2.add(v); if (!print) {System.out.println("dee1:" + v); }}
+        for (Vector3f v : deel2.getWeg()) { track2.add(v); if (!print) {System.out.println("dee2:" + v); }}
+        for (Vector3f v : deel3.getWeg()) { track2.add(v); if (!print) {System.out.println("dee3:" + v); }}
+       
+        
+        boolean print = false;
         return new Route(track2, getPathLength(track2));
     }
     
       public Route getPathAllInVector(Vehicle vehicle, ParkingSpot source, Vector3f destinationVector, Platform destinationPlatform, Road mainroad)
     {
+        System.out.println("In function getPathAllInVector");
         Route deel1 = vehicle.getCurrentPlatform().getRoad().getPathFromParkingSpotToPlatform(vehicle, source, vehicle.getCurrentPlatform().getExitpoint());
         Route deel2 = mainroad.getPathFromExitPointPlatformToEntryPointPlatform(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform, mainroad);
         Route deel3 = destinationPlatform.getRoad().getPathFromEntryPointPlatformToVector(vehicle, destinationVector);
-        
-      
-        
+
         List<Vector3f> track2 = new ArrayList<>();
-        for (Vector3f v : deel1.getWeg()) { track2.add(v); }
-        for (Vector3f v : deel2.getWeg()) { track2.add(v); }
-        for (Vector3f v : deel3.getWeg()) { track2.add(v);  }
+        for (Vector3f v : deel1.getWeg()) { track2.add(v); if (print) {System.out.println("deel1:" + v); }}
+        for (Vector3f v : deel2.getWeg()) { track2.add(v); if (print) {System.out.println("deel2:" + v); }}
+        for (Vector3f v : deel3.getWeg()) { track2.add(v); if (print) {System.out.println("deel3:" + v); }}
+         if (!print)
+        {
+            System.out.println("LINKSONDER: " + mainroad.track.get(1));
+            System.out.println("LINKSBOVEN: " + mainroad.track.get(0));
+            System.out.println("RECHTSBOVEN: " + mainroad.track.get(3));
+            System.out.println("RECHTSONDER: " + mainroad.track.get(2));
+        }
+        print = false;
         
         return new Route(track2, getPathLength(track2));
     }
@@ -97,7 +108,7 @@ public class Road implements Serializable
     //van parkeerplaats op platform naar einde platform
     public Route getPathFromParkingSpotToPlatform(Vehicle vehicle, ParkingSpot source, Vector3f exitwayPlatform)
     {
-  
+        System.out.println("In function getPathFromParkingSpotToPlatform");
         List<Vector3f> track2 = new ArrayList<Vector3f>();
         track2.add(vehicle.getPosition());
         track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
@@ -113,25 +124,26 @@ public class Road implements Serializable
     
      public Route moveToContainer(ExternVehicle ev, int column, Crane crane)
     {
-         System.out.println("column : " + column);
+         System.out.println("In function moveToContainer");
+         //System.out.println("column : " + column);
          List<Vector3f> route = new ArrayList<>();
          route.add(crane.getPosition());
          Vector3f container = ev.getGrid()[column][0][0].getArrivalPosition();
          
-         System.out.println("ev.getPosition = " + ev.getPosition().toString());
+         //System.out.println("ev.getPosition = " + ev.getPosition().toString());
         
          switch (ev.getCurrentPlatform().getAxis())
          {
              case X:
                  Vector3f haha = new Vector3f(ev.getPosition().x - column*1.5f, crane.getPosition().y, crane.getPosition().z);
                  route.add(haha); //??
-                 System.out.println("route x: " + haha.toString());
+                 //System.out.println("route x: " + haha.toString());
                  break;
              case Z:
                  // hardcoded voor de trein nu ;( wagon is 1.5f en trein zelf ook
                  Vector3f hihi = new Vector3f(crane.getPosition().x, crane.getPosition().y, ev.getPosition().z - column*1.5f - 1.5f + 0.70f);
                  route.add(hihi); //??
-                 System.out.println("route z: " + hihi.toString());
+                 //System.out.println("route z: " + hihi.toString());
                  break;
              //caseY?  
              
@@ -143,20 +155,23 @@ public class Road implements Serializable
     //van uitgang platform naar ingang andere platform
      public Route getPathFromExitPointPlatformToEntryPointPlatform(Vehicle vehicle, Vector3f sourcePlatformExitPoint,Platform destination, Road mainroad)
      {
+         System.out.println("In function getPathFromExitPointPlatformToEntryPointPlatform");
          List<Vector3f> track2 = new ArrayList<Vector3f>();//this.track
          track2.add(sourcePlatformExitPoint);
-         System.out.println("sourcePlatformExitPoint: " + sourcePlatformExitPoint);
+         //System.out.println("sourcePlatformExitPoint: " + sourcePlatformExitPoint);
          track2.add(this.createCorrespondingWaypoint(sourcePlatformExitPoint));
-         System.out.println("sourcePlatformExitPointCW: " + this.createCorrespondingWaypoint(sourcePlatformExitPoint));
+         //System.out.println("sourcePlatformExitPointCW: " + this.createCorrespondingWaypoint(sourcePlatformExitPoint));
          track2.add(this.createCorrespondingWaypoint(destination.getEntrypoint()));
-         System.out.println("destinationEntryPointCW: " + this.createCorrespondingWaypoint(destination.getEntrypoint()));
+         //System.out.println("destinationEntryPointCW: " + this.createCorrespondingWaypoint(destination.getEntrypoint()));
          track2.add(destination.getEntrypoint());
-         System.out.println("destinationEntryPoint: " + destination.getEntrypoint());
+         //System.out.println("destinationEntryPoint: " + destination.getEntrypoint());
          for (Vector3f v : track2){
-             System.out.println("BEFORE: " + v);}
+             //System.out.println("BEFORE: " + v);
+         }
          track2 = this.setPathCorrectOrder(track2, vehicle.getCurrentPlatform(), destination, mainroad);
          for (Vector3f v : track2){
-             System.out.println("AFTER: " + v);}
+             //System.out.println("AFTER: " + v);
+         }
          vehicle.setCurrentPlatform(destination);
          vehicle.setPosition(destination.getEntrypoint());
          Route route = new Route(track2, getPathLength(track2));
@@ -170,6 +185,7 @@ public class Road implements Serializable
      //van ingang platform naar parkeerplaats
       public Route getPathFromEntryPointPlatformToParkingSpot(Vehicle vehicle, ParkingSpot ps)
       {
+          System.out.println("In function getPathFromEntryPointPlatformToParkingSpot");
           List<Vector3f> track2 = new ArrayList<Vector3f>();//this.track
           track2.add(vehicle.getPosition());
           track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
@@ -196,6 +212,7 @@ public class Road implements Serializable
       
       public Route getPathToParkingsSpot(Vehicle vehicle, ParkingSpot ps)
       {
+          System.out.println("In function getPathToParkingsSpot");
           List<Vector3f> track2 = new ArrayList<Vector3f>();
           track2.add(vehicle.getPosition());
           track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
@@ -213,6 +230,7 @@ public class Road implements Serializable
       
        public Route getPathFromEntryPointPlatformToVector(Vehicle vehicle, Vector3f destinationVector)
       {
+          System.out.println("In function getPathFromEntryPointPlatformToVector");
           List<Vector3f> track2 = new ArrayList<Vector3f>();//this.track
           track2.add(vehicle.getPosition());
           track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
@@ -226,6 +244,7 @@ public class Road implements Serializable
       
        public Route getPathExternVehicleExit(ParkingSpot ps, Vector3f v )
        {
+           System.out.println("In function getPathExternVehicleExit");
            List<Vector3f> track2 = new ArrayList<Vector3f>();
            track2.add(ps.getPosition());
            track2.add(v);
@@ -240,6 +259,7 @@ public class Road implements Serializable
        
     public Route getPathExternVehicleEntry(ExternVehicle ev, ParkingSpot ps )
     {
+        System.out.println("In function getPathExternVehicleEntry");
         List<Vector3f> track2 = new ArrayList<Vector3f>();
         track2.add(ev.getPosition());
         track2.add(ps.getPosition());
@@ -251,6 +271,7 @@ public class Road implements Serializable
     }
     
     public Route getPathMoveContainer(ExternVehicle ev, int column, Crane crane) {
+        System.out.println("In function getPathMoveContainer");
         List<Vector3f> track2 = new ArrayList<Vector3f>();
         track2.add(crane.getPosition());
         //track2.add(ev.getPosition());
@@ -317,31 +338,35 @@ public class Road implements Serializable
     
     public synchronized List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Platform source, Platform destination, Road mainroad){
         //path size altijd 4
+        System.out.println("In function setPathCorrectOrder");
+        for (Vector3f v : path){
+            System.out.println("Path: " + v);
+        }
         List<Vector3f> correctPath = new ArrayList<>();
-        correctPath.add(path.get(0));
-        correctPath.add(path.get(1));
+        correctPath.add(path.get(0)); //exitpoint
+        correctPath.add(path.get(1)); //exitpoint op weg
         
 
-        System.out.println("POSITIE: " + source.positie); //=rechts
-        System.out.println("POSITIE: " + destination.positie); //=links
+        //System.out.println("POSITIE: " + source.positie); //=rechts
+        //System.out.println("POSITIE: " + destination.positie); //=links
      
         //if (destination.positie == Platform.Positie.)
         
-        boolean right = false;
+        boolean right = true;
         
         
         //bepalen aan hand van platform of rechts of links: nu altijd rechtsom
         
         if (source instanceof StoragePlatform)
         {
-            System.out.println("RIGHT IS THE GOOD SIDE");
-            right = true; //
+            //System.out.println("RIGHT IS THE GOOD SIDE");
+            right = false; //
         }
         //if (typeOrInterface.isInstance(someObject);)
         
         //rechtsom
         if (right)
-        {   
+        {    
 
             
             switch(source.positie)
@@ -350,9 +375,9 @@ public class Road implements Serializable
                
                     
                     if (destination.positie == Platform.Positie.LINKS) 
-                    { //rechtsboven rechtsonder linksonder
+                    {  //rechtsonder linksonder
                        
-                        //correctPath.add(mainroad.track.get(3));
+                       
                         correctPath.add(mainroad.track.get(2)); 
                         correctPath.add(mainroad.track.get(1)); 
                         break;
@@ -468,7 +493,7 @@ public class Road implements Serializable
         correctPath.add(path.get(3));
         for (Vector3f v : path)
         {
-          System.out.println("VectorPath: " + v);  
+          //System.out.println("VectorPath: " + v);  
         }
         
         return correctPath;

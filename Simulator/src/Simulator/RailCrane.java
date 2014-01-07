@@ -127,7 +127,7 @@ public class RailCrane
         return this.con;
     }
     
-    private int grabstate = 0;
+    public int grabstate = 0;
     private boolean occupied = false;
     private int con_index = 0;
     

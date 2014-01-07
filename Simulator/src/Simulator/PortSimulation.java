@@ -48,8 +48,8 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        //Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        Runnable networkHandler = new NetworkHandler("141.252.236.132", 1337);
+        Runnable networkHandler = new NetworkHandler("localhost", 1337);
+        //Runnable networkHandler = new NetworkHandler("141.252.236.132", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -415,12 +415,11 @@ public class PortSimulation extends SimpleApplication {
                                 {
                                     Vector3f waypoint = path.getWayPoint(i).clone();
                                     waypoint.setY(waypoint.getY()+0.31f);
-                                    System.out.println("YOLO: " + waypoint.getY());
                                     conpath.addWayPoint(waypoint);
                                 }
                                 conpath.setCurveTension(0.0f);
                                 
-                                MotionEvent conmotion = new MotionEvent(a.con.model, path, duration);
+                                MotionEvent conmotion = new MotionEvent(a.con.model, conpath, duration);
                                 conmotion.setSpeed(1f);
                                 conmotion.setDirectionType(MotionEvent.Direction.Path);
                                 conmotion.play();
@@ -489,12 +488,16 @@ public class PortSimulation extends SimpleApplication {
                         if (crane.id == crane_id)
                         {
                             Container c = crane.unloadCrane();
+                            
                             for (AGV a : agv)
                             {
                                 if (a.id == agv_id)
                                 {
                                     a.attachContainer(c);
-                                    c.move(a.agv.getLocalTranslation());
+                                    
+                                    Vector3f pos = a.agv.getLocalTranslation();
+                                    pos.setY(pos.getY() + 0.31f + (2.25f*0.33f));
+                                    c.place(pos.x, pos.y, pos.z);
                                 }
                             }
                         }

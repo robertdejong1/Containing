@@ -42,8 +42,8 @@ public class Road implements Serializable
             //rechtsonder
             if (point.x > track.get(2).x) { return new Vector3f(track.get(2).x, point.y, point.z); }
             //linksonder
-            if (point.z < track.get(1).z){ return new Vector3f(point.x, point.y, track.get(1).z); }
-            
+            if (point.z < track.get(1).z){ System.out.println("ABC");return new Vector3f(point.x, point.y, track.get(3).z); }
+            System.out.println("DEF");
             return new Vector3f(point.x,point.y, track.get(0).z);
         
         }
@@ -166,11 +166,11 @@ public class Road implements Serializable
          track2.add(destination.getEntrypoint());
          //System.out.println("destinationEntryPoint: " + destination.getEntrypoint());
          for (Vector3f v : track2){
-             //System.out.println("BEFORE: " + v);
+             System.out.println("BEFORE: " + v);
          }
          track2 = this.setPathCorrectOrder(track2, vehicle.getCurrentPlatform(), destination, mainroad);
          for (Vector3f v : track2){
-             //System.out.println("AFTER: " + v);
+             System.out.println("AFTER: " + v);
          }
          vehicle.setCurrentPlatform(destination);
          vehicle.setPosition(destination.getEntrypoint());

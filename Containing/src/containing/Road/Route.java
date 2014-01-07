@@ -7,6 +7,7 @@
 package containing.Road;
 
 import containing.ErrorLog;
+import containing.Exceptions.InvalidVehicleException;
 import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
 import containing.Settings;
@@ -29,17 +30,17 @@ public class Route implements Serializable {
     public Route(List<Vector3f> weg, float distanceInMeters){
         
         for (Vector3f v : weg){
-            System.out.println("INITROUTE: " + v);
+            //ystem.out.println("INITROUTE: " + v);
             this.weg.add(v);
         }
         this.distance = distanceInMeters;
-        System.out.println("------------");
+        //System.out.println("------------");
         for (Vector3f v : this.weg){
-            System.out.println("ROUTE: " + v);
+            //System.out.println("ROUTE: " + v);
         }
         
       
-        System.out.println("------------");
+        //System.out.println("------------");
     }
     
     public void setDestinationPlatform(Platform destination){this.destinationPlatform = destination;}
@@ -55,7 +56,7 @@ public class Route implements Serializable {
         if (distance <= 0){
             
             Settings.messageLog.AddMessage("Reached end of path");
-            System.out.println("weg.size() == " + weg.size());
+            //System.out.println("weg.size() == " + weg.size());
             vehicle.setPosition(weg.get(weg.size()-1));
             vehicle.stopDriving();
             if (destinationPlatform == null && destinationParkingSpot == null){}
@@ -85,7 +86,16 @@ public class Route implements Serializable {
                 }
                 
                 //hier kraan geparkeerd ... ga unload
-             //park vehicle
+             try
+             {
+                this.destinationParkingSpot.ParkVehicle(vehicle);
+                vehicle.setPosition(this.destinationParkingSpot.getPosition());
+             }
+             catch(InvalidVehicleException ie)
+             {
+                 System.out.println(ie.getMessage());
+                 
+             }
 
         }
         

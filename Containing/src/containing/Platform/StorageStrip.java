@@ -331,11 +331,11 @@ public class StorageStrip implements Serializable {
             {
                 case LOAD:
                     System.out.println("LOAD");
-                    load_phaseLoad(craneAgv);
+                    //load_phaseLoad(craneAgv);
                     break;
                 case SENDTOPARKINGSPOT:
                     System.out.println("SENDTOPARKINGSPOT");
-                    load_phaseSendToParkingSpot();
+                    //load_phaseSendToParkingSpot();
                     break;
             }
         }

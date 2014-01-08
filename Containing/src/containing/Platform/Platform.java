@@ -99,8 +99,8 @@ public abstract class Platform implements Serializable {
     {
         List<Vector3f> wayshit = new ArrayList<>();
         wayshit.add(entrypoint);
-        //wayshit.add(entrycorner);
-        //wayshit.add(exitcorner);
+        wayshit.add(entrycorner);
+        wayshit.add(exitcorner);
         wayshit.add(exitpoint);
         road = new Road(wayshit);
     }

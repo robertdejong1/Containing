@@ -3,6 +3,7 @@ package containing.Platform;
 import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
+import containing.Exceptions.AgvNotAvailable;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.NoFreeAgvException;
@@ -134,7 +135,11 @@ public class TrainPlatform extends Platform {
                     try {
                         AgvSpot agvSpot = Settings.port.getStoragePlatform().requestFreeAgv(getTransportType(), agvQueue);
                         AGV agv = (AGV)agvSpot.getParkedVehicle();
-                        agv.followRoute(road.getPathAllInVector(agv, agvSpot, positions.get(i), this, Settings.port.getMainroad()));
+                        try {
+                            agv.followRoute(road.getPathAllInVector(agv, agvSpot, positions.get(i), this, Settings.port.getMainroad()));
+                        } catch (AgvNotAvailable ex) {
+                            Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         addAgvToQueue(agv);
                     } catch(NoFreeAgvException e) {
                         System.out.println("No Free AGV available ;(");
@@ -218,8 +223,12 @@ public class TrainPlatform extends Platform {
     {
         Crane c = cranes.get(currentCrane);
         if(ev.getGrid()[column][0][0] != null) {
-            c.followRoute(craneRoad.moveToContainer(ev, column, c));
-            busyCranes.add(c);
+            try {
+                c.followRoute(craneRoad.moveToContainer(ev, column, c));
+                busyCranes.add(c);
+            } catch (AgvNotAvailable ex) {
+                Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -232,21 +241,25 @@ public class TrainPlatform extends Platform {
         // send AGV from queue
         AGV agv = agvQueue.peek();
         if(agv.getStatus() != Status.MOVING) {
-            agv = agvQueue.poll();
-            System.out.println("AGV == " + agv.getStatus());
-            agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
-            System.out.println("AGV == " + agv.getStatus());
-            System.out.println("breakie breakie");
-            //while(true) {}
-            craneAgvs.set(currentCrane, agv);
-            if(c.getStatus() == Status.WAITING) {
-                try {
-                    c.load(container, ev);
-                } catch (CargoOutOfBoundsException ex) {
-                    Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {
-                    Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                agv = agvQueue.poll();
+                System.out.println("AGV == " + agv.getStatus());
+                agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
+                System.out.println("AGV == " + agv.getStatus());
+                System.out.println("breakie breakie");
+                //while(true) {}
+                craneAgvs.set(currentCrane, agv);
+                if(c.getStatus() == Status.WAITING) {
+                    try {
+                        c.load(container, ev);
+                    } catch (CargoOutOfBoundsException ex) {
+                        Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
+            } catch (AgvNotAvailable ex) {
+                Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -269,26 +282,31 @@ public class TrainPlatform extends Platform {
     
     private void unload_phaseSendToStorage(int currentCrane) 
     {
-        Crane c = cranes.get(currentCrane);
-        AGV craneAgv = craneAgvs.get(currentCrane);
-        busyCranes.remove(c);
-        unloadOnce = false;
-        craneAgvs.set(currentCrane, null);
-        agvSpots.get(currentCrane).UnparkVehicle();
-        // check where container needs to go
-        TransportType tt = craneAgv.getCargo().get(0).getDepartureTransport();
-        int stripNr = Settings.port.getStoragePlatform().getNearbyStrip(getTransportType());
-        AgvSpot agvSpot = null;
-        for(int i = stripNr; i < Settings.port.getStoragePlatform().getStripAmount(); i++)
-        {
-            if(Settings.port.getStoragePlatform().getStrip(i).getStorageState() != StorageStrip.StorageState.FULL)
+        try {
+            Crane c = cranes.get(currentCrane);
+            AGV craneAgv = craneAgvs.get(currentCrane);
+            busyCranes.remove(c);
+            unloadOnce = false;
+            craneAgvs.set(currentCrane, null);
+            agvSpots.get(currentCrane).UnparkVehicle();
+            // check where container needs to go
+            //TransportType tt = craneAgv.getCargo().get(0).getDepartureTransport();
+            int stripNr = Settings.port.getStoragePlatform().getNearbyStrip(getTransportType());
+            AgvSpot agvSpot = null;
+            for(int i = stripNr; i < Settings.port.getStoragePlatform().getStripAmount(); i++)
             {
-                agvSpot = Settings.port.getStoragePlatform().getStrip(i).getFreeAgvSpotLoad();
+                if(Settings.port.getStoragePlatform().getStrip(i).getStorageState() != StorageStrip.StorageState.FULL)
+                {
+                    agvSpot = Settings.port.getStoragePlatform().getStrip(i).getFreeAgvSpotLoad();
+                }
+                if(agvSpot != null)
+                    break;
             }
-            if(agvSpot != null)
-                break;
+            System.out.println("WOW WTF GEBEURT JIR");
+            craneAgv.followRoute(road.getPathAllIn(craneAgv, agvSpots.get(currentCrane), agvSpot, Settings.port.getStoragePlatform().getLeft(), Settings.port.getMainroad()));
+        } catch (AgvNotAvailable ex) {
+            Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
         }
-        craneAgv.followRoute(road.getPathAllIn(craneAgv, agvSpots.get(currentCrane), agvSpot, Settings.port.getStoragePlatform().getLeft(), Settings.port.getMainroad()));
     }
     
     @Override
@@ -319,9 +337,13 @@ public class TrainPlatform extends Platform {
                     }
                     else
                     {
-                        it.remove();
-                        sendAwayEvTiming[currentVehicle] = -1;
-                        ev.followRoute(road.getPathExternVehicleExit(extVehicleSpots.get(currentVehicle), new Vector3f(ev.getPosition().x, 5.5f, ev.getPosition().z + 1000f)));
+                        try {
+                            it.remove();
+                            sendAwayEvTiming[currentVehicle] = -1;
+                            ev.followRoute(road.getPathExternVehicleExit(extVehicleSpots.get(currentVehicle), new Vector3f(ev.getPosition().x, 5.5f, ev.getPosition().z + 1000f)));
+                        } catch (AgvNotAvailable ex) {
+                            Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
                 

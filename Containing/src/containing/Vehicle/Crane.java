@@ -9,6 +9,7 @@ package containing.Vehicle;
 import containing.Command;
 import containing.CommandHandler;
 import containing.Container;
+import containing.Exceptions.AgvNotAvailable;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
 import containing.Exceptions.VehicleOverflowException;
@@ -112,7 +113,7 @@ public abstract class Crane extends InternVehicle {
       
     
     
-    public void moveToContainer(ExternVehicle ev, int column)
+    public void moveToContainer(ExternVehicle ev, int column) throws AgvNotAvailable
     {
          System.out.println("column : " + column);
          List<Vector3f> route = new ArrayList<>();

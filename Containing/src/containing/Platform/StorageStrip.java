@@ -2,6 +2,7 @@ package containing.Platform;
 
 import containing.Container;
 import containing.Dimension2f;
+import containing.Exceptions.AgvNotAvailable;
 import containing.Exceptions.ContainerNotFoundException;
 import containing.ParkingSpot.AgvSpot;
 import containing.Platform.Platform.State;
@@ -310,8 +311,12 @@ public class StorageStrip implements Serializable {
     
     private void load_phaseSendToParkingSpot()
     {
-        AGV agv = agvQueueLoad.poll();
-        agv.followRoute(platform.getLeft().getRoad().getPathAllIn(agv, getParkingSpotFromVehicleLoad(agv), platform.getFreeParkingSpotUnloaded(), platform, Settings.port.getMainroad()));
+        try {
+            AGV agv = agvQueueLoad.poll();
+            agv.followRoute(platform.getLeft().getRoad().getPathAllIn(agv, getParkingSpotFromVehicleLoad(agv), platform.getFreeParkingSpotUnloaded(), platform, Settings.port.getMainroad()));
+        } catch (AgvNotAvailable ex) {
+            Logger.getLogger(StorageStrip.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void load()

@@ -201,6 +201,7 @@ public class Road implements Serializable
           track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
           track2.add(this.createCorrespondingWaypoint(this.createCorrespondingWaypoint(ps.getPosition())));
           track2.add(ps.getPosition());
+          /*
           try
           {
           ps.ParkVehicle(vehicle);
@@ -209,7 +210,10 @@ public class Road implements Serializable
           catch(Exception e){
               Settings.messageLog.AddMessage(e.getMessage());
           }
-          
+          */
+          Route route = new Route(track2, getPathLength(track2));
+          route.destinationPlatform = null;
+          route.destinationParkingSpot = ps;
           return new Route(track2, getPathLength(track2));
           
           

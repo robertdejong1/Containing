@@ -4,6 +4,7 @@ import containing.Container;
 import containing.Container.TransportType;
 import containing.Controller;
 import containing.Dimension2f;
+import containing.Exceptions.AgvNotAvailable;
 import containing.Exceptions.AgvQueueSpaceOutOfBounds;
 import containing.Exceptions.AgvSpotOutOfBounds;
 import containing.Exceptions.CargoOutOfBoundsException;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class Platform implements Serializable {
     
@@ -104,9 +107,13 @@ public abstract class Platform implements Serializable {
     
     public void registerExternVehicle(ExternVehicle ev)
     {
-        extVehicles.add(ev);
-        System.out.println("extVehicleSpot.position().x: " + extVehicleSpots.get(0).getPosition().x);
-        ev.followRoute(road.getPathExternVehicleEntry(ev, extVehicleSpots.get(0)));
+        try {
+            extVehicles.add(ev);
+            System.out.println("extVehicleSpot.position().x: " + extVehicleSpots.get(0).getPosition().x);
+            ev.followRoute(road.getPathExternVehicleEntry(ev, extVehicleSpots.get(0)));
+        } catch (AgvNotAvailable ex) {
+            Logger.getLogger(Platform.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public List<Crane> getCranes() 

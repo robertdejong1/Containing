@@ -303,28 +303,28 @@ public class StoragePlatform extends Platform {
     private void setEntrypoints()
     {
         entrypoints = new Vector3f[2];
-        entrypoints[0] = new Vector3f(getPosition().x + 1.7f, getPosition().y, getPosition().z + LENGTH);
+        entrypoints[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z + LENGTH);
         entrypoints[1] = new Vector3f(717f*Settings.METER, getPosition().y, getPosition().z + LENGTH);
     }
     
     private void setEntrycorners()
     {
         entrycorners = new Vector3f[2];
-        entrycorners[0] = new Vector3f(getPosition().x + 1.7f, getPosition().y, getPosition().z + LENGTH);
+        entrycorners[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z + LENGTH);
         entrycorners[1] = new Vector3f(710f*Settings.METER - 1.7f, getPosition().y, getPosition().z + LENGTH);
     }
     
     private void setExitcorners()
     {
         exitcorners = new Vector3f[2];
-        exitcorners[0] = new Vector3f(getPosition().x + 1.7f, getPosition().y, getPosition().z);
+        exitcorners[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z);
         exitcorners[1] = new Vector3f(710f*Settings.METER - 1.7f, getPosition().y, getPosition().z);
     }
     
     private void setExitpoints()
     {
         exitpoints = new Vector3f[2];
-        exitpoints[0] = new Vector3f(getPosition().x + 1.7f, getPosition().y, getPosition().z);
+        exitpoints[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z);
         exitpoints[1] = new Vector3f(717f*Settings.METER, getPosition().y, getPosition().z);
     }
     

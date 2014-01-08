@@ -209,7 +209,7 @@ public class Road implements Serializable
           track2.add(vehicle.getCurrentPlatform().getEntrypoint());
           track2.add(vehicle.getCurrentPlatform().getExitcorner());
           
-          track2.add(new Vector3f(vehicle.getCurrentPlatform().getRoad().track.get(0).x,vehicle.getCurrentPlatform().getRoad().track.get(0).y,ps.getPosition().z));
+          track2.add(new Vector3f(vehicle.getCurrentPlatform().getRoad().track.get(1).x,vehicle.getCurrentPlatform().getRoad().track.get(1).y,ps.getPosition().z));
           
           track2.add(ps.getPosition());
           /*
@@ -225,7 +225,7 @@ public class Road implements Serializable
           return new Route(track2, getPathLength(track2));
       }
       
-      /*
+      
       
       public Route getPathToParkingsSpot(Vehicle vehicle, ParkingSpot ps)
       {
@@ -241,7 +241,7 @@ public class Road implements Serializable
           route.destinationParkingSpot = ps;
           return route;
           
-      }*/
+      }
       
       
        public Route getPathFromEntryPointPlatformToVector(Vehicle vehicle, Vector3f destinationVector)

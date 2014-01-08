@@ -2,13 +2,10 @@ package containing.Road;
 
 import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
-import static containing.Platform.Platform.DynamicAxis.X;
-import static containing.Platform.Platform.DynamicAxis.Z;
 import static containing.Platform.Platform.Positie.LINKS;
 import static containing.Platform.Platform.Positie.ONDER;
 import static containing.Platform.Platform.Positie.RECHTS;
 import containing.Platform.StoragePlatform;
-import static containing.Road.Road.getPathLength;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
@@ -45,7 +42,7 @@ public class Road implements Serializable
             //rechtsonder
             if (point.x > track.get(2).x) { return new Vector3f(track.get(2).x, point.y, point.z); }
             //linksonder
-            if (point.z < track.get(3).z){ return new Vector3f(point.x, point.y, track.get(3).z); } 
+            if (point.z < track.get(1).z){ return new Vector3f(point.x, point.y, track.get(1).z); } 
             //was1
             return new Vector3f(point.x,point.y, track.get(3).z); //0
         

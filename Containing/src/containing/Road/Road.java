@@ -21,11 +21,12 @@ public class Road implements Serializable
     float roadWidth = AGV.width + AGV.width * 0.25f;
     
     volatile List<Vector3f> track = new ArrayList<>();
-        
+     
     public Road(List<Vector3f> roadPoints){ //vaste punten voor main road = 4, voor platform road = 2
         for (Vector3f v : roadPoints){
             track.add(v);
         }
+     
         //Collections.sort(track); //links onder links boven rechts boven rechtsonder
         //for (Vector3f v : entryPoints){this.createCorrespondingWaypoint(v);}
     } 
@@ -214,7 +215,7 @@ public class Road implements Serializable
           Route route = new Route(track2, getPathLength(track2));
           route.destinationPlatform = null;
           route.destinationParkingSpot = ps;
-          return new Route(track2, getPathLength(track2));
+          return route;
           
           
           
@@ -355,7 +356,10 @@ public class Road implements Serializable
         correctPath.add(path.get(0)); //exitpoint
         correctPath.add(path.get(1)); //exitpoint op weg
         
-
+        for (Vector3f v : track)
+        {
+            System.out.println("HOEKPUNT: " + v);
+        }
         //System.out.println("POSITIE: " + source.positie); //=rechts
         //System.out.println("POSITIE: " + destination.positie); //=links
      

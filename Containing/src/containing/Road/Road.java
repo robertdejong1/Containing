@@ -35,16 +35,21 @@ public class Road implements Serializable
 
     private synchronized Vector3f createCorrespondingWaypoint(Vector3f point){
         
-        
+        System.out.println("CW_BEFORE: " + point);
         if (track.size() == 4){ //function only relevant for mainroad/rectangle road
             //linksboven
-            if (point.x < track.get(0).x){ return new Vector3f(track.get(0).x, point.y, point.z); }
+            if (point.x <= track.get(0).x){ System.out.println("CW_AFTER0: " + new Vector3f(track.get(0).x, point.y, point.z)); return new Vector3f(track.get(0).x, point.y, point.z); }
             //rechtsonder
-            if (point.x > track.get(2).x) { return new Vector3f(track.get(2).x, point.y, point.z); }
+            if (point.x >= track.get(2).x) {System.out.println("CW_AFTER1: " + new Vector3f(track.get(2).x, point.y, point.z)); return new Vector3f(track.get(2).x, point.y, point.z); }
             //linksonder
-            if (point.z < track.get(1).z){ return new Vector3f(point.x, point.y, track.get(1).z); } 
+            if (point.z >= track.get(1).z){System.out.println("CW_AFTER2: " + new Vector3f(point.x, point.y, track.get(1).z)); return new Vector3f(point.x, point.y, track.get(1).z); } 
             //was1
-            return new Vector3f(point.x,point.y, track.get(3).z); //0
+            if (point.z <= track.get(0).z){System.out.println("CW_AFTER3: " + new Vector3f(point.x, point.y, track.get(0).z)); return new Vector3f(point.x, point.y, track.get(0).z);} 
+            //if (point.z < track.get(1).z){System.out.println("CW_AFTER4: " + new Vector3f(point.x, point.y, track.get(1).z)); return new Vector3f(point.x, point.y, track.get(1).z);} 
+            
+            if (Math.abs(track.get(0).z - point.z) < Math.abs(track.get(1).z - point.z)){System.out.println("CW_AFTER4: return closest z: "+ new Vector3f(point.x,point.y, track.get(0).z)); return new Vector3f(point.x,point.y, track.get(0).z);} //0}
+            System.out.println("CW_AFTER4: return closest z: "+ new Vector3f(point.x,point.y, track.get(1).z));
+            return new Vector3f(point.x,point.y,  track.get(1).z); //0
         
         }
         return new Vector3f(track.get(0).x, point.y, point.z);
@@ -160,6 +165,7 @@ public class Road implements Serializable
          System.out.println("In function getPathFromExitPointPlatformToEntryPointPlatform");
          List<Vector3f> track2 = new ArrayList<Vector3f>();//this.track
          track2.add(sourcePlatformExitPoint);
+       
          //System.out.println("sourcePlatformExitPoint: " + sourcePlatformExitPoint);
          track2.add(this.createCorrespondingWaypoint(sourcePlatformExitPoint));
          //System.out.println("sourcePlatformExitPointCW: " + this.createCorrespondingWaypoint(sourcePlatformExitPoint));

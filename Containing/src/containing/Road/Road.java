@@ -47,7 +47,7 @@ public class Road implements Serializable
             //linksonder
             if (point.z < track.get(1).z){ return new Vector3f(point.x, point.y, track.get(1).z); } 
             //was1
-            return new Vector3f(point.x,point.y, track.get(3).z); //0
+            return new Vector3f(point.x,point.y, track.get(0).z); //0
         
         }
         return new Vector3f(track.get(0).x, point.y, point.z);

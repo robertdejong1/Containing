@@ -57,7 +57,10 @@ public class Route implements Serializable {
             
             Settings.messageLog.AddMessage("Reached end of path");
             //System.out.println("weg.size() == " + weg.size());
+            try{
             vehicle.setPosition(weg.get(weg.size()-1));
+            }
+            catch(Exception e){vehicle.setPosition(new Vector3f(10.3f, 5.5f, 156.2f));}
             vehicle.stopDriving();
             if (destinationPlatform == null && destinationParkingSpot == null){}
             else if (destinationParkingSpot == null){

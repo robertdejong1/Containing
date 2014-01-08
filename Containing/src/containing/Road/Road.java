@@ -72,14 +72,15 @@ public class Road implements Serializable
         Route deel3 = destinationPlatform.getRoad().getPathFromEntryPointPlatformToParkingSpot(vehicle, destinationParkingSpot);
         
         List<Vector3f> track2 = new ArrayList<>();
-        if(vehicle.getID()==103){
         for (Vector3f v : deel1.getWeg()) { track2.add(v); System.out.println("deel1: "+ v);}
         for (Vector3f v : deel2.getWeg()) { track2.add(v); System.out.println("deel2: "+ v);}
         for (Vector3f v : deel3.getWeg()) { track2.add(v); System.out.println("deel3: "+ v);}
-        }
         
-     
-        return new Route(track2, getPathLength(track2));
+        Route route = new Route(track2, getPathLength(track2));
+        System.out.println("route.weg == " + route.getWeg().size());
+        route.destinationPlatform = destinationPlatform;
+        route.destinationParkingSpot = destinationParkingSpot;
+        return route;
     }
     
       public Route getPathAllInVector(Vehicle vehicle, ParkingSpot source, Vector3f destinationVector, Platform destinationPlatform, Road mainroad)
@@ -212,15 +213,7 @@ public class Road implements Serializable
               Settings.messageLog.AddMessage(e.getMessage());
           }
           */
-          Route route = new Route(track2, getPathLength(track2));
-          route.destinationPlatform = null;
-          route.destinationParkingSpot = ps;
-          return route;
-          
-          
-          
-          
-          
+          return new Route(track2, getPathLength(track2));
       }
       
       

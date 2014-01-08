@@ -3,6 +3,7 @@ package containing.Vehicle;
 import containing.Command;
 import containing.CommandHandler;
 import containing.Container;
+import containing.Exceptions.AgvNotAvailable;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.ParkingSpot.ParkingSpot;
@@ -106,7 +107,11 @@ public abstract class Vehicle implements Serializable
     
     public Type getVehicleType(){return this.vehicleType;}
     
-    public synchronized void followRoute(Route route){
+    public synchronized void followRoute(Route route) throws AgvNotAvailable{
+        if (this.status == Status.MOVING)
+        {
+           throw new AgvNotAvailable("AGV " + this.getID() + "is already following route");
+        }
         this.route = route;
         this.status = Status.MOVING;
         //currentplatform sign out

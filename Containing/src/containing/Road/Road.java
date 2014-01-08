@@ -14,7 +14,6 @@ import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.Vehicle;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Road implements Serializable 
@@ -42,9 +41,9 @@ public class Road implements Serializable
             //rechtsonder
             if (point.x > track.get(2).x) { return new Vector3f(track.get(2).x, point.y, point.z); }
             //linksonder
-            if (point.z < track.get(1).z){ return new Vector3f(point.x, point.y, track.get(3).z); } 
-            
-            return new Vector3f(point.x,point.y, track.get(0).z);
+            if (point.z < track.get(3).z){ return new Vector3f(point.x, point.y, track.get(3).z); } 
+            //was1
+            return new Vector3f(point.x,point.y, track.get(2).z); //0
         
         }
         return new Vector3f(track.get(0).x, point.y, point.z);
@@ -72,11 +71,11 @@ public class Road implements Serializable
         Route deel3 = destinationPlatform.getRoad().getPathFromEntryPointPlatformToParkingSpot(vehicle, destinationParkingSpot);
         
         List<Vector3f> track2 = new ArrayList<>();
-        
-        for (Vector3f v : deel1.getWeg()) { track2.add(v); }
-        for (Vector3f v : deel2.getWeg()) { track2.add(v); }
-        for (Vector3f v : deel3.getWeg()) { track2.add(v); }
-       
+        if(vehicle.getID()==103){
+        for (Vector3f v : deel1.getWeg()) { track2.add(v); System.out.println("deel1: "+ v);}
+        for (Vector3f v : deel2.getWeg()) { track2.add(v); System.out.println("deel2: "+ v);}
+        for (Vector3f v : deel3.getWeg()) { track2.add(v); System.out.println("deel3: "+ v);}
+        }
         
      
         return new Route(track2, getPathLength(track2));
@@ -93,7 +92,14 @@ public class Road implements Serializable
         for (Vector3f v : deel1.getWeg()) { track2.add(v);}
         for (Vector3f v : deel2.getWeg()) { track2.add(v);}
         for (Vector3f v : deel3.getWeg()) { track2.add(v);}
-         
+        
+        if (vehicle.getID() == 103){
+            for (Vector3f v : track2) 
+            {
+                System.out.println("V: " + v);
+            }
+        }
+        
         
         return new Route(track2, getPathLength(track2));
     }
@@ -159,9 +165,23 @@ public class Road implements Serializable
          //System.out.println("destinationEntryPointCW: " + this.createCorrespondingWaypoint(destination.getEntrypoint()));
          track2.add(destination.getEntrypoint());
          //System.out.println("destinationEntryPoint: " + destination.getEntrypoint());
-       
+         if(vehicle.routecounter > 1)   
+         {
+            for (Vector3f v : track2)
+            {
+                System.out.println("BEFORE: " + v);
+            }
+         }
+         
+         
          track2 = this.setPathCorrectOrder(track2, vehicle.getCurrentPlatform(), destination, mainroad);
-     
+         if (vehicle.routecounter > 1)
+         {
+            for (Vector3f v : track2)
+            {
+                System.out.println("AFTER: " + v);
+            }
+         }
          vehicle.setCurrentPlatform(destination);
          vehicle.setPosition(destination.getEntrypoint());
          Route route = new Route(track2, getPathLength(track2));

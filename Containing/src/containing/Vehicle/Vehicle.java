@@ -18,6 +18,7 @@ import java.util.List;
 public abstract class Vehicle implements Serializable 
 { 
     private static int counter = 0;
+    public int routecounter = 0;
     protected boolean isLoaded = false;
     protected int capicity;
     protected List<Container> cargo;
@@ -109,8 +110,14 @@ public abstract class Vehicle implements Serializable
         this.route = route;
         this.status = Status.MOVING;
         //currentplatform sign out
-        
-       
+        if (this.getID() == 103){
+            System.out.println("AGV103 route: " + this.routecounter);
+            System.out.println("----------------------");
+            for (Vector3f v : this.route.getWeg()){
+                System.out.println("V: " + v);
+            }
+            System.out.println("----------------------");
+        }
         this.currentSpeed = (this.isLoaded) ? this.maxSpeedLoaded : this.maxSpeedUnloaded;
         float duration = (route.getDistance()*10)/(float)((float)this.getCurrentSpeed()*1000f/3600f);
         HashMap<String, Object> map = new HashMap<>();
@@ -133,8 +140,10 @@ public abstract class Vehicle implements Serializable
     
     public void stopDriving(){
         Settings.messageLog.AddMessage("Stop driving");
+        this.routecounter++;
         this.status = Status.WAITING;
         this.currentSpeed = 0;
+        this.route = null;
     }
     
     public abstract int getMaxSpeedLoaded();

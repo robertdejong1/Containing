@@ -99,8 +99,8 @@ public class StoragePlatform extends Platform {
         orientation = new ArrayList<>();
         List<Vector3f> wayshit = new ArrayList<>();
         wayshit.add(getEntrypoint(Side.RIGHT));
-        wayshit.add(getEntrycorner(Side.RIGHT));
-        wayshit.add(getExitcorner(Side.RIGHT));
+        //wayshit.add(getEntrycorner(Side.RIGHT));
+        //wayshit.add(getExitcorner(Side.RIGHT));
         wayshit.add(getExitpoint(Side.RIGHT));
         corners[0] = getEntrycorner(Side.RIGHT);
         corners[1] = getEntrycorner(Side.RIGHT);
@@ -108,8 +108,8 @@ public class StoragePlatform extends Platform {
         road = new Road(wayshit);
         wayshit.clear();
         wayshit.add(getEntrypoint(Side.LEFT));
-        wayshit.add(getEntrycorner(Side.LEFT));
-        wayshit.add(getExitcorner(Side.LEFT));
+        //wayshit.add(getEntrycorner(Side.LEFT));
+        //wayshit.add(getExitcorner(Side.LEFT));
         wayshit.add(getExitpoint(Side.LEFT));
         corners[0] = getEntrycorner(Side.LEFT);
         corners[1] = getEntrycorner(Side.LEFT);

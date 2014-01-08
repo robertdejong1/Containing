@@ -49,6 +49,8 @@ public class StoragePlatform extends Platform {
     
     protected boolean[] agvSpotQueue;
     
+    protected List<AgvSpot> agvQueueLoadBusy;
+    
     public StoragePlatform(Vector3f position)
     {
         super(position, Positie.RECHTS);
@@ -67,7 +69,18 @@ public class StoragePlatform extends Platform {
         Arrays.fill(agvSpotQueue, false);
         /* no vehicles on this platform */
         extVehicleSpots = null;
+        agvQueueLoadBusy = new ArrayList<>();
         log("Created StoragePlatform object: " + toString());
+    }
+    
+    public void putAgvQueueLoadBusy(AgvSpot agvSpot) {
+        agvQueueLoadBusy.add(agvSpot);
+    }
+    
+    public boolean getAgvQueueLoadBusy(AgvSpot agvSpot) {
+        if(agvQueueLoadBusy.contains(agvSpot))
+            return true;
+        return false;
     }
     
     public StorageStrip[] getStrips() 
@@ -135,7 +148,7 @@ public class StoragePlatform extends Platform {
             Vector3f agvSpotPosition;
             if(i % 2 == 0)
             {
-                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET  - (AGV.length*Settings.METER)*4 + 0.25f, getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.15f + (AGV.width*Settings.METER) / 2f);
+                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET, getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.15f + (AGV.width*Settings.METER) / 2f);
             }
             else
             {

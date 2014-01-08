@@ -305,6 +305,7 @@ public class TrainPlatform extends Platform {
                     break;
             }
             System.out.println("WOW WTF GEBEURT JIR");
+            Settings.port.getStoragePlatform().putAgvQueueLoadBusy(agvSpot);
             craneAgv.followRoute(road.getPathAllIn(craneAgv, agvSpots.get(currentCrane), agvSpot, Settings.port.getStoragePlatform().getLeft(), Settings.port.getMainroad()));
         } catch (AgvNotAvailable ex) {
             Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);

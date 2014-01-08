@@ -135,7 +135,7 @@ public class StoragePlatform extends Platform {
             Vector3f agvSpotPosition;
             if(i % 2 == 0)
             {
-                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET - ((AGV.length / 2) * Settings.METER), getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.15f + (AGV.width*Settings.METER) / 2f);
+                agvSpotPosition = new Vector3f(getPosition().x, getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.15f + (AGV.width*Settings.METER) / 2f);
             }
             else
             {
@@ -304,15 +304,15 @@ public class StoragePlatform extends Platform {
     private void setExitcorners()
     {
         exitcorners = new Vector3f[2];
-        exitcorners[0] = new Vector3f(getPosition().x, getPosition().y, getPosition().z);
-        exitcorners[1] = new Vector3f(717f*Settings.METER, getPosition().y, getPosition().z);
+        exitcorners[0] = new Vector3f(getPosition().x + 1.7f, getPosition().y, getPosition().z);
+        exitcorners[1] = new Vector3f(710f*Settings.METER - 1.7f, getPosition().y, getPosition().z);
     }
     
     private void setExitpoints()
     {
         exitpoints = new Vector3f[2];
         exitpoints[0] = new Vector3f(getPosition().x, getPosition().y, getPosition().z);
-        exitpoints[1] = new Vector3f(710f*Settings.METER, getPosition().y, getPosition().z);
+        exitpoints[1] = new Vector3f(717f*Settings.METER, getPosition().y, getPosition().z);
     }
     
     public StoragePlatformOrientation getLeft() {

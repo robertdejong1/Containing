@@ -170,9 +170,14 @@ public class StorageStrip implements Serializable {
         for(int i = startIndex; i < startIndex + MAX_AGV_SPOTS; i += 2)
         {
             AgvSpot agvSpot = platform.agvSpots.get(i);
-            if(agvSpot.isEmpty())
-            {
-                return agvSpot;
+            if(agvQueueLoad.size() > 0) {
+                if(agvQueueLoad.size() > (i / 2) && agvSpot.isEmpty()) {
+                    return agvSpot;
+                }
+            } else {
+                if(agvSpot.isEmpty()) {
+                    return agvSpot;
+                }
             }
         }
         return null;

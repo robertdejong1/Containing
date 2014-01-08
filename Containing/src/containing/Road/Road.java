@@ -41,9 +41,9 @@ public class Road implements Serializable
             //rechtsonder
             if (point.x > track.get(2).x) { return new Vector3f(track.get(2).x, point.y, point.z); }
             //linksonder
-            if (point.z < track.get(3).z){ return new Vector3f(point.x, point.y, track.get(3).z); } 
+            if (point.z < track.get(1).z){ return new Vector3f(point.x, point.y, track.get(3).z); } 
             //was1
-            return new Vector3f(point.x,point.y, track.get(2).z); //0
+            return new Vector3f(point.x,point.y, track.get(0).z); //0
         
         }
         return new Vector3f(track.get(0).x, point.y, point.z);

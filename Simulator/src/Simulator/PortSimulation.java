@@ -1,7 +1,6 @@
 package Simulator;
 
 import static Simulator.Type.TRAINCRANE;
-import com.jme3.animation.LoopMode;
 import com.jme3.app.SimpleApplication;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.events.MotionEvent;
@@ -19,11 +18,12 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.FogFilter;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.util.SkyFactory;
 import containing.Command;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -103,6 +103,17 @@ public class PortSimulation extends SimpleApplication {
         //motev.play();
         */
         
+         /** Add fog to a scene */
+ FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
+ FogFilter fog=new FogFilter();
+ fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
+ fog.setFogDistance(155);
+ fog.setFogDensity(2.0f);
+ fpp.addFilter(fog);
+ viewPort.addProcessor(fpp);
+
+
+
         
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);

@@ -249,7 +249,7 @@ public class StorageStrip implements Serializable {
     
     private Phase load_getPhase(AGV agv)
     {
-        if(!craneBusy && crane.getStatus() == Status.WAITING &&crane.getCargo().isEmpty())
+        if(!craneBusy && crane.getStatus() == Status.WAITING && crane.getCargo().isEmpty())
         {
             return Phase.LOAD;
         }
@@ -289,6 +289,7 @@ public class StorageStrip implements Serializable {
             {
                 psId = psId / 2;
             }
+            System.out.println("Load on StorageCrane: 'agv': " + agv.getID() + " 'pos': " + pos.toString() + " 'psId': " + psId);
             ((StorageCrane)crane).load(agv, pos, psId, getPosition());
         } catch (Exception ex) {
             Logger.getLogger(StorageStrip.class.getName()).log(Level.SEVERE, null, ex);

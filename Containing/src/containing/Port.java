@@ -1,5 +1,6 @@
 package containing;
 
+import containing.ClientHandler.ClientType;
 import containing.Platform.BargePlatform;
 import containing.Platform.Platform;
 import containing.Platform.SeashipPlatform;
@@ -101,7 +102,7 @@ public class Port implements Serializable
         lastUpdate++;
         HashMap<String,Double> stats = getStats();
         if(lastUpdate == 30 && stats != lastStats){
-            CommandHandler.addCommand(new Command("stats", stats, true));
+            CommandHandler.addCommand(new Command("stats", stats, ClientType.APP));
             lastUpdate = 0;
             lastStats = stats;
         }

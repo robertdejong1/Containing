@@ -14,10 +14,12 @@ import java.util.List;
  */
 public class ClientHandler implements Runnable {
 
+    public enum ClientType { APP, SIM, WEB }
+    
     private Socket client;
     private int id;
     private long lastPing;
-    private boolean app;
+    private ClientType clientType;
 
     /**
      * Creates a ClientHandler instance
@@ -57,14 +59,17 @@ public class ClientHandler implements Runnable {
                             writer.flush();
                             break;
                         case "IDENTIFY:APP":
-                            this.app = true;
+                            this.clientType = ClientType.APP;
                             break;
                         case "IDENTIFY:SIM":
-                            this.app = false;
+                            this.clientType = ClientType.SIM;
                             Command cmd = new Command("INIT", Settings.port);
                             Settings.messageLog.AddMessage("Sending init info " +cmd.toString());
                             writer.println(cmd.toString());
                             writer.flush();
+                            break;
+                        case "IDENTIFY:WEB":
+                            this.clientType = ClientType.WEB;
                             break;
                         default:
                             Command returnCmd = CommandHandler.handle(inputLine);
@@ -77,12 +82,19 @@ public class ClientHandler implements Runnable {
 
                 }
                 else {
-                    List<Command> commands = CommandHandler.getNewCommands(this.id, this.app);
+                    List<Command> commands = CommandHandler.getNewCommands(this.id, this.clientType);
                     if (commands != null && commands.size() > 0) {
                         for (Command cmd : commands) {
-                            Settings.messageLog.AddMessage("Sending: (" +cmd.getCommand() +") " + cmd.toString());
-                            writer.println(cmd.toString());
-                            writer.flush();
+                            if(this.clientType == ClientType.WEB){
+                                Settings.messageLog.AddMessage("Sending: (" +cmd.getCommand() +") " + cmd.toString(false));
+                                writer.println(cmd.toString(false));
+                                writer.flush();
+                            }
+                            else{
+                                Settings.messageLog.AddMessage("Sending: (" +cmd.getCommand() +") " + cmd.toString());
+                                writer.println(cmd.toString());
+                                writer.flush();
+                            }
                         }
                     }
                 }

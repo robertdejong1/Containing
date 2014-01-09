@@ -1,11 +1,11 @@
 package containing;
 
+import containing.ClientHandler.ClientType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -55,10 +55,10 @@ public class CommandHandler {
     /**
      * Checks wether there are new commands available for given id and app
      * @param id The id of the client connection
-     * @param app Boolean to only check for commands to the app
+     * @param type Client type that the commands are ment for
      * @return List of new commands
      */
-    public synchronized static List<Command> getNewCommands(int id, boolean app){
+    public synchronized static List<Command> getNewCommands(int id, ClientType type){
         List<Command> commands = new ArrayList<>();
         
         if(idLastID.get(id) != null){
@@ -67,7 +67,7 @@ public class CommandHandler {
             Iterator it = queuedCommands.entrySet().iterator();
             while(it.hasNext()){
                 Entry<Integer, Command> entry = (Entry) it.next();
-                if(entry.getKey() > lastID && entry.getValue().getApp() == app){
+                if(entry.getKey() > lastID && entry.getValue().getClientType() == type){
                     commands.add(entry.getValue());
                 }
             }

@@ -241,9 +241,10 @@ public class StorageStrip implements Serializable {
     private Vector3f getRealContainerPosition(Container container)
     {
         Point3D containerPosition = getFreeContainerPosition(container);
-        float x = containerPosition.x*Container.depth;
-        float y = containerPosition.y*Container.height;
-        float z = containerPosition.z*Container.width;
+        System.out.println("containerPosition: " + containerPosition.toString());
+        float x = containerPosition.x*Container.depth + position.x + 1.5f;
+        float y = containerPosition.y*Container.height + position.y;
+        float z = containerPosition.z*Container.width + position.z;
         Vector3f realPosition = new Vector3f(x, y, z);
         return realPosition;
     }
@@ -362,7 +363,7 @@ public class StorageStrip implements Serializable {
         if(state.equals(State.LOAD))
         {
             if(platform.time >= 10) {
-                //System.out.println("loading...");
+                //System.out.println("loading... " + id);
                 load();
             }
         }
@@ -372,7 +373,8 @@ public class StorageStrip implements Serializable {
         {
             checkParkedVehiclesLeft();
             checkParkedVehiclesRight();
-            platform.time = 0;
+            if(id == platform.getStripAmount()-1)
+                platform.time = 0;
         }
         
         crane.update();

@@ -82,7 +82,7 @@ public class Road implements Serializable
         for (Vector3f v : deel3.getWeg()) { track2.add(v); System.out.println("deel3: "+ v);}
         
         Route route = new Route(track2, getPathLength(track2));
-        System.out.println("route.weg == " + route.getWeg().size());
+        
         route.destinationPlatform = destinationPlatform;
         route.destinationParkingSpot = destinationParkingSpot;
         return route;
@@ -100,12 +100,7 @@ public class Road implements Serializable
         for (Vector3f v : deel2.getWeg()) { track2.add(v);}
         for (Vector3f v : deel3.getWeg()) { track2.add(v);}
         
-        if (vehicle.getID() == 103){
-            for (Vector3f v : track2) 
-            {
-                System.out.println("V: " + v);
-            }
-        }
+        
         
         
         return new Route(track2, getPathLength(track2));
@@ -173,23 +168,11 @@ public class Road implements Serializable
          //System.out.println("destinationEntryPointCW: " + this.createCorrespondingWaypoint(destination.getEntrypoint()));
          track2.add(destination.getEntrypoint());
          //System.out.println("destinationEntryPoint: " + destination.getEntrypoint());
-         if(vehicle.routecounter > 1)   
-         {
-            for (Vector3f v : track2)
-            {
-                System.out.println("BEFORE: " + v);
-            }
-         }
+   
          
          
          track2 = this.setPathCorrectOrder(track2, vehicle.getCurrentPlatform(), destination, mainroad);
-         if (vehicle.routecounter > 1)
-         {
-            for (Vector3f v : track2)
-            {
-                System.out.println("AFTER: " + v);
-            }
-         }
+       
          vehicle.setCurrentPlatform(destination);
          vehicle.setPosition(destination.getEntrypoint());
          Route route = new Route(track2, getPathLength(track2));
@@ -355,10 +338,7 @@ public class Road implements Serializable
         correctPath.add(path.get(0)); //exitpoint
         correctPath.add(path.get(1)); //exitpoint op weg
         
-        for (Vector3f v : track)
-        {
-            System.out.println("HOEKPUNT: " + v);
-        }
+     
         //System.out.println("POSITIE: " + source.positie); //=rechts
         //System.out.println("POSITIE: " + destination.positie); //=links
      

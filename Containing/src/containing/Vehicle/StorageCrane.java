@@ -36,7 +36,7 @@ public class StorageCrane extends Crane {
     }
     
    
-    public void load(AGV agv, Vector3f containerStoragePosition, int i) throws VehicleOverflowException, CargoOutOfBoundsException, Exception{ //container from extern verhicle
+    public void load(AGV agv, Vector3f containerStoragePosition, int i, Vector3f defaultPositionStorageStrip) throws VehicleOverflowException, CargoOutOfBoundsException, Exception{ //container from extern verhicle
     try
         {
             List<Vector3f> path = new ArrayList<Vector3f>();
@@ -46,10 +46,14 @@ public class StorageCrane extends Crane {
             
             this.loadTime = 20*10;  
             this.unloadTime = 12*10;
+            path.add(this.position);
+            path.add(defaultPositionStorageStrip);
             
+            /*
+            path.add(agv.getPosition());
             path.add(this.position);
             path.add(containerStoragePosition);
-            path.add(this.position);
+            path.add(this.position);*/
        
             HashMap<String, Object> map = new HashMap<>();
             
@@ -61,7 +65,7 @@ public class StorageCrane extends Crane {
              map.put("indexnr", i);
              map.put("path", path);
 
-             CommandHandler.addCommand(new Command("pickAndDropStorageCrane", map));
+             CommandHandler.addCommand(new Command("loadStorageCrane", map));
            
         }
         catch(Exception e)

@@ -147,12 +147,12 @@ public class MainActivity extends Activity {
      */
     public static void showGraphView(HashMap<String, Double> data){
     	stats = new GraphViewSeries(new GraphViewData[] {
-    	      new GraphViewData(1, data.get("train")),
-    	      new GraphViewData(2, data.get("truck")),
-    	      new GraphViewData(3, data.get("seaship")),
-    	      new GraphViewData(4, data.get("barge")),
-    	      new GraphViewData(5, data.get("storage")),
-    	      new GraphViewData(6, data.get("agv")),
+    	      new GraphViewData(0, data.get("train")),
+    	      new GraphViewData(1, data.get("truck")),
+    	      new GraphViewData(2, data.get("seaship")),
+    	      new GraphViewData(3, data.get("barge")),
+    	      new GraphViewData(4, data.get("storage")),
+    	      new GraphViewData(5, data.get("agv")),
     	});
     	 
     	GraphView graphView = new BarGraphView(
@@ -163,9 +163,9 @@ public class MainActivity extends Activity {
     	
     	graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
     	graphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
-    	graphView.getGraphViewStyle().setNumHorizontalLabels(7);
+    	graphView.getGraphViewStyle().setNumHorizontalLabels(6);
     	graphView.setHorizontalLabels(new String[] {"Train" , "Truck", "Seaship", "Barge", "Storage", "AGV"});
-    	graphView.getGraphViewStyle().setVerticalLabelsWidth(50);
+    	graphView.getGraphViewStyle().setVerticalLabelsWidth(80);
 
     	final GraphView view = graphView;
     	
@@ -187,12 +187,12 @@ public class MainActivity extends Activity {
         	@Override
         	public void run(){
             	stats.resetData(new GraphViewData[] {
-                	      new GraphViewData(1, data.get("train")),
-                	      new GraphViewData(2, data.get("truck")),
-                	      new GraphViewData(3, data.get("seaship")),
-                	      new GraphViewData(4, data.get("barge")),
-                	      new GraphViewData(5, data.get("storage")),
-                	      new GraphViewData(6, data.get("agv")),
+                	      new GraphViewData(0, data.get("train")),
+                	      new GraphViewData(1, data.get("truck")),
+                	      new GraphViewData(2, data.get("seaship")),
+                	      new GraphViewData(3, data.get("barge")),
+                	      new GraphViewData(4, data.get("storage")),
+                	      new GraphViewData(5, data.get("agv")),
                 	});
         	}
         });

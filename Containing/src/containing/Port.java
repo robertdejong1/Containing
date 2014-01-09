@@ -10,6 +10,7 @@ import containing.Platform.TrainPlatform;
 import containing.Platform.TruckPlatform;
 import containing.Road.Road;
 import containing.Vehicle.AGV;
+import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -64,6 +65,10 @@ public class Port implements Serializable
             for(ExternVehicle ev : evs){
                 count += ev.getCargo().size();
             }
+            List<Crane> cranes = p.getCranes();
+            for(Crane crane : cranes){
+               count += crane.getCargo().size();
+            }
             
             if(p instanceof BargePlatform){
                 stats.put("barge", count);
@@ -78,22 +83,20 @@ public class Port implements Serializable
                 stats.put("truck", count);
             }
         }
-        
-        
-         List<AGV> agvs = storagePlatform.getAgvs();
+
          double agvCount = 0;
-         for(AGV agv : agvs){
+         for(AGV agv : storagePlatform.getAgvs()){
              agvCount += agv.getCargo().size();
          }
         stats.put("agv", agvCount);
         
         double stripCount = 0;
-        StorageStrip[] strips = storagePlatform.getStrips();
-        for(StorageStrip strip : strips){
+        for(StorageStrip strip : storagePlatform.getStrips()){
             stripCount += strip.getContainers().size();
         }
         
         stats.put("storage", stripCount);
+        System.out.println(stats.toString());
         return stats;
     }
     

@@ -28,6 +28,8 @@ public class StorageCrane extends Crane {
 
     public static float width = 5f; //????????
     public static float length = 6f; //??????????
+    private float unloadtime = 0;
+    private float loadtime = 0;
     //hier StorageCrane specific variables
     private Vector3f containerStoragePosition = null;
     private Vector3f defaultPositionStorageStrip = null;
@@ -40,6 +42,8 @@ public class StorageCrane extends Crane {
     public void load(AGV agv, Vector3f containerStoragePosition, int i, Vector3f defaultPositionStorageStrip) throws VehicleOverflowException, CargoOutOfBoundsException, Exception{ //container from extern verhicle
     try
         {
+            System.out.println("StorageIII: " + i);
+            System.out.println("containerStoragePosition: " + containerStoragePosition);
             this.containerStoragePosition = containerStoragePosition;
             this.defaultPositionStorageStrip =  defaultPositionStorageStrip;
             
@@ -50,8 +54,8 @@ public class StorageCrane extends Crane {
             
             this.getCargo().get(0).setArrivalPosition(agv.getPosition());
             
-            this.loadTime = 14*10;  
-            this.unloadTime = 14*10;
+            this.loadtime = 14*10;  
+            this.unloadtime = 14*10;
             path.add(this.position);
             path.add(defaultPositionStorageStrip);
             this.status = Status.LOADING;
@@ -67,7 +71,7 @@ public class StorageCrane extends Crane {
              map.put("craneid", this.getID());
              map.put("vehicleType", this.getVehicleType());
              map.put("clientid", agv.getID());
-             map.put("duration", this.loadTime);
+             map.put("duration", this.loadtime);
             
           
              map.put("indexnr", i);
@@ -91,16 +95,22 @@ public class StorageCrane extends Crane {
     //from agvspot to containerStoragePosition
     public void unload(Vector3f containerStoragePosition)
     {
+        this.unloadtime = 14 * 10;
         List<Vector3f> path = new ArrayList<Vector3f>();
         path.add(this.position); 
         path.add(this.containerStoragePosition);
-        
+        for (Vector3f v : path)
+        {
+            System.out.println("StorageCraneUnloadPath: " + v );
+        }
+        System.out.println("DURATIONUNLOAD: " + this.unloadtime);
+        this.cargo.get(0).setArrivalPosition(containerStoragePosition); //update container positie
         HashMap<String, Object> map = new HashMap<>();
             
              map.put("craneid", this.getID());
              map.put("vehicleType", this.getVehicleType());
           
-             map.put("duration", this.unloadTime);
+             map.put("duration", this.unloadtime);
             
              map.put("path", path);
 
@@ -117,8 +127,8 @@ public class StorageCrane extends Crane {
        if (this.status == Status.LOADING )
        {
            //System.out.println("UpdateLoading");
-           this.loadTime--;
-           if (this.loadTime <= 0)
+           this.loadtime--;
+           if (this.loadtime <= 0)
            { 
                
                this.status = Status.UNLOADING;
@@ -131,9 +141,9 @@ public class StorageCrane extends Crane {
        
        if (this.status == Status.UNLOADING)
        {
-           this.unloadTime--;
+           this.unloadtime--;
            //System.out.println("UpdateUnloading");
-           if (this.unloadTime <= 0)
+           if (this.unloadtime <= 0)
            {   
                //System.out.println("FINISHFINSIHSTORAGECRANE");
                try

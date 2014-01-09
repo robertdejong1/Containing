@@ -288,7 +288,17 @@ public abstract class Crane extends InternVehicle {
     @Override
     public void update()
     {
+       /* 
+       if (this.getVehicleType() == Type.STORAGECRANE)
+       {
+           System.out.println("StorageCraneYes"); 
+           StorageCrane sc = (StorageCrane) this;
+           sc.update();
+       }
+       
+       else{*/
        super.update();
+       
        if (this.status == Status.LOADING )
        {
            this.loadTime--;
@@ -319,6 +329,7 @@ public abstract class Crane extends InternVehicle {
                //new load
            }
        }
+       
        
     }
     

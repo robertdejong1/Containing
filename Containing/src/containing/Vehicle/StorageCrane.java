@@ -46,6 +46,8 @@ public class StorageCrane extends Crane {
             List<Vector3f> path = new ArrayList<Vector3f>();
             
             super.load(agv.unload());
+            System.out.println("StorageCraneAGV: " + agv.getStatus());
+            
             this.getCargo().get(0).setArrivalPosition(agv.getPosition());
             
             this.loadTime = 14*10;  
@@ -53,7 +55,7 @@ public class StorageCrane extends Crane {
             path.add(this.position);
             path.add(defaultPositionStorageStrip);
             this.status = Status.LOADING;
-          
+            System.out.println("StorageCraneStatus: " + this.status);
             /*
             path.add(agv.getPosition());
             path.add(this.position);
@@ -77,6 +79,7 @@ public class StorageCrane extends Crane {
         }
         catch(Exception e)
         {
+            System.out.println("ERRORERROR");
             throw e;
         }
 
@@ -108,12 +111,16 @@ public class StorageCrane extends Crane {
      @Override
     public void update()
     {
-       super.update();
+        //System.out.println("IN STORAGE CRANE UPDATE");
+       //super.update();
+       
        if (this.status == Status.LOADING )
        {
+           //System.out.println("UpdateLoading");
            this.loadTime--;
            if (this.loadTime <= 0)
            { 
+               
                this.status = Status.UNLOADING;
         
                
@@ -125,11 +132,13 @@ public class StorageCrane extends Crane {
        if (this.status == Status.UNLOADING)
        {
            this.unloadTime--;
+           //System.out.println("UpdateUnloading");
            if (this.unloadTime <= 0)
-           {
+           {   
+               //System.out.println("FINISHFINSIHSTORAGECRANE");
                try
                {
-                this.unload();
+                this.unload(containerStoragePosition);
                }
                catch(Exception e){ System.out.println(e.getMessage()); }
                

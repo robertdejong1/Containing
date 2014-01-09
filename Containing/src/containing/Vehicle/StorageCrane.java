@@ -54,8 +54,8 @@ public class StorageCrane extends Crane {
             
             this.getCargo().get(0).setArrivalPosition(agv.getPosition());
             
-            this.loadtime = 14*10;  
-            this.unloadtime = 14*10;
+            this.loadtime = 14;  
+            this.unloadtime = 14;
             path.add(this.position);
             path.add(defaultPositionStorageStrip);
             this.status = Status.LOADING;
@@ -95,7 +95,7 @@ public class StorageCrane extends Crane {
     //from agvspot to containerStoragePosition
     public void unload(Vector3f containerStoragePosition)
     {
-        this.unloadtime = 14 * 10;
+        this.unloadtime = 14;
         List<Vector3f> path = new ArrayList<Vector3f>();
         path.add(this.position); 
         path.add(this.containerStoragePosition);

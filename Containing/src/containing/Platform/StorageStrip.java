@@ -283,7 +283,6 @@ public class StorageStrip implements Serializable {
             while(psId > 12)
             {
                 psId = psId - 12;
-
             }
             if(psId == 0) {}
             else if(psId < 12)
@@ -330,7 +329,7 @@ public class StorageStrip implements Serializable {
             {
                 case LOAD:
                     System.out.println("LOAD");
-                    //load_phaseLoad(craneAgv);
+                    load_phaseLoad(craneAgv);
                     break;
                 case SENDTOPARKINGSPOT:
                     System.out.println("SENDTOPARKINGSPOT");

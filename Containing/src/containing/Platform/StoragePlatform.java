@@ -148,7 +148,7 @@ public class StoragePlatform extends Platform {
             Vector3f agvSpotPosition;
             if(i % 2 == 0)
             {
-                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET - 0.8f, getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.15f + (AGV.width*Settings.METER) / 2f);
+                agvSpotPosition = new Vector3f(getPosition().x + AGV_OFFSET - 0.7f, getPosition().y, z + (subcount*offset) + (AGV.width*subcount)*Settings.METER + 0.05f*subcount + 0.15f + (AGV.width*Settings.METER) / 2f);
             }
             else
             {
@@ -359,8 +359,9 @@ public class StoragePlatform extends Platform {
     public void update()
     {
         time++;
-        for(AGV agv : agvs)
+        for(AGV agv : agvs) {
             agv.update();
+        }
         for (StorageStrip strip : strips) {
             strip.update();
         }

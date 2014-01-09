@@ -282,7 +282,7 @@ public class StorageStrip implements Serializable {
             craneBusy = true;
             Vector3f pos = getRealContainerPosition(agv.getCargo().get(0));
             int psId = getParkingSpotIndexFromVehicleLoad(agv);
-            while(psId > 12)
+            while(psId > 11)
             {
                 psId = psId - 12;
             }

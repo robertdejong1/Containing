@@ -220,6 +220,7 @@ public class StorageStrip implements Serializable {
             if(!agvSpot.isEmpty())
             {
                 agvQueueLoad.add((AGV)agvSpot.getParkedVehicle());
+                System.out.println("agv with id " + agvQueueLoad.peek().getID() + " is parked in agvspot " + i);
             }
         }
     }
@@ -373,6 +374,8 @@ public class StorageStrip implements Serializable {
             checkParkedVehiclesRight();
             platform.time = 0;
         }
+        
+        crane.update();
     }
     
 }

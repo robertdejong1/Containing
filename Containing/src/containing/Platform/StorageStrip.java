@@ -289,7 +289,7 @@ public class StorageStrip implements Serializable {
             {
                 psId = psId / 2;
             }
-            ((StorageCrane)crane).load(agv, pos, psId);
+            ((StorageCrane)crane).load(agv, pos, psId, getPosition());
         } catch (Exception ex) {
             Logger.getLogger(StorageStrip.class.getName()).log(Level.SEVERE, null, ex);
         }

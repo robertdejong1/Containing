@@ -255,7 +255,7 @@ public class StorageStrip implements Serializable {
         {
             return Phase.LOAD;
         }
-        else if(craneBusy && agv.getCargo().isEmpty())
+        else if(craneBusy && agv.getCargo().isEmpty() && crane.getStatus() == Status.WAITING)
         {
             return Phase.SENDTOPARKINGSPOT;
         }

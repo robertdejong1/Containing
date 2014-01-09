@@ -52,6 +52,7 @@ public class StorageCrane extends Crane {
             this.unloadTime = 14*10;
             path.add(this.position);
             path.add(defaultPositionStorageStrip);
+            this.status = Status.LOADING;
           
             /*
             path.add(agv.getPosition());

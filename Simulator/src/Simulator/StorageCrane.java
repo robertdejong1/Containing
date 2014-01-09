@@ -6,6 +6,7 @@ package Simulator;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.cinematic.MotionPathListener;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -40,7 +41,6 @@ public class StorageCrane
 
         crane.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         crane.scale(0.41f);
-        //crane.scale(1f, 1f, 1.1f);
     }
     
     private void place(Vector3f loc)
@@ -76,14 +76,15 @@ public class StorageCrane
         
         if (occupied)
         {
-            con.model.move(0, y, 0);
+            con.model.move(0, y*0.41f, 0);
         }
     }
     
     private boolean occupied = false;
-    private int cranestate = 1;
+    private int cranestate = 0;
     private int con_index = 0;
     private MotionEvent motev;
+    private MotionEvent con_motev;
     
     public void loadCrane(Container con, int con_index, MotionEvent motev)
     {
@@ -91,7 +92,15 @@ public class StorageCrane
         this.con_index = con_index;
         cranestate = 1;
         this.motev = motev;
-        //node.attachChild(con.model);
+        node.attachChild(con.model);
+    }
+    
+    public void unloadCrane(MotionEvent motev, MotionEvent con_motev)
+    {
+        this.motev = motev;
+        this.con_motev = con_motev;
+        cranestate = 5;
+        
     }
     
     public void update(float tpf)
@@ -106,6 +115,27 @@ public class StorageCrane
                 break;
                 
             case 1:
+                //Move crane to parkingspot
+                if (motev.getPath().getNbWayPoints() >= 2)
+                {
+                    if (motev.getPath().getWayPoint(0).equals(motev.getPath().getWayPoint(1)))
+                    {
+                        cranestate = 2;
+                    } else {
+                        motev.play();
+                        
+                        motev.getPath().addListener(new MotionPathListener() {
+                            public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                                 if (motev.getPath().getNbWayPoints() == wayPointIndex + 1) {
+                                     cranestate = 2;
+                                 }
+                            }
+                        });
+                    }
+                }
+                break;
+                
+            case 2:
                 //Move top to parkingspot
                 float goto_top = 2.4f - con_index;
                 if (goto_top < 0)
@@ -113,36 +143,64 @@ public class StorageCrane
                     if (top_x > goto_top)
                         moveTop(-tpf);
                     else
-                        cranestate = 2;
+                        cranestate = 3;
                     break;
                 } else {
                     if (top_x < goto_top)
                         moveTop(tpf);
                     else
-                        cranestate = 2;
+                        cranestate = 3;
                     break;
                 }
                 
-            case 2:
+            case 3:
                 //Move grab down
-                if (grab_y > -3.5f)
+                if (grab_y > -3.9f)
                     moveGrab(-tpf);
                 else
-                    cranestate = 3;          
+                    cranestate = 4;
                 break;
             
-            case 3:
+            case 4:
                 //Move grab up
-                //occupied = true;
+                occupied = true;
                 
                 if (grab_y < 0)
                     moveGrab(tpf);
                 else
-                    cranestate = 4;          
+                    cranestate = 0;          
                 break;
                 
-            case 4:
-                //motev.play();
+            case 5:
+                //Move to storageposition
+                motev.play();
+                con_motev.play();
+                
+                motev.getPath().addListener(new MotionPathListener() {
+                    public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                         if (motev.getPath().getNbWayPoints() == wayPointIndex + 1) {
+                             cranestate = 6;
+                         }
+                    }
+                });
+                break;
+                
+            case 6:
+                //Move grab with container down
+                if (grab_y > -4.2f)
+                    moveGrab(-tpf);
+                else
+                    cranestate = 7;
+                break;
+            
+            case 7:
+                occupied = false;
+                this.con = null;
+                
+                if (grab_y < 0)
+                    moveGrab(tpf);
+                else
+                    cranestate = 0;          
                 break;
         }
     }

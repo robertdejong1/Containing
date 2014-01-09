@@ -52,12 +52,13 @@ public class Container extends Model
         this.departureTimeTill = departureTimeTill;
         this.departureTransport = departureTransport;
         super.model.setName("Container " + this.containerId);
+        super.model.setUserData("data", this.toString());
     }
     
     @Override
     public String toString()
     {
-        return "Container info: ---------------------------------------" +
+        return "Container info:" +
                 "\n   ID: "+this.containerId +
                 "\n   ArrivalDate: "+this.arrivalDate +
                 "\n   ArrivalTimeFrom: "+this.arrivalTimeFrom +

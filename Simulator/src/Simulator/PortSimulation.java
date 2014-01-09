@@ -14,14 +14,16 @@ import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
+import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.jme3.post.FilterPostProcessor;
-import com.jme3.post.filters.FogFilter;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
 import containing.Command;
 import java.util.HashMap;
@@ -39,9 +41,11 @@ public class PortSimulation extends SimpleApplication {
     //Truck[] truck = new Truck[20];
     Train train;
     BitmapText hudText;
+    BitmapText containerText;
     ChaseCamera chaseCam;
     int camstate = 1;
     String currentChaseTarget;
+    String containerInfo;
     Vector3f flyCamPos;
     
     public static void main(String[] args) {
@@ -49,7 +53,7 @@ public class PortSimulation extends SimpleApplication {
         app.start();
 
         Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        //Runnable networkHandler = new NetworkHandler("141.252.236.132", 1337);
+        //Runnable networkHandler = new NetworkHandler("141.252.222.140", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -103,18 +107,6 @@ public class PortSimulation extends SimpleApplication {
         //motev.play();
         */
         
-         /** Add fog to a scene */
- FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
- FogFilter fog=new FogFilter();
- fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
- fog.setFogDistance(155);
- fog.setFogDensity(2.0f);
- fpp.addFilter(fog);
- viewPort.addProcessor(fpp);
-
-
-
-        
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
         sun.setDirection(lightDir);
@@ -140,6 +132,23 @@ public class PortSimulation extends SimpleApplication {
         hudText.setSize(guiFont.getCharSet().getRenderedSize());      // font size
         hudText.setColor(ColorRGBA.White);
         guiNode.attachChild(hudText);
+        
+        containerText = new BitmapText(guiFont, false);
+        containerText.setSize(guiFont.getCharSet().getRenderedSize()); 
+        containerText.setColor(ColorRGBA.White);
+        containerText.setLocalTranslation(Vector3f.ZERO);
+        guiNode.attachChild(containerText);
+        
+        /*
+        Geometry quad = new Geometry("quad", new Quad(300,300));
+        Material transblack = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        transblack.setColor("Color", new ColorRGBA(1, 0, 0, 0));
+        transblack.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);  
+        quad.setMaterial(transblack);
+        quad.setQueueBucket(Bucket.Transparent);    
+        quad.setLocalTranslation(0, settings.getHeight()-300, 0);
+        guiNode.attachChild(quad); */
+        
     }
     
     private ActionListener actionListener = new ActionListener() {
@@ -242,12 +251,15 @@ public class PortSimulation extends SimpleApplication {
 
                 hudText.setText("Top view");             // the text
                 hudText.setLocalTranslation(settings.getWidth() / 2 - hudText.getLineWidth() / 2, settings.getHeight() - hudText.getLineHeight() / 2, 0); // position
+                containerInfo = "";
+                containerText.setText(containerInfo);
                 break;
 
             case 2:
                 hudText.setText("Chasing: " + currentChaseTarget);             // the text
                 hudText.setLocalTranslation(settings.getWidth() / 2 - hudText.getLineWidth() / 2, settings.getHeight() - hudText.getLineHeight() / 2, 0); // position
-                
+                containerText.setText(containerInfo);
+                containerText.setLocalTranslation(0, settings.getHeight() - hudText.getLineHeight() / 2, 0);
                 break;
                 
             case 3:
@@ -261,7 +273,8 @@ public class PortSimulation extends SimpleApplication {
                 inputManager.setCursorVisible(false);
                 hudText.setText("FlyCam");             // the text
                 hudText.setLocalTranslation(settings.getWidth() / 2 - hudText.getLineWidth() / 2, settings.getHeight() - hudText.getLineHeight() / 2, 0); // position
-                
+                containerInfo = "";
+                containerText.setText(containerInfo);
                 break;
         }
 
@@ -516,7 +529,7 @@ public class PortSimulation extends SimpleApplication {
                     break;
             } 
             
-        } else if (cmd.getCommand().equals("pickAndDropStorageCrane")) 
+        } else if (cmd.getCommand().equals("loadStorageCrane")) 
         {
             System.out.println(cmd.getCommand());
 
@@ -538,17 +551,73 @@ public class PortSimulation extends SimpleApplication {
             for (containing.Vector3f v : motion) {
                 path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
             }
-            path.setCurveTension(0.0f);
             
-            containing.Container con = (containing.Container) map.get("container");
+            path.setCurveTension(0.0f);
+            float duration = Float.parseFloat(map.get("duration").toString());
             
             //Container c = train.detachContainer(con.getContainerId());
             for (StorageCrane crane : storageCranes)
             {
                 if (crane.id == crane_id)
                 {
-                    //c.move(train.train.getLocalTranslation());
-                    crane.loadCrane(null, index_nr, null);
+                    AGV _agv = null;
+                    for (AGV a : agv)
+                    {
+                        if (a.id == vehicle_id)
+                        {
+                            _agv = a;
+                            break;
+                        }
+                    }
+                    MotionEvent motev = new MotionEvent(crane.crane, path, duration);
+                    motev.setSpeed(1f);
+                    Container con = _agv.releaseContainer();
+                    crane.loadCrane(con, index_nr, motev);
+                }
+            }
+
+        } else if (cmd.getCommand().equals("unloadStorageCrane")) 
+        {
+            System.out.println(cmd.getCommand());
+
+            HashMap<String, Object> map = (HashMap<String, Object>) cmd.getObject();
+            int crane_id = Integer.parseInt(map.get("craneid").toString());
+            System.out.println("Crane id:" + crane_id);
+            
+            Type type = Type.valueOf(map.get("vehicleType").toString());
+            System.out.println("" + type.toString());
+            
+            //int index_nr = Integer.parseInt(map.get("indexnr").toString());
+            //System.out.println("" + index_nr);
+            
+            MotionPath path = new MotionPath();
+            List<containing.Vector3f> motion = (List<containing.Vector3f>) map.get("path");
+            //containing.Road.Route route = containing.Settings.port.getMainroad().getPath();
+            for (containing.Vector3f v : motion) {
+                path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
+            }
+            
+            path.setCurveTension(0.0f);
+            float duration = Float.parseFloat(map.get("duration").toString());
+            
+            //Container c = train.detachContainer(con.getContainerId());
+            for (StorageCrane crane : storageCranes)
+            {
+                if (crane.id == crane_id)
+                {
+                    MotionEvent motev = new MotionEvent(crane.crane, path, duration);
+                    motev.setSpeed(1f);
+                    
+                    MotionPath con_path = new MotionPath();
+                    for (int i = 0; i < path.getNbWayPoints(); i++)
+                    {
+                        con_path.addWayPoint(new Vector3f(path.getWayPoint(i).x, crane.con.model.getLocalTranslation().y, crane.con.model.getLocalTranslation().z));
+                    }
+                    con_path.setCurveTension(0.0f);
+                    MotionEvent con_motev = new MotionEvent(crane.con.model, con_path, duration);
+                    con_motev.setSpeed(1f);
+                    
+                    crane.unloadCrane(motev, con_motev);
                 }
             }
 
@@ -570,6 +639,15 @@ public class PortSimulation extends SimpleApplication {
             chaseCam.setDragToRotate(false);
             chaseCam.setDefaultVerticalRotation(0.32259343f);
             currentChaseTarget = name;
+            
+            //Show containers information
+            if (name.contains("Container"))
+            {
+                String data = target.getUserData("data").toString();
+                containerInfo = data;
+            } else {
+                containerInfo = "";
+            }
         }
     }
 }

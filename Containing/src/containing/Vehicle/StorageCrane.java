@@ -61,8 +61,10 @@ public class StorageCrane extends Crane {
              map.put("vehicleType", this.getVehicleType());
              map.put("clientid", agv.getID());
              map.put("duration", this.loadTime);
-             map.put("container", cargo.get(0)); 
+            
+          
              map.put("indexnr", i);
+
              map.put("path", path);
 
              CommandHandler.addCommand(new Command("loadStorageCrane", map));

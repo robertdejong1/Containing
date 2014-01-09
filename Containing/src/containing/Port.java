@@ -103,6 +103,7 @@ public class Port implements Serializable
         HashMap<String,Double> stats = getStats();
         if(lastUpdate == 30 && stats != lastStats){
             CommandHandler.addCommand(new Command("stats", stats, ClientType.APP));
+            CommandHandler.addCommand(new Command("stats", stats, ClientType.WEB));
             lastUpdate = 0;
             lastStats = stats;
         }

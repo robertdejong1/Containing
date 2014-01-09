@@ -79,7 +79,7 @@ public class Command implements Serializable {
             return null;
         }
         else{
-            return this.getCommand().toString();
+            return this.getCommand().toString(); 
         }
     }
 }

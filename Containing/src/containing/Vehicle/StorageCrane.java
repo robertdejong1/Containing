@@ -133,7 +133,11 @@ public class StorageCrane extends Crane {
            { 
                
                this.status = Status.UNLOADING;
-        
+               try
+               {
+                this.unload(containerStoragePosition);
+               }
+               catch(Exception e){ System.out.println(e.getMessage()); }
                
                //command simulator
            }
@@ -147,11 +151,7 @@ public class StorageCrane extends Crane {
            if (this.unloadtime <= 0)
            {   
                //System.out.println("FINISHFINSIHSTORAGECRANE");
-               try
-               {
-                this.unload(containerStoragePosition);
-               }
-               catch(Exception e){ System.out.println(e.getMessage()); }
+      
                
                //this.currentPlatform.getAGV(this.getPosition());
                this.status = Status.WAITING;

@@ -76,13 +76,12 @@ public class Road implements Serializable
         Route deel3 = destinationPlatform.getRoad().getPathFromEntryPointPlatformToParkingSpot(vehicle, destinationParkingSpot);
         
         List<Vector3f> track2 = new ArrayList<>();
-        if (vehicle.getID() == 103)
-        {
+   
             
-            for (Vector3f v : deel1.getWeg()) { track2.add(v); System.out.println("deel1: "+ v);}
-            for (Vector3f v : deel2.getWeg()) { track2.add(v); System.out.println("deel2: "+ v);}
-            for (Vector3f v : deel3.getWeg()) { track2.add(v); System.out.println("deel3: "+ v);}
-        }
+            for (Vector3f v : deel1.getWeg()) { track2.add(v); }
+            for (Vector3f v : deel2.getWeg()) { track2.add(v); }
+            for (Vector3f v : deel3.getWeg()) { track2.add(v); }
+        
         Route route = new Route(track2, getPathLength(track2));
     
         route.destinationPlatform = destinationPlatform;

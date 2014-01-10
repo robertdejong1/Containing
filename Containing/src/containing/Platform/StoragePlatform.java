@@ -77,6 +77,10 @@ public class StoragePlatform extends Platform {
         agvQueueLoadBusy.add(agvSpot);
     }
     
+    public void removeAgvQueueLoadBusy(AgvSpot agvSpot) {
+        agvQueueLoadBusy.remove(agvSpot);
+    }
+    
     public boolean getAgvQueueLoadBusy(AgvSpot agvSpot) {
         if(agvQueueLoadBusy.contains(agvSpot))
             return true;

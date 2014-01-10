@@ -52,8 +52,8 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        //Runnable networkHandler = new NetworkHandler("141.252.222.140", 1337);
+        //Runnable networkHandler = new NetworkHandler("localhost", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.222.88", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -569,7 +569,7 @@ public class PortSimulation extends SimpleApplication {
                             break;
                         }
                     }
-                    MotionEvent motev = new MotionEvent(crane.crane, path, duration);
+                    MotionEvent motev = new MotionEvent(crane.crane, path);
                     motev.setSpeed(1f);
                     Container con = _agv.releaseContainer();
                     crane.loadCrane(con, index_nr, motev);
@@ -598,14 +598,14 @@ public class PortSimulation extends SimpleApplication {
             }
             
             path.setCurveTension(0.0f);
-            float duration = Float.parseFloat(map.get("duration").toString());
+            float duration = Float.parseFloat(map.get("duration").toString())/10;
             
             //Container c = train.detachContainer(con.getContainerId());
             for (StorageCrane crane : storageCranes)
             {
                 if (crane.id == crane_id)
                 {
-                    MotionEvent motev = new MotionEvent(crane.crane, path, duration);
+                    MotionEvent motev = new MotionEvent(crane.crane, path);
                     motev.setSpeed(1f);
                     
                     MotionPath con_path = new MotionPath();
@@ -614,7 +614,7 @@ public class PortSimulation extends SimpleApplication {
                         con_path.addWayPoint(new Vector3f(path.getWayPoint(i).x, crane.con.model.getLocalTranslation().y, crane.con.model.getLocalTranslation().z));
                     }
                     con_path.setCurveTension(0.0f);
-                    MotionEvent con_motev = new MotionEvent(crane.con.model, con_path, duration);
+                    MotionEvent con_motev = new MotionEvent(crane.con.model, con_path);
                     con_motev.setSpeed(1f);
                     
                     crane.unloadCrane(motev, con_motev);

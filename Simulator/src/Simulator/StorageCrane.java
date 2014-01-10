@@ -82,7 +82,7 @@ public class StorageCrane
     
     private boolean occupied = false;
     private int cranestate = 0;
-    private int con_index = 0;
+    private int con_index;
     private MotionEvent motev;
     private MotionEvent con_motev;
     
@@ -102,6 +102,8 @@ public class StorageCrane
         cranestate = 5;
         
     }
+    
+    private boolean hulp = false;
     
     public void update(float tpf)
     {
@@ -140,20 +142,33 @@ public class StorageCrane
                 float goto_top = 2.4f - con_index;
                 if (goto_top < 0)
                 {
-                    if (top_x > goto_top)
+                    if (top_x > goto_top && !hulp)
                         moveTop(-tpf);
                     else
-                        cranestate = 3;
+                    {
+                        hulp = true;
+                        if (top_x < goto_top)
+                            moveTop(tpf);
+                        else
+                            cranestate = 3;
+                    }
                     break;
                 } else {
-                    if (top_x < goto_top)
+                    if (top_x < goto_top && !hulp)
                         moveTop(tpf);
                     else
-                        cranestate = 3;
+                    {
+                        hulp = true;
+                        if (top_x > goto_top)
+                            moveTop(-tpf);
+                        else
+                            cranestate = 3;
+                    }
                     break;
                 }
                 
             case 3:
+                hulp = false;
                 //Move grab down
                 if (grab_y > -3.9f)
                     moveGrab(-tpf);
@@ -187,7 +202,7 @@ public class StorageCrane
                 
             case 6:
                 //Move grab with container down
-                if (grab_y > -4.2f)
+                if (grab_y > -4.35f)
                     moveGrab(-tpf);
                 else
                     cranestate = 7;

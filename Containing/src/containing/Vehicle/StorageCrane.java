@@ -95,6 +95,7 @@ public class StorageCrane extends Crane {
     //from agvspot to containerStoragePosition
     public void unload(Vector3f containerStoragePosition)
     {
+        Container container = super.unload();
         this.unloadtime = 14;
         List<Vector3f> path = new ArrayList<Vector3f>();
         path.add(this.position); 
@@ -104,7 +105,7 @@ public class StorageCrane extends Crane {
             System.out.println("StorageCraneUnloadPath: " + v );
         }
         System.out.println("DURATIONUNLOAD: " + this.unloadtime);
-        this.cargo.get(0).setArrivalPosition(containerStoragePosition); //update container positie
+        container.setArrivalPosition(containerStoragePosition); //update container positie
         HashMap<String, Object> map = new HashMap<>();
             
              map.put("craneid", this.getID());

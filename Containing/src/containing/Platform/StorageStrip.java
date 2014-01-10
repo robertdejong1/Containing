@@ -219,7 +219,9 @@ public class StorageStrip implements Serializable {
             AgvSpot agvSpot = platform.agvSpots.get(i);
             if(!agvSpot.isEmpty())
             {
-                agvQueueLoad.add((AGV)agvSpot.getParkedVehicle());
+                AGV agv = (AGV)agvSpot.getParkedVehicle();
+                if(agv.getCargo().size() > 0)
+                    agvQueueLoad.add((AGV)agvSpot.getParkedVehicle());
             }
         }
     }
@@ -340,6 +342,7 @@ public class StorageStrip implements Serializable {
                     break;
             }
         }
+        System.out.println("Crane cargo == " + crane.getCargo().size());
     }
     
     public void update() {

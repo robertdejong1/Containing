@@ -6,7 +6,6 @@ import static containing.Platform.Platform.Positie.LINKS;
 import static containing.Platform.Platform.Positie.ONDER;
 import static containing.Platform.Platform.Positie.RECHTS;
 import containing.Platform.StoragePlatform;
-import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
@@ -77,14 +76,19 @@ public class Road implements Serializable
         Route deel3 = destinationPlatform.getRoad().getPathFromEntryPointPlatformToParkingSpot(vehicle, destinationParkingSpot);
         
         List<Vector3f> track2 = new ArrayList<>();
-        for (Vector3f v : deel1.getWeg()) { track2.add(v); System.out.println("deel1: "+ v);}
-        for (Vector3f v : deel2.getWeg()) { track2.add(v); System.out.println("deel2: "+ v);}
-        for (Vector3f v : deel3.getWeg()) { track2.add(v); System.out.println("deel3: "+ v);}
-        
+        if (vehicle.getID() == 103)
+        {
+            
+            for (Vector3f v : deel1.getWeg()) { track2.add(v); System.out.println("deel1: "+ v);}
+            for (Vector3f v : deel2.getWeg()) { track2.add(v); System.out.println("deel2: "+ v);}
+            for (Vector3f v : deel3.getWeg()) { track2.add(v); System.out.println("deel3: "+ v);}
+        }
         Route route = new Route(track2, getPathLength(track2));
-        
+    
         route.destinationPlatform = destinationPlatform;
         route.destinationParkingSpot = destinationParkingSpot;
+        if (destinationParkingSpot == null){
+            System.out.println("NULL");}
         return route;
     }
     
@@ -101,6 +105,7 @@ public class Road implements Serializable
         for (Vector3f v : deel3.getWeg()) { track2.add(v);}
         
         
+       
         
         
         return new Route(track2, getPathLength(track2));
@@ -115,8 +120,18 @@ public class Road implements Serializable
         track2.add(this.createCorrespondingWaypoint(vehicle.getPosition()));
         track2.add(this.createCorrespondingWaypoint(exitwayPlatform));
         track2.add(exitwayPlatform);
-        if(vehicle.getCurrentPlatform() instanceof StoragePlatform)
-            source.UnparkVehicle();
+        
+        try
+        {
+            if(vehicle.getCurrentPlatform() instanceof StoragePlatform)
+                source.UnparkVehicle(); 
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        //source.UnparkVehicle();
         vehicle.setPosition(exitwayPlatform);
         Route route = new Route(track2, getPathLength(track2));
         route.destinationParkingSpot = null;

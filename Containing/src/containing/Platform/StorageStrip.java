@@ -220,7 +220,6 @@ public class StorageStrip implements Serializable {
             if(!agvSpot.isEmpty())
             {
                 agvQueueLoad.add((AGV)agvSpot.getParkedVehicle());
-                System.out.println("agv with id " + agvQueueLoad.peek().getID() + " is parked in agvspot " + i);
             }
         }
     }
@@ -316,6 +315,7 @@ public class StorageStrip implements Serializable {
             AGV agv = agvQueueLoad.peek();
             if(agv.getStatus() != Status.MOVING) {
                 agvQueueLoad.poll().followRoute(platform.getLeft().getRoad().getPathAllIn(agv, getParkingSpotFromVehicleLoad(agv), platform.getFreeParkingSpotUnloaded(), platform, Settings.port.getMainroad()));
+                craneBusy = true;
             }
         } catch (AgvNotAvailable ex) {
             Logger.getLogger(StorageStrip.class.getName()).log(Level.SEVERE, null, ex);

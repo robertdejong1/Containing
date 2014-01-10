@@ -335,7 +335,8 @@ public class StorageStrip implements Serializable {
             {
                 case LOAD:
                     System.out.println("LOAD");
-                    load_phaseLoad(craneAgv);
+                    if(!craneAgv.getCargo().isEmpty())
+                        load_phaseLoad(craneAgv);
                     break;
                 case SENDTOPARKINGSPOT:
                     System.out.println("SENDTOPARKINGSPOT");

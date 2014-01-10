@@ -315,7 +315,7 @@ public class StorageStrip implements Serializable {
             AGV agv = agvQueueLoad.peek();
             if(agv.getStatus() != Status.MOVING) {
                 agvQueueLoad.poll().followRoute(platform.getLeft().getRoad().getPathAllIn(agv, getParkingSpotFromVehicleLoad(agv), platform.getFreeParkingSpotUnloaded(), platform, Settings.port.getMainroad()));
-                craneBusy = true;
+                craneBusy = false;
             }
         } catch (AgvNotAvailable ex) {
             Logger.getLogger(StorageStrip.class.getName()).log(Level.SEVERE, null, ex);

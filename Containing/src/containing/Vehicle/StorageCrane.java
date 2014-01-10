@@ -59,6 +59,7 @@ public class StorageCrane extends Crane {
             path.add(this.position);
             path.add(defaultPositionStorageStrip);
             this.status = Status.LOADING;
+            
             System.out.println("StorageCraneStatus: " + this.status);
             /*
             path.add(agv.getPosition());
@@ -100,6 +101,8 @@ public class StorageCrane extends Crane {
         List<Vector3f> path = new ArrayList<Vector3f>();
         path.add(this.position); 
         path.add(this.containerStoragePosition);
+        
+        this.position = containerStoragePosition;
         for (Vector3f v : path)
         {
             System.out.println("StorageCraneUnloadPath: " + v );

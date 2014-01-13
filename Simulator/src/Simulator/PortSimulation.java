@@ -32,6 +32,8 @@ public class PortSimulation extends SimpleApplication {
     FreeCrane[] freeCranes;
     StorageCrane[] storageCranes;
     RailCrane[] railCrane;
+    TruckCrane[] truckCranes;
+    SeashipCrane[] seashipCranes;
     Port port;
     //private StorageCrane storageCrane = new StorageCrane(assetManager, rootNode);
     //Truck[] truck = new Truck[20];
@@ -315,8 +317,30 @@ public class PortSimulation extends SimpleApplication {
             for (int i = 0; i < aantal_bargecranes; i++)
             {
                 containing.Vehicle.BargeCrane crane = (containing.Vehicle.BargeCrane) bargePlatform.getCranes().get(i);
-                freeCranes[0] = new FreeCrane(assetManager, rootNode, crane.getID());
-                freeCranes[0].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().z);
+                freeCranes[i] = new FreeCrane(assetManager, rootNode, crane.getID());
+                freeCranes[i].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().z);
+            }
+            
+            containing.Platform.TruckPlatform truckPlatform = ((containing.Platform.TruckPlatform) _port.getPlatforms().get(3));
+            int aantal_truckcranes = truckPlatform.CRANES;
+            truckCranes = new TruckCrane[aantal_truckcranes];
+            
+            for (int i = 0; i < aantal_truckcranes; i++)
+            {
+                containing.Vehicle.TruckCrane crane = (containing.Vehicle.TruckCrane) truckPlatform.getCranes().get(i);
+                truckCranes[i] = new TruckCrane(assetManager, rootNode, crane.getID());
+                truckCranes[i].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().z);
+            }
+            
+            containing.Platform.SeashipPlatform seashipPlatform = ((containing.Platform.SeashipPlatform) _port.getPlatforms().get(1));
+            int aantal_seashipcranes = seashipPlatform.CRANES;
+            seashipCranes = new SeashipCrane[aantal_seashipcranes];
+            
+            for (int i = 0; i < aantal_seashipcranes; i++)
+            {
+                containing.Vehicle.SeashipCrane crane = (containing.Vehicle.SeashipCrane) seashipPlatform.getCranes().get(i);
+                seashipCranes[i] = new SeashipCrane(assetManager, rootNode, crane.getID());
+                seashipCranes[i].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().z);
             }
 
             for (int i = 0; i < 100; i++) {
@@ -367,7 +391,7 @@ public class PortSimulation extends SimpleApplication {
                         }
                     }
 
-                    barge.place(44, 4.5f, 70);
+                    barge.place(84, 4.5f, 70);
                     break;
 
                 case SEASHIP:

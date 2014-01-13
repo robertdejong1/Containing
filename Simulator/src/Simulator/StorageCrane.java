@@ -61,7 +61,7 @@ public class StorageCrane
         
         if (occupied)
         {
-            con.model.move(0, 0, z);
+            con.model.move(0, 0, z*0.41f);
         }
     }
     
@@ -69,6 +69,11 @@ public class StorageCrane
     {
         crane.getChild(1).move(x, 0, 0);
         crane.getChild(2).move(x, 0, 0);
+        
+        if (occupied)
+        {
+            con.model.move(0, 0, -x*0.41f);
+        }
     }
     
     public void moveGrab(float y)
@@ -231,11 +236,11 @@ public class StorageCrane
                     }
                     break;
                 }
-                //break;
                 
             case 7:
                 //Move grab with container down
-                if (grab_y > (-4.35f+(droppoint.y * Container.height)))
+                hulp = false;
+                if (grab_y > (-4.35f+(droppoint.y * Container.height * 0.24f)))
                     moveGrab(-tpf);
                 else
                     cranestate = 8;

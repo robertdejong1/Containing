@@ -17,7 +17,7 @@ public class SeashipPlatform extends Platform {
     public final float WIDTH          = 100f*Settings.METER; // ???
     public final float LENGTH         = 855f*Settings.METER; // ???
     private final int MAX_VEHICLES     = 2;
-    private final int CRANES           = 10;
+    public final int CRANES           = 10;
     
     private final float AGV_OFFSET     = 0f;
     private final float CRANE_OFFSET   = 25f*Settings.METER;  // ???

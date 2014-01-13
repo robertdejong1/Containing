@@ -17,10 +17,10 @@ public class TruckPlatform extends Platform {
     private final float WIDTH          = 100f*Settings.METER;  // ???
     private final float LENGTH         = 821.5f*Settings.METER;  // ???
     private final int MAX_VEHICLES     = 20;    // ???
-    private final int CRANES           = 20;
+    public final int CRANES           = 20;
     
     private final float AGV_OFFSET     = 0f;
-    private final float CRANE_OFFSET   = 98f;   // ???
+    private final float CRANE_OFFSET   = 80f;   // ???
     private final float VEHICLE_OFFSET = 0f;
     
     public TruckPlatform(Vector3f position)
@@ -43,7 +43,7 @@ public class TruckPlatform extends Platform {
     protected final void createCranes() 
     {
         float space = LENGTH / (float)CRANES;
-        float offset = (space / 2f) - ( TruckCrane.width / 2f);
+        float offset = (space / 2f) - ( TruckCrane.width / 2f) + getPosition().z;
         for(int i = 0; i < CRANES; i++) 
         {
             Vector3f cranePosition = new Vector3f(CRANE_OFFSET, 0, space*i + offset);

@@ -114,9 +114,9 @@ public class StorageStrip implements Serializable {
         int x, y, z;
         for(x = 0; x < MAX_X; x++)
         {
-            for(y = 0; y < MAX_Y; y++) 
+            for(z = 0; z < MAX_Z; z++) 
             {
-                for(z = 0; z < MAX_Z; z++) 
+                for(y = 0; y < MAX_Y; y++) 
                 {
                     Point3D cur = new Point3D(x,y,z);
                     if(containers.containsKey(cur) && y != (MAX_Y - 1))
@@ -126,7 +126,7 @@ public class StorageStrip implements Serializable {
                         long newTimeStamp = Settings.getTimeStamp(date, from);
                         if(newTimeStamp < curTimeStamp)
                         {
-                            return cur;
+                            return new Point3D(cur.x, cur.y+1, cur.z);
                         }
                     } else {
                         return cur;
@@ -241,8 +241,6 @@ public class StorageStrip implements Serializable {
     
     private Vector3f getRealContainerPosition(Container container)
     {
-        Point3D containerPosition = getFreeContainerPosition(container);
-        System.out.println("containerPosition: " + containerPosition.toString());
         float x = containerPosition.x*Container.depth + position.x + 1.5f;
         float y = containerPosition.y*Container.height + position.y;
         float z = containerPosition.z*Container.width + position.z;
@@ -281,8 +279,12 @@ public class StorageStrip implements Serializable {
         try {
             System.out.println("StorageStrip loading... IK BEN IN DE TRY BOIII");
             craneBusy = true;
-            Vector3f pos = getRealContainerPosition(agv.getCargo().get(0));
-            containers.put(getFreeContainerPosition(agv.getCargo().get(0)), agv.getCargo().get(0));
+            Container cargo = agv.getCargo().get(0);
+            Vector3f pos = getRealContainerPosition(cargo);
+            System.out.println("realContainerPosition: " + pos.toString());
+            Point3D containerIndex = getFreeContainerPosition(cargo);
+            System.out.println("containerPosition: " + containerIndex.toString());
+            containers.put(containerIndex, cargo);
             int psId = getParkingSpotIndexFromVehicleLoad(agv);
             while(psId >= 12)
             {
@@ -294,7 +296,7 @@ public class StorageStrip implements Serializable {
                 psId = psId / 2;
             }
             System.out.println("Load on StorageCrane: 'agv': " + agv.getID() + " 'pos': " + pos.toString() + " 'psId': " + psId);
-            ((StorageCrane)crane).load(agv, pos, psId, getPosition());
+            ((StorageCrane)crane).load(agv, pos, psId, getPosition(), containerIndex);
         } catch (Exception ex) {
             Logger.getLogger(StorageStrip.class.getName()).log(Level.SEVERE, null, ex);
         }

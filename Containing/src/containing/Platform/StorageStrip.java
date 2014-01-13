@@ -69,6 +69,8 @@ public class StorageStrip implements Serializable {
     
     private final StoragePlatform platform;
     
+    private int loadCounter = 0;
+    
     public StorageStrip(StoragePlatform platform, Vector3f position, int id) 
     {
         this.platform = platform;
@@ -128,7 +130,9 @@ public class StorageStrip implements Serializable {
                         long newTimeStamp = Settings.getTimeStamp(date, from);
                         if(newTimeStamp < curTimeStamp)
                         {
-                            return new Point3D(cur.x, cur.y+1, cur.z);
+                            Point3D p = new Point3D(cur.x, cur.y+1, cur.z);
+                            if(!containers.containsKey(p))
+                                return p;
                         }
                     } else {
                         return cur;
@@ -222,8 +226,10 @@ public class StorageStrip implements Serializable {
             if(!agvSpot.isEmpty())
             {
                 AGV agv = (AGV)agvSpot.getParkedVehicle();
-                if(agv.getCargo().size() > 0)
-                    agvQueueLoad.add((AGV)agvSpot.getParkedVehicle());
+                if(agv.getCargo().size() > 0 && !agvQueueLoad.contains(agv)) {
+                    agvQueueLoad.add(agv);
+                    System.out.println("added " + i + " to agvQueueLoad");
+                }
             }
         }
     }
@@ -280,6 +286,9 @@ public class StorageStrip implements Serializable {
     {
         System.out.println("StorageStrip loading...");
         try {
+            System.out.println("strip " + id + " loaded " + loadCounter + " times");
+            System.out.println("en BTW agvQueueLoad == " + agvQueueLoad.size());
+            loadCounter++;
             System.out.println("StorageStrip loading... IK BEN IN DE TRY BOIII");
             craneBusy = true;
             Container cargo = agv.getCargo().get(0);

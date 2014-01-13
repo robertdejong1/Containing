@@ -6,6 +6,7 @@ import static containing.Platform.Platform.Positie.LINKS;
 import static containing.Platform.Platform.Positie.ONDER;
 import static containing.Platform.Platform.Positie.RECHTS;
 import containing.Platform.StoragePlatform;
+import containing.Platform.StoragePlatformOrientation;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
@@ -143,7 +144,7 @@ public class Road implements Serializable
         
         try
         {
-            if(vehicle.getCurrentPlatform() instanceof StoragePlatform)
+            if(vehicle.getCurrentPlatform() instanceof StoragePlatform || vehicle.getCurrentPlatform() instanceof StoragePlatformOrientation)
                 source.UnparkVehicle(); 
         }
         catch(Exception e)

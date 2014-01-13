@@ -20,7 +20,7 @@ public class BargePlatform extends Platform {
     public final int CRANES           = 8;
     
     private final float AGV_OFFSET     = 0f;
-    private final float CRANE_OFFSET   = 80f;   // ???
+    private final float CRANE_OFFSET   = 81.0f;  // ???
     private final float VEHICLE_OFFSET = 0f;
     
     public BargePlatform(Vector3f position)
@@ -28,8 +28,8 @@ public class BargePlatform extends Platform {
         super(position, Positie.RECHTS);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(DynamicAxis.Z);
-        setEntrypoint(new Vector3f(0,0,0));
-        setExitpoint(new Vector3f(0,0,LENGTH));
+        setEntrypoint(new Vector3f(71.5f,5.5f,155.5f));
+        setExitpoint(new Vector3f(71.6f, 5.5f,78.8f));
         setRoad();
         setTransportType(TransportType.Barge);
         setMaxAgvQueue(CRANES);
@@ -43,7 +43,7 @@ public class BargePlatform extends Platform {
     protected final void createCranes() 
     {
         float space = LENGTH / (float)CRANES;
-        float offset = (space / 2f) - ( BargeCrane.width / 2f) + 78f;
+        float offset = (space / 2f) - ( BargeCrane.width / 2f) + super.getPosition().z;
         for(int i = 0; i < CRANES; i++) 
         {
             Vector3f cranePosition = new Vector3f(CRANE_OFFSET, 5.5f, space*i + offset);

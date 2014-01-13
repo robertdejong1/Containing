@@ -34,7 +34,7 @@ public class Port implements Serializable
         this.Platforms = new ArrayList<>();
         Settings.messageLog.AddMessage("Created Harbor Object with id: " + ID);
 
-        Platforms.add(new BargePlatform(new Vector3f(3, 0, 0)));
+        Platforms.add(new BargePlatform(new Vector3f(71.7f, 5.5f, 78.0f)));
         Platforms.add(new SeashipPlatform(new Vector3f(0, 0, 0)));
         Platforms.add(new TrainPlatform(new Vector3f(0, 5.5f, 0)));
         Platforms.add(new TruckPlatform(new Vector3f(0, 0, 0)));

@@ -54,7 +54,7 @@ public class StorageCrane extends Crane {
             
             this.getCargo().get(0).setArrivalPosition(agv.getPosition());
             
-            this.loadtime = 14 * 10;  
+            this.loadtime = 20 * 10;  
             this.unloadtime = 25 * 10;
             path.add(this.position);
             path.add(defaultPositionStorageStrip);

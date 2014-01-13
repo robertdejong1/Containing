@@ -64,9 +64,24 @@ public class BargePlatform extends Platform {
     }
     
     @Override
+    public void unload() 
+    {
+        super.unload();
+        
+        //If we have no extVehicles, platform is free
+        if(extVehicles.isEmpty()){
+            state = State.FREE;
+            return;
+        }
+        
+        
+    }
+    
+    @Override
     public void update()
     {
         super.update();
+        time++;
         
         /* if platform is free, request next job */
         if(state.equals(State.FREE))
@@ -82,7 +97,10 @@ public class BargePlatform extends Platform {
         /* UNLOAD EXTERNAL VEHICLE */
         if(state.equals(State.UNLOAD))
         {
-            unload();
+            if(time >= 10) {
+                //System.out.println("unloading...");
+                unload();
+            }
         }
         
         /* LOAD EXTERNAL VEHICLE */

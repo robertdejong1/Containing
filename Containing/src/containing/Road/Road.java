@@ -82,6 +82,16 @@ public class Road implements Serializable
             for (Vector3f v : deel1.getWeg()) { track2.add(v); }
             for (Vector3f v : deel2.getWeg()) { track2.add(v); }
             for (Vector3f v : deel3.getWeg()) { track2.add(v); }
+            
+            if (vehicle.getID() == 103)
+            {
+                for (Vector3f v : deel1.getWeg() ) {
+                    System.out.println("Deel 1: " + v);}
+                for (Vector3f v : deel2.getWeg() ) {
+                    System.out.println("Deel 2: " + v);}
+                for (Vector3f v : deel3.getWeg() ) {
+                    System.out.println("Deel 3: " + v);}
+            }
         
         Route route = new Route(track2, getPathLength(track2));
     
@@ -103,6 +113,16 @@ public class Road implements Serializable
         for (Vector3f v : deel1.getWeg()) { track2.add(v);}
         for (Vector3f v : deel2.getWeg()) { track2.add(v);}
         for (Vector3f v : deel3.getWeg()) { track2.add(v);}
+        
+             if (vehicle.getID() == 103)
+            {
+                for (Vector3f v : deel1.getWeg() ) {
+                    System.out.println("Deel 1: " + v);}
+                for (Vector3f v : deel2.getWeg() ) {
+                    System.out.println("Deel 2: " + v);}
+                for (Vector3f v : deel3.getWeg() ) {
+                    System.out.println("Deel 3: " + v);}
+            }
         
         
        
@@ -184,10 +204,25 @@ public class Road implements Serializable
          track2.add(destination.getEntrypoint());
          //System.out.println("destinationEntryPoint: " + destination.getEntrypoint());
    
-         
+         if (vehicle.getID() == 103 && vehicle.routecounter == 3)
+         {
+             System.out.println("Before deel 2");
+             for (Vector3f v : track2)
+             {
+                 System.out.println("Deel 2 V: " + v);
+             }
+         }
          
          track2 = this.setPathCorrectOrder(track2, vehicle.getCurrentPlatform(), destination, mainroad);
-       
+         
+               if (vehicle.getID() == 103 && vehicle.routecounter == 3)
+         {
+             System.out.println("After deel 2");
+             for (Vector3f v : track2)
+             {
+                 System.out.println("Deel 2 V: " + v);
+             }
+         }
          vehicle.setCurrentPlatform(destination);
          vehicle.setPosition(destination.getEntrypoint());
          Route route = new Route(track2, getPathLength(track2));
@@ -347,6 +382,7 @@ public class Road implements Serializable
     
     public synchronized List<Vector3f> setPathCorrectOrder(List<Vector3f> path, Platform source, Platform destination, Road mainroad){
         //path size altijd 4
+       
         System.out.println("In function setPathCorrectOrder");
        
         List<Vector3f> correctPath = new ArrayList<>();
@@ -354,8 +390,8 @@ public class Road implements Serializable
         correctPath.add(path.get(1)); //exitpoint op weg
         
      
-        //System.out.println("POSITIE: " + source.positie); //=rechts
-        //System.out.println("POSITIE: " + destination.positie); //=links
+        System.out.println("POSITIES: " + source.positie); //=rechts
+        System.out.println("POSITIED: " + destination.positie); //=links
      
         //if (destination.positie == Platform.Positie.)
         
@@ -375,6 +411,7 @@ public class Road implements Serializable
         if (right)
         {    
 
+            
             
             switch(source.positie)
             {
@@ -399,7 +436,10 @@ public class Road implements Serializable
                     
                     if (destination.positie == Platform.Positie.RECHTS)
                     {
-                        correctPath.add(mainroad.track.get(0)); //linksboven
+                        System.out.println("Not in else");
+                        correctPath.add(mainroad.track.get(1)); //linksboven
+                        System.out.println("0: "+ mainroad.track.get(1));
+                        System.out.println("2: "+mainroad.track.get(2));
                         correctPath.add(mainroad.track.get(2)); //rechtsboven
                     }
                     if (destination.positie == Platform.Positie.ONDER)
@@ -464,8 +504,12 @@ public class Road implements Serializable
                     
                     if (destination.positie == Platform.Positie.RECHTS)
                     {
+                        System.out.println("In else");
                         //linksonder
                         //rechtsonder
+                       System.out.println("1: " + mainroad.track.get(1));
+                        System.out.println("2: " + mainroad.track.get(2));
+                                
                         correctPath.add(mainroad.track.get(1)); 
                         correctPath.add(mainroad.track.get(2)); 
                     }

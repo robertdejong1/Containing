@@ -39,6 +39,8 @@ public class Route implements Serializable {
             //System.out.println("ROUTE: " + v);
         }
         
+        //this.weg.add(new Vector3f(71.700005f, 5.5f, 0.0f));
+        //this.weg.add(new Vector3f(71.700005f, 5.5f, 156.2f));
       
         //System.out.println("------------");
     }

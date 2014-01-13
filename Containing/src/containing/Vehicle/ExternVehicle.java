@@ -44,7 +44,7 @@ public abstract class ExternVehicle extends Vehicle {
     public ExternVehicle(Date arrivalDate, float arrivalTime, int depthGrid,int widthGrid,int heightGrid, Platform platform, String company, Type type)
     {
         
-        super(depthGrid*widthGrid*heightGrid, platform, type);
+        super(depthGrid+1*widthGrid+1*heightGrid+1, platform, type);
         this.arrivalDate = arrivalDate;
         this.arrivalTime = arrivalTime;
 

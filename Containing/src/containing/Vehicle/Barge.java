@@ -10,6 +10,8 @@ import containing.Container;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
+import containing.Settings;
+import containing.Vector3f;
 import java.util.Date;
 
 /**
@@ -29,6 +31,7 @@ public class Barge extends ExternVehicle {
     {
         
         super(arrivalDate, arrivalTime, nrContainersDepth,nrContainersWidth,nrContainersHeight, platform, company, Type.BARGE); //true if vehicle comes to load, otherwise false
+        this.position = new Vector3f(880f*Settings.METER,4.5f,1400f*Settings.METER);
         this.maxSpeedLoaded = 20;
         this.maxSpeedUnloaded = 30;
     

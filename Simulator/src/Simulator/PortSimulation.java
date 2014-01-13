@@ -14,17 +14,14 @@ import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
-import com.jme3.material.Material;
-import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
+import containing.Point3D;
 import containing.Command;
 import java.util.HashMap;
 import java.util.List;
@@ -52,8 +49,8 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        //Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        Runnable networkHandler = new NetworkHandler("141.252.222.88", 1337);
+        Runnable networkHandler = new NetworkHandler("localhost", 1337);
+        //Runnable networkHandler = new NetworkHandler("141.252.222.88", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -597,6 +594,8 @@ public class PortSimulation extends SimpleApplication {
                 path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
             }
             
+            containing.Point3D droppoint = (containing.Point3D)map.get("containerindex");
+            System.out.println("DROPPOINT: z="+droppoint.z);
             path.setCurveTension(0.0f);
             float duration = Float.parseFloat(map.get("duration").toString())/10;
             
@@ -617,7 +616,7 @@ public class PortSimulation extends SimpleApplication {
                     MotionEvent con_motev = new MotionEvent(crane.con.model, con_path);
                     con_motev.setSpeed(1f);
                     
-                    crane.unloadCrane(motev, con_motev);
+                    crane.unloadCrane(motev, con_motev, droppoint);
                 }
             }
 

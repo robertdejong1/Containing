@@ -11,6 +11,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import containing.Point3D;
 
 
 public class StorageCrane
@@ -85,6 +86,7 @@ public class StorageCrane
     private int con_index;
     private MotionEvent motev;
     private MotionEvent con_motev;
+    private Point3D droppoint;
     
     public void loadCrane(Container con, int con_index, MotionEvent motev)
     {
@@ -95,10 +97,11 @@ public class StorageCrane
         node.attachChild(con.model);
     }
     
-    public void unloadCrane(MotionEvent motev, MotionEvent con_motev)
+    public void unloadCrane(MotionEvent motev, MotionEvent con_motev, Point3D droppoint)
     {
         this.motev = motev;
         this.con_motev = con_motev;
+        this.droppoint = droppoint;
         cranestate = 5;
         
     }
@@ -199,16 +202,46 @@ public class StorageCrane
                     }
                 });
                 break;
-                
+            
             case 6:
+                float goto_topdrop = 2.4f - droppoint.z;
+                if (goto_topdrop < 0)
+                {
+                    if (top_x > goto_topdrop && !hulp)
+                        moveTop(-tpf);
+                    else
+                    {
+                        hulp = true;
+                        if (top_x < goto_topdrop)
+                            moveTop(tpf);
+                        else
+                            cranestate = 7;
+                    }
+                    break;
+                } else {
+                    if (top_x < goto_topdrop && !hulp)
+                        moveTop(tpf);
+                    else
+                    {
+                        hulp = true;
+                        if (top_x > goto_topdrop)
+                            moveTop(-tpf);
+                        else
+                            cranestate = 7;
+                    }
+                    break;
+                }
+                //break;
+                
+            case 7:
                 //Move grab with container down
-                if (grab_y > -4.35f)
+                if (grab_y > (-4.35f+(droppoint.y * Container.height)))
                     moveGrab(-tpf);
                 else
-                    cranestate = 7;
+                    cranestate = 8;
                 break;
             
-            case 7:
+            case 8:
                 occupied = false;
                 this.con = null;
                 

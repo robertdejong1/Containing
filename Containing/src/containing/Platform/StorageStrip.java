@@ -15,6 +15,7 @@ import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
 import containing.Vehicle.StorageCrane;
 import containing.Vehicle.Vehicle.Status;
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -119,6 +120,7 @@ public class StorageStrip implements Serializable {
                 for(y = 0; y < MAX_Y; y++) 
                 {
                     Point3D cur = new Point3D(x,y,z);
+                    System.out.println("container contains " + cur.toString() + " == " + containers.containsKey(cur));
                     if(containers.containsKey(cur) && y != (MAX_Y - 1))
                     {
                         Container c = containers.get(cur);

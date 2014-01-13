@@ -252,7 +252,7 @@ public class StorageStrip implements Serializable {
         Point3D containerPosition = getFreeContainerPosition(container);
         float x = containerPosition.x*Container.depth + position.x + 1.5f;
         float y = containerPosition.y*Container.height + position.y;
-        float z = containerPosition.z*Container.width + position.z;
+        float z = position.z;
         Vector3f realPosition = new Vector3f(x, y, z);
         return realPosition;
     }

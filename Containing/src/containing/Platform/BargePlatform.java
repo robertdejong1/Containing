@@ -5,7 +5,12 @@ import containing.Dimension2f;
 import containing.ParkingSpot.BargeSpot;
 import containing.Settings;
 import containing.Vector3f;
+import containing.Vehicle.AGV;
 import containing.Vehicle.BargeCrane;
+import containing.Vehicle.Crane;
+import containing.Vehicle.ExternVehicle;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * BargePlatform.java
@@ -23,20 +28,34 @@ public class BargePlatform extends Platform {
     private final float CRANE_OFFSET   = 81.0f;  // ???
     private final float VEHICLE_OFFSET = 0f;
     
+    private ArrayList<Vector3f> agvQueuePositions;
+    
     public BargePlatform(Vector3f position)
     {
         super(position, Positie.RECHTS);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(DynamicAxis.Z);
-        setEntrypoint(new Vector3f(71.5f,5.5f,155.5f));
-        setExitpoint(new Vector3f(71.6f, 5.5f,78.8f));
+        setEntrypoint(new Vector3f(81.0f,5.5f, 155.5f));
+        setExitpoint(new Vector3f(81.0f, 5.5f, 78.8f));
         setRoad();
         setTransportType(TransportType.Barge);
         setMaxAgvQueue(CRANES);
         createAgvSpots(new Vector3f(CRANE_OFFSET - BargeCrane.length - AGV_OFFSET, 0, 0));
         createExtVehicleSpots();
-        createCranes();        
+        createCranes(); 
+        createAgvQueuePositions();
         log("Created BargePlatform object: " + toString());
+    }
+    
+       private void createAgvQueuePositions() 
+    {
+        agvQueuePositions = new ArrayList<>();
+        Vector3f base = new Vector3f(760f*Settings.METER, 5.5f, 1450f*Settings.METER);
+        for(int i = 0; i < maxAgvQueue; i++) 
+        {
+            agvQueuePositions.add(new Vector3f(base.x, base.y, base.z + (AGV.length * Settings.METER) * i + 0.5f));
+        }
+        Collections.reverse(agvQueuePositions);
     }
     
     @Override
@@ -73,6 +92,17 @@ public class BargePlatform extends Platform {
             state = State.FREE;
             return;
         }
+        
+        for(ExternVehicle extVehicle : extVehicles){
+            
+            super.sendAgvs(extVehicle.getCargo().size(), agvQueuePositions);
+            
+            for(Crane crane : cranes){
+                //crane.
+            }
+            
+        }
+        
         
         
     }

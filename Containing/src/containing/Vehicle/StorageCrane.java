@@ -28,6 +28,7 @@ public class StorageCrane extends Crane {
     public static float length = 6f; //??????????
     private float unloadtime = 0;
     private float loadtime = 0;
+    Point3D containerindex = null;
     //hier StorageCrane specific variables
     private Vector3f containerStoragePosition = null;
     private Vector3f defaultPositionStorageStrip = null;
@@ -37,9 +38,10 @@ public class StorageCrane extends Crane {
     }
     
    
-    public void load(AGV agv, Vector3f containerStoragePosition, int i, Vector3f defaultPositionStorageStrip,  Point3D containerindex) throws VehicleOverflowException, CargoOutOfBoundsException, Exception{ //container from extern verhicle
+    public void load(AGV agv, Vector3f containerStoragePosition, int i, Vector3f defaultPositionStorageStrip, Point3D containerindex) throws VehicleOverflowException, CargoOutOfBoundsException, Exception{ //container from extern verhicle
     try
         {
+            this.containerindex = containerindex;
             System.out.println("StorageIII: " + i);
             System.out.println("containerStoragePosition: " + containerStoragePosition);
             this.containerStoragePosition = containerStoragePosition;
@@ -72,7 +74,7 @@ public class StorageCrane extends Crane {
              map.put("vehicleType", this.getVehicleType());
              map.put("clientid", agv.getID());
              map.put("duration", this.loadtime);
-             map.put("containerindex", containerindex);
+             
             
           
              map.put("indexnr", i);
@@ -115,7 +117,7 @@ public class StorageCrane extends Crane {
              map.put("vehicleType", this.getVehicleType());
           
              map.put("duration", this.unloadtime);
-            
+             map.put("containerindex", containerindex);
              map.put("path", path);
 
              CommandHandler.addCommand(new Command("unloadStorageCrane", map));

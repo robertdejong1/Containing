@@ -70,7 +70,7 @@ public class Road implements Serializable
     //allinclusive
     public Route getPathAllIn(Vehicle vehicle, ParkingSpot source, ParkingSpot destinationParkingSpot, Platform destinationPlatform, Road mainroad)
     {
-        source.UnparkVehicle();
+        //source.UnparkVehicle();
         System.out.println("In function getPathAllIn");
         Route deel1 = vehicle.getCurrentPlatform().getRoad().getPathFromParkingSpotToPlatform(vehicle, source, vehicle.getCurrentPlatform().getExitpoint());
         Route deel2 = mainroad.getPathFromExitPointPlatformToEntryPointPlatform(vehicle, vehicle.getCurrentPlatform().getExitpoint(), destinationPlatform, mainroad);

@@ -11,10 +11,8 @@ import containing.CommandHandler;
 import containing.Container;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.VehicleOverflowException;
-import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
-import containing.Road.Road;
-import containing.Road.Route;
+import containing.Point3D;
 import containing.Vector3f;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +37,7 @@ public class StorageCrane extends Crane {
     }
     
    
-    public void load(AGV agv, Vector3f containerStoragePosition, int i, Vector3f defaultPositionStorageStrip) throws VehicleOverflowException, CargoOutOfBoundsException, Exception{ //container from extern verhicle
+    public void load(AGV agv, Vector3f containerStoragePosition, int i, Vector3f defaultPositionStorageStrip,  Point3D containerindex) throws VehicleOverflowException, CargoOutOfBoundsException, Exception{ //container from extern verhicle
     try
         {
             System.out.println("StorageIII: " + i);
@@ -74,6 +72,7 @@ public class StorageCrane extends Crane {
              map.put("vehicleType", this.getVehicleType());
              map.put("clientid", agv.getID());
              map.put("duration", this.loadtime);
+             map.put("containerindex", containerindex);
             
           
              map.put("indexnr", i);

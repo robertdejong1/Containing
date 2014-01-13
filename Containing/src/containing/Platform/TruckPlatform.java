@@ -46,7 +46,7 @@ public class TruckPlatform extends Platform {
         float offset = (space / 2f) - ( TruckCrane.width / 2f) + getPosition().z;
         for(int i = 0; i < CRANES; i++) 
         {
-            Vector3f cranePosition = new Vector3f(CRANE_OFFSET, 0, space*i + offset);
+            Vector3f cranePosition = new Vector3f(CRANE_OFFSET, 5.5f, space*i + offset);
             cranes.add(new TruckCrane(cranePosition, this));
         }
     }

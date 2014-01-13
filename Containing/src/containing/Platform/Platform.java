@@ -185,7 +185,8 @@ public abstract class Platform implements Serializable {
             for(int i = 0; i < extVehicleSpots.size(); i++) 
             {
                 if(extVehicleSpots.get(i).getParkedVehicle() != null) {
-                    extVehicles.add((Train)extVehicleSpots.get(i).getParkedVehicle());
+                    
+                    extVehicles.add((ExternVehicle)extVehicleSpots.get(i).getParkedVehicle());
                 }
             }
         }

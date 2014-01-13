@@ -115,15 +115,15 @@ public class StorageStrip implements Serializable {
         Date date = container.getDepartureDate();
         float from = container.getDepartureTimeFrom();
         int x, y, z;
-        for(x = 0; x < MAX_X; x++)
+        for(z = 0; z < MAX_X; z++)
         {
-            for(z = 0; z < MAX_Z; z++) 
+            for(x = 0; x < MAX_X; x++) 
             {
                 for(y = 0; y < MAX_Y; y++) 
                 {
                     Point3D cur = new Point3D(x,y,z);
                     System.out.println("container contains " + cur.toString() + " == " + containers.containsKey(cur));
-                    if(containers.containsKey(cur) && y != (MAX_Y - 1))
+                    if(containers.containsKey(cur) && y != (MAX_Y - 2))
                     {
                         Container c = containers.get(cur);
                         long curTimeStamp = Settings.getTimeStamp(c.getDepartureDate(), c.getDepartureTimeFrom());

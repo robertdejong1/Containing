@@ -21,7 +21,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.util.SkyFactory;
-import containing.Point3D;
 import containing.Command;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +29,7 @@ public class PortSimulation extends SimpleApplication {
 
     AGV[] agv = new AGV[100];
     //Container[] container = new Container[19];
-    FreeCrane[] freeCranes = new FreeCrane[4];
+    FreeCrane[] freeCranes;
     StorageCrane[] storageCranes;
     RailCrane[] railCrane;
     Port port;
@@ -65,11 +64,11 @@ public class PortSimulation extends SimpleApplication {
         flyCamPos = new Vector3f(817f / 20, 80f, 1643f / 20);
         this.setPauseOnLostFocus(false);
         
-        for (int i = 0; i < 4; i++) {
-            freeCranes[i] = new FreeCrane(assetManager, rootNode);
-            freeCranes[i].scale(0.5f);
-            freeCranes[i].rotate(0, 180 * FastMath.DEG_TO_RAD, 0);
-        }
+        //for (int i = 0; i < 4; i++) {
+            //freeCranes[i] = new FreeCrane(assetManager, rootNode);
+            //freeCranes[i].scale(0.5f);
+            //freeCranes[i].rotate(0, 180 * FastMath.DEG_TO_RAD, 0);
+        //}
         port = new Port(assetManager, rootNode, viewPort);
         //port.scale(10f);
         //port.place();
@@ -307,6 +306,17 @@ public class PortSimulation extends SimpleApplication {
                 containing.Vehicle.StorageCrane crane = (containing.Vehicle.StorageCrane) storagePlatform.getCranes().get(i);
                 storageCranes[i] = new StorageCrane(assetManager, rootNode, crane.getID());
                 storageCranes[i].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().z);
+            }
+            
+            containing.Platform.BargePlatform bargePlatform = ((containing.Platform.BargePlatform) _port.getPlatforms().get(0));
+            int aantal_bargecranes = bargePlatform.CRANES;
+            freeCranes = new FreeCrane[aantal_bargecranes];
+            
+            for (int i = 0; i < aantal_bargecranes; i++)
+            {
+                containing.Vehicle.BargeCrane crane = (containing.Vehicle.BargeCrane) bargePlatform.getCranes().get(i);
+                freeCranes[0] = new FreeCrane(assetManager, rootNode, crane.getID());
+                freeCranes[0].place(crane.getPosition().x, crane.getPosition().y, crane.getPosition().z);
             }
 
             for (int i = 0; i < 100; i++) {
@@ -594,7 +604,7 @@ public class PortSimulation extends SimpleApplication {
                 path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
             }
             
-            containing.Point3D droppoint = (containing.Point3D)map.get("containerindex");
+            containing.Point3D droppoint = (containing.Point3D) map.get("containerindex");
             System.out.println("DROPPOINT: z="+droppoint.z);
             path.setCurveTension(0.0f);
             float duration = Float.parseFloat(map.get("duration").toString())/10;

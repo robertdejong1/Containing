@@ -20,7 +20,7 @@ public class BargePlatform extends Platform {
     public final int CRANES           = 8;
     
     private final float AGV_OFFSET     = 0f;
-    private final float CRANE_OFFSET   = 98f;   // ???
+    private final float CRANE_OFFSET   = 80f;   // ???
     private final float VEHICLE_OFFSET = 0f;
     
     public BargePlatform(Vector3f position)
@@ -43,7 +43,7 @@ public class BargePlatform extends Platform {
     protected final void createCranes() 
     {
         float space = LENGTH / (float)CRANES;
-        float offset = (space / 2f) - ( BargeCrane.width / 2f);
+        float offset = (space / 2f) - ( BargeCrane.width / 2f) + 78f;
         for(int i = 0; i < CRANES; i++) 
         {
             Vector3f cranePosition = new Vector3f(CRANE_OFFSET, 5.5f, space*i + offset);

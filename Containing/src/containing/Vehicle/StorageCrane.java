@@ -58,6 +58,7 @@ public class StorageCrane extends Crane {
             this.unloadtime = 50 * 10;
             path.add(this.position);
             path.add(defaultPositionStorageStrip);
+            this.position = defaultPositionStorageStrip;
             this.status = Status.LOADING;
             
             System.out.println("StorageCraneStatus: " + this.status);

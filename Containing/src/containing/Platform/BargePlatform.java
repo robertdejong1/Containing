@@ -17,7 +17,7 @@ public class BargePlatform extends Platform {
     private final float WIDTH          = 100f*Settings.METER;  // ???
     private final float LENGTH         = 821.5f*Settings.METER;  // ???
     private final int MAX_VEHICLES     = 2;
-    private final int CRANES           = 8;
+    public final int CRANES           = 8;
     
     private final float AGV_OFFSET     = 0f;
     private final float CRANE_OFFSET   = 98f;   // ???
@@ -46,7 +46,7 @@ public class BargePlatform extends Platform {
         float offset = (space / 2f) - ( BargeCrane.width / 2f);
         for(int i = 0; i < CRANES; i++) 
         {
-            Vector3f cranePosition = new Vector3f(CRANE_OFFSET, 0, space*i + offset);
+            Vector3f cranePosition = new Vector3f(CRANE_OFFSET, 5.5f, space*i + offset);
             cranes.add(new BargeCrane(cranePosition, this));
         }
     }

@@ -49,7 +49,7 @@ public abstract class ExternVehicle extends Vehicle {
         this.arrivalTime = arrivalTime;
 
 
-        this.grid = new Container[widthGrid][heightGrid][depthGrid];
+        this.grid = new Container[widthGrid+1][heightGrid+1][depthGrid+1];
         
         this.company = company;
         this.nrContainersDepth = depthGrid;

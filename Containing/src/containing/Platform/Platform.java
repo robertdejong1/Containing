@@ -286,7 +286,7 @@ public abstract class Platform implements Serializable {
     protected void unload_phaseMove(int currentCrane, int column, ExternVehicle ev) 
     {
         Crane c = cranes.get(currentCrane);
-        if(ev.getGrid()[column][0][0] != null) {
+        if(ev.getGrid()[column][0][0] != null) { 
             try {
                 Route ding = craneRoad.moveToContainer(ev, column, c);
                 System.out.println("Ja route is dit " +ding.getWeg());

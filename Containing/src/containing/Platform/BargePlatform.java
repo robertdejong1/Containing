@@ -161,8 +161,11 @@ public class BargePlatform extends Platform {
                 
                 // loop through cranes
                 int currentCrane = 0;
-                for(Crane c : cranes)
+                for(int i = (cranes.size() - 1); i >= 0; i--)
                 {
+                    
+                    Crane c = cranes.get(i);
+                    System.out.println(c.getID());
                     int allowedCranes = (currentVehicle+1 * cranesPerVehicle - cranesPerVehicle);
                     int rows = ev.getGridWidth();
                     int rowsPerCrane = rows / cranesPerVehicle;

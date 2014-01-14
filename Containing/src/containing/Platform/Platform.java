@@ -91,9 +91,6 @@ public abstract class Platform implements Serializable {
         busyCranes = new ArrayList<>();
         craneAgvs = new ArrayList<>();
         this.positie = positie;
-        for(int i = 0; i < cranes.size(); i++) {
-            craneAgvs.add(null);
-        }
     }
     
     public List<ExternVehicle> getEvs()

@@ -60,6 +60,10 @@ public class TrainPlatform extends Platform {
         createCranes();
         createAgvSpots();
         createAgvQueuePositions();
+        /* 'initialize' craneAgvs */
+        for(int i = 0; i < cranes.size(); i++) {
+            craneAgvs.add(null);
+        }
         /* create crainroad (HARDCODED WAYPOINTS, ASK BENJAMIN) */
         List waypoints = new ArrayList();
         waypoints.add(new Vector3f(2.6f, 5.5f, 0.5f));

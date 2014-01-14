@@ -1,7 +1,9 @@
 package containing.Platform;
 
+import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
+import containing.Exceptions.AgvNotAvailable;
 import containing.ParkingSpot.BargeSpot;
 import containing.Settings;
 import containing.Vector3f;
@@ -9,8 +11,13 @@ import containing.Vehicle.AGV;
 import containing.Vehicle.BargeCrane;
 import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
+import containing.Vehicle.Vehicle;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * BargePlatform.java
@@ -30,6 +37,8 @@ public class BargePlatform extends Platform {
     
     private ArrayList<Vector3f> agvQueuePositions;
     
+    private final int[] sendAwayEvTiming;
+    
     public BargePlatform(Vector3f position)
     {
         super(position, Positie.RECHTS);
@@ -44,6 +53,20 @@ public class BargePlatform extends Platform {
         createExtVehicleSpots();
         createCranes(); 
         createAgvQueuePositions();
+        sendAwayEvTiming = new int[MAX_VEHICLES];
+        for(int i = 0; i < sendAwayEvTiming.length; i++)
+            sendAwayEvTiming[i] = -1;
+        
+                /* 'initialize' craneAgvs */
+        for(int i = 0; i < cranes.size(); i++) {
+            craneAgvs.add(null);
+        }
+        
+        List waypoints = new ArrayList();
+        waypoints.add(new Vector3f(7.9f, 5.5f, 15.6f));
+        waypoints.add(new Vector3f(7.9f, 5.5f, 7.8f));
+        setCraneRoad(waypoints);
+        
         log("Created BargePlatform object: " + toString());
     }
     
@@ -77,7 +100,7 @@ public class BargePlatform extends Platform {
         float offset = (space / 2) - (BargeSpot.length / 2);
         for(int i = 0; i < MAX_VEHICLES; i++)
         {
-            Vector3f spotPosition = new Vector3f(WIDTH + VEHICLE_OFFSET,0,space*i + offset);
+            Vector3f spotPosition = new Vector3f(WIDTH + VEHICLE_OFFSET + getPosition().x, 4.5f,space*i + offset + getPosition().z);
             extVehicleSpots.add(new BargeSpot(spotPosition));
         }
     }
@@ -87,24 +110,90 @@ public class BargePlatform extends Platform {
     {
         super.unload();
         
-        //If we have no extVehicles, platform is free
-        if(extVehicles.isEmpty()){
-            state = State.FREE;
-            return;
-        }
-        
-        for(ExternVehicle extVehicle : extVehicles){
+        if(!extVehicles.isEmpty()) 
+        {
+            int currentVehicle = 0;
+            int cranesPerVehicle = CRANES / extVehicles.size();
             
-            super.sendAgvs(extVehicle.getCargo().size(), agvQueuePositions);
-            
-            for(Crane crane : cranes){
-                //crane.
+            Iterator<ExternVehicle> it = extVehicles.iterator();
+            while(it.hasNext())
+            {
+                ExternVehicle ev = it.next();
+                
+                // if cargo is unloaded, send vehicle away
+                if(ev.getCargo().isEmpty() && sendAwayEvTiming[currentVehicle] == -1) {
+                    sendAwayEvTiming[currentVehicle] = 120;
+                }
+                if(sendAwayEvTiming[currentVehicle] != -1)
+                {
+                    if(sendAwayEvTiming[currentVehicle] > 0)
+                    {
+                        System.out.println("nog seconden: " + sendAwayEvTiming[currentVehicle]);
+                        sendAwayEvTiming[currentVehicle] = sendAwayEvTiming[currentVehicle] - 1;
+                    }
+                    else
+                    {
+                        try {
+                            it.remove();
+                            sendAwayEvTiming[currentVehicle] = -1;
+                            ev.followRoute(road.getPathExternVehicleExit(extVehicleSpots.get(currentVehicle), new Vector3f(ev.getPosition().x, 5.5f, ev.getPosition().z + 1000f)));
+                        } catch (AgvNotAvailable ex) {
+                            Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                
+                // send new AGV's
+                sendAgvs(ev.getCargo().size(), agvQueuePositions);
+                
+                // loop through cranes
+                int currentCrane = 0;
+                for(Crane c : cranes)
+                {
+                    int allowedCranes = (currentVehicle+1 * cranesPerVehicle - cranesPerVehicle);
+                    int rows = ev.getGridWidth();
+                    int rowsPerCrane = rows / cranesPerVehicle;
+                    // fix isAvailable statuses?
+                    if(c.getStatus() != Vehicle.Status.LOADING && c.getStatus() != Vehicle.Status.UNLOADING && c.getStatus() != Vehicle.Status.MOVING)
+                            c.setIsAvailable(true);
+                    // process phase of cranes
+                    if(currentCrane >= allowedCranes && currentCrane < allowedCranes + cranesPerVehicle && currentCrane*rowsPerCrane < ev.getColumns().size()) {
+                        int column = getColumn(currentCrane, rowsPerCrane, ev);
+                        Container container = getContainer(column, ev);
+                        Phase phase = unload_getPhase(currentCrane, column, ev);
+                        if(phase != null)
+                        {
+                            switch(phase)
+                            {
+                                case MOVE:
+                                    //System.out.println("MOVE");
+                                    unload_phaseMove(currentCrane, column, ev);
+                                    break;
+                                case LOAD:
+                                    //System.out.println("LOAD");
+                                    unload_phaseLoad(currentCrane, container, ev);
+                                    break;
+                                case UNLOAD:
+                                    //System.out.println("UNLOAD");
+                                    unload_phaseUnload(currentCrane);
+                                    break;
+                                case SENDTOSTORAGE:
+                                    //System.out.println("SENDTOSTORAGE");
+                                    unload_phaseSendToStorage(currentCrane);
+                                    break;
+                            }
+                        }
+                    }
+                    currentCrane++;
+                }
             }
-            
         }
-        
-        
-        
+        else 
+        {
+            state = State.FREE;
+        }
+        if(agvQueue.isEmpty())
+            time = 0;
     }
     
     @Override

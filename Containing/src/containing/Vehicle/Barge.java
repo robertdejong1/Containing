@@ -20,7 +20,7 @@ import java.util.Date;
  */
 public class Barge extends ExternVehicle {
 
-    public static float width = 5f; //????????
+    public static float width = 10f; //????????
     public static float length = 10f; //??????????
     public static int nrContainersDepth = 20;
     public static int nrContainersHeight = 20;

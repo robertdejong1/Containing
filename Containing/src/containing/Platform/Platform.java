@@ -189,7 +189,7 @@ public abstract class Platform implements Serializable {
         }
     }
     
-    /**
+        /**
      * Get column of containers from Extern Vehicle
      * @param currentCrane the crane who requested
      * @param rowsPerCrane the amount of rows the crane is allowed to unload
@@ -207,6 +207,21 @@ public abstract class Platform implements Serializable {
                 return i;
             else if(!columns.get(i))
                 return i;
+        }
+        return -1;
+    }
+
+    protected int getColumn(int currentCrane, int rowsPerCrane, ExternVehicle ev, int cranesPerVehicle) 
+    {
+        List<Integer> pColumns = ev.getPriorityColumns();
+        List<Boolean> columns = ev.getColumns();
+        int startIndex = currentCrane * rowsPerCrane;
+        for(int i = startIndex; i < startIndex + rowsPerCrane; i++)
+        {
+            if(pColumns.contains(i) && !columns.get(i))
+                return i + cranesPerVehicle;
+            else if(!columns.get(i))
+                return i + cranesPerVehicle;
         }
         return -1;
     }

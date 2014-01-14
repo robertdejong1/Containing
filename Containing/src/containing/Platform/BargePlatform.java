@@ -128,6 +128,9 @@ public class BargePlatform extends Platform {
         {
             int currentVehicle = 0;
             int cranesPerVehicle = CRANES / extVehicles.size();
+            if(cranesPerVehicle > 2){
+                cranesPerVehicle = 2;
+            }
             
             Iterator<ExternVehicle> it = extVehicles.iterator();
             while(it.hasNext())
@@ -161,11 +164,8 @@ public class BargePlatform extends Platform {
                 
                 // loop through cranes
                 int currentCrane = 0;
-                for(int i = (cranes.size() - 1); i >= 0; i--)
-                {
-                    
-                    Crane c = cranes.get(i);
-                    System.out.println(c.getID());
+                for(Crane c : cranes)
+                {    
                     int allowedCranes = (currentVehicle+1 * cranesPerVehicle - cranesPerVehicle);
                     int rows = ev.getGridWidth();
                     int rowsPerCrane = rows / cranesPerVehicle;
@@ -174,7 +174,7 @@ public class BargePlatform extends Platform {
                             c.setIsAvailable(true);
                     // process phase of cranes
                     if(currentCrane >= allowedCranes && currentCrane < allowedCranes + cranesPerVehicle && currentCrane*rowsPerCrane < ev.getColumns().size()) {
-                        int column = getColumn(currentCrane, rowsPerCrane, ev);
+                        int column = getColumn(currentCrane, rowsPerCrane, ev, cranesPerVehicle);
                         Container container = getContainer(column, ev);
                         Phase phase = unload_getPhase(currentCrane, column, ev);
                         if(phase != null)

@@ -148,8 +148,8 @@ public class UserInterface extends JFrame
                 {
                     File xmlFile = new File("xmlfiles\\xml3.xml");
                     Controller.readXMLAndSortOutput(xmlFile);
-                    JOptionPane.showMessageDialog(new Frame(),
-                        "Fock you robert met je kut button.");
+                    //JOptionPane.showMessageDialog(new Frame(),
+                      //  "Fock you robert met je kut button.");
                 }
             }
         );

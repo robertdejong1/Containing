@@ -40,7 +40,7 @@ public class TruckCrane {
         crane.attachChild(grab);
         crane.attachChild(top);
 
-        crane.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+        //crane.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         crane.scale(0.41f);
     }
     

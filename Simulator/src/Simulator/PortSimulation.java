@@ -51,8 +51,8 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        //Runnable networkHandler = new NetworkHandler("141.252.222.88", 1337);
+        //Runnable networkHandler = new NetworkHandler("localhost", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.222.80", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -149,7 +149,7 @@ public class PortSimulation extends SimpleApplication {
         quad.setQueueBucket(Bucket.Transparent);    
         quad.setLocalTranslation(0, settings.getHeight()-300, 0);
         guiNode.attachChild(quad); */
-        
+       
     }
     
     private ActionListener actionListener = new ActionListener() {
@@ -444,6 +444,7 @@ public class PortSimulation extends SimpleApplication {
             List<containing.Vector3f> motion = route.getWeg();
             for (containing.Vector3f v : motion) {
                 path.addWayPoint(new Vector3f(v.x, 5.5f, v.z));
+                System.out.println("Path: " + v.x + ", " + v.y + ", " + v.z);
             }
             path.setCurveTension(0.0f);
             float duration = Float.parseFloat(map.get("duration").toString());
@@ -488,6 +489,12 @@ public class PortSimulation extends SimpleApplication {
                     
                 case BARGE:
                     barge.place(path.getWayPoint(0));
+                    
+                    for (int i = 0; i < path.getNbWayPoints(); i++)
+                    {
+                        path.getWayPoint(i).setY(4.5f);
+                    }
+                    
                     motev = new MotionEvent(barge.barge, path, duration);
                     motev.setSpeed(1f);
                     motev.play();
@@ -505,7 +512,7 @@ public class PortSimulation extends SimpleApplication {
                 
                 case BARGECRANE:
                     for (FreeCrane r : freeCranes) {
-                        if (r.id == id) {
+                        if (r.id == id) {                            
                             motev = new MotionEvent(r.model, path, duration);
                             motev.setSpeed(1f);
                             motev.play();

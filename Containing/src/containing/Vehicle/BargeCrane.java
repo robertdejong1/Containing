@@ -31,18 +31,13 @@ public class BargeCrane extends Crane {
     
     public BargeCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
         super(startPosition, platform, Type.BARGECRANE, width, length);
+        this.maxSpeedLoaded = 50;
+        this.maxSpeedUnloaded = 40;
 
     }
     
     
   
-    public void move(int direction){ //-1 = left + 1 = rechts
-        /*
-        int starttime = this.timeCounter;
-        while (this.timeCounter < starttime + this.metersToNextAgvSpot * this.maxSpeedUnloaded){}
-        this.startPosition.x = this.startPosition.x + direction * this.metersToNextAgvSpot;
-        */
-     }
     
     @Override
     public int getMaxSpeedUnloaded(){return 8;}

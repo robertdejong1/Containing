@@ -16,6 +16,7 @@ import containing.Job;
 import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.ParkingSpot;
 import containing.Road.Road;
+import containing.Road.Route;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
@@ -287,7 +288,9 @@ public abstract class Platform implements Serializable {
         Crane c = cranes.get(currentCrane);
         if(ev.getGrid()[column][0][0] != null) {
             try {
-                c.followRoute(craneRoad.moveToContainer(ev, column, c));
+                Route ding = craneRoad.moveToContainer(ev, column, c);
+                System.out.println("Ja route is dit " +ding.getWeg());
+                c.followRoute(ding);
                 busyCranes.add(c);
             } catch (AgvNotAvailable ex) {
                 System.out.println(ex.getMessage());

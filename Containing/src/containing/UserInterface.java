@@ -1,6 +1,7 @@
 package containing;
 
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -8,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -146,6 +148,8 @@ public class UserInterface extends JFrame
                 {
                     File xmlFile = new File("xmlfiles\\xml3.xml");
                     Controller.readXMLAndSortOutput(xmlFile);
+                    JOptionPane.showMessageDialog(new Frame(),
+                        "Fock you robert met je kut button.");
                 }
             }
         );

@@ -298,7 +298,7 @@ public class StoragePlatform extends Platform {
     private void setEntrypoints()
     {
         entrypoints = new Vector3f[2];
-        entrypoints[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z + LENGTH);
+        entrypoints[0] = new Vector3f(getPosition().x, getPosition().y, getPosition().z + LENGTH);
         entrypoints[1] = new Vector3f(710*Settings.METER, getPosition().y, getPosition().z + LENGTH);
     }
     
@@ -312,7 +312,7 @@ public class StoragePlatform extends Platform {
     private void setExitpoints()
     {
         exitpoints = new Vector3f[2];
-        exitpoints[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z);
+        exitpoints[0] = new Vector3f(getPosition().x, getPosition().y, getPosition().z);
         exitpoints[1] = new Vector3f(710f*Settings.METER, getPosition().y, getPosition().z);
     }
     

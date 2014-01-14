@@ -502,6 +502,16 @@ public class PortSimulation extends SimpleApplication {
                         }
                     }
                     break;
+                
+                case BARGECRANE:
+                    for (FreeCrane r : freeCranes) {
+                        if (r.id == id) {
+                            motev = new MotionEvent(r.model, path, duration);
+                            motev.setSpeed(1f);
+                            motev.play();
+                        }
+                    }
+                    break;
             }
         } else if (cmd.getCommand().equals("loadCrane")) {
             System.out.println(cmd.getCommand());

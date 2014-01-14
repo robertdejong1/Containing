@@ -199,7 +199,7 @@ public class Road implements Serializable
                     //System.out.println("route z: " + hihi.toString());
                  }
                  else if(ev.getCurrentPlatform().getTransportType() == TransportType.Barge){
-                    Vector3f hihi = new Vector3f(crane.getPosition().x, crane.getPosition().y, ev.getPosition().z - column*1.5f + 0.70f);
+                    Vector3f hihi = new Vector3f(crane.getPosition().x, crane.getPosition().y, ev.getPosition().z - column+1.5f +1f);
                     route.add(hihi); //??
                  }
 

@@ -168,6 +168,7 @@ public class BargePlatform extends Platform {
                 {    
                     int allowedCranes = (currentVehicle+1 * cranesPerVehicle - cranesPerVehicle);
                     int rows = ev.getGridWidth();
+                    System.out.println("rows" +rows);
                     int rowsPerCrane = rows / cranesPerVehicle;
                     // fix isAvailable statuses?
                     if(c.getStatus() != Vehicle.Status.LOADING && c.getStatus() != Vehicle.Status.UNLOADING && c.getStatus() != Vehicle.Status.MOVING)
@@ -183,6 +184,7 @@ public class BargePlatform extends Platform {
                             {
                                 case MOVE:
                                     //System.out.println("MOVE");
+                                    System.out.println("Hallo ik ben kraan id " +currentCrane +" en ik ga kolom " +column +" uitladen");
                                     unload_phaseMove(currentCrane, column, ev);
                                     break;
                                 case LOAD:

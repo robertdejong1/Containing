@@ -272,20 +272,6 @@ public class StoragePlatform extends Platform {
         return entrypoints[1];
     }
     
-    public Vector3f getEntrycorner(Side side)
-    {
-        if(side.equals(Side.LEFT))
-            return entrycorners[0];
-        return entrycorners[1];
-    }
-    
-    public Vector3f getExitcorner(Side side)
-    {
-        if(side.equals(Side.LEFT))
-            return exitcorners[0];
-        return exitcorners[1];
-    }
-    
     public Vector3f getExitpoint(Side side)
     {
         if(side.equals(Side.LEFT))
@@ -297,14 +283,14 @@ public class StoragePlatform extends Platform {
     {
         entrypoints = new Vector3f[2];
         entrypoints[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z + LENGTH);
-        entrypoints[1] = new Vector3f(710f*Settings.METER, getPosition().y, getPosition().z + LENGTH);
+        entrypoints[1] = new Vector3f(695*Settings.METER, getPosition().y, getPosition().z + LENGTH);
     }
     
     private void setExitpoints()
     {
         exitpoints = new Vector3f[2];
         exitpoints[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z);
-        exitpoints[1] = new Vector3f(710f*Settings.METER, getPosition().y, getPosition().z);
+        exitpoints[1] = new Vector3f(695f*Settings.METER, getPosition().y, getPosition().z);
     }
     
     public StoragePlatformOrientation getLeft() {

@@ -171,13 +171,11 @@ public class BargePlatform extends Platform {
                             c.setIsAvailable(true);
                     // process phase of cranes
                     if(currentCrane >= allowedCranes && currentCrane < allowedCranes + cranesPerVehicle && currentCrane*rowsPerCrane < ev.getColumns().size()) {
-                        System.out.println("yeah boiii");
                         int column = getColumn(currentCrane, rowsPerCrane, ev);
                         Container container = getContainer(column, ev);
                         Phase phase = unload_getPhase(currentCrane, column, ev);
                         if(phase != null)
                         {
-                            System.out.println("Swich manannn");
                             switch(phase)
                             {
                                 case MOVE:

@@ -337,8 +337,8 @@ public abstract class Platform implements Serializable {
     }
     
     /**
-     * UNLOAD PHASE : 
-     * @param currentCrane 
+     * UNLOAD PHASE : Unload container to AGV
+     * @param currentCrane nr crane
      */
     protected void unload_phaseUnload(int currentCrane) 
     {
@@ -356,6 +356,10 @@ public abstract class Platform implements Serializable {
         }
     }
     
+    /**
+     * 
+     * @param currentCrane 
+     */
     protected void unload_phaseSendToStorage(int currentCrane) 
     {
         try {
@@ -464,7 +468,7 @@ public abstract class Platform implements Serializable {
         {
             Vector3f spotPosition;
             float currentWidth = AgvSpot.width*i;
-            spotPosition = axis.equals(DynamicAxis.X) ? new Vector3f(currentWidth,0,z) : new Vector3f(x,0,currentWidth);
+            spotPosition = axis.equals(DynamicAxis.X) ? new Vector3f(currentWidth,5.5f,z) : new Vector3f(x,5.5f,currentWidth);
             agvSpots.add(new AgvSpot(spotPosition));
         }
     }

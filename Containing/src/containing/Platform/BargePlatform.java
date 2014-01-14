@@ -4,6 +4,7 @@ import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.Exceptions.AgvNotAvailable;
+import containing.ParkingSpot.AgvSpot;
 import containing.ParkingSpot.BargeSpot;
 import containing.Settings;
 import containing.Vector3f;
@@ -49,7 +50,7 @@ public class BargePlatform extends Platform {
         setRoad();
         setTransportType(TransportType.Barge);
         setMaxAgvQueue(CRANES);
-        createAgvSpots(new Vector3f(CRANE_OFFSET - BargeCrane.length - AGV_OFFSET, 0, 0));
+        createAgvSpots();
         createExtVehicleSpots();
         createCranes(); 
         createAgvQueuePositions();
@@ -63,8 +64,8 @@ public class BargePlatform extends Platform {
         }
         
         List waypoints = new ArrayList();
-        waypoints.add(new Vector3f(7.9f, 5.5f, 15.6f));
-        waypoints.add(new Vector3f(7.9f, 5.5f, 7.8f));
+        waypoints.add(new Vector3f(79f, 5.5f, 78f));
+        waypoints.add(new Vector3f(79f, 5.5f, 156f));
         setCraneRoad(waypoints);
         
         log("Created BargePlatform object: " + toString());
@@ -105,6 +106,19 @@ public class BargePlatform extends Platform {
         }
     }
     
+    protected final void createAgvSpots() {
+        float space = LENGTH / (float)CRANES;
+        float offset = (space / 2f) - ( BargeCrane.width*Settings.METER / 2f);
+        for(int i = 0; i < CRANES; i++) 
+        {
+            Vector3f cranePosition = new Vector3f(getPosition().x + CRANE_OFFSET, getPosition().y, getPosition().z + (space*i + offset));
+            float x = cranePosition.x;
+            float y = cranePosition.y;
+            float z = cranePosition.z;
+            agvSpots.add(new AgvSpot(new Vector3f(x + BargeCrane.length*Settings.METER, y, z)));
+        }
+    }
+    
     @Override
     public void unload() 
     {
@@ -142,8 +156,7 @@ public class BargePlatform extends Platform {
                         }
                     }
                 }
-                
-                // send new AGV's
+                 // send new AGV's
                 sendAgvs(ev.getCargo().size(), agvQueuePositions);
                 
                 // loop through cranes
@@ -158,11 +171,13 @@ public class BargePlatform extends Platform {
                             c.setIsAvailable(true);
                     // process phase of cranes
                     if(currentCrane >= allowedCranes && currentCrane < allowedCranes + cranesPerVehicle && currentCrane*rowsPerCrane < ev.getColumns().size()) {
+                        System.out.println("yeah boiii");
                         int column = getColumn(currentCrane, rowsPerCrane, ev);
                         Container container = getContainer(column, ev);
                         Phase phase = unload_getPhase(currentCrane, column, ev);
                         if(phase != null)
                         {
+                            System.out.println("Swich manannn");
                             switch(phase)
                             {
                                 case MOVE:

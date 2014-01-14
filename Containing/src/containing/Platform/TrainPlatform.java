@@ -49,27 +49,27 @@ public class TrainPlatform extends Platform {
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(DynamicAxis.Z);
         setEntrypoint(new Vector3f(3.7f - (AGV.width*Settings.METER) / 2f, getPosition().y, getPosition().z + 1.5f));
-        //setEntrycorner(new Vector3f(3.7f - (AGV.width*Settings.METER) / 2f, getPosition().y, getPosition().z + 1.5f));
         setExitpoint(new Vector3f(3.7f - (AGV.width*Settings.METER) / 2f, getPosition().y, getPosition().z + LENGTH));
-        //setExitcorner(new Vector3f(3.7f - (AGV.width*Settings.METER) / 2f, getPosition().y, getPosition().z + LENGTH));
         setRoad();
         setTransportType(TransportType.Train);
         setMaxAgvQueue(CRANES * 3);
-        //createAgvSpots(new Vector3f(CRANE_OFFSET + TrainCrane.length + AGV_OFFSET, 0, 0));
         createExtVehicleSpots();
         createCranes();
         createAgvSpots();
         createAgvQueuePositions();
+        
         /* 'initialize' craneAgvs */
         for(int i = 0; i < cranes.size(); i++) {
             craneAgvs.add(null);
         }
+        
         /* create crainroad (HARDCODED WAYPOINTS, ASK BENJAMIN) */
         List waypoints = new ArrayList();
         waypoints.add(new Vector3f(2.6f, 5.5f, 0.5f));
         waypoints.add(new Vector3f(2.6f, 5.5f, 152.3f));
         setCraneRoad(waypoints);
-        /* timing for train to go away */
+        
+        /* timing for train to leave */
         sendAwayEvTiming = new int[MAX_VEHICLES];
         for(int i = 0; i < sendAwayEvTiming.length; i++)
             sendAwayEvTiming[i] = -1;

@@ -133,7 +133,7 @@ public class UserInterface extends JFrame
             }
         );
         
-        //Quick Load xml 2 button
+        //Quick Load xml 3 k button
         QuickXml3Button = new JButton("Quick load xml3");
         QuickXml3Button.setBounds(625, 5, 150, 25);
         this.add(QuickXml3Button);

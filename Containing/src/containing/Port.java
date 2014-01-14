@@ -40,10 +40,10 @@ public class Port implements Serializable
         Platforms.add(new TruckPlatform(new Vector3f(71.7f, 5.5f, 0)));
         
         waypointList = new ArrayList<>();
-        waypointList.add(new Vector3f(103f*Settings.METER,5.5f,0));
+        waypointList.add(new Vector3f(103f*Settings.METER,5.5f, 0.5f));
         waypointList.add(new Vector3f(103f*Settings.METER,5.5f, 1562f*Settings.METER));
         waypointList.add(new Vector3f(717f*Settings.METER,5.5f, 1562f*Settings.METER));
-        waypointList.add(new Vector3f(717f*Settings.METER, 5.5f, 0));
+        waypointList.add(new Vector3f(717f*Settings.METER, 5.5f, 0.5f));
         Mainroad = new Road(waypointList);
         
         storagePlatform = new StoragePlatform(new Vector3f(110f*Settings.METER , 5.5f, 19f*Settings.METER));

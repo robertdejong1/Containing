@@ -31,8 +31,6 @@ import java.util.logging.Logger;
  * @author Minardus
  */
 public class TrainPlatform extends Platform {
-    
-    private enum Phase { MOVE, LOAD, UNLOAD, SENDTOSTORAGE }
 
     private final float WIDTH          = 103f*Settings.METER;  // ???
     private final float LENGTH         = 1523f*Settings.METER; // ???
@@ -42,12 +40,6 @@ public class TrainPlatform extends Platform {
     private final float AGV_OFFSET     = 0f;
     private final float CRANE_OFFSET   = 1.5f;   // ???
     private final float VEHICLE_OFFSET = 1.4f;
-    
-    private List<Vector3f> agvQueuePositions;
-    
-    private final Road craneRoad;
-    
-    private boolean unloadOnce = false;
     
     private final int[] sendAwayEvTiming;
     
@@ -68,13 +60,12 @@ public class TrainPlatform extends Platform {
         createCranes();
         createAgvSpots();
         createAgvQueuePositions();
-        for(int i = 0; i < cranes.size(); i++) {
-            craneAgvs.add(null);
-        }
+        /* create crainroad (HARDCODED WAYPOINTS, ASK BENJAMIN) */
         List waypoints = new ArrayList();
         waypoints.add(new Vector3f(2.6f, 5.5f, 0.5f));
         waypoints.add(new Vector3f(2.6f, 5.5f, 152.3f));
-        craneRoad = new Road(waypoints);
+        setCraneRoad(waypoints);
+        /* timing for train to go away */
         sendAwayEvTiming = new int[MAX_VEHICLES];
         for(int i = 0; i < sendAwayEvTiming.length; i++)
             sendAwayEvTiming[i] = -1;
@@ -128,120 +119,6 @@ public class TrainPlatform extends Platform {
             agvQueuePositions.add(new Vector3f(base.x, base.y, base.z + (AGV.length * Settings.METER) * i + 0.5f));
         }
         Collections.reverse(agvQueuePositions);
-    }
-    
-    private Phase unload_getPhase(int currentCrane, int moveToColumn, ExternVehicle ev) 
-    {
-        Crane c = cranes.get(currentCrane);
-        AGV craneAgv = craneAgvs.get(currentCrane);
-        if(!busyCranes.contains(c) && craneAgv == null && moveToColumn != -1 && c.getStatus() == Status.WAITING) 
-        {
-            return Phase.MOVE;
-        } 
-        else if(busyCranes.contains(c) && c.getStatus() == Status.WAITING && craneAgv == null && getContainer(moveToColumn, ev) != null) 
-        {
-            return Phase.LOAD;
-        }
-        else if(busyCranes.contains(c) && craneAgv != null && craneAgv.getStatus() != Status.MOVING && c.getStatus() == Status.UNLOADING && !c.getCargo().isEmpty() && !agvSpots.get(currentCrane).isEmpty()) 
-        {
-            return Phase.UNLOAD;
-        }
-        else if(busyCranes.contains(c) && craneAgv != null && craneAgv.getStatus() != Status.MOVING && c.getStatus() == Status.WAITING && c.getCargo().isEmpty()) 
-        {
-            return Phase.SENDTOSTORAGE;
-        }
-        return null;
-    }
-    
-    private void unload_phaseMove(int currentCrane, int column, ExternVehicle ev) 
-    {
-        Crane c = cranes.get(currentCrane);
-        if(ev.getGrid()[column][0][0] != null) {
-            try {
-                c.followRoute(craneRoad.moveToContainer(ev, column, c));
-                busyCranes.add(c);
-            } catch (AgvNotAvailable ex) {
-                Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
-    private void unload_phaseLoad(int currentCrane, Container container, ExternVehicle ev) 
-    {
-        Crane c = cranes.get(currentCrane);
-        // adjust parkingspot
-        Vector3f cp = c.getPosition();
-        agvSpots.set(currentCrane, new AgvSpot(new Vector3f(cp.x + TrainCrane.length*Settings.METER, cp.y, cp.z)));
-        // send AGV from queue
-        AGV agv = agvQueue.peek();
-        if(agv.getStatus() != Status.MOVING) {
-            try {
-                agv = agvQueue.poll();
-                System.out.println("AGV == " + agv.getStatus());
-                agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
-                System.out.println("AGV == " + agv.getStatus());
-                System.out.println("breakie breakie");
-                //while(true) {}
-                craneAgvs.set(currentCrane, agv);
-                if(c.getStatus() == Status.WAITING) {
-                    try {
-                        c.load(container, ev);
-                    } catch (CargoOutOfBoundsException ex) {
-                        Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (Exception ex) {
-                        Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            } catch (AgvNotAvailable ex) {
-                Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
-    private void unload_phaseUnload(int currentCrane) 
-    {
-        Crane c = cranes.get(currentCrane);
-        AGV craneAgv = craneAgvs.get(currentCrane);
-        System.out.println("(UNLOAD) AGV STATUS == " + craneAgv.getStatus());
-        if(!unloadOnce) {
-            try {
-                System.out.println("crane cargo == " + c.getCargo().size());
-                c.unload(craneAgv);
-                unloadOnce = true;
-            } catch (VehicleOverflowException | ContainerNotFoundException | CargoOutOfBoundsException ex) {
-                Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
-    private void unload_phaseSendToStorage(int currentCrane) 
-    {
-        try {
-            Crane c = cranes.get(currentCrane);
-            AGV craneAgv = craneAgvs.get(currentCrane);
-            busyCranes.remove(c);
-            unloadOnce = false;
-            craneAgvs.set(currentCrane, null);
-            agvSpots.get(currentCrane).UnparkVehicle();
-            // check where container needs to go
-            //TransportType tt = craneAgv.getCargo().get(0).getDepartureTransport();
-            int stripNr = Settings.port.getStoragePlatform().getNearbyStrip(getTransportType());
-            AgvSpot agvSpot = null;
-            for(int i = stripNr; i < Settings.port.getStoragePlatform().getStripAmount(); i++)
-            {
-                if(Settings.port.getStoragePlatform().getStrip(i).getStorageState() != StorageStrip.StorageState.FULL)
-                {
-                    agvSpot = Settings.port.getStoragePlatform().getStrip(i).getFreeAgvSpotLoad();
-                }
-                if(agvSpot != null)
-                    break;
-            }
-            System.out.println("WOW WTF GEBEURT JIR");
-            Settings.port.getStoragePlatform().putAgvQueueLoadBusy(agvSpot);
-            craneAgv.followRoute(road.getPathAllIn(craneAgv, agvSpots.get(currentCrane), agvSpot, Settings.port.getStoragePlatform().getLeft(), Settings.port.getMainroad()));
-        } catch (AgvNotAvailable ex) {
-            Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     @Override

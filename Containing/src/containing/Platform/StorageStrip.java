@@ -127,7 +127,9 @@ public class StorageStrip implements Serializable {
                     {
                         Container c = containers.get(cur);
                         long curTimeStamp = Settings.getTimeStamp(c.getDepartureDate(), c.getDepartureTimeFrom());
+                        System.out.println("container below: " + curTimeStamp);
                         long newTimeStamp = Settings.getTimeStamp(date, from);
+                        System.out.println("new container: " + newTimeStamp);
                         if(newTimeStamp < curTimeStamp)
                         {
                             Point3D p = new Point3D(cur.x, cur.y+1, cur.z);

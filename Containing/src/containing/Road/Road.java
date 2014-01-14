@@ -1,5 +1,6 @@
 package containing.Road;
 
+import containing.Container.TransportType;
 import containing.ParkingSpot.ParkingSpot;
 import containing.Platform.Platform;
 import static containing.Platform.Platform.Positie.LINKS;
@@ -191,10 +192,17 @@ public class Road implements Serializable
                  //System.out.println("route x: " + haha.toString());
                  break;
              case Z:
-                 // hardcoded voor de trein nu ;( wagon is 1.5f en trein zelf ook
-                 Vector3f hihi = new Vector3f(crane.getPosition().x, crane.getPosition().y, ev.getPosition().z - column*1.5f - 1.5f + 0.70f);
-                 route.add(hihi); //??
-                 //System.out.println("route z: " + hihi.toString());
+                 if(ev.getCurrentPlatform().getTransportType() == TransportType.Train){
+                    // hardcoded voor de trein nu ;( wagon is 1.5f en trein zelf ook
+                    Vector3f hihi = new Vector3f(crane.getPosition().x, crane.getPosition().y, ev.getPosition().z - column*1.5f - 1.5f + 0.70f);
+                    route.add(hihi); //??
+                    //System.out.println("route z: " + hihi.toString());
+                 }
+                 else if(ev.getCurrentPlatform().getTransportType() == TransportType.Barge){
+                    Vector3f hihi = new Vector3f(crane.getPosition().x, crane.getPosition().y, ev.getPosition().z - column*1.5f + 0.70f);
+                    route.add(hihi); //??
+                 }
+
                  break;
              //caseY?  
              

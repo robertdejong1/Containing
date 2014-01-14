@@ -215,13 +215,13 @@ public abstract class Platform implements Serializable {
     {
         List<Integer> pColumns = ev.getPriorityColumns();
         List<Boolean> columns = ev.getColumns();
-        int startIndex = currentCrane * rowsPerCrane; 
+        int startIndex = (cranesPerVehicle - 1 - currentCrane) * rowsPerCrane; 
         for(int i = startIndex; i < startIndex + rowsPerCrane; i++)
         {
             if(pColumns.contains(i) && !columns.get(i))
-                return i + cranesPerVehicle;
+                return i;
             else if(!columns.get(i))
-                return i + cranesPerVehicle;
+                return i;
         }
         return -1;
     }
@@ -304,7 +304,6 @@ public abstract class Platform implements Serializable {
         if(ev.getGrid()[column][0][0] != null) { 
             try {
                 Route ding = craneRoad.moveToContainer(ev, column, c);
-                System.out.println("Ja route is dit " +ding.getWeg());
                 c.followRoute(ding);
                 busyCranes.add(c);
             } catch (AgvNotAvailable ex) {

@@ -28,8 +28,8 @@ public class TruckPlatform extends Platform {
         super(position, Platform.Positie.RECHTS);
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setAxis(Platform.DynamicAxis.Z);
-        setEntrypoint(new Vector3f(80.0f, 5.5f, 0));
-        setExitpoint(new Vector3f(80.0f, 5.5f, LENGTH));
+        setEntrypoint(new Vector3f(80.0f, 5.5f, 78.5f));
+        setExitpoint(new Vector3f(80.0f, 5.5f, 0));
         setRoad();
         setTransportType(TransportType.Truck);
         setMaxAgvQueue(CRANES);
@@ -56,10 +56,11 @@ public class TruckPlatform extends Platform {
     protected final void createExtVehicleSpots() 
     {
         float space = LENGTH / (float)MAX_VEHICLES;
-        float offset = (space / 2) - (TruckSpot.width / 2);
+        float offset = getPosition().z;
+        
         for(int i = 0; i < MAX_VEHICLES; i++)
         {
-            Vector3f spotPosition = new Vector3f(WIDTH + VEHICLE_OFFSET,0,space*i + offset);
+            Vector3f spotPosition = new Vector3f(CRANE_OFFSET, 5.5f, i * TruckCrane.width + offset + TruckCrane.width / 2f);
             extVehicleSpots.add(new TruckSpot(spotPosition));
         }
     }

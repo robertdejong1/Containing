@@ -14,13 +14,13 @@ import containing.Vehicle.SeashipCrane;
  */
 public class SeashipPlatform extends Platform {
     
-    public final float WIDTH          = 100f*Settings.METER; // ???
-    public final float LENGTH         = 855f*Settings.METER; // ???
+    public final float WIDTH          = 100f *Settings.METER; // ???
+    public final float LENGTH         = 855f *Settings.METER; // ???
     private final int MAX_VEHICLES     = 2;
     public final int CRANES           = 10;
     
     private final float AGV_OFFSET     = 0f;
-    private final float CRANE_OFFSET   = 25f*Settings.METER;  // ???
+    private final float CRANE_OFFSET   = 8f; //*Settings.METER;  // ???
     private final float VEHICLE_OFFSET = 0f;
     
     public SeashipPlatform(Vector3f position)
@@ -42,11 +42,11 @@ public class SeashipPlatform extends Platform {
     @Override
     protected final void createCranes() 
     {
-        float space = WIDTH / (float)CRANES;
-        float offset = (space / 2f) - ( SeashipCrane.width / 2f);
+        float space = LENGTH / (float)CRANES;
+        float offset = (space / 2f) - ( SeashipCrane.width / 2f) + getPosition().x;
         for(int i = 0; i < CRANES; i++) 
         {
-            Vector3f cranePosition = new Vector3f(space*i + offset, 0, CRANE_OFFSET);
+            Vector3f cranePosition = new Vector3f(space*i + offset, 5.5f, CRANE_OFFSET + getPosition().z);
             cranes.add(new SeashipCrane(cranePosition, this));
         }
     }

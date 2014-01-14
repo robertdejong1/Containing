@@ -31,7 +31,7 @@ public class Barge extends ExternVehicle {
     {
         
         super(arrivalDate, arrivalTime, nrContainersDepth,nrContainersWidth,nrContainersHeight, platform, company, Type.BARGE); //true if vehicle comes to load, otherwise false
-        this.position = new Vector3f(835f * Settings.METER,4.5f,100f*Settings.METER); 
+        this.position = new Vector3f(835f * Settings.METER,4.5f,300f*Settings.METER); 
         this.maxSpeedLoaded = 20;
         this.maxSpeedUnloaded = 30;
     

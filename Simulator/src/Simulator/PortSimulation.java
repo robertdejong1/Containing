@@ -51,8 +51,8 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        //Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        Runnable networkHandler = new NetworkHandler("141.252.222.80", 1337);
+        Runnable networkHandler = new NetworkHandler("localhost", 1337);
+        //Runnable networkHandler = new NetworkHandler("141.252.222.80", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     }
@@ -392,8 +392,6 @@ public class PortSimulation extends SimpleApplication {
                             }
                         }
                     }
-
-                    //barge.place(83.5f, 4.5f, 100);
                     break;
 
                 case SEASHIP:

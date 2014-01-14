@@ -29,6 +29,7 @@ public class Barge
         barge_model.scale(3f);
         barge_model.scale(2f, 1f, 1f);
         barge.attachChild(barge_model);
+        barge.setName("Barge");
         
         containers = new ArrayList<Container>();
     }

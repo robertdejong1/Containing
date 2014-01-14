@@ -34,7 +34,7 @@ public class Road implements Serializable
     
 
     private synchronized Vector3f createCorrespondingWaypoint(Vector3f point){
-        
+        System.out.println("NR WAYPOINT: " + this.track.size());
         System.out.println("CW_BEFORE: " + point);
         if (track.size() == 4){ //function only relevant for mainroad/rectangle road
             //linksboven
@@ -52,7 +52,11 @@ public class Road implements Serializable
             return new Vector3f(point.x,point.y,  track.get(1).z); //0
         
         }
-        return new Vector3f(track.get(0).x, point.y, point.z);
+        System.out.println("TRACK1: " + track.get(0));
+        System.out.println("TRACK2: " + track.get(1));
+        if (track.get(0).x == track.get(1).x){return new Vector3f(track.get(0).x, point.y, point.z);}
+        else return new Vector3f(point.x, point.y, track.get(0).z);
+
     
     }
     
@@ -84,14 +88,18 @@ public class Road implements Serializable
             for (Vector3f v : deel2.getWeg()) { track2.add(v); }
             for (Vector3f v : deel3.getWeg()) { track2.add(v); }
             
-            if (vehicle.getID() == 103)
+            if (vehicle.getID() == 201)
             {
+                System.out.println("----------------------");
+                System.out.println("Route nr: " + vehicle.routecounter);
                 for (Vector3f v : deel1.getWeg() ) {
                     System.out.println("Deel 1: " + v);}
                 for (Vector3f v : deel2.getWeg() ) {
                     System.out.println("Deel 2: " + v);}
                 for (Vector3f v : deel3.getWeg() ) {
                     System.out.println("Deel 3: " + v);}
+                
+                System.out.println("----------------------");
             }
         
         Route route = new Route(track2, getPathLength(track2));
@@ -115,15 +123,20 @@ public class Road implements Serializable
         for (Vector3f v : deel2.getWeg()) { track2.add(v);}
         for (Vector3f v : deel3.getWeg()) { track2.add(v);}
         
-             if (vehicle.getID() == 103)
+                   if (vehicle.getID() == 201)
             {
+                System.out.println("----------------------");
+                System.out.println("Route nr: " + vehicle.routecounter);
                 for (Vector3f v : deel1.getWeg() ) {
                     System.out.println("Deel 1: " + v);}
                 for (Vector3f v : deel2.getWeg() ) {
                     System.out.println("Deel 2: " + v);}
                 for (Vector3f v : deel3.getWeg() ) {
                     System.out.println("Deel 3: " + v);}
+                
+                System.out.println("----------------------");
             }
+        
         
         
        
@@ -205,7 +218,7 @@ public class Road implements Serializable
          track2.add(destination.getEntrypoint());
          //System.out.println("destinationEntryPoint: " + destination.getEntrypoint());
    
-         if (vehicle.getID() == 103 && vehicle.routecounter == 3)
+         if (vehicle.getID() == 201 && vehicle.routecounter == 3)
          {
              System.out.println("Before deel 2");
              for (Vector3f v : track2)
@@ -216,7 +229,7 @@ public class Road implements Serializable
          
          track2 = this.setPathCorrectOrder(track2, vehicle.getCurrentPlatform(), destination, mainroad);
          
-               if (vehicle.getID() == 103 && vehicle.routecounter == 3)
+               if (vehicle.getID() == 201 && vehicle.routecounter == 3)
          {
              System.out.println("After deel 2");
              for (Vector3f v : track2)

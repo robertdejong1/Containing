@@ -33,6 +33,8 @@ public class Route implements Serializable {
             //ystem.out.println("INITROUTE: " + v);
             this.weg.add(v);
         }
+        
+      
         this.distance = distanceInMeters;
         //System.out.println("------------");
         for (Vector3f v : this.weg){

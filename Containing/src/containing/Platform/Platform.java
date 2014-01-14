@@ -21,8 +21,6 @@ import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
-import containing.Vehicle.Train;
-import containing.Vehicle.TrainCrane;
 import containing.Vehicle.Vehicle;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,8 +37,6 @@ public abstract class Platform implements Serializable {
     public enum State { FREE, LOAD, UNLOAD }
     public enum Positie { BOVEN, RECHTS, ONDER, LINKS };
     public enum DynamicAxis { X, Z }
-    
-    protected final float AGVSPOT_OFFSET = 0f;
     
     private static int idCounter = 1;
     
@@ -63,7 +59,7 @@ public abstract class Platform implements Serializable {
     protected Road road = null;
     
     protected Queue<Job> jobs = null;
-    protected Queue<AGV> agvQueue = null; //is de bedoeling dat er een wachtrij van AGV's ontstaat
+    protected Queue<AGV> agvQueue = null;
     protected int agvCount = 0;
     protected int maxAgvQueue = 1;    
     
@@ -76,11 +72,17 @@ public abstract class Platform implements Serializable {
     
     protected int time = 0;
     
+    /**
+     * The Platform class defines the basics of a platform
+     * @param position the position in the Port
+     * @param positie the position in the Port (left, right, top, bottom)
+     */
     public Platform(Vector3f position, Positie positie) 
     {
         id = idCounter++;
         this.position = position;
         state = State.FREE;
+        
         /* initialize arraylists */
         agvSpots = new ArrayList<>();
         cranes = new ArrayList<>();
@@ -93,34 +95,58 @@ public abstract class Platform implements Serializable {
         this.positie = positie;
     }
     
+    /**
+     * Return extern vehicles which are docked on the
+     * platform
+     * @return a list with docked extern vehicles
+     */
     public List<ExternVehicle> getEvs()
     {
         return extVehicles;
     }
     
+    /**
+     * Return the road of this platform, the AGV's are the
+     * only vehicles which are driving on it.
+     * @return the road
+     */
     public Road getRoad()
     {
         return road;
     }
     
+    /**
+     * Set the road for AGV's with 2 points
+     */
     protected void setRoad()
     {
         List<Vector3f> wayshit = new ArrayList<>();
         wayshit.add(entrypoint);
-        //wayshit.add(entrycorner);
-        //wayshit.add(exitcorner);
         wayshit.add(exitpoint);
         road = new Road(wayshit);
     }
     
+    /**
+     * Return the road for the cranes on this platform.
+     * @return the crane road
+     */
     protected Road getCraneRoad() { 
         return craneRoad;
     }
     
+    /**
+     * Set the road for cranes on this platform
+     * @param waypoints 2 points which define the road
+     */
     protected void setCraneRoad(List<Vector3f> waypoints) {
         craneRoad = new Road(waypoints);
     }
     
+    /**
+     * Register extern vehicle at platform, the EV is given a route
+     * to the parkingspot where it can dock.
+     * @param ev the extern vehicle which is registerd
+     */
     public void registerExternVehicle(ExternVehicle ev)
     {
         try {
@@ -132,6 +158,13 @@ public abstract class Platform implements Serializable {
         }
     }
     
+    /**
+     * Send AGV's to the platform, when there is a extern vehicle,
+     * which needs to be unloaded, creates a queue of AGV's whom are
+     * waiting for a loaded crane
+     * @param cargoSize the current nr of cargo on the extern vehicle
+     * @param positions the positions where an AGV can be 'parked' temporarily
+     */
     protected void sendAgvs(int cargoSize, List<Vector3f> positions) {
         if(agvQueue.isEmpty() || agvQueue.size() < maxAgvQueue) {
             for(int i = agvQueue.size(); i < (cargoSize < maxAgvQueue ? cargoSize : maxAgvQueue); i++) {
@@ -155,6 +188,13 @@ public abstract class Platform implements Serializable {
         }
     }
     
+    /**
+     * Get column of containers from Extern Vehicle
+     * @param currentCrane the crane who requested
+     * @param rowsPerCrane the amount of rows the crane is allowed to unload
+     * @param ev the extern vehicle
+     * @return column nr
+     */
     protected int getColumn(int currentCrane, int rowsPerCrane, ExternVehicle ev) 
     {
         List<Integer> pColumns = ev.getPriorityColumns();
@@ -170,6 +210,12 @@ public abstract class Platform implements Serializable {
         return -1;
     }
     
+    /**
+     * Get container from column
+     * @param column
+     * @param ev
+     * @return container
+     */
     protected Container getContainer(int column, ExternVehicle ev) {
         List<Integer> unloadOrder = ev.getUnloadOrderY(column);
         if(unloadOrder != null)
@@ -200,6 +246,13 @@ public abstract class Platform implements Serializable {
         return null;
     }
     
+    /**
+     * Determines the phase of which a crane is in for unloading
+     * @param currentCrane crane nr
+     * @param moveToColumn column nr
+     * @param ev extern vehicle
+     * @return the phase
+     */
     protected Phase unload_getPhase(int currentCrane, int moveToColumn, ExternVehicle ev) 
     {
         Crane c = cranes.get(currentCrane);
@@ -223,6 +276,12 @@ public abstract class Platform implements Serializable {
         return null;
     }
     
+    /**
+     * UNLOAD PHASE : Move crane to the column on the extern vehicle
+     * @param currentCrane crane nr
+     * @param column column nr
+     * @param ev extern vehicle
+     */
     protected void unload_phaseMove(int currentCrane, int column, ExternVehicle ev) 
     {
         Crane c = cranes.get(currentCrane);
@@ -236,12 +295,18 @@ public abstract class Platform implements Serializable {
         }
     }
     
+    /**
+     * UNLOAD PHASE : Load container from extern vehicle onto the crane
+     * @param currentCrane crane nr
+     * @param container the container which is going to load onto crane
+     * @param ev extern vehicle
+     */
     protected void unload_phaseLoad(int currentCrane, Container container, ExternVehicle ev) 
     {
         Crane c = cranes.get(currentCrane);
         // adjust parkingspot
         Vector3f cp = c.getPosition();
-        agvSpots.set(currentCrane, new AgvSpot(new Vector3f(cp.x + TrainCrane.length*Settings.METER, cp.y, cp.z)));
+        agvSpots.set(currentCrane, new AgvSpot(new Vector3f(cp.x + c.length*Settings.METER, cp.y, cp.z)));
         // send AGV from queue
         AGV agv = agvQueue.peek();
         if(agv.getStatus() != Vehicle.Status.MOVING) {
@@ -268,6 +333,10 @@ public abstract class Platform implements Serializable {
         }
     }
     
+    /**
+     * UNLOAD PHASE : 
+     * @param currentCrane 
+     */
     protected void unload_phaseUnload(int currentCrane) 
     {
         Crane c = cranes.get(currentCrane);
@@ -336,45 +405,7 @@ public abstract class Platform implements Serializable {
             if(c.getIsAvailable())
                 craneTemp = c;
         }
-        /*
-        final Crane crane = craneTemp;
-        new Thread() {
-            
-            @Override
-            public void run()
-            {
-                int index = 0;
-                boolean hasContainer = false;
-                for(int i = 0; i < jobs.peek().getContainers().size(); i++)
-                {
-                    if(Controller.RequestNextContainer(jobs.peek().getContainers().get(index), instance))
-                    {
-                        hasContainer = true;
-                        break;
-                    }
-                    index++;
-                }
-                
-                if(hasContainer)
-                {
-                    Container container = jobs.peek().getContainers().remove(index);
-                    try
-                    {
-                        crane.load(container);
-                        extVehicleSpots.get(0).getParkedVehicle().load(crane.unload());
-                        Settings.messageLog.AddMessage("loading some containers in some vehicle boi");
-                    }
-                    catch(ContainerNotFoundException | CargoOutOfBoundsException | VehicleOverflowException e)
-                    {
-                        System.out.println(e.getMessage());
-                        this.interrupt();
-                    }
-                    
-                }
-            }
-     
-        }.start();
-        */
+        //TODO BLABLA
     }
     
     public void unload()
@@ -388,11 +419,6 @@ public abstract class Platform implements Serializable {
                 }
             }
         }
-    }
-    
-    protected void unloadAGV(Container container)
-    {
-        //todo
     }
     
     protected void requestNextContainer()
@@ -434,7 +460,7 @@ public abstract class Platform implements Serializable {
         for(int i = 0; i < getAgvSpotAmount(); i++)
         {
             Vector3f spotPosition;
-            float currentWidth = AgvSpot.width*i+AGVSPOT_OFFSET;
+            float currentWidth = AgvSpot.width*i;
             spotPosition = axis.equals(DynamicAxis.X) ? new Vector3f(currentWidth,0,z) : new Vector3f(x,0,currentWidth);
             agvSpots.add(new AgvSpot(spotPosition));
         }

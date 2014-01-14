@@ -133,7 +133,7 @@ public class BargePlatform extends Platform {
                     }
                     else
                     {
-                        try {
+                        try { 
                             it.remove();
                             sendAwayEvTiming[currentVehicle] = -1;
                             ev.followRoute(road.getPathExternVehicleExit(extVehicleSpots.get(currentVehicle), new Vector3f(ev.getPosition().x, 5.5f, ev.getPosition().z + 1000f)));

@@ -57,8 +57,6 @@ public class StoragePlatform extends Platform {
         strips = new StorageStrip[getStripAmount()];
         setDimension(new Dimension2f(WIDTH, LENGTH));
         setEntrypoints();
-        setEntrycorners();
-        setExitcorners();
         setExitpoints();
         setAxis(Platform.DynamicAxis.X);
         createStrips();
@@ -112,12 +110,9 @@ public class StoragePlatform extends Platform {
     @Override
     protected final void setRoad() 
     {
-        Vector3f[] corners = new Vector3f[2];
         orientation = new ArrayList<>();
         List<Vector3f> wayshit = new ArrayList<>();
         wayshit.add(getEntrypoint(Side.RIGHT));
-        //wayshit.add(getEntrycorner(Side.RIGHT));
-        //wayshit.add(getExitcorner(Side.RIGHT));
         wayshit.add(getExitpoint(Side.RIGHT));
         orientation.add(new StoragePlatformOrientation(positie.RECHTS, new Road(wayshit), getEntrypoint(Side.RIGHT), getExitpoint(Side.RIGHT)));
         road = new Road(wayshit);
@@ -302,28 +297,14 @@ public class StoragePlatform extends Platform {
     {
         entrypoints = new Vector3f[2];
         entrypoints[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z + LENGTH);
-        entrypoints[1] = new Vector3f(717f*Settings.METER, getPosition().y, getPosition().z + LENGTH);
-    }
-    
-    private void setEntrycorners()
-    {
-        entrycorners = new Vector3f[2];
-        entrycorners[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z + LENGTH);
-        entrycorners[1] = new Vector3f(710f*Settings.METER - 1.7f, getPosition().y, getPosition().z + LENGTH);
-    }
-    
-    private void setExitcorners()
-    {
-        exitcorners = new Vector3f[2];
-        exitcorners[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z);
-        exitcorners[1] = new Vector3f(710f*Settings.METER - 1.7f, getPosition().y, getPosition().z);
+        entrypoints[1] = new Vector3f(710f*Settings.METER, getPosition().y, getPosition().z + LENGTH);
     }
     
     private void setExitpoints()
     {
         exitpoints = new Vector3f[2];
         exitpoints[0] = new Vector3f(getPosition().x + 1.55f, getPosition().y, getPosition().z);
-        exitpoints[1] = new Vector3f(717f*Settings.METER, getPosition().y, getPosition().z);
+        exitpoints[1] = new Vector3f(710f*Settings.METER, getPosition().y, getPosition().z);
     }
     
     public StoragePlatformOrientation getLeft() {

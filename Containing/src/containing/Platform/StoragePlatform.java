@@ -119,18 +119,12 @@ public class StoragePlatform extends Platform {
         //wayshit.add(getEntrycorner(Side.RIGHT));
         //wayshit.add(getExitcorner(Side.RIGHT));
         wayshit.add(getExitpoint(Side.RIGHT));
-        corners[0] = getEntrycorner(Side.RIGHT);
-        corners[1] = getEntrycorner(Side.RIGHT);
-        orientation.add(new StoragePlatformOrientation(positie.RECHTS, new Road(wayshit), getEntrypoint(Side.RIGHT), getExitpoint(Side.RIGHT), corners));
+        orientation.add(new StoragePlatformOrientation(positie.RECHTS, new Road(wayshit), getEntrypoint(Side.RIGHT), getExitpoint(Side.RIGHT)));
         road = new Road(wayshit);
         wayshit.clear();
         wayshit.add(getEntrypoint(Side.LEFT));
-        //wayshit.add(getEntrycorner(Side.LEFT));
-        //wayshit.add(getExitcorner(Side.LEFT));
         wayshit.add(getExitpoint(Side.LEFT));
-        corners[0] = getEntrycorner(Side.LEFT);
-        corners[1] = getEntrycorner(Side.LEFT);
-        orientation.add(new StoragePlatformOrientation(positie.LINKS, new Road(wayshit), getEntrypoint(Side.LEFT), getExitpoint(Side.LEFT), corners));
+        orientation.add(new StoragePlatformOrientation(positie.LINKS, new Road(wayshit), getEntrypoint(Side.LEFT), getExitpoint(Side.LEFT)));
         road2 = new Road(wayshit);
     }
     

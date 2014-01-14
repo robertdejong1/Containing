@@ -14,21 +14,15 @@ import java.io.Serializable;
 
 public class StoragePlatformOrientation extends Platform implements Serializable {
     
-    private final Positie positie;
-    private final Road road;
     private final Vector3f entrypoint;
-    private final Vector3f entrycorner;
-    private final Vector3f exitcorner;
     private final Vector3f exitpoint;
     
-    public StoragePlatformOrientation(Positie positie, Road road, Vector3f entrypoint, Vector3f exitpoint, Vector3f[] corners) {
+    public StoragePlatformOrientation(Positie positie, Road road, Vector3f entrypoint, Vector3f exitpoint) {
         super(new Vector3f(110f*Settings.METER , 5.5f, 19f*Settings.METER), positie);
         this.positie = positie;
         this.road = road;
         this.entrypoint = entrypoint;
         this.exitpoint = exitpoint;
-        this.entrycorner = corners[0];
-        this.exitcorner = corners[1];
     }
     
     public Positie getPositie() {
@@ -43,16 +37,6 @@ public class StoragePlatformOrientation extends Platform implements Serializable
     @Override
     public Vector3f getEntrypoint() {
         return entrypoint;
-    }
-    
-    @Override
-    public Vector3f getEntrycorner() {
-        return entrycorner;
-    }
-    
-    @Override
-    public Vector3f getExitcorner() {
-        return exitcorner;
     }
     
     @Override

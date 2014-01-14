@@ -357,8 +357,8 @@ public abstract class Platform implements Serializable {
     }
     
     /**
-     * 
-     * @param currentCrane 
+     * UNLOAD PHASE : Send loaded AGV to StoragePlatform
+     * @param currentCrane nr crane
      */
     protected void unload_phaseSendToStorage(int currentCrane) 
     {
@@ -390,11 +390,19 @@ public abstract class Platform implements Serializable {
         }
     }
     
+    /**
+     * Return all cranes on this platform
+     * @return list of cranes 
+     */
     public List<Crane> getCranes() 
     {
         return cranes;
     }
     
+    /**
+     * Check if there is one or more extern vehicles
+     * @return true or false
+     */
     protected boolean hasExtVehicle()
     {
         for(ParkingSpot vs : extVehicleSpots)
@@ -403,6 +411,10 @@ public abstract class Platform implements Serializable {
         return false;
     }
     
+    /**
+     * TODO
+     * @param instance 
+     */
     public void load(final Platform instance)
     {
         /* platform -> requestNextContainer -> agv from storagePlatform -> crane -> externVehicle */
@@ -415,6 +427,10 @@ public abstract class Platform implements Serializable {
         //TODO BLABLA
     }
     
+    /**
+     * Unload basics needed on every platform, add Extern vehicles
+     * to 'to unload' list
+     */
     public void unload()
     {   
         if(extVehicles.isEmpty()) {
@@ -428,11 +444,17 @@ public abstract class Platform implements Serializable {
         }
     }
     
+    /**
+     * TODO
+     */
     protected void requestNextContainer()
     {
         //Controller.RequestNextContainer(null, this);
     }
     
+    /**
+     * TODO
+     */
     protected void requestNextJob()
     {
         try 
@@ -442,23 +464,21 @@ public abstract class Platform implements Serializable {
         catch(NoJobException e){/* ignore */}
     }
     
-    private void agvToQueue(AGV agv) throws AgvQueueSpaceOutOfBounds
+    /**
+     * Add AGV to queue, which is essentially a wait list
+     * of AGVS which are get loaded by cranes
+     * @param agv the agv to be loaded
+     */
+    protected void addAgvToQueue(AGV agv)
     {
         if(agvQueue.size() < maxAgvQueue)
             agvQueue.add(agv);
-        else
-            throw new AgvQueueSpaceOutOfBounds("No space available for AGV in agvQueue");
     }
     
-    protected void addAgvToQueue(AGV agv)
-    {
-        try
-        {
-            agvToQueue(agv);
-        }
-        catch(AgvQueueSpaceOutOfBounds e){/* ignore */}
-    }
-    
+    /**
+     * Create parkingspot for AGV's to park at the cranes.
+     * @param baseposition the first position
+     */
     protected void createAgvSpots(Vector3f baseposition)
     {   
         float x = baseposition.x;
@@ -473,11 +493,21 @@ public abstract class Platform implements Serializable {
         }
     }
     
+    /**
+     * Return the amount of AGV spots
+     * @return amount of agv spots
+     */
     protected int getAgvSpotAmount()
     {
         return (int)((float)(axis.equals(DynamicAxis.X) ? dimension.width : dimension.length) / AgvSpot.width);
     }
     
+    /**
+     * Return requested AGV spot
+     * @param spot nr of spot
+     * @return parkingspot for AGV
+     * @throws AgvSpotOutOfBounds 
+     */
     protected AgvSpot getAgvSpot(int spot) throws AgvSpotOutOfBounds
     {
         if(agvSpots.size() > spot)
@@ -485,6 +515,10 @@ public abstract class Platform implements Serializable {
         throw new AgvSpotOutOfBounds("The requested AGV Spot does not exist");
     }
     
+    /**
+     * Check if there is a free parking spot on this platform
+     * @return true or false
+     */
     public boolean hasFreeParkingSpot()
     {
         for(ParkingSpot spot : extVehicleSpots)
@@ -493,85 +527,117 @@ public abstract class Platform implements Serializable {
         return false;
     }
     
+    /**
+     * Return position of this platform
+     * @return list of 3 floats
+     */
     public Vector3f getPosition()
     {
         return position;
     }
     
+    /**
+     * Return the dimension of this platform
+     * @return list of 2 floats
+     */
     public Dimension2f getDimension() 
     {
         return dimension;
     }
     
+    /**
+     * Set the dimension of this platform
+     * @param dimension 2 floats
+     */
     protected void setDimension(Dimension2f dimension)
     {
         this.dimension = dimension;
     }
     
+    /**
+     * Return the axis the cranes move on
+     * @return axis
+     */
     public DynamicAxis getAxis()
     {
         return axis;
     }
     
+    /**
+     * Set the axis the cranes move on
+     * @param axis x or z
+     */
     protected void setAxis(DynamicAxis axis) 
     {
         this.axis = axis;
     }
     
+    /**
+     * Return the entrypoint of the road
+     * @return list of 3 points
+     */
     public Vector3f getEntrypoint()
     {
         return entrypoint;
     }
     
+    /**
+     * Set entrypoint of the road
+     * @param entrypoint
+     */
     protected void setEntrypoint(Vector3f entrypoint)
     {
         this.entrypoint = entrypoint;
     }
     
-    public Vector3f getEntrycorner()
-    {
-        return entrycorner;
-    }
-    
-    protected void setEntrycorner(Vector3f entrycorner)
-    {
-        this.entrycorner = entrycorner;
-    }
-    
+    /**
+     * Return the exitpoint of the road
+     * @return list of 3 points 
+     */
     public Vector3f getExitpoint() {
         return exitpoint;
     }
     
+    /**
+     * Set exitpoint of the road
+     * @param exitpoint
+     */
     protected void setExitpoint(Vector3f exitpoint)
     {
         this.exitpoint = exitpoint;
     }
     
-    public Vector3f getExitcorner()
-    {
-        return exitcorner;
-    }
-    
-    protected void setExitcorner(Vector3f exitcorner)
-    {
-        this.exitcorner = exitcorner;
-    }
-    
+    /**
+     * Return the type of transport (Extern Vehicle)
+     * @return transportType
+     */
     public TransportType getTransportType() {
         return transportType;
     }
     
+    /**
+     * Set the type of transport (Extern Vehicle)
+     * @param transportType 
+     */
     protected void setTransportType(TransportType transportType)
     {
         this.transportType = transportType;
     }
     
+    /**
+     * Set the maximum of AGVS which are allowed in the waitlist (queue)
+     * @param max nr of AGVs
+     */
     protected void setMaxAgvQueue(int max)
     {
         //calculate how much AGV's fit in queue
         maxAgvQueue = max;
     }
     
+    /**
+     * Return the ID which is assigned to this platform
+     * @return ID
+     */
     public int getId()
     {
         return id;
@@ -580,6 +646,9 @@ public abstract class Platform implements Serializable {
     protected abstract void createCranes();
     protected abstract void createExtVehicleSpots();
     
+    /**
+     * Update is called every 100ms
+     */
     public void update()
     {
         for(Crane c : cranes)

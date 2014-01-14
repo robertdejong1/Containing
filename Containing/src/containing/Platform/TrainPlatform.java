@@ -43,6 +43,10 @@ public class TrainPlatform extends Platform {
     
     private final int[] sendAwayEvTiming;
     
+    /**
+     * Create trainplatform
+     * @param position the position in the Port
+     */
     public TrainPlatform(Vector3f position)
     {
         super(position, Platform.Positie.LINKS);
@@ -76,6 +80,9 @@ public class TrainPlatform extends Platform {
         log("Created TrainPlatform object: " + toString());
     }
     
+    /**
+     * Create AGV spots by the cranes
+     */
     protected final void createAgvSpots() {
         float space = LENGTH / (float)CRANES;
         float offset = (space / 2f) - ( TrainCrane.width*Settings.METER / 2f);
@@ -88,7 +95,10 @@ public class TrainPlatform extends Platform {
             agvSpots.add(new AgvSpot(new Vector3f(x + TrainCrane.length*Settings.METER, y, z)));
         }
     }
-
+    
+    /**
+     * Create cranes
+     */
     @Override
     protected final void createCranes() 
     {
@@ -102,6 +112,9 @@ public class TrainPlatform extends Platform {
         Collections.reverse(cranes);
     }
     
+    /**
+     * Create parking spots for Extern Vehicles
+     */
     @Override
     protected final void createExtVehicleSpots() 
     {
@@ -114,6 +127,9 @@ public class TrainPlatform extends Platform {
         }
     }
     
+    /**
+     * Create AGV spots for the wait list (queue)
+     */
     private void createAgvQueuePositions() 
     {
         agvQueuePositions = new ArrayList<>();
@@ -125,6 +141,9 @@ public class TrainPlatform extends Platform {
         Collections.reverse(agvQueuePositions);
     }
     
+    /**
+     * Unload function which takes care of unloading a extern vehicle
+     */
     @Override
     public void unload() 
     {
@@ -216,6 +235,9 @@ public class TrainPlatform extends Platform {
             time = 0;
     }
     
+    /**
+     * Update is called every 100ms
+     */
     @Override
     public void update()
     {

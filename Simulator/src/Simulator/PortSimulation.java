@@ -38,6 +38,7 @@ public class PortSimulation extends SimpleApplication {
     //private StorageCrane storageCrane = new StorageCrane(assetManager, rootNode);
     //Truck[] truck = new Truck[20];
     Train train;
+    Barge barge;
     BitmapText hudText;
     BitmapText containerText;
     ChaseCamera chaseCam;
@@ -59,6 +60,8 @@ public class PortSimulation extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         train = new Train(assetManager, rootNode);
+        barge = new Barge(assetManager, rootNode);
+                    
         this.setDisplayStatView(false);
         flyCam.setEnabled(false);
         rootNode.setName("rootnode");
@@ -376,7 +379,6 @@ public class PortSimulation extends SimpleApplication {
                     break;
 
                 case BARGE:
-                    Barge barge = new Barge(assetManager, rootNode);
                     for (int i = 0; i < containing.Vehicle.Barge.nrContainersWidth; i++) {
                         for (int j = 0; j < containing.Vehicle.Barge.nrContainersHeight; j++) {
                             for (int k = 0; k < containing.Vehicle.Barge.nrContainersDepth; k++) {
@@ -391,7 +393,7 @@ public class PortSimulation extends SimpleApplication {
                         }
                     }
 
-                    barge.place(84, 4.5f, 70);
+                    //barge.place(83.5f, 4.5f, 100);
                     break;
 
                 case SEASHIP:
@@ -482,6 +484,13 @@ public class PortSimulation extends SimpleApplication {
                         }
 
                     }
+                    break;
+                    
+                case BARGE:
+                    barge.place(path.getWayPoint(0));
+                    motev = new MotionEvent(barge.barge, path, duration);
+                    motev.setSpeed(1f);
+                    motev.play();
                     break;
                 
                 case TRAINCRANE:

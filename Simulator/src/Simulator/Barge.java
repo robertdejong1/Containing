@@ -41,6 +41,12 @@ public class Barge
         containers.add(con);
     }
     
+    public void place(Vector3f loc)
+    {
+        barge.setLocalTranslation(loc);
+        node.attachChild(barge);
+    }
+    
     public void place(float x, float y, float z)
     {
         barge.setLocalTranslation(new Vector3f(x,y,z));

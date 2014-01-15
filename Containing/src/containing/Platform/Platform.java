@@ -447,13 +447,10 @@ public abstract class Platform implements Serializable {
      */
     public void unload()
     {   
-        if(extVehicles.isEmpty()) {
-            for(int i = 0; i < extVehicleSpots.size(); i++) 
-            {
-                if(extVehicleSpots.get(i).getParkedVehicle() != null) {
-                    
-                    extVehicles.add((ExternVehicle)extVehicleSpots.get(i).getParkedVehicle());
-                }
+        for(int i = 0; i < extVehicleSpots.size(); i++) 
+        {
+            if(extVehicleSpots.get(i).getParkedVehicle() != null) {
+                extVehicles.add((ExternVehicle)extVehicleSpots.get(i).getParkedVehicle());
             }
         }
     }

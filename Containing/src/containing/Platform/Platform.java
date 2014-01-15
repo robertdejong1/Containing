@@ -282,10 +282,6 @@ public abstract class Platform implements Serializable {
     {
         Crane c = cranes.get(currentCrane);
         AGV craneAgv = craneAgvs.get(currentCrane);
-        System.out.println("busyCranes contains? " + busyCranes.contains(c));
-        System.out.println("craneStatus? " + c.getStatus());
-        System.out.println("moveToColumn? " + moveToColumn);
-        System.out.println("container is null? " + (getContainer(moveToColumn, ev) == null ? "yes" : "no"));
         if(!busyCranes.contains(c) && craneAgv == null && moveToColumn != -1 && c.getStatus() == Vehicle.Status.WAITING) 
         {
             return Phase.MOVE;

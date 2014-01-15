@@ -346,7 +346,7 @@ public abstract class Platform implements Serializable {
         Crane c = cranes.get(currentCrane);
         // adjust parkingspot
         Vector3f cp = c.getPosition();
-        agvSpots.set(currentCrane, new AgvSpot(new Vector3f(cp.x -1000f + c.length*Settings.METER, cp.y, cp.z)));
+        agvSpots.set(currentCrane, new AgvSpot(new Vector3f(cp.x + c.length*Settings.METER, cp.y, cp.z)));
         // send AGV from queue
         AGV agv = agvQueue.peek();
         if(agv.getStatus() != Vehicle.Status.MOVING) {

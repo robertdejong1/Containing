@@ -108,7 +108,7 @@ public class BargePlatform extends Platform {
     
     protected final void createAgvSpots() {
         float space = LENGTH / (float)CRANES;
-        float offset = (space / 2f) - ( BargeCrane.width*Settings.METER / 2f);
+        float offset = (space / 2f) - ( BargeCrane.width*Settings.METER);
         for(int i = 0; i < CRANES; i++) 
         {
             Vector3f cranePosition = new Vector3f(getPosition().x + CRANE_OFFSET, getPosition().y, getPosition().z + (space*i + offset));
@@ -136,6 +136,11 @@ public class BargePlatform extends Platform {
             while(it.hasNext())
             {
                 ExternVehicle ev = it.next();
+                Container[][][] grid = ev.getGrid();
+                Container[][][] grid2 = grid;
+                //for(int i = 0; i < ev.getGridWidth(); i++){
+                //    grid2[]
+               // }
                 
                 // if cargo is unloaded, send vehicle away
                 if(ev.getCargo().isEmpty() && sendAwayEvTiming[currentVehicle] == -1) {
@@ -165,38 +170,38 @@ public class BargePlatform extends Platform {
                 // loop through cranes
                 int currentCrane = 0;
                 for(Crane c : cranes)
-                {    
+                {
                     int allowedCranes = (currentVehicle+1 * cranesPerVehicle - cranesPerVehicle);
                     int rows = ev.getGridWidth();
-                    System.out.println("rows" +rows);
+
                     int rowsPerCrane = rows / cranesPerVehicle;
                     // fix isAvailable statuses?
                     if(c.getStatus() != Vehicle.Status.LOADING && c.getStatus() != Vehicle.Status.UNLOADING && c.getStatus() != Vehicle.Status.MOVING)
                             c.setIsAvailable(true);
                     // process phase of cranes
                     if(currentCrane >= allowedCranes && currentCrane < allowedCranes + cranesPerVehicle && currentCrane*rowsPerCrane < ev.getColumns().size()) {
-                        int column = getColumn(currentCrane, rowsPerCrane, ev, cranesPerVehicle);
+                        int column = getColumn(currentCrane, rowsPerCrane, ev);
                         Container container = getContainer(column, ev);
                         Phase phase = unload_getPhase(currentCrane, column, ev);
+                        System.out.println("Phase: " +phase);
                         if(phase != null)
                         {
                             switch(phase)
                             {
                                 case MOVE:
-                                    //System.out.println("MOVE");
-                                    System.out.println("Hallo ik ben kraan id " +currentCrane +" en ik ga kolom " +column +" uitladen");
+                                    System.out.println("MOVE");
                                     unload_phaseMove(currentCrane, column, ev);
                                     break;
                                 case LOAD:
-                                    //System.out.println("LOAD");
+                                    System.out.println("LOAD");
                                     unload_phaseLoad(currentCrane, container, ev);
                                     break;
                                 case UNLOAD:
-                                    //System.out.println("UNLOAD");
+                                    System.out.println("UNLOAD");
                                     unload_phaseUnload(currentCrane);
                                     break;
                                 case SENDTOSTORAGE:
-                                    //System.out.println("SENDTOSTORAGE");
+                                    System.out.println("SENDTOSTORAGE");
                                     unload_phaseSendToStorage(currentCrane);
                                     break;
                             }

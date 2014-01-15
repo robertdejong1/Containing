@@ -2,11 +2,9 @@ package containing.Platform;
 
 import containing.Container;
 import containing.Container.TransportType;
-import static containing.Container.TransportType.Train;
 import containing.Controller;
 import containing.Dimension2f;
 import containing.Exceptions.AgvNotAvailable;
-import containing.Exceptions.AgvQueueSpaceOutOfBounds;
 import containing.Exceptions.AgvSpotOutOfBounds;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.ContainerNotFoundException;
@@ -21,6 +19,7 @@ import containing.Road.Route;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
+import containing.Vehicle.Barge;
 import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.Train;
@@ -221,7 +220,7 @@ public abstract class Platform implements Serializable {
     {
         List<Integer> pColumns = ev.getPriorityColumns();
         List<Boolean> columns = ev.getColumns();
-        int startIndex = (cranesPerVehicle-1 - currentCrane) * rowsPerCrane; 
+        int startIndex = (cranesPerVehicle -1 - currentCrane) * rowsPerCrane; 
         for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
         {
             if(pColumns.contains(i) && !columns.get(i))
@@ -324,6 +323,21 @@ public abstract class Platform implements Serializable {
         }
     }
     
+    protected void unload_phaseMove(int currentCrane, int column, ExternVehicle ev, int cranesPerVehicle) 
+    {
+        int cid = cranesPerVehicle - currentCrane;
+        Crane c = cranes.get(cid);
+        if(ev.getGrid()[column][0][0] != null) { 
+            try {
+                Route ding = craneRoad.moveToContainer(ev, column, c);
+                c.followRoute(ding);
+                busyCranes.add(c);
+            } catch (AgvNotAvailable ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+    
     /**
      * UNLOAD PHASE : Load container from extern vehicle onto the crane
      * @param currentCrane crane nr
@@ -335,7 +349,7 @@ public abstract class Platform implements Serializable {
         Crane c = cranes.get(currentCrane);
         // adjust parkingspot
         Vector3f cp = c.getPosition();
-        agvSpots.set(currentCrane, new AgvSpot(new Vector3f(cp.x + c.length*Settings.METER, cp.y, cp.z)));
+        agvSpots.set(currentCrane, new AgvSpot(new Vector3f(cp.x -1000f + c.length*Settings.METER, cp.y, cp.z)));
         // send AGV from queue
         AGV agv = agvQueue.peek();
         if(agv.getStatus() != Vehicle.Status.MOVING) {

@@ -112,7 +112,7 @@ public class BargePlatform extends Platform {
         for(int i = 0; i < CRANES; i++) 
         {
             Vector3f cranePosition = new Vector3f(getPosition().x + CRANE_OFFSET, getPosition().y, getPosition().z + (space*i + offset));
-            float x = cranePosition.x;
+            float x = cranePosition.x +100;
             float y = cranePosition.y;
             float z = cranePosition.z;
             agvSpots.add(new AgvSpot(new Vector3f(x + BargeCrane.length*Settings.METER, y, z)));
@@ -175,7 +175,7 @@ public class BargePlatform extends Platform {
                             c.setIsAvailable(true);
                     // process phase of cranes
                     if(currentCrane >= allowedCranes && currentCrane < allowedCranes + cranesPerVehicle && currentCrane*rowsPerCrane < ev.getColumns().size()) {
-                        int column = getColumn(currentCrane, rowsPerCrane, ev, rowsPerCrane);
+                        int column = getColumn(currentCrane, rowsPerCrane, ev);
                         Container container = getContainer(column, ev);
                         Phase phase = unload_getPhase(currentCrane, column, ev);
                         if(phase != null)
@@ -184,7 +184,7 @@ public class BargePlatform extends Platform {
                             {
                                 case MOVE:
                                     //System.out.println("MOVE");
-                                    unload_phaseMove(currentCrane, column, ev);
+                                    unload_phaseMove(currentCrane, column, ev, cranesPerVehicle);
                                     break;
                                 case LOAD:
                                     //System.out.println("LOAD");

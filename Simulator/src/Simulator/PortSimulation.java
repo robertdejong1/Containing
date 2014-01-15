@@ -205,7 +205,7 @@ public class PortSimulation extends SimpleApplication {
                         camstate = 2;
                     }
                 }
-            }
+            } 
         }
     };
 

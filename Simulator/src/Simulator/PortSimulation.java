@@ -41,6 +41,7 @@ public class PortSimulation extends SimpleApplication {
     Train train;
     Barge barge;
     List<Truck> trucks = new ArrayList<Truck>();
+    //Truck truck;
     BitmapText hudText;
     BitmapText containerText;
     ChaseCamera chaseCam;
@@ -53,8 +54,8 @@ public class PortSimulation extends SimpleApplication {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        //Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        Runnable networkHandler = new NetworkHandler("141.252.225.97", 1337);
+        Runnable networkHandler = new NetworkHandler("localhost", 1337);
+        //Runnable networkHandler = new NetworkHandler("141.252.222.80", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
     } 
@@ -63,6 +64,7 @@ public class PortSimulation extends SimpleApplication {
     public void simpleInitApp() {
         train = new Train(assetManager, rootNode);
         barge = new Barge(assetManager, rootNode);
+        //truck = new Truck(assetManager, rootNode, 5);
                     
         this.setDisplayStatView(false);
         flyCam.setEnabled(false);
@@ -435,11 +437,13 @@ public class PortSimulation extends SimpleApplication {
                     break;
                     
                 case TRUCK:
-                    trucks.add(new Truck(assetManager, guiNode, id));
+                    Truck temp = new Truck(assetManager, rootNode, id);
                     containing.Container c = (containing.Container) containers[1][0][0];
                     Container cont = new Container(assetManager, rootNode, ColorRGBA.randomColor());
                     cont.setData(c.getContainerId(), c.getArrivalDate(), c.getArrivalTimeFrom(), c.getArrivalTimeTill(), c.getArrivalTransport(), c.getArrivalTransportCompany(), c.getArrivalPosition(), c.getOwner(), c.getDepartureDate(), c.getDepartureTimeFrom(), c.getDepartureTimeTill(), c.getDepartureTransport());
-                    trucks.get(trucks.size()-1).addContainer(cont);                
+                    temp.addContainer(cont);      
+                    trucks.add(temp);
+                    //truck = temp;
                     break;
 
                 default:
@@ -492,10 +496,13 @@ public class PortSimulation extends SimpleApplication {
                     {
                         if (t.id == id)
                         {
-                            motev = new MotionEvent(t.model, path, duration);
+                            t.truck.rotate(0, 180*FastMath.DEG_TO_RAD, 0);
+                            t.place(path.getWayPoint(0));
+                            motev = new MotionEvent(t.truck, path);
                             motev.setSpeed(1f);
                             motev.setDirectionType(MotionEvent.Direction.Path);
                             motev.play();
+                            //chaseCamSetTarget(truck.truck, truck.truck.getName());
                         }
                     }
                     break;

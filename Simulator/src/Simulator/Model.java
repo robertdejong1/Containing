@@ -56,7 +56,7 @@ public abstract class Model
      * Place the model on specified location
      * @param loc location to place model
      */
-    private void place(Vector3f loc)
+    public void place(Vector3f loc)
     {
         Spatial model_cur = model;
         model_cur.setLocalTranslation(loc);

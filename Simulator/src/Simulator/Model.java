@@ -18,7 +18,7 @@ import com.jme3.scene.Spatial;
 public abstract class Model
 {
     Spatial model;
-    private Node node;
+    Node node;
     
     /**
      * Creates new model instance

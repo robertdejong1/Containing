@@ -53,4 +53,14 @@ public class Barge
         barge.setLocalTranslation(new Vector3f(x,y,z));
         node.attachChild(barge);
     }
+    
+    public Container detachContainer(int containerID)
+    {
+        for (Container c : containers)
+        {
+            if (c.containerId == containerID)
+                return c;
+        }
+        return null;
+    }
 }

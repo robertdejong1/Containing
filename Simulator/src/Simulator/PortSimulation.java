@@ -22,6 +22,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.util.SkyFactory;
 import containing.Command;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class PortSimulation extends SimpleApplication {
     //Truck[] truck = new Truck[20];
     Train train;
     Barge barge;
+    List<Truck> trucks = new ArrayList<Truck>();
     BitmapText hudText;
     BitmapText containerText;
     ChaseCamera chaseCam;
@@ -46,16 +48,16 @@ public class PortSimulation extends SimpleApplication {
     String currentChaseTarget;
     String containerInfo;
     Vector3f flyCamPos;
-    
+
     public static void main(String[] args) {
         PortSimulation app = new PortSimulation();
         app.start();
 
-        Runnable networkHandler = new NetworkHandler("localhost", 1337);
-        //Runnable networkHandler = new NetworkHandler("141.252.222.80", 1337);
+        //Runnable networkHandler = new NetworkHandler("localhost", 1337);
+        Runnable networkHandler = new NetworkHandler("141.252.225.97", 1337);
         Thread t = new Thread(networkHandler);
         t.start();
-    }
+    } 
 
     @Override
     public void simpleInitApp() {
@@ -107,6 +109,25 @@ public class PortSimulation extends SimpleApplication {
         motev.setSpeed(1f);
         //motev.play();
         */
+        
+        /*free_crane = new FreeCrane(assetManager, rootNode, 1);
+        free_crane.place(20, 5.5f, 20);
+        
+        Container cont = new Container(assetManager, rootNode, ColorRGBA.Blue);
+        cont.place(23, 5.5f, 20);
+        
+        free_crane.loadCrane(cont);
+        
+        AGV _agv = new AGV(assetManager, rootNode, 2);
+        _agv.place(free_crane.model.getLocalTranslation().x-1f, 5.5f, free_crane.model.getLocalTranslation().z);
+        free_crane.unloadCrane();
+        */
+        
+        //Truck truck = new Truck(assetManager, rootNode, 5);
+        //truck.place(20, 5.5f, 20);
+        
+        //Container cont = new Container(assetManager, rootNode, ColorRGBA.Blue);
+        //truck.addContainer(cont);
         
         DirectionalLight sun = new DirectionalLight();
         Vector3f lightDir = new Vector3f(-0.37352666f, -0.50444174f, -0.7784704f);
@@ -412,6 +433,14 @@ public class PortSimulation extends SimpleApplication {
                     freighter.place(0, 4f, 85);
 
                     break;
+                    
+                case TRUCK:
+                    trucks.add(new Truck(assetManager, guiNode, id));
+                    containing.Container c = (containing.Container) containers[1][0][0];
+                    Container cont = new Container(assetManager, rootNode, ColorRGBA.randomColor());
+                    cont.setData(c.getContainerId(), c.getArrivalDate(), c.getArrivalTimeFrom(), c.getArrivalTimeTill(), c.getArrivalTransport(), c.getArrivalTransportCompany(), c.getArrivalPosition(), c.getOwner(), c.getDepartureDate(), c.getDepartureTimeFrom(), c.getDepartureTimeTill(), c.getDepartureTransport());
+                    trucks.get(trucks.size()-1).addContainer(cont);                
+                    break;
 
                 default:
                     break;
@@ -425,6 +454,8 @@ public class PortSimulation extends SimpleApplication {
 
             Type type = Type.valueOf(map.get("vehicleType").toString());
             System.out.println("" + type.toString());
+            
+            //DOET VERDER NIKS!
 
         } else if (cmd.getCommand().equals("followPath")) {
             System.out.println(cmd.getCommand());
@@ -454,6 +485,19 @@ public class PortSimulation extends SimpleApplication {
                     motev = new MotionEvent(train.train, path, duration);
                     motev.setSpeed(1f);
                     motev.play();
+                    break;
+                    
+                case TRUCK:
+                    for (Truck t : trucks)
+                    {
+                        if (t.id == id)
+                        {
+                            motev = new MotionEvent(t.model, path, duration);
+                            motev.setSpeed(1f);
+                            motev.setDirectionType(MotionEvent.Direction.Path);
+                            motev.play();
+                        }
+                    }
                     break;
 
                 case AGV:
@@ -531,16 +575,28 @@ public class PortSimulation extends SimpleApplication {
             System.out.println("" + type.toString());
             
             containing.Container con = (containing.Container) map.get("container");
+            Container c;
             
             switch (type)
             {
                 case TRAINCRANE:
-                    Container c = train.detachContainer(con.getContainerId());
+                    c = train.detachContainer(con.getContainerId());
                     for (RailCrane crane : railCrane)
                     {
                         if (crane.id == crane_id)
                         {
                             c.move(train.train.getLocalTranslation());
+                            crane.loadCrane(c);
+                        }
+                    }
+                    break;
+                    
+                case BARGECRANE:
+                    c = barge.detachContainer(con.getContainerId());
+                    for (FreeCrane crane : freeCranes)
+                    {
+                        if (crane.id == crane_id)
+                        {
                             crane.loadCrane(c);
                         }
                     }
@@ -576,6 +632,28 @@ public class PortSimulation extends SimpleApplication {
                                     
                                     Vector3f pos = a.agv.getLocalTranslation();
                                     pos.setY(pos.getY() + 0.31f + (2.25f*0.33f));
+                                    c.place(pos.x, pos.y, pos.z);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                
+                case BARGECRANE:
+                    for (FreeCrane crane : freeCranes)
+                    {
+                        if (crane.id == crane_id)
+                        {
+                            Container c = crane.unloadCrane();
+                            
+                            for (AGV a : agv)
+                            {
+                                if (a.id == agv_id)
+                                {
+                                    a.attachContainer(c);
+                                    
+                                    Vector3f pos = a.agv.getLocalTranslation();
+                                    pos.setY(pos.getY() + 0.31f + (8.2f-5.81f));
                                     c.place(pos.x, pos.y, pos.z);
                                 }
                             }

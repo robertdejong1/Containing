@@ -222,7 +222,7 @@ public abstract class Platform implements Serializable {
         List<Integer> pColumns = ev.getPriorityColumns();
         List<Boolean> columns = ev.getColumns();
         int startIndex = (cranesPerVehicle-1 - currentCrane) * rowsPerCrane; 
-        for(int i = startIndex; i < startIndex + rowsPerCrane; i++)
+        for(int i = startIndex; i < startIndex + rowsPerCrane; i++) 
         {
             if(pColumns.contains(i) && !columns.get(i))
                 return i;

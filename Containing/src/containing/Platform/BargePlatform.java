@@ -136,11 +136,6 @@ public class BargePlatform extends Platform {
             while(it.hasNext())
             {
                 ExternVehicle ev = it.next();
-                Container[][][] grid = ev.getGrid();
-                Container[][][] grid2 = grid;
-                //for(int i = 0; i < ev.getGridWidth(); i++){
-                //    grid2[]
-               // }
                 
                 // if cargo is unloaded, send vehicle away
                 if(ev.getCargo().isEmpty() && sendAwayEvTiming[currentVehicle] == -1) {
@@ -155,16 +150,17 @@ public class BargePlatform extends Platform {
                     }
                     else
                     {
-                        try { 
+                        try {
                             it.remove();
                             sendAwayEvTiming[currentVehicle] = -1;
                             ev.followRoute(road.getPathExternVehicleExit(extVehicleSpots.get(currentVehicle), new Vector3f(ev.getPosition().x, 5.5f, ev.getPosition().z + 1000f)));
                         } catch (AgvNotAvailable ex) {
-                            Logger.getLogger(TrainPlatform.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(BargePlatform.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
-                 // send new AGV's
+                
+                // send new AGV's
                 sendAgvs(ev.getCargo().size(), agvQueuePositions);
                 
                 // loop through cranes
@@ -173,35 +169,33 @@ public class BargePlatform extends Platform {
                 {
                     int allowedCranes = (currentVehicle+1 * cranesPerVehicle - cranesPerVehicle);
                     int rows = ev.getGridWidth();
-
                     int rowsPerCrane = rows / cranesPerVehicle;
                     // fix isAvailable statuses?
                     if(c.getStatus() != Vehicle.Status.LOADING && c.getStatus() != Vehicle.Status.UNLOADING && c.getStatus() != Vehicle.Status.MOVING)
                             c.setIsAvailable(true);
                     // process phase of cranes
                     if(currentCrane >= allowedCranes && currentCrane < allowedCranes + cranesPerVehicle && currentCrane*rowsPerCrane < ev.getColumns().size()) {
-                        int column = getColumn(currentCrane, rowsPerCrane, ev);
+                        int column = getColumn(currentCrane, rowsPerCrane, ev, rowsPerCrane);
                         Container container = getContainer(column, ev);
                         Phase phase = unload_getPhase(currentCrane, column, ev);
-                        System.out.println("Phase: " +phase);
                         if(phase != null)
                         {
                             switch(phase)
                             {
                                 case MOVE:
-                                    System.out.println("MOVE");
+                                    //System.out.println("MOVE");
                                     unload_phaseMove(currentCrane, column, ev);
                                     break;
                                 case LOAD:
-                                    System.out.println("LOAD");
+                                    //System.out.println("LOAD");
                                     unload_phaseLoad(currentCrane, container, ev);
                                     break;
                                 case UNLOAD:
-                                    System.out.println("UNLOAD");
+                                    //System.out.println("UNLOAD");
                                     unload_phaseUnload(currentCrane);
                                     break;
                                 case SENDTOSTORAGE:
-                                    System.out.println("SENDTOSTORAGE");
+                                    //System.out.println("SENDTOSTORAGE");
                                     unload_phaseSendToStorage(currentCrane);
                                     break;
                             }

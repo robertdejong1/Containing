@@ -17,12 +17,19 @@ public class MessageLog
     
     public void AddMessage(String Message)
     {
+        try
+        {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
         String formattedDate = sdf.format(date);
         
         Messages.add("[" + formattedDate + "]: " + Message);
         Settings.userInterface.MessageLogTextArea.setText(GetLastMessages());
+        }
+        catch (Exception e)
+        {
+            
+        }
     }
     
     public String GetLastMessages()

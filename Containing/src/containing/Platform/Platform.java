@@ -273,21 +273,24 @@ public abstract class Platform implements Serializable {
     {
         Crane c = cranes.get(currentCrane);
         AGV craneAgv = craneAgvs.get(currentCrane);
+        System.out.println("busyCranes contains? " + busyCranes.contains(c));
+        System.out.println("craneStatus? " + c.getStatus());
+        System.out.println("container is null? " + (getContainer(moveToColumn, ev) == null ? "yes" : "no"));
         if(!busyCranes.contains(c) && craneAgv == null && moveToColumn != -1 && c.getStatus() == Vehicle.Status.WAITING) 
         {
-            return TrainPlatform.Phase.MOVE;
+            return Phase.MOVE;
         } 
         else if(busyCranes.contains(c) && c.getStatus() == Vehicle.Status.WAITING && craneAgv == null && getContainer(moveToColumn, ev) != null) 
         {
-            return TrainPlatform.Phase.LOAD;
+            return Phase.LOAD;
         }
         else if(busyCranes.contains(c) && craneAgv != null && craneAgv.getStatus() != Vehicle.Status.MOVING && c.getStatus() == Vehicle.Status.UNLOADING && !c.getCargo().isEmpty() && !agvSpots.get(currentCrane).isEmpty()) 
         {
-            return TrainPlatform.Phase.UNLOAD;
+            return Phase.UNLOAD;
         }
         else if(busyCranes.contains(c) && craneAgv != null && craneAgv.getStatus() != Vehicle.Status.MOVING && c.getStatus() == Vehicle.Status.WAITING && c.getCargo().isEmpty()) 
         {
-            return TrainPlatform.Phase.SENDTOSTORAGE;
+            return Phase.SENDTOSTORAGE;
         }
         return null;
     }
@@ -450,7 +453,8 @@ public abstract class Platform implements Serializable {
         for(int i = 0; i < extVehicleSpots.size(); i++) 
         {
             if(extVehicleSpots.get(i).getParkedVehicle() != null) {
-                extVehicles.add((ExternVehicle)extVehicleSpots.get(i).getParkedVehicle());
+                if(!extVehicles.contains((ExternVehicle)extVehicleSpots.get(i).getParkedVehicle()))
+                    extVehicles.add((ExternVehicle)extVehicleSpots.get(i).getParkedVehicle());
             }
         }
     }

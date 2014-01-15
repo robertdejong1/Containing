@@ -158,6 +158,7 @@ public abstract class Platform implements Serializable {
                 if(extVehicleSpots.get(i).getParkedVehicle() == null) {
                     System.out.println("extVehicleSpot.position().x: " + extVehicleSpots.get(i).getPosition().x);
                     ev.followRoute(road.getPathExternVehicleEntry(ev, extVehicleSpots.get(i)));
+                    break;
                 }
             }
         } catch (AgvNotAvailable ex) {

@@ -149,7 +149,7 @@ public abstract class Platform implements Serializable {
      * to the parkingspot where it can dock.
      * @param ev the extern vehicle which is registerd
      */
-    public void registerExternVehicle(ExternVehicle ev)
+        public void registerExternVehicle(ExternVehicle ev)
     {
         try {
             extVehicles.add(ev);
@@ -157,6 +157,7 @@ public abstract class Platform implements Serializable {
                 if(extVehicleSpots.get(i).getParkedVehicle() == null) {
                     System.out.println("extVehicleSpot.position().x: " + extVehicleSpots.get(i).getPosition().x);
                     ev.followRoute(road.getPathExternVehicleEntry(ev, extVehicleSpots.get(i)));
+                    break;
                 }
             }
         } catch (AgvNotAvailable ex) {
@@ -280,10 +281,6 @@ public abstract class Platform implements Serializable {
     {
         Crane c = cranes.get(currentCrane);
         AGV craneAgv = craneAgvs.get(currentCrane);
-        System.out.println("busyCranes contains? " + busyCranes.contains(c));
-        System.out.println("craneStatus? " + c.getStatus());
-        System.out.println("moveToColumn? " + moveToColumn);
-        System.out.println("container is null? " + (getContainer(moveToColumn, ev) == null ? "yes" : "no"));
         if(!busyCranes.contains(c) && craneAgv == null && moveToColumn != -1 && c.getStatus() == Vehicle.Status.WAITING) 
         {
             return Phase.MOVE;

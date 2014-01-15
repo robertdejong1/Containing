@@ -10,6 +10,8 @@ import containing.Container;
 import containing.Exceptions.CargoOutOfBoundsException;
 import containing.Exceptions.VehicleOverflowException;
 import containing.Platform.Platform;
+import containing.Settings;
+import containing.Vector3f;
 import static containing.Vehicle.Barge.nrContainersDepth;
 import static containing.Vehicle.Barge.nrContainersHeight;
 import static containing.Vehicle.Barge.nrContainersWidth;
@@ -34,6 +36,7 @@ public class Truck extends ExternVehicle{
         super(arrivalDate, arrivalTime, nrContainersDepth,nrContainersWidth,nrContainersHeight, platform, company, Type.TRUCK); //true if vehicle comes to load, otherwise false
         this.maxSpeedLoaded = 50;
         this.maxSpeedUnloaded = 60;
+        this.position = new Vector3f(805f * Settings.METER,5.5f,600f*Settings.METER); 
 
     }
    

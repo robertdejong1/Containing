@@ -2,6 +2,7 @@ package containing.Platform;
 
 import containing.Container;
 import containing.Container.TransportType;
+import static containing.Container.TransportType.Train;
 import containing.Controller;
 import containing.Dimension2f;
 import containing.Exceptions.AgvNotAvailable;
@@ -22,6 +23,7 @@ import containing.Vector3f;
 import containing.Vehicle.AGV;
 import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
+import containing.Vehicle.Train;
 import containing.Vehicle.Vehicle;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -241,7 +243,9 @@ public abstract class Platform implements Serializable {
         if(unloadOrder != null)
         {
             //System.out.println("unloadOrder == " +  unloadOrder.size());
-            Collections.reverse(unloadOrder);
+            if(ev instanceof Train) {
+                Collections.reverse(unloadOrder);
+            }
             int rowUnloaded = 0;
             for(Integer row : unloadOrder) 
             {

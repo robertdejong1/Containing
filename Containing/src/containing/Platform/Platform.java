@@ -152,8 +152,12 @@ public abstract class Platform implements Serializable {
     {
         try {
             extVehicles.add(ev);
-            System.out.println("extVehicleSpot.position().x: " + extVehicleSpots.get(0).getPosition().x);
-            ev.followRoute(road.getPathExternVehicleEntry(ev, extVehicleSpots.get(0)));
+            for(int i=0; i < extVehicleSpots.size(); i++) {
+                if(extVehicleSpots.get(i).getParkedVehicle() == null) {
+                    System.out.println("extVehicleSpot.position().x: " + extVehicleSpots.get(i).getPosition().x);
+                    ev.followRoute(road.getPathExternVehicleEntry(ev, extVehicleSpots.get(i)));
+                }
+            }
         } catch (AgvNotAvailable ex) {
             Logger.getLogger(Platform.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -275,6 +279,7 @@ public abstract class Platform implements Serializable {
         AGV craneAgv = craneAgvs.get(currentCrane);
         System.out.println("busyCranes contains? " + busyCranes.contains(c));
         System.out.println("craneStatus? " + c.getStatus());
+        System.out.println("moveToColumn? " + moveToColumn);
         System.out.println("container is null? " + (getContainer(moveToColumn, ev) == null ? "yes" : "no"));
         if(!busyCranes.contains(c) && craneAgv == null && moveToColumn != -1 && c.getStatus() == Vehicle.Status.WAITING) 
         {

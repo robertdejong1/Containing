@@ -150,7 +150,7 @@ public abstract class Platform implements Serializable {
      * to the parkingspot where it can dock.
      * @param ev the extern vehicle which is registerd
      */
-    public void registerExternVehicle(ExternVehicle ev)
+        public void registerExternVehicle(ExternVehicle ev)
     {
         try {
             extVehicles.add(ev);

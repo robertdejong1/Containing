@@ -110,7 +110,7 @@ public abstract class Vehicle implements Serializable
     public synchronized void followRoute(Route route) throws AgvNotAvailable{
         if (this.status == Status.MOVING)
         {
-           throw new AgvNotAvailable("AGV " + this.getID() + "is already following route");
+           throw new AgvNotAvailable(this.getVehicleType() + " " + this.getID() + " is already following route");
         }
         this.route = route;
         this.status = Status.MOVING;

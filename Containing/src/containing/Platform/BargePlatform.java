@@ -40,6 +40,10 @@ public class BargePlatform extends Platform {
     
     private final int[] sendAwayEvTiming;
     
+    /**
+     * Create bargeplatform
+     * @param position the position in the Port
+     */
     public BargePlatform(Vector3f position)
     {
         super(position, Positie.RECHTS);
@@ -71,7 +75,10 @@ public class BargePlatform extends Platform {
         log("Created BargePlatform object: " + toString());
     }
     
-       private void createAgvQueuePositions() 
+    /**
+     * Create AGV spots for the wait list (queue)
+     */
+    private void createAgvQueuePositions() 
     {
         agvQueuePositions = new ArrayList<>();
         Vector3f base = new Vector3f(760f*Settings.METER, 5.5f, 1450f*Settings.METER);
@@ -82,6 +89,9 @@ public class BargePlatform extends Platform {
         Collections.reverse(agvQueuePositions);
     }
     
+    /**
+     * Create cranes
+     */
     @Override
     protected final void createCranes() 
     {
@@ -93,7 +103,10 @@ public class BargePlatform extends Platform {
             cranes.add(new BargeCrane(cranePosition, this));
         }
     }
-
+    
+    /**
+     * Create parking spots for Extern Vehicles
+     */
     @Override
     protected final void createExtVehicleSpots() 
     {
@@ -106,6 +119,9 @@ public class BargePlatform extends Platform {
         }
     }
     
+    /**
+     * Create AGV spots by the cranes
+     */
     protected final void createAgvSpots() {
         float space = LENGTH / (float)CRANES;
         float offset = (space / 2f) - ( BargeCrane.width*Settings.METER);
@@ -119,6 +135,9 @@ public class BargePlatform extends Platform {
         }
     }
     
+    /**
+     * Unload function which takes care of unloading a extern vehicle
+     */
     @Override
     public void unload() 
     {
@@ -213,6 +232,9 @@ public class BargePlatform extends Platform {
             time = 0;
     }
     
+    /**
+     * Update is called every 100ms
+     */
     @Override
     public void update()
     {

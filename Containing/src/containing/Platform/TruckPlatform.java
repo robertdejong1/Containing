@@ -4,21 +4,12 @@ import containing.Container;
 import containing.Container.TransportType;
 import containing.Dimension2f;
 import containing.ParkingSpot.TruckSpot;
-import static containing.Platform.Platform.Phase.LOAD;
-import static containing.Platform.Platform.Phase.MOVE;
-import static containing.Platform.Platform.Phase.SENDTOSTORAGE;
-import static containing.Platform.Platform.Phase.UNLOAD;
-import containing.Point3D;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
-import containing.Vehicle.Crane;
-import containing.Vehicle.ExternVehicle;
-import containing.Vehicle.StorageCrane;
 import containing.Vehicle.Truck;
 import containing.Vehicle.TruckCrane;
 import containing.Vehicle.Vehicle;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,6 +30,10 @@ public class TruckPlatform extends Platform {
     private final float VEHICLE_OFFSET = 0f;
     private Vehicle.Status[] VehicleStatus = new Vehicle.Status[CRANES];
     
+    /**
+     * Create truckplatform
+     * @param position the position in the Port
+     */
     public TruckPlatform(Vector3f position)
     {
         super(position, Platform.Positie.RECHTS);
@@ -54,7 +49,10 @@ public class TruckPlatform extends Platform {
         createCranes();
         log("Created TruckPlatform object: " + toString());
     }
-
+    
+    /**
+     * Create cranes
+     */
     @Override
     protected final void createCranes() 
     {
@@ -68,6 +66,9 @@ public class TruckPlatform extends Platform {
         }
     }
     
+    /**
+     * Create parking spots for Extern Vehicles
+     */
     @Override
     protected final void createExtVehicleSpots() 
     {
@@ -81,6 +82,9 @@ public class TruckPlatform extends Platform {
         }
     }
     
+    /**
+     * Update is called every 100ms
+     */
     @Override
     public void update()
     {

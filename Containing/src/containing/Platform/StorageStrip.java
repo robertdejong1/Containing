@@ -68,6 +68,12 @@ public class StorageStrip implements Serializable {
     
     private int loadCounter = 0;
     
+    /**
+     * Create a strip on the StoragePlatform
+     * @param platform the platform this strip is located
+     * @param position the position on the storageplatform
+     * @param id nr of strip
+     */
     public StorageStrip(StoragePlatform platform, Vector3f position, int id) 
     {
         this.platform = platform;
@@ -84,6 +90,9 @@ public class StorageStrip implements Serializable {
         createCrane();
     }
     
+    /**
+     * Set the road for AGV's with 2 points
+     */
     private void setRoad()
     {
         List<Vector3f> wayshit = new ArrayList<>();
@@ -92,21 +101,39 @@ public class StorageStrip implements Serializable {
         craneRoad = new Road(wayshit);
     }
     
+    /**
+     * Return containers loaded on this strip
+     * @return HashMap with containers and positions
+     */
     public HashMap<Point3D, Container> getContainers() {
         return containers;
     }
     
+    /**
+     * Check if this strip has a specific container
+     * @param container container which could be here
+     * @return is container here
+     */
     public boolean hasContainer(Container container)
     {
         return containers.containsValue(container);
     }
     
+    /**
+     * Remove container from strip
+     * @param position position (index for HashMap)
+     * @return index of container
+     */
     public Container unloadContainer(Point3D position)
     {
         return containers.remove(position);
     }
     
-    // todo till, container kan eerder weg moeten, prioriteit is dan hoger
+    /**
+     * Return free index for container
+     * @param container the container to be loaded
+     * @return position (index)
+     */
     private Point3D getFreeContainerPosition(Container container)
     {
         Date date = container.getDepartureDate();
@@ -142,11 +169,18 @@ public class StorageStrip implements Serializable {
         return null;
     }
     
+    /**
+     * Return the state of the Storage
+     * @return the state (FULL, EMPTY)
+     */
     public StorageState getStorageState()
     {
         return storageState;
     }
     
+    /**
+     * Create crane
+     */
     private void createCrane()
     {
         Vector3f cranePosition = new Vector3f(getPosition().x,getPosition().y,getPosition().z);
@@ -154,21 +188,37 @@ public class StorageStrip implements Serializable {
         platform.cranes.add(crane);
     }
     
+    /**
+     * Return AGV parkingspots
+     * @return list with parkingspots
+     */
     public List<AgvSpot> getAgvSpots()
     {
         return agvSpots;
     }
     
+    /**
+     * Return position of this strip
+     * @return position
+     */
     public Vector3f getPosition()
     {
         return position;
     }
     
+    /**
+     * Return dimension of this strip
+     * @return dimension
+     */
     public Dimension2f getDimension()
     {
         return dimension;
     }
     
+    /**
+     * Return Free AGV Spot on the left (loading) side
+     * @return parkingspot for AGV
+     */
     public AgvSpot getFreeAgvSpotLoad()
     {
         int startIndex = id * MAX_AGV_SPOTS;
@@ -182,6 +232,11 @@ public class StorageStrip implements Serializable {
         return null;
     }
     
+    /**
+     * Return AGV parkingspot where AGV is parked (which is on the load side)
+     * @param agv the agv
+     * @return parking spot where the agv is parked
+     */
     public AgvSpot getParkingSpotFromVehicleLoad(AGV agv)
     {
         int startIndex = id * MAX_AGV_SPOTS;
@@ -199,6 +254,11 @@ public class StorageStrip implements Serializable {
         return null;
     }
     
+    /**
+     * Get the index of the parkingspot where the AGV is parked (on the loading side)
+     * @param agv
+     * @return index
+     */
     public int getParkingSpotIndexFromVehicleLoad(AGV agv)
     {
         int startIndex = id * MAX_AGV_SPOTS;
@@ -216,6 +276,10 @@ public class StorageStrip implements Serializable {
         return 0;
     }
     
+    /**
+     * Check if there are AGV's parked on the left side, then add
+     * them to agvQueueLoad
+     */
     public void checkParkedVehiclesLeft()
     {
         int startIndex = id * MAX_AGV_SPOTS;
@@ -233,6 +297,10 @@ public class StorageStrip implements Serializable {
         }
     }
     
+    /**
+     * NOT USED: Check parked AGV's on the right side, if there is a AGV parked,
+     * set them false in agvSpotQueue
+     */
     public void checkParkedVehiclesRight()
     {
         int startIndex = id * MAX_AGV_SPOTS + 1;
@@ -246,6 +314,11 @@ public class StorageStrip implements Serializable {
         }
     }
     
+    /**
+     * Return the real (Vector3f) position of where the container is to be placed.
+     * @param container the container
+     * @return position
+     */
     private Vector3f getRealContainerPosition(Container container)
     {
         Point3D containerPosition = getFreeContainerPosition(container);
@@ -256,6 +329,11 @@ public class StorageStrip implements Serializable {
         return realPosition;
     }
     
+    /**
+     * LOAD PHASE : Return the actual phase of loading.
+     * @param agv agv which brought a container
+     * @return phase
+     */
     private Phase load_getPhase(AGV agv)
     {
         if(!craneBusy && crane.getStatus() == Status.WAITING && crane.getCargo().isEmpty())
@@ -269,26 +347,14 @@ public class StorageStrip implements Serializable {
         return null;
     }
     
-    /*
-    private void load_phaseMoveToAgv(AGV agv)
-    {
-        Vector3f agvPosition = agv.getPosition();
-        
-        if(!agv.getCargo().isEmpty()) {
-            crane.followRoute(craneRoad.moveToContainer(crane, new Vector3f(agvPosition.x, getPosition().y, getPosition().z)));
-            craneBusy = true;
-        }
-    }
-    */
-    
+    /**
+     * LOAD PHASE : Load container onto crane and onto StorageStrip
+     * @param agv the agv which brought a container
+     */
     private void load_phaseLoad(AGV agv)
     {
-        System.out.println("StorageStrip loading...");
         try {
-            System.out.println("strip " + id + " loaded " + loadCounter + " times");
-            System.out.println("en BTW agvQueueLoad == " + agvQueueLoad.size());
             loadCounter++;
-            System.out.println("StorageStrip loading... IK BEN IN DE TRY BOIII");
             craneBusy = true;
             Container cargo = agv.getCargo().get(0);
             Vector3f pos = getRealContainerPosition(cargo);
@@ -313,18 +379,9 @@ public class StorageStrip implements Serializable {
         }
     }
     
-    /*
-    private void load_phaseUnload()
-    {
-        try {
-            Container container = crane.unload();
-            containers.put(getFreeContainerPosition(container), container);
-        } catch (ContainerNotFoundException ex) {
-            Logger.getLogger(StorageStrip.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    */
-    
+    /**
+     * LOAD PHASE : Send unloaded AGV to parkingspot
+     */
     private void load_phaseSendToParkingSpot()
     {
         try {
@@ -341,6 +398,9 @@ public class StorageStrip implements Serializable {
         }
     }
     
+    /**
+     * LOAD PHASE : The call (control) function (is called in update)
+     */
     public void load()
     {
         AGV craneAgv = agvQueueLoad.peek();
@@ -363,6 +423,9 @@ public class StorageStrip implements Serializable {
         System.out.println("Crane cargo == " + crane.getCargo().size());
     }
     
+    /**
+     * Called every 100ms
+     */
     public void update() {
         if(state.equals(State.FREE)) {}
         

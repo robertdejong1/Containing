@@ -23,6 +23,10 @@ public class SeashipPlatform extends Platform {
     private final float CRANE_OFFSET   = 8f; //*Settings.METER;  // ???
     private final float VEHICLE_OFFSET = 0f;
     
+    /**
+     * Create trainplatform
+     * @param position the position in the Port
+     */
     public SeashipPlatform(Vector3f position)
     {
         super(position, Positie.ONDER);
@@ -38,7 +42,10 @@ public class SeashipPlatform extends Platform {
         createCranes();
         log("Created SeashipPlatform object: " + toString());
     }
-
+    
+    /**
+     * Create cranes
+     */
     @Override
     protected final void createCranes() 
     {
@@ -51,6 +58,9 @@ public class SeashipPlatform extends Platform {
         }
     }
     
+    /**
+     * Create parking spots for Extern Vehicles
+     */
     @Override
     protected final void createExtVehicleSpots() 
     {
@@ -63,6 +73,9 @@ public class SeashipPlatform extends Platform {
         }
     }
     
+    /**
+     * Update is called every 100ms
+     */
     @Override
     public void update()
     {

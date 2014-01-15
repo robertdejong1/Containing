@@ -19,7 +19,6 @@ import containing.Road.Route;
 import containing.Settings;
 import containing.Vector3f;
 import containing.Vehicle.AGV;
-import containing.Vehicle.Barge;
 import containing.Vehicle.Crane;
 import containing.Vehicle.ExternVehicle;
 import containing.Vehicle.Train;
@@ -216,7 +215,15 @@ public abstract class Platform implements Serializable {
         }
         return -1;
     }
-
+    
+    /**
+     * Get column of Extern Vehicle
+     * @param currentCrane crane nr
+     * @param rowsPerCrane rows per crane
+     * @param ev extern vehicle
+     * @param cranesPerVehicle crane working on vehicle
+     * @return the column index
+     */
     protected int getColumn(int currentCrane, int rowsPerCrane, ExternVehicle ev, int cranesPerVehicle) 
     {
         List<Integer> pColumns = ev.getPriorityColumns();
@@ -320,6 +327,13 @@ public abstract class Platform implements Serializable {
         }
     }
     
+    /**
+     * UNLOAD PHASE : Move crane to the column on the extern vehicle
+     * @param currentCrane crane nr
+     * @param column column nr
+     * @param ev extern vehicle
+     * @param cranesPerVehicle cranes per vehicle
+     */
     protected void unload_phaseMove(int currentCrane, int column, ExternVehicle ev, int cranesPerVehicle) 
     {
         int cid = cranesPerVehicle - currentCrane;

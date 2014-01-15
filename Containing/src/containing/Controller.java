@@ -94,7 +94,7 @@ public class Controller
         if (Settings.port.getStoragePlatform().hasContainer(container))
         {
             //Route route = new Route(requestingPlatform);
-            Settings.port.getStoragePlatform().loadContainerInAgv(container, requestingPlatform); 
+            //Settings.port.getStoragePlatform().loadContainerInAgv(container, requestingPlatform); 
             return true;
         }
         else

@@ -51,6 +51,10 @@ public class StoragePlatform extends Platform {
     
     protected List<AgvSpot> agvQueueLoadBusy;
     
+    /**
+     * Create storageplatform
+     * @param position the position in the Port
+     */
     public StoragePlatform(Vector3f position)
     {
         super(position, Positie.RECHTS);
@@ -73,30 +77,56 @@ public class StoragePlatform extends Platform {
         log("Created StoragePlatform object: " + toString());
     }
     
+    /**
+     * Put AGV in busy list
+     * @param agvSpot 
+     */
     public void putAgvQueueLoadBusy(AgvSpot agvSpot) {
         agvQueueLoadBusy.add(agvSpot);
     }
     
+    /**
+     * Remove AGV from busy list
+     * @param agvSpot 
+     */
     public void removeAgvQueueLoadBusy(AgvSpot agvSpot) {
         agvQueueLoadBusy.remove(agvSpot);
     }
     
+    /**
+     * Get busy list of AGVs
+     * @param agvSpot
+     * @return 
+     */
     public boolean getAgvQueueLoadBusy(AgvSpot agvSpot) {
         if(agvQueueLoadBusy.contains(agvSpot))
             return true;
         return false;
     }
     
+    /**
+     * Return all strips (StorageStrip)
+     * @return 
+     */
     public StorageStrip[] getStrips() 
     {
         return strips;
     }
     
+    /**
+     * Return specific strip from index
+     * @param nr nr strip
+     * @return StorageStrip object
+     */
     public StorageStrip getStrip(int nr)
     {
         return strips[nr];
     }
     
+    /**
+     * Return parkingspot which is parked on the right side
+     * @return 
+     */
     public AgvSpot getFreeParkingSpotUnloaded()
     {
         for(int i = 1; i < agvSpots.size(); i += 2)
@@ -109,6 +139,10 @@ public class StoragePlatform extends Platform {
         return agvSpots.get(0);
     }
     
+    /**
+     * Set road where the AGVS are riding on and create left and right side of
+     * storageplatform
+     */
     @Override
     protected final void setRoad() 
     {
@@ -125,11 +159,9 @@ public class StoragePlatform extends Platform {
         road2 = new Road(wayshit);
     }
     
-    public void loadContainerInAgv(Container container, Platform platformToGo)
-    {
-        //todo
-    }
-    
+    /**
+     * Create AGV parkingspots
+     */
     private void createAgvSpots()
     {
         int subcount = 0;
@@ -154,6 +186,9 @@ public class StoragePlatform extends Platform {
         }
     }
     
+    /**
+     * Create all 100 AGVS
+     */
     public final void createAllAgvs()
     {
         agvs = new ArrayList<>();
@@ -180,10 +215,21 @@ public class StoragePlatform extends Platform {
         
     }
     
+    /**
+     * Return all AGVS
+     * @return list of AGVS
+     */
     public List<AGV> getAgvs() {
         return agvs;
     }
     
+    /**
+     * Return free AGV parkingspot
+     * @param tt transporttype
+     * @param agvQueue the queue of AGVs
+     * @return parkingspot
+     * @throws NoFreeAgvException 
+     */
     public AgvSpot requestFreeAgv(TransportType tt, Queue<AGV> agvQueue) throws NoFreeAgvException
     {
         switch(tt)
@@ -216,12 +262,9 @@ public class StoragePlatform extends Platform {
         throw new NoFreeAgvException("No free AGV available");
     }
     
-    public void loadContainerInAgv(AGV agv, Container container, TransportType tt)
-    {
-        // last thing to do, send to platform (identifiable with tt)
-        //agv.followRoute();
-    }
-    
+    /**
+     * Create all strips
+     */
     private void createStrips() 
     {
         Vector3f stripPosition;
@@ -232,6 +275,11 @@ public class StoragePlatform extends Platform {
         }
     }
     
+    /**
+     * Check if StoragePlatform has a specific container
+     * @param container
+     * @return true or false
+     */
     public boolean hasContainer(Container container)
     {
         for(StorageStrip strip : strips)
@@ -242,11 +290,20 @@ public class StoragePlatform extends Platform {
         return false;
     }
     
+    /**
+     * Return amount of strips
+     * @return int
+     */
     public final int getStripAmount()
     {
         return (int)((float)LENGTH / STRIP_WIDTH);
     }
     
+    /**
+     * Return nearby strip index
+     * @param tt transporttpe
+     * @return index
+     */
     public int getNearbyStrip(TransportType tt)
     {
         switch(tt)
@@ -267,6 +324,11 @@ public class StoragePlatform extends Platform {
         return 0;
     }
     
+    /**
+     * Return position of entrypoint
+     * @param side left or right
+     * @return position
+     */
     public Vector3f getEntrypoint(Side side)
     {
         if(side.equals(Side.LEFT))
@@ -274,6 +336,11 @@ public class StoragePlatform extends Platform {
         return entrypoints[1];
     }
     
+    /**
+     * Return position of entrycorner
+     * @param side left or right
+     * @return position
+     */
     public Vector3f getEntrycorner(Side side)
     {
         if(side.equals(Side.LEFT))
@@ -281,6 +348,11 @@ public class StoragePlatform extends Platform {
         return entrycorners[1];
     }
     
+    /**
+     * Return position of exitpoint
+     * @param side left or right
+     * @return position
+     */
     public Vector3f getExitpoint(Side side)
     {
         if(side.equals(Side.LEFT))
@@ -288,6 +360,11 @@ public class StoragePlatform extends Platform {
         return exitpoints[1];
     }
     
+    /**
+     * Return position of exitcorner
+     * @param side left or right
+     * @return position
+     */
     public Vector3f getExitcorner(Side side)
     {
         if(side.equals(Side.LEFT))
@@ -295,6 +372,9 @@ public class StoragePlatform extends Platform {
         return exitcorners[1];
     }
     
+    /**
+     * Set entrypoints, left and right
+     */
     private void setEntrypoints()
     {
         entrypoints = new Vector3f[2];
@@ -302,6 +382,9 @@ public class StoragePlatform extends Platform {
         entrypoints[1] = new Vector3f(710*Settings.METER, getPosition().y, getPosition().z + LENGTH);
     }
     
+    /**
+     * Set entrycorners, left and right
+     */
     private void setEntrycorners()
     {
         entrycorners = new Vector3f[2];
@@ -309,6 +392,9 @@ public class StoragePlatform extends Platform {
         entrycorners[1] = new Vector3f(695*Settings.METER, getPosition().y, getPosition().z + LENGTH);
     }
     
+    /**
+     * Set exitpoints, left and right
+     */
     private void setExitpoints()
     {
         exitpoints = new Vector3f[2];
@@ -316,6 +402,9 @@ public class StoragePlatform extends Platform {
         exitpoints[1] = new Vector3f(710f*Settings.METER, getPosition().y, getPosition().z);
     }
     
+    /**
+     * Set exitcorners, left and right
+     */
     private void setExitcorners()
     {
         exitcorners = new Vector3f[2];
@@ -323,20 +412,36 @@ public class StoragePlatform extends Platform {
         exitcorners[1] = new Vector3f(695f*Settings.METER, getPosition().y, getPosition().z);
     }
     
+    /**
+     * Return the left side of StoragePlatform
+     * @return platform
+     */
     public StoragePlatformOrientation getLeft() {
         return orientation.get(1);
     }
     
+    /**
+     * Return the right side of StoragePlatform
+     * @return platform
+     */
     public StoragePlatformOrientation getRight() {
         return orientation.get(0);
     }
     
+    /**
+     * Return position of entrypoint
+     * @return position
+     */
     @Override
     public Vector3f getEntrypoint()
     {
         return getEntrypoint(Side.RIGHT);
     }
     
+    /**
+     * Return position of exitpoint
+     * @return position
+     */
     @Override
     public Vector3f getExitpoint()
     {
@@ -350,6 +455,9 @@ public class StoragePlatform extends Platform {
     protected void createExtVehicleSpots() {/* ignore */}
     /* end ignore */
     
+    /**
+     * Called every 100ms
+     */
     @Override
     public void update()
     {

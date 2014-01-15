@@ -25,12 +25,13 @@ public class TruckCrane extends Crane {
 
     public static float width = 3f; //????????
     public static float length = 5f; //??????????
-    
+ 
     //hier TruckCrane specific variables
    
     public TruckCrane(Vector3f startPosition, Platform platform){ //variabelen doorgeven aan constructor crane
         super(startPosition, platform, Type.TRUCKCRANE, width, length);
-    
+        this.maxSpeedLoaded = 50;
+        this.maxSpeedUnloaded = 40;
     }
     
     @Override

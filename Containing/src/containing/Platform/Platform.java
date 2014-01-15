@@ -355,7 +355,7 @@ public abstract class Platform implements Serializable {
                 System.out.println("AGV == " + agv.getStatus());
                 agv.followRoute(road.getPathToParkingsSpot(agv, agvSpots.get(currentCrane)));
                 System.out.println("AGV == " + agv.getStatus());
-                System.out.println("breakie breakie");
+                
                 //while(true) {}
                 craneAgvs.set(currentCrane, agv);
                 if(c.getStatus() == Vehicle.Status.WAITING) {

@@ -89,7 +89,7 @@ public class Road implements Serializable
             for (Vector3f v : deel2.getWeg()) { track2.add(v); }
             for (Vector3f v : deel3.getWeg()) { track2.add(v); }
             
-            if (vehicle.getID() == 201)
+            if (vehicle.getID() == 201 || vehicle.getID() == 103)
             {
                 System.out.println("----------------------");
                 System.out.println("Route nr: " + vehicle.routecounter);
@@ -124,7 +124,7 @@ public class Road implements Serializable
         for (Vector3f v : deel2.getWeg()) { track2.add(v);}
         for (Vector3f v : deel3.getWeg()) { track2.add(v);}
         
-                   if (vehicle.getID() == 201)
+                   if (vehicle.getID() == 201 || vehicle.getID() == 103)
             {
                 System.out.println("----------------------");
                 System.out.println("Route nr: " + vehicle.routecounter);
